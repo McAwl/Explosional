@@ -13,14 +13,11 @@ func _ready():
 
 
 func reset_car():
-	$Body.global_transform.origin.x = 0.0
-	$Body.global_transform.origin.y = 100.0
-	$Body.global_transform.origin.z = 0.0
-	$Body.linear_velocity.x = 0.0
-	$Body.linear_velocity.y = 0.0
-	$Body.linear_velocity.z = 0.0
+	$Body.global_transform.origin = Vector3(54.0, 10.0, 60.0)
+	$Body.linear_velocity = Vector3(0.0, 0.0, 0.0)
 	$Body.speed = 0.0
-
+	$Body.angular_velocity = Vector3(0.0, 0.0, 0.0)
+	$Body.rotation_degrees = Vector3(0.0, 0.0, 0.0)
 
 func _process(delta):
 	
@@ -28,7 +25,7 @@ func _process(delta):
 		reset_car()
 			
 	print_timer += delta
-	if print_timer > 1.0:
+	if print_timer > 10.0:
 		if $Body.player_number == 1:
 			print("player "+str($Body.player_number)+" bomb_timer="+str(bomb_timer))
 			print("player "+str($Body.player_number)+" $Body.global_transform="+str($Body.global_transform))

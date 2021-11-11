@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://logic/panel.gd" type="Script" id=1]
+[ext_resource path="res://logic/Button.gd" type="Script" id=2]
+
+[node name="Panel" type="Panel"]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Spedometer" type="Button" parent="."]
+margin_right = 12.0
+margin_bottom = 20.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="Spedometer" to="Spedometer" method="_on_Spedometer_pressed"]

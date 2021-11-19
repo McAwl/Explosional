@@ -14,10 +14,10 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.3188, 0, 82.1719 )
 script = ExtResource( 2 )
 
 [node name="TownMesh" parent="." instance=ExtResource( 1 )]
-transform = Transform( 4, 0, 0, 0, 1, 0, 0, 0, 4, -49.9591, -3.8575, 155.254 )
+transform = Transform( 2, 0, 0, 0, 1, 0, 0, 0, 2, -5.43333, -4.41106, 80.2723 )
 
 [node name="InstancePos1" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2039, 6.02587, -43.9009 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2039, 6.02587, -42.0203 )
 
 [node name="VC" type="ViewportContainer" parent="InstancePos1"]
 margin_right = 960.0
@@ -32,7 +32,7 @@ handle_input_locally = false
 render_target_update_mode = 3
 
 [node name="CarBase" parent="InstancePos1/VC/V" instance=ExtResource( 3 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 49.2004, 2.19205, 61.7707 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 44.0438, 2.47202, 64.0031 )
 
 [node name="InstancePos2" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.52371, 6.11807, -40.0914 )
@@ -88,16 +88,6 @@ render_target_update_mode = 3
 [node name="CarBase" parent="InstancePos4/VC/V" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 54.7121, 2.05634, 60.6527 )
 
-[node name="Back" type="Button" parent="."]
-margin_left = 17.0
-margin_top = 9.0
-margin_right = 85.0
-margin_bottom = 41.0
-text = "<- Back!"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 1, 0, 0, 0, -0.629475, 0.777021, 0, -0.777021, -0.629475, 0, 24.4076, 0 )
 shadow_enabled = true
@@ -118,13 +108,13 @@ stream = ExtResource( 7 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.9224, -51.8874 )
 
 [node name="Bomb1" parent="." instance=ExtResource( 8 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 11.0643, 13.3206, -34.7229 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 15.4188, 2.61735, -20.037 )
 
 [node name="Bomb2" parent="." instance=ExtResource( 8 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.45886, 10.1779, -36.0696 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 22.6544, 5.10109, -18.426 )
 
 [node name="Bomb3" parent="." instance=ExtResource( 8 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6.73704, 10.2225, -37.2412 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.9202, 4.58054, -19.5285 )
 
 [node name="Bomb4" parent="." instance=ExtResource( 8 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.41074, 10.133, -35.1522 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.6667, 3.6484, -23.4602 )

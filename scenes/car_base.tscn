@@ -122,6 +122,7 @@ extents = Vector3( 0.477039, 0.5, 1.16331 )
 
 [node name="CarBase" type="Spatial"]
 _import_path = NodePath(".")
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.662493, 0.4749 )
 script = ExtResource( 9 )
 __meta__ = {
 "__editor_plugin_screen__": "3D"
@@ -249,6 +250,9 @@ script = ExtResource( 10 )
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1.58571, -0.428293 )
 mesh = SubResource( 8 )
 material/0 = ExtResource( 8 )
+
+[node name="MinePosition" type="Position3D" parent="Body"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.48442 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

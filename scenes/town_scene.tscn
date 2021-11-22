@@ -73,6 +73,8 @@ margin_top = 21.0
 margin_right = 1748.0
 margin_bottom = 35.0
 rect_scale = Vector2( 10, 10 )
+text = "2"
+align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -103,6 +105,8 @@ margin_top = 896.0
 margin_right = 38.0
 margin_bottom = 910.0
 rect_scale = Vector2( 10, 10 )
+text = "2"
+valign = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -133,6 +137,9 @@ margin_top = 908.0
 margin_right = 1726.0
 margin_bottom = 922.0
 rect_scale = Vector2( 10, 10 )
+text = "2"
+align = 2
+valign = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }

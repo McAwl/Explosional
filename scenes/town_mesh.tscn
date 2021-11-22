@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=2]
+[gd_scene load_steps=52 format=2]
 
 [ext_resource path="res://assets/Materials/buildings/roof.tres" type="Material" id=1]
 [ext_resource path="res://assets/Materials/buildings/roof2.tres" type="Material" id=2]
@@ -7,7 +7,6 @@
 [ext_resource path="res://assets/Materials/buildings/house.tres" type="Material" id=5]
 [ext_resource path="res://assets/Materials/buildings/windows.tres" type="Material" id=6]
 [ext_resource path="res://assets/Materials/buildings/door.tres" type="Material" id=7]
-[ext_resource path="res://logic/road.gd" type="Script" id=8]
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "Plane.003"
@@ -532,7 +531,6 @@ transform = Transform( 3.55498, 0, 0, 0, 3.55498, 0, 0, 0, 3.55498, 3.24208, 0.0
 use_in_baked_light = true
 mesh = SubResource( 1 )
 material/0 = null
-script = ExtResource( 8 )
 
 [node name="col" type="StaticBody" parent="road"]
 

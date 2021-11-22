@@ -1,10 +1,13 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://assets/Materials/vehicles/car_blue_body.tres" type="Material" id=1]
 [ext_resource path="res://assets/Materials/vehicles/car_grill.tres" type="Material" id=2]
 [ext_resource path="res://assets/Materials/vehicles/car_orange_body.tres" type="Material" id=3]
 [ext_resource path="res://logic/vehicle.gd" type="Script" id=4]
 [ext_resource path="res://logic/follow_camera.gd" type="Script" id=5]
+[ext_resource path="res://logic/AudioStreamPlayer.gd" type="Script" id=6]
+[ext_resource path="res://assets/sounds/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3" type="AudioStream" id=7]
+[ext_resource path="res://assets/Materials/terrain/cement.tres" type="Material" id=8]
 
 [sub_resource type="ArrayMesh" id=1]
 surfaces/0 = {
@@ -220,6 +223,8 @@ surfaces/2 = {
 [sub_resource type="BoxShape" id=14]
 extents = Vector3( 0.669599, 0.520797, 1.19735 )
 
+[sub_resource type="SphereMesh" id=15]
+
 [node name="TrailerTruck" type="Spatial"]
 _import_path = NodePath(".")
 __meta__ = {
@@ -388,8 +393,16 @@ min_distance = 5.0
 max_distance = 7.0
 height = 2.5
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-_import_path = NodePath("AnimationPlayer")
+[node name="Bomb" type="Position3D" parent="Body"]
+visible = false
+
+[node name="Body" type="MeshInstance" parent="Body/Bomb"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1.58571, -0.428293 )
+mesh = SubResource( 15 )
+material/0 = ExtResource( 8 )
+
+[node name="MinePosition" type="Position3D" parent="Body"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.205089, -5.22406 )
 
 [node name="PinJoint" type="ConeTwistJoint" parent="."]
 transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.704587, -0.960112 )
@@ -397,3 +410,9 @@ nodes/node_a = NodePath("../Trailer")
 nodes/node_b = NodePath("../Body")
 swing_span = 30.0
 twist_span = 45.0
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+volume_db = -9.087
+pitch_scale = 0.56
+script = ExtResource( 6 )

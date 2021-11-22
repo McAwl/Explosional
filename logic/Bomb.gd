@@ -8,9 +8,9 @@ var print_timer = 0.0
 var player_number
 const EXPLOSION_STRENGTH = 10000.0  #200.0
 const EXPLOSION_RANGE = 10.0  #200.0
-const BOMB_START_WAIT = 1.0  # wait time when first turned on to activation
+const BOMB_START_WAIT = 3.0  # wait time when first turned on to activation
 const BOMB_ACTIVE_WAIT = 1.0
-const BOMB_PROXIMITY_DISTANCE = 10.0
+const BOMB_PROXIMITY_DISTANCE = 5.0
 var rng = RandomNumberGenerator.new()
 var explode = false
 const FLASH_TIMER_WAIT = 0.25
@@ -59,7 +59,7 @@ func _physics_process(_delta):
 				var explosion_force = EXPLOSION_STRENGTH/pow(distance+1.0, 1.5)  # inverse square of distance
 				target.apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 		bomb_stage = 5
-		bomb_proximity_check_timer = BOMB_ACTIVE_WAIT * 4  # to ensure we don't wait forever
+		bomb_proximity_check_timer = BOMB_ACTIVE_WAIT *4  # to ensure we don't wait forever
 
 
 
@@ -92,7 +92,7 @@ func _process(delta):
 		if bomb_inactive_timer <= 0.0:
 			bomb_inactive_timer = BOMB_START_WAIT  # rest for next time
 			bomb_stage = 2
-			bomb_proximity_timer_limit = BOMB_ACTIVE_WAIT * 4  # to ensure we don't wait forever, e.g. if the bomb is stuck somewhere it can't be activated
+			bomb_proximity_timer_limit = 20  # to ensure we don't wait forever, e.g. if the bomb is stuck somewhere it can't be activated
 			material_override(material_orange)
 		
 	if bomb_stage == 2:  # active waiting for proximity to car 
@@ -112,10 +112,6 @@ func _process(delta):
 		if timer <= 0.0:
 			timer = BOMB_ACTIVE_WAIT
 			$Body.visible = false
-			#if player_number == 1:
-			#	print("player_number = "+str(player_number))
-			#		print("  explode")
-			#	print("  real_bomb.global_transform.origin = "+ str( global_transform.origin ) )
 			#	print("  real bomb Body.visible = "+str($Body.visible))'''
 			bomb_stage = 4
 			material_override(material_green)

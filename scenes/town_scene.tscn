@@ -34,6 +34,19 @@ render_target_update_mode = 3
 [node name="CarBase" parent="InstancePos1/VC/V" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 44.0438, 2.47202, 64.0031 )
 
+[node name="CanvasLayer" type="CanvasLayer" parent="InstancePos1/VC"]
+
+[node name="Label" type="Label" parent="InstancePos1/VC/CanvasLayer"]
+margin_left = 11.0
+margin_top = 14.0
+margin_right = 29.0
+margin_bottom = 28.0
+rect_scale = Vector2( 10, 10 )
+text = "2"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="InstancePos2" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 5.52371, 6.11807, -40.0914 )
 
@@ -51,6 +64,18 @@ render_target_update_mode = 3
 
 [node name="CarBase" parent="InstancePos2/VC/V" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 47.1179, 2.56556, 73.9696 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="InstancePos2/VC"]
+
+[node name="Label" type="Label" parent="InstancePos2/VC/CanvasLayer"]
+margin_left = 1731.0
+margin_top = 21.0
+margin_right = 1748.0
+margin_bottom = 35.0
+rect_scale = Vector2( 10, 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="InstancePos3" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8734, 6.20757, -39.4722 )
@@ -70,6 +95,18 @@ render_target_update_mode = 3
 [node name="CarBase" parent="InstancePos3/VC/V" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 54.368, 2.27585, 68.396 )
 
+[node name="CanvasLayer" type="CanvasLayer" parent="InstancePos3/VC"]
+
+[node name="Label" type="Label" parent="InstancePos3/VC/CanvasLayer"]
+margin_left = 18.0
+margin_top = 896.0
+margin_right = 38.0
+margin_bottom = 910.0
+rect_scale = Vector2( 10, 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="InstancePos4" type="Position3D" parent="."]
 transform = Transform( 0.997932, 0, 0, 0, 0.997932, 0, 0, 0, 0.997932, 9.72482, 6.22327, -45.032 )
 
@@ -87,6 +124,18 @@ render_target_update_mode = 3
 
 [node name="CarBase" parent="InstancePos4/VC/V" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 54.7121, 2.05634, 60.6527 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="InstancePos4/VC"]
+
+[node name="Label" type="Label" parent="InstancePos4/VC/CanvasLayer"]
+margin_left = 1708.0
+margin_top = 908.0
+margin_right = 1726.0
+margin_bottom = 922.0
+rect_scale = Vector2( 10, 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 1, 0, 0, 0, -0.629475, 0.777021, 0, -0.777021, -0.629475, 0, 24.4076, 0 )

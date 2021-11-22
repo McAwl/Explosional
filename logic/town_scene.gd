@@ -11,3 +11,4 @@ func _ready():
 		car = car.get_node("CarBase")
 		car = car.get_node("Body")
 		car.player_number = player_number
+		get_node("./InstancePos"+str(player_number)+"/VC/CanvasLayer/Label").text = "3"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://logic/vehicle.gd" type="Script" id=1]
 [ext_resource path="res://assets/Materials/vehicles/car_red_body.tres" type="Material" id=2]
@@ -9,7 +9,6 @@
 [ext_resource path="res://assets/sounds/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3" type="AudioStream" id=7]
 [ext_resource path="res://assets/Materials/terrain/cement.tres" type="Material" id=8]
 [ext_resource path="res://logic/car_base.gd" type="Script" id=9]
-[ext_resource path="res://logic/Bomb.gd" type="Script" id=10]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
@@ -231,10 +230,10 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.588269, 0.0774262 )
 shape = SubResource( 7 )
 
 [node name="CameraBase" type="Spatial" parent="Body"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.97449, 0 )
+transform = Transform( 0.998172, 0, 0.0604388, 0, 1, 0, -0.0604388, 0, 0.998172, -0.0157232, 1.97449, -2.31076 )
 
 [node name="Camera" type="Camera" parent="Body/CameraBase"]
-transform = Transform( -0.709652, -0.170177, 0.683691, -2.11161e-08, 0.970391, 0.241539, -0.704552, 0.171409, -0.68864, 1.27275, -1.01466, -1.7754 )
+transform = Transform( -0.998922, -0.0112154, 0.0450581, -2.11161e-08, 0.970391, 0.241539, -0.046433, 0.241279, -0.969344, 0.135014, 0.102694, -1.84429 )
 current = true
 fov = 74.0
 near = 0.1
@@ -244,7 +243,6 @@ height = 1.25
 
 [node name="Bomb" type="Position3D" parent="Body"]
 visible = false
-script = ExtResource( 10 )
 
 [node name="Body" type="MeshInstance" parent="Body/Bomb"]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1.58571, -0.428293 )

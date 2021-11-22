@@ -14,17 +14,14 @@ var rng = RandomNumberGenerator.new()
 
 
 func _ready():
-	pass  #bomb = $Bomb #.player_number = player_number
+	pass 
 
+
+func get_speed():
+	return speed
 
 func _physics_process(delta):
-	
-	rng.randomize()
-	var my_random_number = rng.randf_range(0.0, 1000.0)
-	if my_random_number < 1.0:
-		# add impulse force (explosion)
-		apply_impulse( Vector3(rng.randf_range(0.0, 0.01), 1.0, rng.randf_range(0.0, 0.01)), Vector3(rng.randf_range(0.0, 1.0), EXPLOSION_STRENGTH+rng.randf_range(0.0, EXPLOSION_STRENGTH), rng.randf_range(0.0, 1.0)))
-		#print("explosion!")
+
 	
 	var fwd_mps = transform.basis.xform_inv(linear_velocity).x
 
@@ -70,7 +67,5 @@ func _physics_process(delta):
 	#	if w1cpn == "grass" and w2cpn == "grass" and w3cpn == "grass" and w4cpn == "grass":
 	#		apply_impulse( Vector3(rng.randf_range(0.0, 0.01), 1.0, rng.randf_range(0.0, 0.01)), Vector3(rng.randf_range(0.0, 1.0), 5*EXPLOSION_STRENGTH+rng.randf_range(0.0, 5*EXPLOSION_STRENGTH), rng.randf_range(0.0, 1.0)))
 
-func get_speed():
-	return speed
 
 

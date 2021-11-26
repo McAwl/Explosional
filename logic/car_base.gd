@@ -25,6 +25,7 @@ func reset_car():
 		$Body.angular_velocity = Vector3(0.0, 0.0, 0.0)
 		$Body.rotation_degrees = Vector3(0.0, 0.0, 0.0)
 
+
 func _process(delta):
 	
 	if $Body.global_transform.origin.y < -50.0:

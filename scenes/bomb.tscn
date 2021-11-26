@@ -19,27 +19,28 @@ height = 1.08911
 offsets = PoolRealArray( 0, 0.477273, 1 )
 colors = PoolColorArray( 1, 0, 0, 1, 0.832031, 0.50773, 0.162506, 1, 0.605469, 0.54708, 0.231781, 1 )
 
-[sub_resource type="GradientTexture" id=10]
+[sub_resource type="GradientTexture" id=14]
 gradient = SubResource( 9 )
 
 [sub_resource type="Curve" id=4]
 _data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=5]
+[sub_resource type="CurveTexture" id=15]
 curve = SubResource( 4 )
 
 [sub_resource type="ParticlesMaterial" id=6]
 direction = Vector3( 1, 1, 1 )
 spread = 180.0
 initial_velocity = 11.63
-scale_curve = SubResource( 5 )
-color_ramp = SubResource( 10 )
+damping = 13.73
+scale_curve = SubResource( 15 )
+color_ramp = SubResource( 14 )
 
-[sub_resource type="SpatialMaterial" id=7]
+[sub_resource type="SpatialMaterial" id=16]
 vertex_color_use_as_albedo = true
 
 [sub_resource type="SphereMesh" id=8]
-material = SubResource( 7 )
+material = SubResource( 16 )
 
 [node name="Bomb" type="Position3D"]
 script = ExtResource( 1 )
@@ -65,9 +66,10 @@ material/0 = ExtResource( 2 )
 [node name="Particles" type="Particles" parent="."]
 emitting = false
 amount = 30
-lifetime = 0.24
+lifetime = 0.26
 one_shot = true
 explosiveness = 0.54
+local_coords = false
 process_material = SubResource( 6 )
 draw_pass_1 = SubResource( 8 )
 

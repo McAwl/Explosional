@@ -130,6 +130,8 @@ __meta__ = {
 [node name="Body" type="VehicleBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
 physics_material_override = SubResource( 1 )
+contacts_reported = 2
+contact_monitor = true
 script = ExtResource( 1 )
 
 [node name="Wheel1" type="VehicleWheel" parent="Body"]
@@ -252,8 +254,15 @@ material/0 = ExtResource( 8 )
 [node name="MinePosition" type="Position3D" parent="Body"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.48442 )
 
+[node name="MissilePosition" type="Position3D" parent="Body"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.05756, 1.20003 )
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
 volume_db = -9.087
 pitch_scale = 0.56
 script = ExtResource( 6 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+
+[connection signal="body_entered" from="Body" to="Body" method="_on_Body_body_entered"]

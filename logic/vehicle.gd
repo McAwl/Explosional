@@ -7,10 +7,11 @@ const EXPLOSION_STRENGTH = 50.0
 
 var steer_target = 0
 
-export var engine_force_value = 40
+export var engine_force_value = 60  #40
 var player_number
 var camera
 export var speed = 0.0
+var speed_low_limit = 5
 var rng = RandomNumberGenerator.new()
 
 export var muzzle_velocity = 25
@@ -22,8 +23,11 @@ var missile_cooldown_timer
 
 var hit_by_missile = false
 var hit_by_missile_origin
+var hit_by_missile_velocity
 
 var missile_scene = load("res://scenes/missile.tscn")  # export (PackedScene) var Missile
+var total_damage = 0.0
+var take_damage = true
 
 func _ready():
 	pass #missile_active = false 
@@ -42,8 +46,8 @@ func _physics_process(delta):
 	if Input.is_action_pressed("accelerate_player"+str(player_number)):
 		# Increase engine force at low speeds to make the initial acceleration faster.
 		speed = linear_velocity.length()
-		if speed < 5 and speed != 0:
-			engine_force = clamp(engine_force_value * 5 / speed, 0, 100)
+		if speed < speed_low_limit and speed != 0:
+			engine_force = clamp(engine_force_value * speed_low_limit / speed, 0, 100)
 		else:
 			engine_force = engine_force_value
 	else:
@@ -53,8 +57,8 @@ func _physics_process(delta):
 		# Increase engine force at low speeds to make the initial acceleration faster.
 		if fwd_mps >= -1:
 			speed = linear_velocity.length()
-			if speed < 5 and speed != 0:
-				engine_force = -clamp(engine_force_value * 5 / speed, 0, 100)
+			if speed < speed_low_limit and speed != 0:
+				engine_force = -clamp(engine_force_value * speed_low_limit / speed, 0, 100)
 			else:
 				engine_force = -engine_force_value
 		else:
@@ -66,12 +70,18 @@ func _physics_process(delta):
 	
 	if hit_by_missile == true:
 		print("Player "+str(player_number)+ " hit by missile!")
-		var direction = hit_by_missile_origin - $Body.transform.origin  
-		direction[1] += 20.0
+		#var direction = hit_by_missile_origin - $Body.transform.origin  
+		var direction = hit_by_missile_velocity  # $Body.transform.origin - hit_by_missile_origin 
+		direction[1] += 5.0
 		var explosion_force = 400  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
 		apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
 		hit_by_missile = false
+		total_damage += explosion_force/10000
+		if $Particles.process_material.get_param(ParticlesMaterial.PARAM_SCALE) < 0.25:
+			$Particles.process_material.set_param(ParticlesMaterial.PARAM_SCALE, total_damage)
+		print("missile explosion_force="+str(explosion_force))
+		print("$Particles.process_material.get_param(ParticlesMaterial.PARAM_SCALE)="+str($Particles.process_material.get_param(ParticlesMaterial.PARAM_SCALE)))
 		
 	# detect the wheels touching grass 
 	#var w1r = $Wheel1.get_node("RayCast")
@@ -90,6 +100,10 @@ func _physics_process(delta):
 
 func _process(delta):
 	
+	if total_damage > 100.0 and $Particles.visible == false:
+		$Particles.visible = true
+		
+		
 	if Input.is_action_pressed("missile_player"+str(player_number)) and missile_active == false:
 		var b = missile_scene.instance()
 		add_child(b)  # #owner.add_child(b)
@@ -100,11 +114,13 @@ func _process(delta):
 		#b.global_transform.origin[2] += 3.0  # forward a bit (in front of car)
 		#b.velocity = b.transform.basis.z * b.muzzle_velocity
 		b.velocity = transform.basis.z * b.muzzle_velocity
+		b.initial_speed = b.velocity.length()
 		b.linear_velocity = linear_velocity
 		b.angular_velocity = angular_velocity
 		b.rotation_degrees = rotation_degrees
 		missile_active = true
 		missile_cooldown_timer = MISSILE_COOLDOWN_TIMER
+		b.parent_player_number = player_number
 		b.set_as_toplevel(true)
 
 	if missile_active == true:
@@ -119,6 +135,7 @@ func _on_Body_body_entered(body):
 	if "Missile" in body.name:
 		hit_by_missile = true
 		hit_by_missile_origin = body.transform.origin
+		hit_by_missile_velocity = body.velocity
 		body.queue_free()
 		
 

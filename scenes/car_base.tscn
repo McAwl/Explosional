@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://logic/vehicle.gd" type="Script" id=1]
 [ext_resource path="res://assets/Materials/vehicles/car_red_body.tres" type="Material" id=2]
@@ -118,6 +118,42 @@ surfaces/2 = {
 extents = Vector3( 0.477039, 0.5, 1.16331 )
 
 [sub_resource type="SphereMesh" id=8]
+
+[sub_resource type="SpatialMaterial" id=17]
+flags_transparent = true
+vertex_color_use_as_albedo = true
+albedo_color = Color( 0.772549, 0.772549, 0.772549, 1 )
+
+[sub_resource type="Gradient" id=11]
+offsets = PoolRealArray( 0, 0.322981, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0.27451, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=10]
+gradient = SubResource( 11 )
+
+[sub_resource type="Curve" id=12]
+_data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=13]
+curve = SubResource( 12 )
+
+[sub_resource type="ParticlesMaterial" id=14]
+direction = Vector3( 0, 1, 0 )
+spread = 15.88
+gravity = Vector3( 0, 2, 0 )
+initial_velocity = 1.0
+scale = 0.2
+scale_curve = SubResource( 13 )
+color = Color( 0.113725, 0.0980392, 0.0980392, 1 )
+color_ramp = SubResource( 10 )
+
+[sub_resource type="SpatialMaterial" id=15]
+flags_transparent = true
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id=16]
+material = SubResource( 15 )
 
 [node name="CarBase" type="Spatial"]
 _import_path = NodePath(".")
@@ -239,6 +275,7 @@ transform = Transform( -0.998921, -0.0112154, 0.0450581, -2.11161e-08, 0.970391,
 current = true
 fov = 74.0
 near = 0.1
+far = 201.5
 script = ExtResource( 5 )
 min_distance = 3.0
 height = 1.25
@@ -256,6 +293,16 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.48442
 
 [node name="MissilePosition" type="Position3D" parent="Body"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.05756, 1.20003 )
+
+[node name="Particles" type="Particles" parent="Body"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.514265, 0.879329 )
+visible = false
+material_override = SubResource( 17 )
+amount = 30
+lifetime = 1.48
+local_coords = false
+process_material = SubResource( 14 )
+draw_pass_1 = SubResource( 16 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

@@ -23,7 +23,7 @@ var material_orange
 var material_black
 var bomb_flash_state = 0
 var flash_timer = 0.25
-
+var take_damage = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -58,6 +58,14 @@ func _physics_process(_delta):
 				# direction[2]+=5.0  # slight upward force as well
 				var explosion_force = EXPLOSION_STRENGTH/pow(distance+1.0, 1.5)  # inverse square of distance
 				target.apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
+				if target.take_damage == true:
+					target.total_damage += explosion_force/10000
+					if target.get_node("Particles").process_material.get_param(ParticlesMaterial.PARAM_SCALE) < 0.25:
+						target.get_node("Particles").process_material.set_param(ParticlesMaterial.PARAM_SCALE, target.total_damage)
+					print("target.total_damage="+str(target.total_damage))
+					print("target.get_node('Particles').process_material.get_param(ParticlesMaterial.PARAM_SCALE)="+str(target.get_node("Particles").process_material.get_param(ParticlesMaterial.PARAM_SCALE)))
+				print("bomb explosion_force="+str(explosion_force))
+					
 		bomb_stage = 5
 		bomb_proximity_check_timer = BOMB_ACTIVE_WAIT *4  # to ensure we don't wait forever
 

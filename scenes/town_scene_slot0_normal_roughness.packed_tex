@@ -3,7 +3,6 @@
 	"resolution": 512,
 	"src": {
 		"a": "res://assets/textures/Ground048_2K_Roughness.jpg",
-		"normalmap_flip_y": true,
 		"rgb": "res://assets/textures/Ground048_2K_NormalDX.jpg"
 	}
 }

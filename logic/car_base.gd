@@ -16,9 +16,10 @@ func reset_car():
 	
 	lives_left -= 1
 	if lives_left < 0:
+		get_node( "../../CanvasLayer/Label").text = "Player: "+str($Body.player_number)+" Game Over"
 		visible = false
 	else:
-		get_node( "../../CanvasLayer/Label").text = str(lives_left)
+		get_node( "../../CanvasLayer/Label").text = "Player: "+str($Body.player_number)+" Lives: "+str(lives_left)
 		$Body.global_transform.origin = Vector3(54.0, 10.0, 60.0)
 		$Body.linear_velocity = Vector3(0.0, 0.0, 0.0)
 		$Body.speed = 0.0

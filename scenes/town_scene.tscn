@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://scenes/town_mesh.tscn" type="PackedScene" id=1]
 [ext_resource path="res://logic/town_scene.gd" type="Script" id=2]
@@ -23,6 +23,10 @@
 [ext_resource path="res://addons/zylann.hterrain/hterrain_texture_set.gd" type="Script" id=21]
 [ext_resource path="res://scenes/town_scene_slot0_albedo_bump.packed_tex" type="Texture" id=22]
 [ext_resource path="res://scenes/town_scene_slot0_normal_roughness.packed_tex" type="Texture" id=23]
+[ext_resource path="res://scenes/town_scene_slot1_albedo_bump.packed_tex" type="Texture" id=24]
+[ext_resource path="res://scenes/town_scene_slot2_albedo_bump.packed_tex" type="Texture" id=25]
+[ext_resource path="res://scenes/town_scene_slot2_normal_roughness.packed_tex" type="Texture" id=26]
+[ext_resource path="res://scenes/town_scene_slot1_normal_roughness.packed_tex" type="Texture" id=27]
 
 [sub_resource type="CubeMesh" id=1]
 
@@ -38,7 +42,7 @@ data = PoolVector3Array( -299.605, -99.2471, 1408.9, -300.87, -111.26, 1407.49, 
 [sub_resource type="Resource" id=6]
 script = ExtResource( 21 )
 mode = 0
-textures = [ [ ExtResource( 22 ) ], [ ExtResource( 23 ) ] ]
+textures = [ [ ExtResource( 22 ), ExtResource( 24 ), ExtResource( 25 ) ], [ ExtResource( 23 ), ExtResource( 27 ), ExtResource( 26 ) ] ]
 
 [node name="TownScene" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.3188, 0, 82.1719 )
@@ -68,12 +72,12 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 47.1179, 2.56556, 73.9696 )
 [node name="CanvasLayer" type="CanvasLayer" parent="InstancePos2/VC"]
 
 [node name="Label" type="Label" parent="InstancePos2/VC/CanvasLayer"]
-margin_left = 1731.0
-margin_top = 21.0
-margin_right = 1748.0
-margin_bottom = 35.0
-rect_scale = Vector2( 10, 10 )
-text = "2"
+margin_left = 1035.0
+margin_top = 10.0
+margin_right = 1468.0
+margin_bottom = 24.0
+rect_scale = Vector2( 2, 2 )
+text = "Player x: Score: 2"
 align = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -102,10 +106,10 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 44.0438, 2.47202, 64.0031 )
 [node name="Label" type="Label" parent="InstancePos1/VC/CanvasLayer"]
 margin_left = 11.0
 margin_top = 14.0
-margin_right = 29.0
+margin_right = 319.0
 margin_bottom = 28.0
-rect_scale = Vector2( 10, 10 )
-text = "2"
+rect_scale = Vector2( 2, 2 )
+text = "Player x: Score: 2"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -131,12 +135,12 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 54.368, -1.23735, 68.396 )
 [node name="CanvasLayer" type="CanvasLayer" parent="InstancePos3/VC"]
 
 [node name="Label" type="Label" parent="InstancePos3/VC/CanvasLayer"]
-margin_left = 18.0
-margin_top = 896.0
-margin_right = 38.0
-margin_bottom = 910.0
-rect_scale = Vector2( 10, 10 )
-text = "2"
+margin_left = 16.0
+margin_top = 1042.0
+margin_right = 373.0
+margin_bottom = 1056.0
+rect_scale = Vector2( 2, 2 )
+text = "Player x: Score: 2"
 valign = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -163,12 +167,12 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 54.7121, 2.05634, 60.6527 )
 [node name="CanvasLayer" type="CanvasLayer" parent="InstancePos4/VC"]
 
 [node name="Label" type="Label" parent="InstancePos4/VC/CanvasLayer"]
-margin_left = 1708.0
-margin_top = 908.0
-margin_right = 1726.0
-margin_bottom = 922.0
-rect_scale = Vector2( 10, 10 )
-text = "2"
+margin_left = 1028.0
+margin_top = 1038.0
+margin_right = 1464.0
+margin_bottom = 1052.0
+rect_scale = Vector2( 2, 2 )
+text = "Player x: Score: 2"
 align = 2
 valign = 2
 __meta__ = {

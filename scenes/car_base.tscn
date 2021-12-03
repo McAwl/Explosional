@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://logic/vehicle.gd" type="Script" id=1]
 [ext_resource path="res://assets/Materials/vehicles/car_red_body.tres" type="Material" id=2]
@@ -116,6 +116,13 @@ surfaces/2 = {
 
 [sub_resource type="BoxShape" id=7]
 extents = Vector3( 0.477039, 0.5, 1.16331 )
+
+[sub_resource type="ProceduralSky" id=19]
+
+[sub_resource type="Environment" id=18]
+background_mode = 2
+background_sky = SubResource( 19 )
+ambient_light_color = Color( 0.717647, 0.827451, 1, 1 )
 
 [sub_resource type="SphereMesh" id=8]
 
@@ -272,6 +279,7 @@ transform = Transform( 0.998172, 0, 0.0604388, 0, 1, 0, -0.0604388, 0, 0.998172,
 
 [node name="Camera" type="Camera" parent="Body/CameraBase"]
 transform = Transform( -0.998921, -0.0112154, 0.0450581, -2.11161e-08, 0.970391, 0.24154, -0.0464329, 0.241279, -0.969344, -0.138464, 0.281651, -1.96593 )
+environment = SubResource( 18 )
 current = true
 fov = 74.0
 near = 0.1

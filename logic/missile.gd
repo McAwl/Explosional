@@ -16,6 +16,7 @@ var closest_target_direction
 var closest_target_direction_normalised
 var print_timer = 0.1
 var initial_speed
+
 		
 func _process(delta):
 	lifetime_seconds -= delta

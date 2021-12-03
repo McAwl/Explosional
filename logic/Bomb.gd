@@ -63,7 +63,7 @@ func _physics_process(_delta):
 					if explosion_force > 100:
 						if target.get_node("Particles").emitting == true:
 							target.get_node("Particles").amount += 1
-							target.engine_force_value *= 0.5
+							target.engine_force_value *= 0.75
 						else:
 							target.get_node("Particles").emitting = true
 				

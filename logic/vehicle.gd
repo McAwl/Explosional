@@ -80,7 +80,7 @@ func _physics_process(delta):
 		total_damage += 1
 		if $Particles.emitting == true:
 			$Particles.amount += 1
-			engine_force_value *= 0.5
+			engine_force_value *= 0.75
 		else:
 			$Particles.emitting = true
 		
@@ -104,7 +104,7 @@ func _process(delta):
 	if total_damage > 100.0 and $Particles.visible == false:
 		$Particles.visible = true
 		
-		
+	
 	if Input.is_action_pressed("missile_player"+str(player_number)) and missile_active == false:
 		var b = missile_scene.instance()
 		add_child(b)  # #owner.add_child(b)
@@ -137,7 +137,9 @@ func _on_Body_body_entered(body):
 		hit_by_missile = true
 		hit_by_missile_origin = body.transform.origin
 		hit_by_missile_velocity = body.velocity
-		body.queue_free()
+		body.get_node("explosion").playing = true
+		body.get_node("Particles2").emitting = true
+		body.hit_something = true
 		
 
 

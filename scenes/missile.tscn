@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://logic/missile.gd" type="Script" id=1]
+[ext_resource path="res://assets/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=2]
 
 [sub_resource type="SphereMesh" id=1]
 
@@ -36,6 +37,33 @@ vertex_color_use_as_albedo = true
 [sub_resource type="SphereMesh" id=14]
 material = SubResource( 17 )
 
+[sub_resource type="Gradient" id=18]
+offsets = PoolRealArray( 0, 0.477273, 1 )
+colors = PoolColorArray( 1, 0, 0, 1, 0.832031, 0.50773, 0.162506, 1, 0.605469, 0.54708, 0.231781, 1 )
+
+[sub_resource type="GradientTexture" id=19]
+gradient = SubResource( 18 )
+
+[sub_resource type="Curve" id=20]
+_data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=21]
+curve = SubResource( 20 )
+
+[sub_resource type="ParticlesMaterial" id=22]
+direction = Vector3( 1, 1, 1 )
+spread = 180.0
+initial_velocity = 11.63
+damping = 13.73
+scale_curve = SubResource( 21 )
+color_ramp = SubResource( 19 )
+
+[sub_resource type="SpatialMaterial" id=23]
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id=24]
+material = SubResource( 23 )
+
 [node name="Missile" type="RigidBody"]
 transform = Transform( 0.999998, 0, 0.00191986, 0, 1, 0, -0.00191986, 0, 0.999998, 0, -1.10123, 0 )
 mass = 20.0
@@ -60,3 +88,16 @@ lifetime = 0.99
 local_coords = false
 process_material = SubResource( 13 )
 draw_pass_1 = SubResource( 14 )
+
+[node name="explosion" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+
+[node name="Particles2" type="Particles" parent="."]
+emitting = false
+amount = 30
+lifetime = 0.26
+one_shot = true
+explosiveness = 0.54
+local_coords = false
+process_material = SubResource( 22 )
+draw_pass_1 = SubResource( 24 )

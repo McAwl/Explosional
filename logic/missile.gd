@@ -17,11 +17,17 @@ var closest_target_direction_normalised
 var print_timer = 0.1
 var initial_speed
 
+var hit_something = false
+
 		
 func _process(delta):
 	lifetime_seconds -= delta
 	homing_check_target_timer -= delta
 	print_timer -= delta
+	
+	if hit_something == true and $explosion.playing == false and $Particles2.emitting == true:
+		# explosiion noise finished
+		queue_free()
 	
 	if lifetime_seconds < 0.0:
 		queue_free()

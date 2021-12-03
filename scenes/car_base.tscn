@@ -147,7 +147,7 @@ curve = SubResource( 12 )
 [sub_resource type="ParticlesMaterial" id=14]
 direction = Vector3( 0, 1, 0 )
 spread = 15.88
-gravity = Vector3( 0, 2, 0 )
+gravity = Vector3( 0, 0, 0 )
 initial_velocity = 1.0
 scale = 0.2
 scale_curve = SubResource( 13 )
@@ -304,9 +304,9 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.05756, 1.20003 )
 
 [node name="Particles" type="Particles" parent="Body"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.514265, 0.879329 )
-visible = false
 material_override = SubResource( 17 )
-amount = 30
+emitting = false
+amount = 1
 lifetime = 1.48
 local_coords = false
 process_material = SubResource( 14 )

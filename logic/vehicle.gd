@@ -18,7 +18,7 @@ export var muzzle_velocity = 25
 export var g = Vector3.DOWN * 20
 var velocity = Vector3.ZERO
 var missile_active = false
-const MISSILE_COOLDOWN_TIMER = 0.25
+const MISSILE_COOLDOWN_TIMER = 0.5
 var missile_cooldown_timer
 
 var hit_by_missile = false
@@ -77,11 +77,12 @@ func _physics_process(delta):
 		apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
 		hit_by_missile = false
-		total_damage += explosion_force/10000
-		if $Particles.process_material.get_param(ParticlesMaterial.PARAM_SCALE) < 0.25:
-			$Particles.process_material.set_param(ParticlesMaterial.PARAM_SCALE, total_damage)
-		print("missile explosion_force="+str(explosion_force))
-		print("$Particles.process_material.get_param(ParticlesMaterial.PARAM_SCALE)="+str($Particles.process_material.get_param(ParticlesMaterial.PARAM_SCALE)))
+		total_damage += 1
+		if $Particles.emitting == true:
+			$Particles.amount += 1
+			engine_force_value *= 0.5
+		else:
+			$Particles.emitting = true
 		
 	# detect the wheels touching grass 
 	#var w1r = $Wheel1.get_node("RayCast")

@@ -33,14 +33,7 @@ func _physics_process(delta):
 		
 		if print_timer<0.0:
 			print_timer = 0.1
-			print(" initial_speed="+str(initial_speed))
-			print(" velocity="+str(velocity))
-			print(" delta="+str(delta))
-			print(" closest_target_direction_normalised="+str(closest_target_direction_normalised))
-			print(" g="+str(g))
-			print(" homing_force*(closest_target_direction_normalised)="+str(homing_force*(closest_target_direction_normalised)))
-			print("(g+homing_force*(closest_target_direction_normalised)) * delta="+str((g+homing_force*(closest_target_direction_normalised)) * delta))
-			print("(g+homing_force*(closest_target_direction)).normalized() * delta="+str((g+homing_force*(closest_target_direction)).normalized() * delta))
+			
 	else:
 		velocity += g
 		if print_timer<0.0:

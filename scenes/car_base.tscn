@@ -5,7 +5,7 @@
 [ext_resource path="res://assets/Materials/vehicles/car_window.tres" type="Material" id=3]
 [ext_resource path="res://assets/Materials/vehicles/car_grill.tres" type="Material" id=4]
 [ext_resource path="res://logic/follow_camera.gd" type="Script" id=5]
-[ext_resource path="res://logic/AudioStreamPlayer.gd" type="Script" id=6]
+[ext_resource path="res://logic/audio_stream_player.gd" type="Script" id=6]
 [ext_resource path="res://assets/sounds/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3" type="AudioStream" id=7]
 [ext_resource path="res://assets/Materials/terrain/cement.tres" type="Material" id=8]
 [ext_resource path="res://logic/car_base.gd" type="Script" id=9]
@@ -135,13 +135,13 @@ albedo_color = Color( 0.772549, 0.772549, 0.772549, 1 )
 offsets = PoolRealArray( 0, 0.322981, 1 )
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0.27451, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=10]
+[sub_resource type="GradientTexture" id=20]
 gradient = SubResource( 11 )
 
 [sub_resource type="Curve" id=12]
 _data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=13]
+[sub_resource type="CurveTexture" id=21]
 curve = SubResource( 12 )
 
 [sub_resource type="ParticlesMaterial" id=14]
@@ -150,17 +150,17 @@ spread = 15.88
 gravity = Vector3( 0, 0, 0 )
 initial_velocity = 1.0
 scale = 0.2
-scale_curve = SubResource( 13 )
+scale_curve = SubResource( 21 )
 color = Color( 0.113725, 0.0980392, 0.0980392, 1 )
-color_ramp = SubResource( 10 )
+color_ramp = SubResource( 20 )
 
-[sub_resource type="SpatialMaterial" id=15]
+[sub_resource type="SpatialMaterial" id=22]
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
 
 [sub_resource type="SphereMesh" id=16]
-material = SubResource( 15 )
+material = SubResource( 22 )
 
 [node name="CarBase" type="Spatial"]
 _import_path = NodePath(".")
@@ -296,7 +296,7 @@ transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1.58571, -0.428293 )
 mesh = SubResource( 8 )
 material/0 = ExtResource( 8 )
 
-[node name="MinePosition" type="Position3D" parent="Body"]
+[node name="BombPosition" type="Position3D" parent="Body"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.48442 )
 
 [node name="MissilePosition" type="Position3D" parent="Body"]

@@ -2,17 +2,49 @@ extends Spatial
 
 var town = null
 var check_game_over_timer = 1.0
+var missile_homing = false
+var num_players = 4
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var car
-	for player_number in range(1,5):
-		car = get_car_body(player_number)
-		car.player_number = player_number
-		get_node("./InstancePos"+str(player_number)+"/VC/CanvasLayer/Label").text = "Player "+str(player_number)+" Lives: 3"
+	for player_number in range(1, num_players+1):
+		var player_instance = load("res://scenes/player.tscn").instance()
+		player_instance.init(player_number, num_players, missile_homing)
+		#print("player_instance="+str(player_instance))
+		#print("player_instance.get_body()="+str(player_instance.get_carbody()))
+		player_instance.set_global_transform_origin($SpawnPoint.global_transform.origin)
+		add_child(player_instance)
 
-		
+
+func get_players(ignore_player_number=false):
+	var players_all = get_tree().get_nodes_in_group("player")  # 
+	var players = []
+	for player in players_all:  # range(1, num_players+1):
+		if ignore_player_number == false:
+			players.append(get_player(player.player_number))
+		else:
+			if ignore_player_number != player.player_number:
+				players.append(get_player(player.player_number))
+	return players
+
+
+func get_player(player_number):
+	return get_node("InstancePos"+str(player_number))
+	
+
+func get_bombs():
+	return get_tree().get_nodes_in_group("bomb")
+	
+
 func _process(delta):
+	
+	if Input.is_action_pressed("missile_homing_toggle"):
+		missile_homing = !missile_homing
+		for player_number in range(1, num_players+1):
+			get_player(player_number).set_missile_homing(missile_homing)
+	
+	
 	check_game_over_timer -= delta
 	if Input.is_action_pressed("back"):
 		reset_game()
@@ -21,10 +53,9 @@ func _process(delta):
 		var dead_cars = 0
 		var num_cars = 0
 		check_game_over_timer = 1.0
-		for player_number in range(1,5):
+		for player_number in range(1, num_players+1):
 			num_cars += 1
-			var car = get_car_base(player_number)
-			if car.lives_left < 0:
+			if get_player(player_number).lives_left < 0:
 				dead_cars += 1
 		if dead_cars >= (num_cars-1):
 			
@@ -32,16 +63,5 @@ func _process(delta):
 
 
 func reset_game():
-	var ret_val = get_tree().reload_current_scene()
+	var _ret_val = get_tree().reload_current_scene()
 
-
-func get_car_base(player_number):
-	var car = get_node("./InstancePos"+str(player_number))
-	car = car.get_node("VC")  #+str(player_number))
-	car = car.get_node("V")  #+str(player_number))
-	return car.get_node("CarBase")
-
-
-func get_car_body(player_number):
-	var car = get_car_base(player_number)
-	return car.get_node("Body")

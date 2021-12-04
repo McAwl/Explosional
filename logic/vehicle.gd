@@ -14,18 +14,22 @@ export var speed = 0.0
 var speed_low_limit = 5
 var rng = RandomNumberGenerator.new()
 
-export var muzzle_velocity = 25
-export var g = Vector3.DOWN * 20
-var velocity = Vector3.ZERO
+var bomb_active = false
+
+# missile
 var missile_active = false
 const MISSILE_COOLDOWN_TIMER = 0.5
+const BOMB_COOLDOWN_TIMER = 0.5
 var missile_cooldown_timer
+var bomb_cooldown_timer
+var missile_homing = false
 
 var hit_by_missile = false
 var hit_by_missile_origin
 var hit_by_missile_velocity
 
-var missile_scene = load("res://scenes/missile.tscn")  # export (PackedScene) var Missile
+var missile_scene = load("res://scenes/missile.tscn")  
+var bomb_scene = load("res://scenes/bomb.tscn")  
 var total_damage = 0.0
 var take_damage = true
 
@@ -35,6 +39,7 @@ func _ready():
 
 func get_speed():
 	return speed
+
 
 func _physics_process(delta):
 
@@ -83,37 +88,14 @@ func _physics_process(delta):
 			engine_force_value *= 0.75
 		else:
 			$Particles.emitting = true
-		
-	# detect the wheels touching grass 
-	#var w1r = $Wheel1.get_node("RayCast")
-	#var w2r = $Wheel2.get_node("RayCast")
-	#var w3r = $Wheel3.get_node("RayCast")
-	#var w4r = $Wheel4.get_node("RayCast")
-	#if w1r.is_colliding() and w2r.is_colliding() and w3r.is_colliding() and w4r.is_colliding():
-	#	var w1cpn = w1r.get_collider().get_parent().name
-#		var w2cpn = w2r.get_collider().get_parent().name#
-	#	var w3cpn = w3r.get_collider().get_parent().name
-	#	var w4cpn = w4r.get_collider().get_parent().name
-	#	#print( str(player_number)+": "+w1cpn+" "+w1cpn+" "+w1cpn+" "+w1cpn)
-	#	if w1cpn == "grass" and w2cpn == "grass" and w3cpn == "grass" and w4cpn == "grass":
-	#		apply_impulse( Vector3(rng.randf_range(0.0, 0.01), 1.0, rng.randf_range(0.0, 0.01)), Vector3(rng.randf_range(0.0, 1.0), 5*EXPLOSION_STRENGTH+rng.randf_range(0.0, 5*EXPLOSION_STRENGTH), rng.randf_range(0.0, 1.0)))
 
 
 func _process(delta):
 	
-	if total_damage > 100.0 and $Particles.visible == false:
-		$Particles.visible = true
-		
-	
 	if Input.is_action_pressed("missile_player"+str(player_number)) and missile_active == false:
 		var b = missile_scene.instance()
-		add_child(b)  # #owner.add_child(b)
-		#b.transform = global_transform 
-		#b.global_transform.origin = $MissilePosition.global_transform.origin
+		add_child(b)  
 		b.global_transform.origin = $MissilePosition.global_transform.origin
-		#b.global_transform.origin[1] -= 0.1  # down a bit (centre of car)
-		#b.global_transform.origin[2] += 3.0  # forward a bit (in front of car)
-		#b.velocity = b.transform.basis.z * b.muzzle_velocity
 		b.velocity = transform.basis.z * b.muzzle_velocity
 		b.initial_speed = b.velocity.length()
 		b.linear_velocity = linear_velocity
@@ -122,6 +104,7 @@ func _process(delta):
 		missile_active = true
 		missile_cooldown_timer = MISSILE_COOLDOWN_TIMER
 		b.parent_player_number = player_number
+		b.homing = missile_homing
 		b.set_as_toplevel(true)
 
 	if missile_active == true:
@@ -129,10 +112,23 @@ func _process(delta):
 		if missile_cooldown_timer < 0.0:
 			missile_active = false
 
+	if Input.is_action_pressed("bomb_player"+str(player_number)) and bomb_active == false:
+		var b = bomb_scene.instance()
+		add_child(b) 
+		b.rotation_degrees = rotation_degrees
+		bomb_active = true
+		bomb_cooldown_timer = BOMB_COOLDOWN_TIMER
+		b.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity)
+		b.set_as_toplevel(true)
 
-
+	if bomb_active == true:
+		bomb_cooldown_timer -= delta
+		if bomb_cooldown_timer < 0.0:
+			bomb_active = false
+			
 
 func _on_Body_body_entered(body):
+	
 	if "Missile" in body.name:
 		hit_by_missile = true
 		hit_by_missile_origin = body.transform.origin

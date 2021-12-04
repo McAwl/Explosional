@@ -64,7 +64,7 @@ vertex_color_use_as_albedo = true
 [sub_resource type="SphereMesh" id=24]
 material = SubResource( 23 )
 
-[node name="Missile" type="RigidBody"]
+[node name="Missile" type="RigidBody" groups=["missile"]]
 transform = Transform( 0.999998, 0, 0.00191986, 0, 1, 0, -0.00191986, 0, 0.999998, 0, -1.10123, 0 )
 mass = 20.0
 contacts_reported = 2

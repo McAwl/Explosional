@@ -2,7 +2,7 @@
 	"contains_albedo": false,
 	"resolution": 512,
 	"src": {
-		"a": "res://assets/textures/Ground048_2K_Roughness.jpg",
-		"rgb": "res://assets/textures/Ground048_2K_NormalDX.jpg"
+		"a": "#ffffffff",
+		"rgb": "#ff8888ff"
 	}
 }

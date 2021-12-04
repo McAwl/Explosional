@@ -22,7 +22,8 @@ var hit_something = false
 		
 func _process(delta):
 	lifetime_seconds -= delta
-	homing_check_target_timer -= delta
+	if homing:
+		homing_check_target_timer -= delta
 	print_timer -= delta
 	
 	if hit_something == true and $explosion.playing == false and $Particles2.emitting == true:
@@ -33,7 +34,7 @@ func _process(delta):
 		queue_free()
 
 func _physics_process(delta):
-	if closest_target != null: 
+	if closest_target != null and homing: 
 		
 		velocity = initial_speed * ( ((1.0-homing_force)*velocity.normalized()) + (homing_force*closest_target_direction.normalized()) )  # update this periodically below
 		
@@ -44,25 +45,23 @@ func _physics_process(delta):
 		velocity += g
 		if print_timer<0.0:
 			print_timer = 0.1
-			print("velocity g*delta)="+str(velocity))
 	
-
-	#look_at(transform.origin + velocity.normalized(), Vector3.UP)
 	transform.origin += velocity * delta
 	
-	
-	if homing_check_target_timer < 0.0:
-		homing_check_target_timer = 0.1
-		# print("closest_target="+str(closest_target))
-		for i in range(1,5): # explosion toward all players
-			if i != parent_player_number:
-				var target = get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
-				var distance = global_transform.origin.distance_to(target.global_transform.origin)
-				if closest_target_distance == null or distance < closest_target_distance or closest_target == null or closest_target_direction == null:
-					closest_target = target
-					closest_target_distance = distance
-					closest_target_direction =  closest_target.global_transform.origin - global_transform.origin
-					closest_target_direction_normalised = closest_target_direction.normalized()
+	if homing:
+		if homing_check_target_timer < 0.0:
+			homing_check_target_timer = 0.1
+			for player in get_node("/root/TownScene").get_players():  # in range(1, 5): # explosion toward all players
+				#if i != parent_player_number:
+				if player.player_number != parent_player_number:
+					var target = player.get_carbody()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+					#var target = get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+					var distance = global_transform.origin.distance_to(target.global_transform.origin)
+					if closest_target_distance == null or distance < closest_target_distance or closest_target == null or closest_target_direction == null:
+						closest_target = target
+						closest_target_distance = distance
+						closest_target_direction =  closest_target.global_transform.origin - global_transform.origin
+						closest_target_direction_normalised = closest_target_direction.normalized()
 
 
 

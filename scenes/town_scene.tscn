@@ -58,9 +58,6 @@ stream = ExtResource( 5 )
 [node name="track_3" type="AudioStreamPlayer" parent="BackgroundMusic"]
 stream = ExtResource( 7 )
 
-[node name="SpawnPoint" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 109.333, 10.0591, 125.437 )
-
 [node name="HTerrain" type="Spatial" parent="."]
 script = ExtResource( 20 )
 map_scale = Vector3( 0.5, 1, 0.5 )
@@ -528,3 +525,44 @@ material/101 = ExtResource( 9 )
 
 [node name="CollisionShape" type="CollisionShape" parent="city/uploads_files_914923_Lowpoly_City_Free_Pack8/StaticBody"]
 shape = SubResource( 5 )
+
+[node name="SpawnPoints" type="Node" parent="."]
+
+[node name="SpawnPoint0" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 137.652, 5.87399, 211.45 )
+
+[node name="SpawnPoint1" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 203.383, 6.59816, 261.635 )
+
+[node name="SpawnPoint2" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 191.126, 10.0591, 158.295 )
+
+[node name="SpawnPoint3" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 94.831, 10.0591, 156.249 )
+
+[node name="SpawnPoint4" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 46.8319, 10.0591, 295.45 )
+
+[node name="SpawnPoint5" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 50.409, 3.5947, 194.81 )
+
+[node name="SpawnPoint6" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 256.575, 3.06363, 207.609 )
+
+[node name="SpawnPoint7" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 137.652, 2.87486, 303.988 )
+
+[node name="SpawnPoint8" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 137.652, 0.672669, 116.178 )
+
+[node name="SpawnPoint9" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 236.888, 2.01657, 279.266 )
+
+[node name="SpawnPoint10" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 236.888, 2.01657, 147.877 )
+
+[node name="SpawnPoint11" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 222.442, 3.17645, 238.86 )
+
+[node name="SpawnPoint12" type="Spatial" parent="SpawnPoints"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 186.851, 11.1245, 312.535 )

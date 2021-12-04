@@ -97,6 +97,7 @@ func _process(delta):
 		add_child(b)  
 		b.global_transform.origin = $MissilePosition.global_transform.origin
 		b.velocity = transform.basis.z * b.muzzle_velocity
+		b.velocity[1] += 1.0 
 		b.initial_speed = b.velocity.length()
 		b.linear_velocity = linear_velocity
 		b.angular_velocity = angular_velocity

@@ -4,19 +4,30 @@ var town = null
 var check_game_over_timer = 1.0
 var missile_homing = false
 var num_players = 4
-
+var rng = RandomNumberGenerator.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	var spawn_points = get_spawn_points()
 	for player_number in range(1, num_players+1):
 		var player_instance = load("res://scenes/player.tscn").instance()
-		player_instance.init(player_number, num_players, missile_homing)
+		var pos = spawn_points[player_number-1].global_transform.origin
+		player_instance.init(player_number, num_players, missile_homing, pos)
 		#print("player_instance="+str(player_instance))
 		#print("player_instance.get_body()="+str(player_instance.get_carbody()))
-		player_instance.set_global_transform_origin($SpawnPoint.global_transform.origin)
+		# player_instance.set_global_transform_origin(get_random_spawn_point())
 		add_child(player_instance)
 
 
+func get_spawn_points():
+	return get_node("SpawnPoints").get_children()
+
+
+func get_random_spawn_point():
+	var spawn_points = get_spawn_points()
+	return spawn_points[randi() % spawn_points.size()].global_transform.origin
+	
+	
 func get_players(ignore_player_number=false):
 	var players_all = get_tree().get_nodes_in_group("player")  # 
 	var players = []

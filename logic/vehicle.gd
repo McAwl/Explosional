@@ -101,7 +101,7 @@ func _process(delta):
 		b.initial_speed = b.velocity.length()
 		b.linear_velocity = linear_velocity
 		b.angular_velocity = angular_velocity
-		b.rotation_degrees = rotation_degrees
+		b.rotation_degrees = $MissilePosition.rotation_degrees
 		missile_active = true
 		missile_cooldown_timer = MISSILE_COOLDOWN_TIMER
 		b.parent_player_number = player_number

@@ -47,6 +47,7 @@ func _physics_process(delta):
 			print_timer = 0.1
 	
 	transform.origin += velocity * delta
+	look_at(transform.origin + velocity.normalized(), Vector3.UP)
 	
 	if homing:
 		if homing_check_target_timer < 0.0:

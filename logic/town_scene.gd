@@ -13,9 +13,6 @@ func _ready():
 		var player_instance = load("res://scenes/player.tscn").instance()
 		var pos = spawn_points[player_number-1].global_transform.origin
 		player_instance.init(player_number, num_players, missile_homing, pos)
-		#print("player_instance="+str(player_instance))
-		#print("player_instance.get_body()="+str(player_instance.get_carbody()))
-		# player_instance.set_global_transform_origin(get_random_spawn_point())
 		add_child(player_instance)
 
 
@@ -68,11 +65,12 @@ func _process(delta):
 			num_cars += 1
 			if get_player(player_number).lives_left < 0:
 				dead_cars += 1
-		if dead_cars >= (num_cars-1):
+		if dead_cars >= (num_cars-1) and num_cars>1:
 			
 			reset_game()
 
 
 func reset_game():
-	var _ret_val = get_tree().reload_current_scene()
+	queue_free()
+	var _ret_val = get_tree().change_scene("res://scenes/start.tscn")  #get_tree().reload_current_scene()
 

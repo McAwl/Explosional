@@ -46,13 +46,7 @@ func get_bombs():
 	
 
 func _process(delta):
-	
-	if Input.is_action_pressed("missile_homing_toggle"):
-		missile_homing = !missile_homing
-		for player_number in range(1, num_players+1):
-			get_player(player_number).set_missile_homing(missile_homing)
-	
-	
+
 	check_game_over_timer -= delta
 	if Input.is_action_pressed("back"):
 		reset_game()

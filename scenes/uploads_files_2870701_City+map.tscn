@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=2]
-
-[ext_resource path="res://assets/uploads_files_2870701_City+map.obj" type="PackedScene" id=1]
-
-[node name="uploads_files_2870701_City+map" instance=ExtResource( 1 )]
-transform = Transform( 0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0 )
-
-[node name="MeshInstance" parent="." index="0"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00067465, -9.31323e-10, 1.49012e-08 )

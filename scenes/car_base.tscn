@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://logic/vehicle.gd" type="Script" id=1]
 [ext_resource path="res://assets/Materials/vehicles/car_red_body.tres" type="Material" id=2]
@@ -7,7 +7,7 @@
 [ext_resource path="res://logic/follow_camera.gd" type="Script" id=5]
 [ext_resource path="res://logic/audio_stream_player.gd" type="Script" id=6]
 [ext_resource path="res://assets/sounds/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3" type="AudioStream" id=7]
-[ext_resource path="res://assets/Materials/terrain/cement.tres" type="Material" id=8]
+[ext_resource path="res://assets/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=8]
 [ext_resource path="res://logic/car_base.gd" type="Script" id=9]
 
 [sub_resource type="PhysicsMaterial" id=1]
@@ -124,8 +124,6 @@ background_mode = 2
 background_sky = SubResource( 19 )
 ambient_light_color = Color( 0.717647, 0.827451, 1, 1 )
 
-[sub_resource type="SphereMesh" id=8]
-
 [sub_resource type="SpatialMaterial" id=17]
 flags_transparent = true
 vertex_color_use_as_albedo = true
@@ -162,6 +160,33 @@ vertex_color_use_as_albedo = true
 [sub_resource type="SphereMesh" id=16]
 material = SubResource( 22 )
 
+[sub_resource type="Gradient" id=23]
+offsets = PoolRealArray( 0, 0.477273, 1 )
+colors = PoolColorArray( 1, 0, 0, 1, 0.832031, 0.50773, 0.162506, 1, 0.605469, 0.54708, 0.231781, 1 )
+
+[sub_resource type="GradientTexture" id=24]
+gradient = SubResource( 23 )
+
+[sub_resource type="Curve" id=25]
+_data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=15]
+curve = SubResource( 25 )
+
+[sub_resource type="ParticlesMaterial" id=26]
+direction = Vector3( 0, 1, 0 )
+spread = 75.88
+initial_velocity = 11.63
+damping = 13.73
+scale_curve = SubResource( 15 )
+color_ramp = SubResource( 24 )
+
+[sub_resource type="SpatialMaterial" id=27]
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id=28]
+material = SubResource( 27 )
+
 [node name="CarBase" type="Spatial"]
 _import_path = NodePath(".")
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.662493, 0.4749 )
@@ -178,7 +203,7 @@ contact_monitor = true
 script = ExtResource( 1 )
 
 [node name="Wheel1" type="VehicleWheel" parent="Body"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.573678, 0.115169, 1.10416 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.668, 0.115, 1.081 )
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.4
@@ -200,7 +225,7 @@ collision_mask = 2
 collide_with_areas = true
 
 [node name="Wheel2" type="VehicleWheel" parent="Body"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.573678, 0.115169, -0.783403 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.574, 0.115, -0.783 )
 use_as_traction = true
 wheel_roll_influence = 0.4
 wheel_radius = 0.25
@@ -221,7 +246,7 @@ collision_mask = 2
 collide_with_areas = true
 
 [node name="Wheel3" type="VehicleWheel" parent="Body"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.573678, 0.115169, 1.10416 )
+transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.573678, 0.115169, 1.10416 )
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.4
@@ -288,14 +313,6 @@ script = ExtResource( 5 )
 min_distance = 3.0
 height = 1.25
 
-[node name="Bomb" type="Position3D" parent="Body"]
-visible = false
-
-[node name="Body" type="MeshInstance" parent="Body/Bomb"]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1.58571, -0.428293 )
-mesh = SubResource( 8 )
-material/0 = ExtResource( 8 )
-
 [node name="BombPosition" type="Position3D" parent="Body"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.48442 )
 
@@ -311,6 +328,19 @@ lifetime = 1.48
 local_coords = false
 process_material = SubResource( 14 )
 draw_pass_1 = SubResource( 16 )
+
+[node name="Explosion" type="Particles" parent="Body"]
+emitting = false
+amount = 60
+lifetime = 0.8
+one_shot = true
+explosiveness = 0.77
+local_coords = false
+process_material = SubResource( 26 )
+draw_pass_1 = SubResource( 28 )
+
+[node name="ExplosionSound" type="AudioStreamPlayer" parent="Body"]
+stream = ExtResource( 8 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

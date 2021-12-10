@@ -1,13 +1,12 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://assets/Materials/vehicles/car_blue_body.tres" type="Material" id=1]
 [ext_resource path="res://assets/Materials/vehicles/car_grill.tres" type="Material" id=2]
 [ext_resource path="res://assets/Materials/vehicles/car_orange_body.tres" type="Material" id=3]
-[ext_resource path="res://logic/vehicle.gd" type="Script" id=4]
+[ext_resource path="res://scenes/trailer_truck_body.gd" type="Script" id=4]
 [ext_resource path="res://logic/follow_camera.gd" type="Script" id=5]
 [ext_resource path="res://logic/audio_stream_player.gd" type="Script" id=6]
 [ext_resource path="res://assets/sounds/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3" type="AudioStream" id=7]
-[ext_resource path="res://assets/Materials/terrain/cement.tres" type="Material" id=8]
 
 [sub_resource type="ArrayMesh" id=1]
 surfaces/0 = {
@@ -223,8 +222,6 @@ surfaces/2 = {
 [sub_resource type="BoxShape" id=14]
 extents = Vector3( 0.669599, 0.520797, 1.19735 )
 
-[sub_resource type="SphereMesh" id=15]
-
 [sub_resource type="SpatialMaterial" id=16]
 flags_transparent = true
 vertex_color_use_as_albedo = true
@@ -261,7 +258,7 @@ vertex_color_use_as_albedo = true
 [sub_resource type="SphereMesh" id=23]
 material = SubResource( 22 )
 
-[node name="TrailerBase" type="Spatial"]
+[node name="CaseBase" type="Spatial"]
 _import_path = NodePath(".")
 __meta__ = {
 "__editor_plugin_screen__": "3D"
@@ -429,19 +426,8 @@ min_distance = 5.0
 max_distance = 7.0
 height = 2.5
 
-[node name="Bomb" type="Position3D" parent="Body"]
-visible = false
-
-[node name="Body" type="MeshInstance" parent="Body/Bomb"]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1.58571, -0.428293 )
-mesh = SubResource( 15 )
-material/0 = ExtResource( 8 )
-
-[node name="MinePosition" type="Position3D" parent="Body"]
+[node name="BombPosition" type="Position3D" parent="Body"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.205089, -5.22406 )
-
-[node name="MinePosition2" type="Position3D" parent="Body"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, -0.0272144, -5.15743 )
 
 [node name="MissilePosition" type="Position3D" parent="Body"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.05756, 1.20003 )

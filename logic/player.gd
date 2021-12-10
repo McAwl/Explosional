@@ -13,14 +13,15 @@ func init(_player_number, _number_players, _missile_homing, pos=false):
 	print("init")
 	# Add a car to the player
 	var carbase = load("res://scenes/car_base.tscn").instance()
+	# carbase = load("res://scenes/trailer_truck.tscn").instance()
 	carbase.name = "CarBase"
 	player_number = _player_number
 	get_viewport().add_child(carbase)
 	get_carbody().player_number = player_number
-	get_carbody().missile_homing = _missile_homing
+	#get_carbody().missile_homing = _missile_homing
 	if pos:
 		get_carbody().global_transform.origin = pos
-	set_label("Player: "+str(player_number)+" Lives: "+str(lives_left))
+	set_label(player_number,lives_left, get_carbody().total_damage, get_carbody().weapons[get_carbody().weapon_select])
 
 	
 	name = "InstancePos"+str(_player_number)
@@ -137,16 +138,17 @@ func get_label():
 	return $VC.get_node( "CanvasLayer/Label")
 
 
-func set_label(s):
+func set_label2(s):
 	get_label().text = s
 
 
+func set_label(_player_number, _lives_left, total_damage, weapon):
+	get_label().text = "Player: "+str(_player_number)+" Lives: "+str(_lives_left)+" Damage: "+str(total_damage)+" Weapon: "+str(weapon)
+
+	
+
 func set_global_transform_origin(o):
 	get_carbody().global_transform.origin = o
-
-
-func set_missile_homing(_missile_homing):
-	get_carbody().missile_homing = _missile_homing
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

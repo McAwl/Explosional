@@ -147,13 +147,7 @@ func _physics_process(_delta):
 				var explosion_force = EXPLOSION_STRENGTH/pow(distance+1.0, 1.5)  # inverse square of distance
 				target.apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 				if target.take_damage == true:
-					target.total_damage += 1
-					if explosion_force > 100:
-						if target.get_node(\"Particles\").emitting == true:
-							target.get_node(\"Particles\").amount += 1
-							target.engine_force_value *= 0.75
-						else:
-							target.get_node(\"Particles\").emitting = true
+					target.damage(2)
 				
 					
 		bomb_stage = 5
@@ -189,13 +183,13 @@ height = 1.08911
 offsets = PoolRealArray( 0, 0.477273, 1 )
 colors = PoolColorArray( 1, 0, 0, 1, 0.832031, 0.50773, 0.162506, 1, 0.605469, 0.54708, 0.231781, 1 )
 
-[sub_resource type="GradientTexture" id=14]
+[sub_resource type="GradientTexture" id=18]
 gradient = SubResource( 9 )
 
 [sub_resource type="Curve" id=4]
 _data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=15]
+[sub_resource type="CurveTexture" id=19]
 curve = SubResource( 4 )
 
 [sub_resource type="ParticlesMaterial" id=6]
@@ -203,14 +197,14 @@ direction = Vector3( 1, 1, 1 )
 spread = 180.0
 initial_velocity = 11.63
 damping = 13.73
-scale_curve = SubResource( 15 )
-color_ramp = SubResource( 14 )
+scale_curve = SubResource( 19 )
+color_ramp = SubResource( 18 )
 
-[sub_resource type="SpatialMaterial" id=16]
+[sub_resource type="SpatialMaterial" id=20]
 vertex_color_use_as_albedo = true
 
 [sub_resource type="SphereMesh" id=8]
-material = SubResource( 16 )
+material = SubResource( 20 )
 
 [node name="Bomb" type="RigidBody" groups=["bomb"]]
 mass = 20.0

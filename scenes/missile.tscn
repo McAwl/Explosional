@@ -67,7 +67,6 @@ vertex_color_use_as_albedo = true
 material = SubResource( 23 )
 
 [node name="Missile" type="RigidBody" groups=["missile"]]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 mass = 20.0
 contacts_reported = 2
 contact_monitor = true

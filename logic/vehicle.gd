@@ -14,7 +14,7 @@ export var speed = 0.0
 var speed_low_limit = 5
 var rng = RandomNumberGenerator.new()
 
-const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "homing missile": 30.0}
+const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "homing missile": 60.0}
 var cooldown_timer = COOLDOWN_TIMER_DEFAULTS["mine"]
 var update_display_timer = 0.1
 var hit_by_missile = {"active": false, "homing": null, "origin": null, "velocity": null}

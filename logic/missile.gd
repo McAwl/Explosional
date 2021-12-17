@@ -8,7 +8,7 @@ var velocity = Vector3.ZERO
 onready var lifetime_seconds = 2.0
 var homing = true
 var homing_check_target_timer = 0.1
-var homing_force = 0.5  # 0.1 OK 1.0 too strong, keep < 0.1
+var homing_force = 0.2  # 0.1 OK 1.0 too strong, keep < 0.1
 var parent_player_number
 var closest_target
 var closest_target_distance

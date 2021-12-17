@@ -21,7 +21,7 @@ func init(_player_number, _number_players, _missile_homing, pos=false):
 	#get_carbody().missile_homing = _missile_homing
 	if pos:
 		get_carbody().global_transform.origin = pos
-	set_label(player_number,lives_left, get_carbody().total_damage, get_carbody().weapons[get_carbody().weapon_select])
+	set_label(player_number, lives_left, get_carbody().total_damage, get_carbody().weapons[get_carbody().weapon_select]["name"], get_carbody().cooldown_timer, get_carbody().weapons[get_carbody().weapon_select]["damage"])
 
 	
 	name = "InstancePos"+str(_player_number)
@@ -127,9 +127,9 @@ func get_carbase():
 
 	
 func get_carbody():
-	var carbody = get_carbase().get_node("Body")
+	var carbody = get_carbase().get_node("CarBody")
 	if carbody == null:
-		print("Warning: carbody="+str(carbody)+", print_tree: ")
+		print("Warning: CarBody="+str(carbody)+", print_tree: ")
 		print_tree()
 	return carbody
 
@@ -142,8 +142,8 @@ func set_label2(s):
 	get_label().text = s
 
 
-func set_label(_player_number, _lives_left, total_damage, weapon):
-	get_label().text = "Player: "+str(_player_number)+" Lives: "+str(_lives_left)+" Damage: "+str(total_damage)+" Weapon: "+str(weapon)
+func set_label(_player_number, _lives_left, player_damage, weapon, cooldown_timer, weapon_damage):
+	get_label().text = "Player:"+str(_player_number)+" Lives:"+str(_lives_left)+" Damage:"+str(player_damage)+" Weapon:"+str(weapon)+" Cooldown:"+str(cooldown_timer)+" Weapon Damage:"+str(weapon_damage)
 
 	
 

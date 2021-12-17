@@ -195,14 +195,14 @@ __meta__ = {
 "__editor_plugin_screen__": "3D"
 }
 
-[node name="Body" type="VehicleBody" parent="."]
+[node name="CarBody" type="VehicleBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
 physics_material_override = SubResource( 1 )
 contacts_reported = 2
 contact_monitor = true
 script = ExtResource( 1 )
 
-[node name="Wheel1" type="VehicleWheel" parent="Body"]
+[node name="Wheel1" type="VehicleWheel" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.668, 0.115, 1.081 )
 use_as_traction = true
 use_as_steering = true
@@ -213,18 +213,18 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel1" type="MeshInstance" parent="Body/Wheel1"]
+[node name="Wheel1" type="MeshInstance" parent="CarBody/Wheel1"]
 _import_path = NodePath("BODY-vehicle/wheel1-wheel")
 mesh = SubResource( 2 )
 material/0 = null
 
-[node name="RayCast" type="RayCast" parent="Body/Wheel1"]
+[node name="RayCast" type="RayCast" parent="CarBody/Wheel1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.118925, 0 )
 enabled = true
 collision_mask = 2
 collide_with_areas = true
 
-[node name="Wheel2" type="VehicleWheel" parent="Body"]
+[node name="Wheel2" type="VehicleWheel" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.574, 0.115, -0.783 )
 use_as_traction = true
 wheel_roll_influence = 0.4
@@ -234,18 +234,18 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel2" type="MeshInstance" parent="Body/Wheel2"]
+[node name="Wheel2" type="MeshInstance" parent="CarBody/Wheel2"]
 _import_path = NodePath("BODY-vehicle/wheel2-wheel")
 mesh = SubResource( 3 )
 material/0 = null
 
-[node name="RayCast" type="RayCast" parent="Body/Wheel2"]
+[node name="RayCast" type="RayCast" parent="CarBody/Wheel2"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.118925, 1.88756 )
 enabled = true
 collision_mask = 2
 collide_with_areas = true
 
-[node name="Wheel3" type="VehicleWheel" parent="Body"]
+[node name="Wheel3" type="VehicleWheel" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.573678, 0.115169, 1.10416 )
 use_as_traction = true
 use_as_steering = true
@@ -256,18 +256,18 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel3" type="MeshInstance" parent="Body/Wheel3"]
+[node name="Wheel3" type="MeshInstance" parent="CarBody/Wheel3"]
 _import_path = NodePath("BODY-vehicle/wheel3-wheel")
 mesh = SubResource( 4 )
 material/0 = null
 
-[node name="RayCast" type="RayCast" parent="Body/Wheel3"]
+[node name="RayCast" type="RayCast" parent="CarBody/Wheel3"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.14736, 0.118925, 0 )
 enabled = true
 collision_mask = 2
 collide_with_areas = true
 
-[node name="Wheel4" type="VehicleWheel" parent="Body"]
+[node name="Wheel4" type="VehicleWheel" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.573678, 0.115169, -0.783403 )
 use_as_traction = true
 wheel_roll_influence = 0.4
@@ -277,32 +277,32 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel4" type="MeshInstance" parent="Body/Wheel4"]
+[node name="Wheel4" type="MeshInstance" parent="CarBody/Wheel4"]
 _import_path = NodePath("BODY-vehicle/wheel4-wheel")
 mesh = SubResource( 5 )
 material/0 = null
 
-[node name="RayCast" type="RayCast" parent="Body/Wheel4"]
+[node name="RayCast" type="RayCast" parent="CarBody/Wheel4"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.14736, 0.118925, 1.88756 )
 enabled = true
 collision_mask = 2
 collide_with_areas = true
 
-[node name="Body" type="MeshInstance" parent="Body"]
+[node name="Body" type="MeshInstance" parent="CarBody"]
 _import_path = NodePath("BODY-vehicle")
 mesh = SubResource( 6 )
 material/0 = null
 material/1 = null
 material/2 = null
 
-[node name="CollisionShape" type="CollisionShape" parent="Body"]
+[node name="CollisionShape" type="CollisionShape" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.588269, 0.0774262 )
 shape = SubResource( 7 )
 
-[node name="CameraBase" type="Spatial" parent="Body"]
+[node name="CameraBase" type="Spatial" parent="CarBody"]
 transform = Transform( 0.998172, 0, 0.0604388, 0, 1, 0, -0.0604388, 0, 0.998172, -0.0157232, 1.97449, -2.31076 )
 
-[node name="Camera" type="Camera" parent="Body/CameraBase"]
+[node name="Camera" type="Camera" parent="CarBody/CameraBase"]
 transform = Transform( -0.998921, -0.0112154, 0.0450581, -2.11161e-08, 0.970391, 0.24154, -0.0464329, 0.241279, -0.969344, -0.138464, 0.281651, -1.96593 )
 environment = SubResource( 18 )
 current = true
@@ -313,13 +313,13 @@ script = ExtResource( 5 )
 min_distance = 3.0
 height = 1.25
 
-[node name="BombPosition" type="Position3D" parent="Body"]
+[node name="BombPosition" type="Position3D" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.48442 )
 
-[node name="MissilePosition" type="Position3D" parent="Body"]
+[node name="MissilePosition" type="Position3D" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.05756, 1.20003 )
 
-[node name="Particles" type="Particles" parent="Body"]
+[node name="Particles" type="Particles" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.514265, 0.879329 )
 material_override = SubResource( 17 )
 emitting = false
@@ -329,7 +329,7 @@ local_coords = false
 process_material = SubResource( 14 )
 draw_pass_1 = SubResource( 16 )
 
-[node name="Explosion" type="Particles" parent="Body"]
+[node name="Explosion" type="Particles" parent="CarBody"]
 emitting = false
 amount = 60
 lifetime = 0.8
@@ -339,7 +339,7 @@ local_coords = false
 process_material = SubResource( 26 )
 draw_pass_1 = SubResource( 28 )
 
-[node name="ExplosionSound" type="AudioStreamPlayer" parent="Body"]
+[node name="ExplosionSound" type="AudioStreamPlayer" parent="CarBody"]
 stream = ExtResource( 8 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
@@ -350,4 +350,4 @@ script = ExtResource( 6 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 
-[connection signal="body_entered" from="Body" to="Body" method="_on_Body_body_entered"]
+[connection signal="body_entered" from="CarBody" to="CarBody" method="_on_Body_body_entered"]

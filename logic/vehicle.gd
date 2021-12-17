@@ -14,29 +14,24 @@ export var speed = 0.0
 var speed_low_limit = 5
 var rng = RandomNumberGenerator.new()
 
-var bomb_active = false
-
-# missile
-var missile_active = false
-const MISSILE_COOLDOWN_TIMER = 2.0
-const BOMB_COOLDOWN_TIMER = 2.0
-var missile_cooldown_timer
-var bomb_cooldown_timer
-
+const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "homing missile": 30.0}
+var cooldown_timer = COOLDOWN_TIMER_DEFAULTS["mine"]
+var update_display_timer = 0.1
 var hit_by_missile = {"active": false, "homing": null, "origin": null, "velocity": null}
-
-var missile_scene = load("res://scenes/missile.tscn")  
-var bomb_scene = load("res://scenes/bomb.tscn")  
 var total_damage = 0.0
 var take_damage = true
 var wheel_positions = []
 var wheels = []
 var reset_car = false
-var weapon_select = 0  
-var weapons = {0: "bomb", 1: "missile", 2: "homing missile"}
+var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["mine"], "scene": "res://scenes/mine.tscn"}, \
+			   1: {"name": "rocket", "damage": 5, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["rocket"], "scene": "res://scenes/missile.tscn"}, \
+			   2: {"name": "homing missile", "damage": 5, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["homing missile"], "scene": "res://scenes/missile.tscn"}}
+var weapon_select = 0
+
 
 func _ready():
-	pass #missile_active = false 
+	cooldown_timer = weapons[weapon_select]["cooldown_timer"]
+	
 
 func reset_vals():
 	engine_force_value = ENGINE_FORCE_VALUE
@@ -91,9 +86,9 @@ func _physics_process(delta):
 		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
 		hit_by_missile["active"] = false
 		if hit_by_missile["homing"]:
-			damage(1)
+			damage(weapons[2].damage)
 		else:
-			damage(5)
+			damage(weapons[1].damage)
 
 
 func damage(amount):
@@ -107,7 +102,7 @@ func damage(amount):
 		$Explosion.emitting = true
 		$ExplosionSound.playing = true
 		reset_car = true
-	get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select])
+	get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select], ceil(cooldown_timer), weapons[weapon_select].damage)
 	
 
 func get_player():
@@ -120,6 +115,26 @@ func get_wheel(num):
 	
 func _process(delta):
 	
+	update_display_timer -= delta
+	if update_display_timer <= 0.0:
+		update_display_timer = 0.1
+		if not ("instance" in weapons[weapon_select]):
+			print(str(weapons[weapon_select]["name"])+" not in dict")
+			weapons[weapon_select]["active"] = false
+			cooldown_timer = weapons[weapon_select]["cooldown_timer"]
+		elif weapons[weapon_select]["instance"] == null:
+			print(str(weapons[weapon_select]["name"])+" is null")
+			weapons[weapon_select]["active"] = false
+			cooldown_timer = weapons[weapon_select]["cooldown_timer"]
+		elif not is_instance_valid(weapons[weapon_select]["instance"]):
+			print(str(weapons[weapon_select]["name"])+" is invalid instance")
+			weapons[weapon_select]["active"] = false
+			cooldown_timer = weapons[weapon_select]["cooldown_timer"]
+		else:
+			print(str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
+		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].name, ceil(cooldown_timer), weapons[weapon_select].damage)
+	
+		
 	if reset_car == true and $Explosion.emitting == false and $ExplosionSound.playing == false:
 		reset_vals()
 		get_parent().reset_car()
@@ -128,60 +143,51 @@ func _process(delta):
 		weapon_select += 1
 		if weapon_select > 2:
 			weapon_select = 0
-		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select])
-
+		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].name, ceil(cooldown_timer), weapons[weapon_select].damage)
 	
-	if Input.is_action_just_released("fire_player"+str(player_number)):
+	if Input.is_action_just_released("fire_player"+str(player_number)) and weapons[weapon_select]["active"] == false and weapons[weapon_select]["cooldown_timer"] <= 0.0:
+		weapons[weapon_select]["cooldown_timer"] = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select].name]
+		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].name, ceil(cooldown_timer), weapons[weapon_select].damage)
 		if weapon_select == 0:  # bomb (mine)
-			if bomb_active == false:
-				var b = bomb_scene.instance()
-				add_child(b) 
-				b.rotation_degrees = rotation_degrees
-				bomb_active = true
-				bomb_cooldown_timer = BOMB_COOLDOWN_TIMER
-				b.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity)
-				b.set_as_toplevel(true)
-		if weapon_select == 1 or weapon_select == 2:
-			if missile_active == false:
-				var b = missile_scene.instance()
-				add_child(b)  
-				b.global_transform.origin = $MissilePosition.global_transform.origin
-				b.velocity = transform.basis.z * b.muzzle_velocity
-				b.velocity[1] += 1.0 
-				b.initial_speed = b.velocity.length()
-				b.linear_velocity = linear_velocity
-				b.angular_velocity = angular_velocity
-				b.rotation_degrees = $MissilePosition.rotation_degrees
-				missile_active = true
-				missile_cooldown_timer = MISSILE_COOLDOWN_TIMER
-				b.parent_player_number = player_number
-				if weapon_select == 1:
-					b.homing = false
-				else:
-					b.homing = true
-				b.set_as_toplevel(true)
+			var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
+			add_child(weapon_instance) 
+			weapon_instance.rotation_degrees = rotation_degrees
+			weapons[0]["active"] = true
+			weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity)
+			weapon_instance.set_as_toplevel(true)
+		elif weapon_select == 1:
+			fire_missile_or_rocket()
+		elif weapon_select == 2:
+			fire_missile_or_rocket()
+
+	if weapons[weapon_select]["active"] == false:
+		if weapons[weapon_select]["cooldown_timer"] > 0.0:
+			weapons[weapon_select]["cooldown_timer"] -= delta
+			if weapons[weapon_select]["cooldown_timer"] < 0.0:
+				weapons[weapon_select]["cooldown_timer"]  = 0.0
+		cooldown_timer = weapons[weapon_select]["cooldown_timer"]
 	
-	if missile_active == true:
-		missile_cooldown_timer -= delta
-		if missile_cooldown_timer < 0.0:
-			missile_active = false
+	if cooldown_timer < 0.0:
+		cooldown_timer = 0.0
 
-	if bomb_active == true:
-		bomb_cooldown_timer -= delta
-		if bomb_cooldown_timer < 0.0:
-			bomb_active = false
-			
 
-func _on_Body_body_entered(body):
+func fire_missile_or_rocket():
 	
-	if "Missile" in body.name:
-		hit_by_missile["active"] = true
-		hit_by_missile["origin"] = body.transform.origin
-		hit_by_missile["velocity"] = body.velocity
-		hit_by_missile["homing"] = body.homing
-		body.get_node("explosion").playing = true
-		body.get_node("Particles2").emitting = true
-		body.hit_something = true
-		
-
-
+	var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
+	weapons[weapon_select]["instance"] = weapon_instance
+	add_child(weapon_instance)  
+	weapon_instance.global_transform.origin = $MissilePosition.global_transform.origin
+	weapon_instance.velocity = transform.basis.z * weapon_instance.muzzle_velocity
+	weapon_instance.velocity[1] += 1.0 
+	weapon_instance.initial_speed = weapon_instance.velocity.length()
+	weapon_instance.linear_velocity = linear_velocity
+	weapon_instance.angular_velocity = angular_velocity
+	weapon_instance.rotation_degrees = $MissilePosition.rotation_degrees
+	weapon_instance.parent_player_number = player_number
+	if weapon_select == 1:
+		weapon_instance.homing = false
+	else:
+		weapon_instance.homing = true
+	weapon_instance.set_as_toplevel(true)
+	weapons[weapon_select]["active"] = true
+	

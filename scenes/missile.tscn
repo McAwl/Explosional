@@ -102,3 +102,5 @@ explosiveness = 0.54
 local_coords = false
 process_material = SubResource( 22 )
 draw_pass_1 = SubResource( 24 )
+
+[connection signal="body_entered" from="." to="." method="_on_Missile_body_entered"]

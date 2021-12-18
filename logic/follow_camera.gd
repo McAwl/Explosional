@@ -27,10 +27,15 @@ func _ready():
 
 
 func _physics_process(_delta):
-	var target = get_parent().get_global_transform().origin
-	#print("get_parent().name = "+str(get_parent().name))
+	var target = get_parent().get_global_transform().origin  # parent is CameraBase pos behind and above the vehicle
+	var linear_velocity = get_parent().get_parent().linear_velocity
+	var speed = linear_velocity.length()
+	var fwd_mps  = get_parent().get_parent().transform.basis.xform_inv(linear_velocity).z
+	# print("fwd_mps) = "+str(fwd_mps))
+	# target.z += fwd_mps
 	var pos = get_global_transform().origin
-
+	# pos.z -= fwd_mps
+	
 	var from_target = pos - target
 
 	# Check ranges.
@@ -43,7 +48,7 @@ func _physics_process(_delta):
 
 	pos = target + from_target
 
-	look_at_from_position(pos, target, Vector3.UP)
+	look_at_from_position(pos, target, Vector3.UP)  # move the camera to pos
 
 	# Turn a little up or down
 	var t = get_transform()

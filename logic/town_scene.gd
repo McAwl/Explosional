@@ -3,16 +3,18 @@ extends Spatial
 var town = null
 var check_game_over_timer = 1.0
 var missile_homing = false
-var num_players = 4
+var num_players
+var players
 var rng = RandomNumberGenerator.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	num_players = len(players)
 	var spawn_points = get_spawn_points()
 	for player_number in range(1, num_players+1):
 		var player_instance = load("res://scenes/player.tscn").instance()
 		var pos = spawn_points[player_number-1].global_transform.origin
-		player_instance.init(player_number, num_players, missile_homing, pos)
+		player_instance.init(player_number, num_players, missile_homing, players[player_number]["name"], pos)
 		add_child(player_instance)
 
 
@@ -60,11 +62,19 @@ func _process(delta):
 			if get_player(player_number).lives_left < 0:
 				dead_cars += 1
 		if dead_cars >= (num_cars-1) and num_cars>1:
-			
-			reset_game()
+			var next_level_resource = load("res://scenes/final_score.tscn")
+			var next_level = next_level_resource.instance()
+			var winner_name = ""
+			for player_number in range(1, num_players+1):
+				if get_player(player_number).lives_left >= 0:
+					winner_name = get_player(player_number).player_name
+			next_level.player_winner_name = winner_name
+			get_tree().root.call_deferred("add_child", next_level)
+			queue_free()
 
 
 func reset_game():
 	queue_free()
 	var _ret_val = get_tree().change_scene("res://scenes/start.tscn")  #get_tree().reload_current_scene()
+
 

@@ -119,19 +119,19 @@ func _process(delta):
 	if update_display_timer <= 0.0:
 		update_display_timer = 0.1
 		if not ("instance" in weapons[weapon_select]):
-			print(str(weapons[weapon_select]["name"])+" not in dict")
+			#print(str(weapons[weapon_select]["name"])+" not in dict")
 			weapons[weapon_select]["active"] = false
 			cooldown_timer = weapons[weapon_select]["cooldown_timer"]
 		elif weapons[weapon_select]["instance"] == null:
-			print(str(weapons[weapon_select]["name"])+" is null")
+			#print(str(weapons[weapon_select]["name"])+" is null")
 			weapons[weapon_select]["active"] = false
 			cooldown_timer = weapons[weapon_select]["cooldown_timer"]
 		elif not is_instance_valid(weapons[weapon_select]["instance"]):
-			print(str(weapons[weapon_select]["name"])+" is invalid instance")
+			#print(str(weapons[weapon_select]["name"])+" is invalid instance")
 			weapons[weapon_select]["active"] = false
 			cooldown_timer = weapons[weapon_select]["cooldown_timer"]
-		else:
-			print(str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
+		#else:
+		#	print(str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
 		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].name, ceil(cooldown_timer), weapons[weapon_select].damage)
 	
 		

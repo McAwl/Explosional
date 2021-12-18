@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://logic/vehicle.gd" type="Script" id=1]
 [ext_resource path="res://assets/Materials/vehicles/car_red_body.tres" type="Material" id=2]
@@ -117,12 +117,16 @@ surfaces/2 = {
 [sub_resource type="BoxShape" id=7]
 extents = Vector3( 0.477039, 0.5, 1.16331 )
 
+[sub_resource type="SphereMesh" id=29]
+
 [sub_resource type="ProceduralSky" id=19]
 
 [sub_resource type="Environment" id=18]
 background_mode = 2
 background_sky = SubResource( 19 )
 ambient_light_color = Color( 0.717647, 0.827451, 1, 1 )
+
+[sub_resource type="CapsuleMesh" id=30]
 
 [sub_resource type="SpatialMaterial" id=17]
 flags_transparent = true
@@ -302,6 +306,13 @@ shape = SubResource( 7 )
 [node name="CameraBase" type="Spatial" parent="CarBody"]
 transform = Transform( 0.998172, 0, 0.0604388, 0, 1, 0, -0.0604388, 0, 0.998172, -0.0157232, 1.97449, -2.31076 )
 
+[node name="MeshInstance" type="MeshInstance" parent="CarBody/CameraBase"]
+transform = Transform( -0.0998921, -0.00112154, 0.00450581, -2.05513e-09, 0.0970391, 0.024154, -0.00464329, 0.0241279, -0.0969345, 0, 0, 0 )
+visible = false
+mesh = SubResource( 29 )
+skeleton = NodePath("../Camera")
+material/0 = null
+
 [node name="Camera" type="Camera" parent="CarBody/CameraBase"]
 transform = Transform( -0.998921, -0.0112154, 0.0450581, -2.11161e-08, 0.970391, 0.24154, -0.0464329, 0.241279, -0.969344, -0.138464, 0.281651, -1.96593 )
 environment = SubResource( 18 )
@@ -312,6 +323,12 @@ far = 201.5
 script = ExtResource( 5 )
 min_distance = 3.0
 height = 1.25
+
+[node name="MeshInstance" type="MeshInstance" parent="CarBody/CameraBase/Camera"]
+transform = Transform( 0.1, 0, -2.32831e-10, 5.82077e-11, 0.1, 0, 0, 0, 0.1, -1.49012e-08, 0.233574, 0.0581388 )
+visible = false
+mesh = SubResource( 30 )
+material/0 = null
 
 [node name="BombPosition" type="Position3D" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.48442 )
@@ -341,6 +358,12 @@ draw_pass_1 = SubResource( 28 )
 
 [node name="ExplosionSound" type="AudioStreamPlayer" parent="CarBody"]
 stream = ExtResource( 8 )
+
+[node name="CamPosForward" type="Spatial" parent="CarBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.9381 )
+
+[node name="CamPosReverse" type="Spatial" parent="CarBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.87125 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

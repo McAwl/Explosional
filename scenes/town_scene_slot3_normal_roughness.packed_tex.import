@@ -1,0 +1,18 @@
+[remap]
+
+importer="hterrain_packed_texture_importer"
+type="StreamTexture"
+path.s3tc="res://.import/town_scene_slot3_normal_roughness.packed_tex-a20040a53fab2384ea134da7157e8926.s3tc.stex"
+path.etc="res://.import/town_scene_slot3_normal_roughness.packed_tex-a20040a53fab2384ea134da7157e8926.etc.stex"
+
+[deps]
+
+source_file="res://scenes/town_scene_slot3_normal_roughness.packed_tex"
+dest_files=[ "res://.import/town_scene_slot3_normal_roughness.packed_tex-a20040a53fab2384ea134da7157e8926.s3tc.stex", "res://.import/town_scene_slot3_normal_roughness.packed_tex-a20040a53fab2384ea134da7157e8926.etc.stex" ]
+
+[params]
+
+compress/mode=2
+flags/repeat=1
+flags/filter=true
+flags/mipmaps=true

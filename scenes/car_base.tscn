@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://logic/vehicle.gd" type="Script" id=1]
 [ext_resource path="res://assets/Materials/vehicles/car_red_body.tres" type="Material" id=2]
@@ -118,13 +118,6 @@ surfaces/2 = {
 extents = Vector3( 0.477039, 0.5, 1.16331 )
 
 [sub_resource type="SphereMesh" id=29]
-
-[sub_resource type="ProceduralSky" id=19]
-
-[sub_resource type="Environment" id=18]
-background_mode = 2
-background_sky = SubResource( 19 )
-ambient_light_color = Color( 0.717647, 0.827451, 1, 1 )
 
 [sub_resource type="CapsuleMesh" id=30]
 
@@ -315,7 +308,6 @@ material/0 = null
 
 [node name="Camera" type="Camera" parent="CarBody/CameraBase"]
 transform = Transform( -0.998921, -0.0112154, 0.0450581, -2.11161e-08, 0.970391, 0.24154, -0.0464329, 0.241279, -0.969344, -0.138464, 0.281651, -1.96593 )
-environment = SubResource( 18 )
 current = true
 fov = 74.0
 near = 0.1
@@ -364,6 +356,32 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.9381 )
 
 [node name="CamPosReverse" type="Spatial" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.87125 )
+
+[node name="FrontLeft" type="SpotLight" parent="CarBody"]
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.163859, 1.39401 )
+light_energy = 5.0
+spot_range = 50.0
+spot_attenuation = 4.75683
+spot_angle = 16.93
+spot_angle_attenuation = 1.93187
+
+[node name="FrontRight" type="SpotLight" parent="CarBody"]
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.39401 )
+light_energy = 5.0
+spot_range = 50.0
+spot_attenuation = 4.75683
+spot_angle = 16.93
+spot_angle_attenuation = 1.93187
+
+[node name="BackRight" type="OmniLight" parent="CarBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.29508 )
+light_color = Color( 1, 0, 0, 1 )
+light_energy = 0.1
+
+[node name="BackLeft" type="OmniLight" parent="CarBody"]
+transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.362708, 0.190666, -1.31362 )
+light_color = Color( 1, 0, 0, 1 )
+light_energy = 0.1
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

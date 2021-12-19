@@ -8,6 +8,7 @@ var collision_exception = []
 export var height = 1.5
 
 func _ready():
+	# environment = get_node("/root/TownScene/Viewport/WorldEnvironment")
 	# Find collision exceptions for ray.
 	var node = self
 	while(node):
@@ -30,7 +31,7 @@ func _physics_process(_delta):
 	var target = get_parent().get_global_transform().origin  # parent is CameraBase pos behind and above the vehicle
 	var linear_velocity = get_parent().get_parent().linear_velocity
 	var speed = linear_velocity.length()
-	var fwd_mps  = get_parent().get_parent().transform.basis.xform_inv(linear_velocity).z
+	var _fwd_mps  = get_parent().get_parent().transform.basis.xform_inv(linear_velocity).z
 	# print("fwd_mps) = "+str(fwd_mps))
 	# target.z += fwd_mps
 	var pos = get_global_transform().origin

@@ -33,7 +33,7 @@ varying complexity using vehicle physics.
 Do not be surprised if everything is bouncy and glitchy,
 Godot's physics system is not polished and will likely be
 reworked in the future."
-run/main_scene="res://scenes/start.tscn"
+run/main_scene="res://scenes/title_screen.tscn"
 config/icon="res://icon.png"
 
 [display]

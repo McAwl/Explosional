@@ -7,6 +7,9 @@ export var angle_v_adjust = 0.0
 var collision_exception = []
 export var height = 1.5
 
+var follow_speed = 0.01  # set 0-1: 0.1=slow follow 0.9=fast follow
+var lerp_val = 0.5
+
 func _ready():
 	# environment = get_node("/root/TownScene/Viewport/WorldEnvironment")
 	# Find collision exceptions for ray.
@@ -27,15 +30,30 @@ func _ready():
 	set_as_toplevel(true)
 
 
-func _physics_process(_delta):
-	var target = get_parent().get_global_transform().origin  # parent is CameraBase pos behind and above the vehicle
+func _physics_process(delta):
+	#var target = get_parent().get_global_transform().origin  # parent is CameraBase pos behind and above the vehicle
+	var target_forward = get_parent().get_node("CamTargetForward").get_global_transform().origin
+	var target_reverse = get_parent().get_node("CamTargetReverse").get_global_transform().origin
+	var cam_base_forward = get_parent().get_node("CamBaseForward").get_global_transform().origin
+	var cam_base_reverse = get_parent().get_node("CamBaseReverse").get_global_transform().origin
+	
 	var linear_velocity = get_parent().get_parent().linear_velocity
 	var speed = linear_velocity.length()
-	var _fwd_mps  = get_parent().get_parent().transform.basis.xform_inv(linear_velocity).z
-	# print("fwd_mps) = "+str(fwd_mps))
-	# target.z += fwd_mps
-	var pos = get_global_transform().origin
-	# pos.z -= fwd_mps
+	var fwd_mps = 2.0 + get_parent().get_parent().transform.basis.xform_inv(linear_velocity).z
+	
+	var old_lerp_val = lerp_val
+	var new_lerp_val = 0.5 + (fwd_mps/10)
+	lerp_val = (follow_speed*new_lerp_val) + ((1.0-follow_speed)*old_lerp_val)
+	
+	if lerp_val < 0.0:
+		lerp_val = 0.0
+	elif lerp_val > 1.0:
+		lerp_val = 1.0
+	print("fwd_mps) = "+str(fwd_mps))
+	print("lerp_val="+str(lerp_val))
+	
+	var target = lerp(target_reverse, target_forward, lerp_val)
+	var pos =  lerp(cam_base_reverse, cam_base_forward, lerp_val)
 	
 	var from_target = pos - target
 

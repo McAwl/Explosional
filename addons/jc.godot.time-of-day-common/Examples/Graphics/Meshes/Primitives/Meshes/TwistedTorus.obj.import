@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/TwistedTorus.obj-7d7ce90a1b16ace5587aaab52ecaec4b.mesh"
+
+[deps]
+
+files=[ "res://.import/TwistedTorus.obj-7d7ce90a1b16ace5587aaab52ecaec4b.mesh" ]
+
+source_file="res://addons/jc.godot.time-of-day-common/Examples/Graphics/Meshes/Primitives/Meshes/TwistedTorus.obj"
+dest_files=[ "res://.import/TwistedTorus.obj-7d7ce90a1b16ace5587aaab52ecaec4b.mesh", "res://.import/TwistedTorus.obj-7d7ce90a1b16ace5587aaab52ecaec4b.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

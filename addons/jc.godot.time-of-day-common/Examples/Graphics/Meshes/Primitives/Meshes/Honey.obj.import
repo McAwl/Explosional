@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Honey.obj-4bf2f1ebc8a8ceb8f06ecf0aac971f3f.mesh"
+
+[deps]
+
+files=[ "res://.import/Honey.obj-4bf2f1ebc8a8ceb8f06ecf0aac971f3f.mesh" ]
+
+source_file="res://addons/jc.godot.time-of-day-common/Examples/Graphics/Meshes/Primitives/Meshes/Honey.obj"
+dest_files=[ "res://.import/Honey.obj-4bf2f1ebc8a8ceb8f06ecf0aac971f3f.mesh", "res://.import/Honey.obj-4bf2f1ebc8a8ceb8f06ecf0aac971f3f.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

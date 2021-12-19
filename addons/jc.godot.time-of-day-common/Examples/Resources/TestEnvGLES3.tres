@@ -1,0 +1,6 @@
+[gd_resource type="Environment" format=2]
+
+[resource]
+ambient_light_color = Color( 0.479594, 0.432705, 0.489454, 0.574322 )
+tonemap_mode = 3
+tonemap_white = 6.0

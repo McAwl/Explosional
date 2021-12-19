@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Teapot.obj-40a6eb5394c62c6f6c0671bc00fdc3ce.mesh"
+
+[deps]
+
+files=[ "res://.import/Teapot.obj-40a6eb5394c62c6f6c0671bc00fdc3ce.mesh" ]
+
+source_file="res://addons/jc.godot.time-of-day-common/Examples/Graphics/Meshes/Primitives/Meshes/Teapot.obj"
+dest_files=[ "res://.import/Teapot.obj-40a6eb5394c62c6f6c0671bc00fdc3ce.mesh", "res://.import/Teapot.obj-40a6eb5394c62c6f6c0671bc00fdc3ce.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 0.5, 0.5, 0.5 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

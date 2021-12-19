@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/RoundCube.obj-04e65511c8001c730e5c99f4120825db.mesh"
+
+[deps]
+
+files=[ "res://.import/RoundCube.obj-04e65511c8001c730e5c99f4120825db.mesh" ]
+
+source_file="res://addons/jc.godot.time-of-day-common/Examples/Graphics/Meshes/Primitives/Meshes/RoundCube.obj"
+dest_files=[ "res://.import/RoundCube.obj-04e65511c8001c730e5c99f4120825db.mesh", "res://.import/RoundCube.obj-04e65511c8001c730e5c99f4120825db.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

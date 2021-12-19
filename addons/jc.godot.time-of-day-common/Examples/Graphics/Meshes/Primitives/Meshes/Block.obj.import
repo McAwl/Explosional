@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Block.obj-f5066f4fd627930ddf658ccc687f344f.mesh"
+
+[deps]
+
+files=[ "res://.import/Block.obj-f5066f4fd627930ddf658ccc687f344f.mesh" ]
+
+source_file="res://addons/jc.godot.time-of-day-common/Examples/Graphics/Meshes/Primitives/Meshes/Block.obj"
+dest_files=[ "res://.import/Block.obj-f5066f4fd627930ddf658ccc687f344f.mesh", "res://.import/Block.obj-f5066f4fd627930ddf658ccc687f344f.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

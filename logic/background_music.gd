@@ -7,14 +7,14 @@ onready var _track_3 = $track_3
 
 var last_track_played = 1
 var timer = 0.0
-var music = true
+var music = false
 var current_track
 
 func _ready():
 	_track_1.volume_db = 0.0
-	_track_1.playing = true
-	current_track = _track_1
-	pass
+	if music:
+		_track_1.playing = true
+		current_track = _track_1
 	
 
 func _process(delta):

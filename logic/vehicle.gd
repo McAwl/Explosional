@@ -17,6 +17,7 @@ var rng = RandomNumberGenerator.new()
 const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "homing missile": 60.0}
 var cooldown_timer = COOLDOWN_TIMER_DEFAULTS["mine"]
 var update_display_timer = 0.1
+var check_lights_timer = 1.0  # timer to check if car needs to turn light on 
 var hit_by_missile = {"active": false, "homing": null, "origin": null, "velocity": null}
 var total_damage = 0.0
 var take_damage = true
@@ -114,6 +115,21 @@ func get_wheel(num):
 	
 	
 func _process(delta):
+	
+	check_lights_timer -= delta
+	if check_lights_timer <= 0.0:
+		check_lights_timer = 1.0
+		check_lights_timer
+		if get_node("/root/TownScene/DirectionalLight").light_energy < 0.2:
+			$LightFrontLeft.visible = true
+			$LightFrontRight.visible = true
+			$LightBackLeft.visible = true
+			$LightBackLeft.visible = true
+		else:
+			$LightFrontLeft.visible = false
+			$LightFrontRight.visible = false
+			$LightBackLeft.visible = false
+			$LightBackLeft.visible = false
 	
 	update_display_timer -= delta
 	if update_display_timer <= 0.0:

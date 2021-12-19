@@ -103,4 +103,10 @@ local_coords = false
 process_material = SubResource( 22 )
 draw_pass_1 = SubResource( 24 )
 
+[node name="OmniLight" type="OmniLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.578202 )
+light_color = Color( 0.972549, 0.592157, 0.054902, 1 )
+shadow_enabled = true
+omni_range = 30.0
+
 [connection signal="body_entered" from="." to="." method="_on_Missile_body_entered"]

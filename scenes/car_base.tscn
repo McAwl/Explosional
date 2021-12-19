@@ -357,31 +357,39 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.9381 )
 [node name="CamPosReverse" type="Spatial" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.87125 )
 
-[node name="FrontLeft" type="SpotLight" parent="CarBody"]
+[node name="LightFrontLeft" type="SpotLight" parent="CarBody"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.163859, 1.39401 )
+visible = false
 light_energy = 5.0
+shadow_enabled = true
 spot_range = 50.0
 spot_attenuation = 4.75683
 spot_angle = 16.93
 spot_angle_attenuation = 1.93187
 
-[node name="FrontRight" type="SpotLight" parent="CarBody"]
+[node name="LightFrontRight" type="SpotLight" parent="CarBody"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.39401 )
+visible = false
 light_energy = 5.0
+shadow_enabled = true
 spot_range = 50.0
 spot_attenuation = 4.75683
 spot_angle = 16.93
 spot_angle_attenuation = 1.93187
 
-[node name="BackRight" type="OmniLight" parent="CarBody"]
+[node name="LightBackRight" type="OmniLight" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.29508 )
+visible = false
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
+shadow_enabled = true
 
-[node name="BackLeft" type="OmniLight" parent="CarBody"]
+[node name="LightBackLeft" type="OmniLight" parent="CarBody"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.362708, 0.190666, -1.31362 )
+visible = false
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
+shadow_enabled = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

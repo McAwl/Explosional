@@ -368,6 +368,9 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.48442
 [node name="MissilePosition" type="Position3D" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.05756, 1.20003 )
 
+[node name="RocketPosition" type="Position3D" parent="CarBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.499051, 1.69379 )
+
 [node name="Particles" type="Particles" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.514265, 0.879329 )
 material_override = SubResource( 17 )
@@ -394,9 +397,9 @@ stream = ExtResource( 8 )
 [node name="LightFrontLeft" type="SpotLight" parent="CarBody"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.163859, 1.39401 )
 visible = false
-light_energy = 5.0
+light_energy = 10.0
 shadow_enabled = true
-spot_range = 50.0
+spot_range = 100.0
 spot_attenuation = 4.75683
 spot_angle = 16.93
 spot_angle_attenuation = 1.93187
@@ -404,9 +407,9 @@ spot_angle_attenuation = 1.93187
 [node name="LightFrontRight" type="SpotLight" parent="CarBody"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.39401 )
 visible = false
-light_energy = 5.0
+light_energy = 10.0
 shadow_enabled = true
-spot_range = 50.0
+spot_range = 100.0
 spot_attenuation = 4.75683
 spot_angle = 16.93
 spot_angle_attenuation = 1.93187

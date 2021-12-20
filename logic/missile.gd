@@ -16,6 +16,9 @@ var closest_target_direction
 var closest_target_direction_normalised
 var print_timer = 0.1
 var initial_speed
+var explosion_range = 10.0
+
+var rng = RandomNumberGenerator.new()
 
 var hit_something = false
 
@@ -32,6 +35,7 @@ func _process(delta):
 	
 	if lifetime_seconds < 0.0:
 		queue_free()
+
 
 func _physics_process(delta):
 	if not hit_something:
@@ -79,5 +83,15 @@ func _on_Missile_body_entered(body):
 		body.hit_by_missile["origin"] = transform.origin
 		body.hit_by_missile["velocity"] = velocity
 		body.hit_by_missile["homing"] = homing
+	else:
+		for player in get_node("/root/TownScene").get_players():  # in range(1, 5): # explosion toward all players
+			var target = player.get_carbody()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+			#var target = get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+			var distance = global_transform.origin.distance_to(target.global_transform.origin)
+			var direction = global_transform.origin - target.global_transform.origin
+			if distance < explosion_range:
+				target.apply_impulse( Vector3(0,0,0), 200*direction.normalized() )   # offset, impulse(=direction*force)
+				target.angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
+				target.damage(1)
 
 

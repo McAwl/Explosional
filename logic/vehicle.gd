@@ -25,8 +25,8 @@ var wheel_positions = []
 var wheels = []
 var reset_car = false
 var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["mine"], "scene": "res://scenes/mine.tscn"}, \
-			   1: {"name": "rocket", "damage": 5, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["rocket"], "scene": "res://scenes/missile.tscn"}, \
-			   2: {"name": "homing missile", "damage": 5, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["homing missile"], "scene": "res://scenes/missile.tscn"}}
+			   1: {"name": "rocket", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["rocket"], "scene": "res://scenes/missile.tscn"}, \
+			   2: {"name": "homing missile", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["homing missile"], "scene": "res://scenes/missile.tscn"}}
 var weapon_select = 0
 
 
@@ -192,13 +192,20 @@ func fire_missile_or_rocket():
 	var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
 	weapons[weapon_select]["instance"] = weapon_instance
 	add_child(weapon_instance)  
-	weapon_instance.global_transform.origin = $MissilePosition.global_transform.origin
 	weapon_instance.velocity = transform.basis.z * weapon_instance.muzzle_velocity
 	weapon_instance.velocity[1] += 1.0 
 	weapon_instance.initial_speed = weapon_instance.velocity.length()
 	weapon_instance.linear_velocity = linear_velocity
 	weapon_instance.angular_velocity = angular_velocity
-	weapon_instance.rotation_degrees = $MissilePosition.rotation_degrees
+	if weapon_select == 2:
+		weapon_instance.global_transform.origin = $MissilePosition.global_transform.origin
+		weapon_instance.rotation_degrees = $MissilePosition.rotation_degrees
+	else:
+		weapon_instance.global_transform.origin = $RocketPosition.global_transform.origin
+		weapon_instance.rotation_degrees = $RocketPosition.rotation_degrees
+		weapon_instance.rotation_degrees.x = 0.0
+		weapon_instance.rotation_degrees.y = 0.0
+		weapon_instance.rotation_degrees.z = 0.0
 	weapon_instance.parent_player_number = player_number
 	if weapon_select == 1:
 		weapon_instance.homing = false

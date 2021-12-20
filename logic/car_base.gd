@@ -22,7 +22,6 @@ func get_player():
 	return get_parent().get_parent().get_parent()
 
 
-
 func reset_car():
 	print("reset_car()")
 	get_player().lives_left -= 1

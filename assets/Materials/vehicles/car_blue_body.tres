@@ -4,7 +4,3 @@
 albedo_color = Color( 0.0387451, 0, 0.256549, 1 )
 metallic = 0.2
 roughness = 0.6
-ao_enabled = true
-ao_light_affect = 0.0
-ao_on_uv2 = false
-ao_texture_channel = 0

@@ -7,6 +7,7 @@
 
 [resource]
 resource_name = "mud"
+flags_world_triplanar = true
 params_billboard_keep_scale = true
 albedo_texture = ExtResource( 1 )
 metallic = 0.14
@@ -22,6 +23,7 @@ ao_light_affect = 0.2
 ao_texture = ExtResource( 2 )
 ao_on_uv2 = false
 ao_texture_channel = 0
-uv1_scale = Vector3( 0.05, 0.1, 0.01 )
-uv1_triplanar_sharpness = 0.901252
-uv2_triplanar = true
+uv1_scale = Vector3( 0.2, 2, 1 )
+uv1_offset = Vector3( 1, 1, 0 )
+uv1_triplanar = true
+uv1_triplanar_sharpness = 1.1487

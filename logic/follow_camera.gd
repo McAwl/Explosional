@@ -52,6 +52,9 @@ func _physics_process(delta):
 	print("fwd_mps) = "+str(fwd_mps))
 	print("lerp_val="+str(lerp_val))
 	
+	# get_global_transform().position = get_global_transform().position.linear_interpolate(mouse_pos, delta * FOLLOW_SPEED)
+	# look_at(target_forward, Vector3.UP)  # move the camera to pos
+	
 	var target = lerp(target_reverse, target_forward, lerp_val)
 	var pos =  lerp(cam_base_reverse, cam_base_forward, lerp_val)
 	

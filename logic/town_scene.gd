@@ -6,7 +6,7 @@ var missile_homing = false
 var num_players
 var players
 var rng = RandomNumberGenerator.new()
-var air_strike = {"on": true, "prob_per_minute": 1.0, "duration_min": 2.0, "on_rate_per_sec": 2.0, "circle_radius_m": 10.0}
+var air_strike = {"on": false, "prob_per_minute": 1.0, "duration_min": 2.0, "on_rate_per_sec": 2.0, "circle_radius_m": 10.0}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,17 +21,34 @@ func _ready():
 
 func _process(delta):
 	
-	if air_strike["on"] == true:
-		# print("air strike on")
-		if randf()<0.01:
-			print("randf()<0.01")
-			var weapon_instance = load("res://scenes/mine.tscn").instance()
-			add_child(weapon_instance) 
-			var speed = get_player(1).get_carbody().get_speed2()
-			var cbo = get_player(1).get_carbody().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
-			weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0))
-			#weapon_instance.translation.y += 20.0
-			weapon_instance.set_as_toplevel(true)
+	if air_strike["on"] == false:
+		if randf()<0.001:
+			air_strike["on"] = true
+			var players_all = get_tree().get_nodes_in_group("player")  # 
+			for player in players_all:  # range(1, num_players+1):
+				player.air_strike_label().visible = true
+	elif air_strike["on"] == true:
+		if randf()<0.001:
+			air_strike["on"] = false
+			var players_all = get_tree().get_nodes_in_group("player")  # 
+			for player in players_all:  # range(1, num_players+1):
+				player.air_strike_label().visible = false
+		var players_all = get_tree().get_nodes_in_group("player")  # 
+		for player in players_all:  # range(1, num_players+1):
+			if randf()<0.01:
+				var weapon_instance = load("res://scenes/mine.tscn").instance()
+				add_child(weapon_instance) 
+				var speed = player.get_carbody().get_speed2()
+				var cbo = player.get_carbody().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
+				weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0))
+				#weapon_instance.translation.y += 20.0
+				weapon_instance.hit_on_contact = true
+				weapon_instance.get_node("MeshInstance").visible = false
+				weapon_instance.get_node("MeshInstance2").visible = false
+				weapon_instance.get_node("MeshInstance3").visible = true
+				weapon_instance.get_node("MeshInstance4").visible = true
+				weapon_instance.get_node("MeshInstance5").visible = true
+				weapon_instance.set_as_toplevel(true)
 
 	check_game_over_timer -= delta
 	if Input.is_action_pressed("back"):

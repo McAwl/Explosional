@@ -140,6 +140,9 @@ func get_carbody():
 func get_label():
 	return $VC.get_node( "CanvasLayer/Label")
 
+func air_strike_label():
+	return $VC.get_node( "CanvasLayer/Label2")
+
 
 func set_label2(s):
 	get_label().text = s

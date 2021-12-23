@@ -32,3 +32,18 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Label2" type="Label" parent="VC/CanvasLayer"]
+visible = false
+margin_left = 833.996
+margin_top = 459.708
+margin_right = 929.996
+margin_bottom = 471.708
+rect_scale = Vector2( 2, 2 )
+custom_colors/font_color = Color( 0.894118, 0.168627, 0.168627, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "Air Strike!"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

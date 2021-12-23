@@ -13,13 +13,13 @@ radius = 1.01069
 offsets = PoolRealArray( 0, 0.142857, 0.273292, 0.447205 )
 colors = PoolColorArray( 0.986816, 0.0077095, 0.0077095, 1, 0.983398, 1, 0, 1, 1, 0, 0, 1, 0.0258789, 0.0253735, 0.0253735, 1 )
 
-[sub_resource type="GradientTexture" id=15]
+[sub_resource type="GradientTexture" id=27]
 gradient = SubResource( 11 )
 
 [sub_resource type="Curve" id=12]
 _data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=16]
+[sub_resource type="CurveTexture" id=28]
 curve = SubResource( 12 )
 
 [sub_resource type="ParticlesMaterial" id=13]
@@ -28,28 +28,28 @@ spread = 180.0
 gravity = Vector3( 0, 0, 0 )
 initial_velocity = 1.0
 scale = 0.25
-scale_curve = SubResource( 16 )
-color_ramp = SubResource( 15 )
+scale_curve = SubResource( 28 )
+color_ramp = SubResource( 27 )
 
-[sub_resource type="SpatialMaterial" id=17]
+[sub_resource type="SpatialMaterial" id=29]
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
 
 [sub_resource type="SphereMesh" id=14]
-material = SubResource( 17 )
+material = SubResource( 29 )
 
 [sub_resource type="Gradient" id=18]
 offsets = PoolRealArray( 0, 0.477273, 1 )
 colors = PoolColorArray( 1, 0, 0, 1, 0.832031, 0.50773, 0.162506, 1, 0.605469, 0.54708, 0.231781, 1 )
 
-[sub_resource type="GradientTexture" id=19]
+[sub_resource type="GradientTexture" id=30]
 gradient = SubResource( 18 )
 
 [sub_resource type="Curve" id=20]
 _data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=21]
+[sub_resource type="CurveTexture" id=31]
 curve = SubResource( 20 )
 
 [sub_resource type="ParticlesMaterial" id=22]
@@ -57,14 +57,14 @@ direction = Vector3( 1, 1, 1 )
 spread = 180.0
 initial_velocity = 11.63
 damping = 13.73
-scale_curve = SubResource( 21 )
-color_ramp = SubResource( 19 )
+scale_curve = SubResource( 31 )
+color_ramp = SubResource( 30 )
 
-[sub_resource type="SpatialMaterial" id=23]
+[sub_resource type="SpatialMaterial" id=32]
 vertex_color_use_as_albedo = true
 
 [sub_resource type="SphereMesh" id=24]
-material = SubResource( 23 )
+material = SubResource( 32 )
 
 [node name="Missile" type="RigidBody" groups=["missile"]]
 mass = 20.0

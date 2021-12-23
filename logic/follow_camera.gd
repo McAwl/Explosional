@@ -49,8 +49,8 @@ func _physics_process(delta):
 		lerp_val = 0.0
 	elif lerp_val > 1.0:
 		lerp_val = 1.0
-	print("fwd_mps) = "+str(fwd_mps))
-	print("lerp_val="+str(lerp_val))
+	#print("fwd_mps) = "+str(fwd_mps))
+	#print("lerp_val="+str(lerp_val))
 	
 	# get_global_transform().position = get_global_transform().position.linear_interpolate(mouse_pos, delta * FOLLOW_SPEED)
 	# look_at(target_forward, Vector3.UP)  # move the camera to pos

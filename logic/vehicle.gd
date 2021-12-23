@@ -45,6 +45,18 @@ func get_speed():
 	return speed
 
 
+func get_speed2():
+	return transform.basis.xform_inv(linear_velocity).z
+
+
+func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z):
+	var local_pos = to_local(global_transform.origin)
+	local_pos -= (offset_z*mult_z)*Vector3.FORWARD
+	local_pos += (offset_y*mult_y)*Vector3.UP
+	var global_pos = to_global(local_pos)
+	return global_pos  # get_transform().basis.xform(localTranslate)
+	
+	
 func _physics_process(delta):
 	
 	var fwd_mps = transform.basis.xform_inv(linear_velocity).x

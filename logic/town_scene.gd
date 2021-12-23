@@ -6,6 +6,7 @@ var missile_homing = false
 var num_players
 var players
 var rng = RandomNumberGenerator.new()
+var air_strike = {"on": true, "prob_per_minute": 1.0, "duration_min": 2.0, "on_rate_per_sec": 2.0, "circle_radius_m": 10.0}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -16,6 +17,44 @@ func _ready():
 		var pos = spawn_points[player_number-1].global_transform.origin
 		player_instance.init(player_number, num_players, missile_homing, players[player_number]["name"], pos)
 		add_child(player_instance)
+
+
+func _process(delta):
+	
+	if air_strike["on"] == true:
+		# print("air strike on")
+		if randf()<0.01:
+			print("randf()<0.01")
+			var weapon_instance = load("res://scenes/mine.tscn").instance()
+			add_child(weapon_instance) 
+			var speed = get_player(1).get_carbody().get_speed2()
+			var cbo = get_player(1).get_carbody().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
+			weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0))
+			#weapon_instance.translation.y += 20.0
+			weapon_instance.set_as_toplevel(true)
+
+	check_game_over_timer -= delta
+	if Input.is_action_pressed("back"):
+		reset_game()
+	
+	if check_game_over_timer < 0.0:
+		var dead_cars = 0
+		var num_cars = 0
+		check_game_over_timer = 1.0
+		for player_number in range(1, num_players+1):
+			num_cars += 1
+			if get_player(player_number).lives_left < 0:
+				dead_cars += 1
+		if dead_cars >= (num_cars-1) and num_cars>1:
+			var next_level_resource = load("res://scenes/final_score.tscn")
+			var next_level = next_level_resource.instance()
+			var winner_name = ""
+			for player_number in range(1, num_players+1):
+				if get_player(player_number).lives_left >= 0:
+					winner_name = get_player(player_number).player_name
+			next_level.player_winner_name = winner_name
+			get_tree().root.call_deferred("add_child", next_level)
+			queue_free()
 
 
 func get_spawn_points():
@@ -46,32 +85,6 @@ func get_player(player_number):
 func get_bombs():
 	return get_tree().get_nodes_in_group("bomb")
 	
-
-func _process(delta):
-
-	check_game_over_timer -= delta
-	if Input.is_action_pressed("back"):
-		reset_game()
-	
-	if check_game_over_timer < 0.0:
-		var dead_cars = 0
-		var num_cars = 0
-		check_game_over_timer = 1.0
-		for player_number in range(1, num_players+1):
-			num_cars += 1
-			if get_player(player_number).lives_left < 0:
-				dead_cars += 1
-		if dead_cars >= (num_cars-1) and num_cars>1:
-			var next_level_resource = load("res://scenes/final_score.tscn")
-			var next_level = next_level_resource.instance()
-			var winner_name = ""
-			for player_number in range(1, num_players+1):
-				if get_player(player_number).lives_left >= 0:
-					winner_name = get_player(player_number).player_name
-			next_level.player_winner_name = winner_name
-			get_tree().root.call_deferred("add_child", next_level)
-			queue_free()
-
 
 func reset_game():
 	queue_free()

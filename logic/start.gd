@@ -45,9 +45,8 @@ func _process(_delta):
 
 
 func _on_Button_pressed():
-	var next_level_resource = load("res://scenes/town_scene.tscn")
+	var next_level_resource = load("res://scenes/instructions.tscn")
 	var next_level = next_level_resource.instance()
 	next_level.players = players
-	#next_level.load_saved_game = true
 	get_tree().root.call_deferred("add_child", next_level)
 	queue_free()

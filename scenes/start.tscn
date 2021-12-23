@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://logic/start.gd" type="Script" id=1]
 [ext_resource path="res://assets/fonts/Square.ttf" type="DynamicFontData" id=2]
@@ -42,26 +42,6 @@ bg_color = Color( 0, 0, 0, 1 )
 
 [sub_resource type="StyleBoxFlat" id=18]
 bg_color = Color( 1, 0, 0, 1 )
-
-[sub_resource type="DynamicFont" id=2]
-size = 24
-use_filter = true
-font_data = ExtResource( 2 )
-
-[sub_resource type="DynamicFont" id=3]
-size = 24
-use_filter = true
-font_data = ExtResource( 2 )
-
-[sub_resource type="DynamicFont" id=4]
-size = 24
-use_filter = true
-font_data = ExtResource( 2 )
-
-[sub_resource type="DynamicFont" id=5]
-size = 24
-use_filter = true
-font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=10]
 size = 40
@@ -134,57 +114,6 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ButtonAddPlayer1" type="Button" parent="."]
-visible = false
-margin_left = 224.853
-margin_top = 255.791
-margin_right = 387.853
-margin_bottom = 301.791
-custom_fonts/font = SubResource( 2 )
-text = "Add Player 1"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ButtonAddPlayer2" type="Button" parent="."]
-visible = false
-margin_left = 224.853
-margin_top = 428.95
-margin_right = 388.853
-margin_bottom = 474.95
-custom_fonts/font = SubResource( 3 )
-disabled = true
-text = "Add Player 2"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ButtonAddPlayer3" type="Button" parent="."]
-visible = false
-margin_left = 231.265
-margin_top = 620.248
-margin_right = 395.265
-margin_bottom = 666.248
-custom_fonts/font = SubResource( 4 )
-disabled = true
-text = "Add Player 3"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ButtonAddPlayer4" type="Button" parent="."]
-visible = false
-margin_left = 227.489
-margin_top = 821.055
-margin_right = 391.489
-margin_bottom = 867.055
-custom_fonts/font = SubResource( 5 )
-disabled = true
-text = "Add Player 4"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="LabelAddPlayers" type="Label" parent="."]
 margin_left = 818.394
 margin_top = 89.2087
@@ -251,26 +180,42 @@ margin_top = 255.454
 margin_right = 1015.68
 margin_bottom = 305.454
 custom_fonts/font = SubResource( 10 )
-text = "Press Fire to select"
+text = "Press E/Left Trigger to select"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="InstructionPlayer5" type="Label" parent="."]
-margin_left = 1082.86
-margin_top = 207.728
-margin_right = 1827.86
-margin_bottom = 342.728
+[node name="InstructionPlayer2" type="Label" parent="."]
+margin_left = 565.901
+margin_top = 442.543
+margin_right = 1185.9
+margin_bottom = 492.543
 custom_fonts/font = SubResource( 10 )
-text = "Fire: E key / Left Trigger
-Cycle weapon: Q key / Left Bumper
-Accelerate: W key / Right Trigger"
+text = "Press Shift/Left Trigger to select"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InstructionPlayer3" type="Label" parent="."]
+margin_left = 565.901
+margin_top = 622.504
+margin_right = 1185.9
+margin_bottom = 672.504
+custom_fonts/font = SubResource( 10 )
+text = "Press Y to select"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InstructionPlayer4" type="Label" parent="."]
+margin_left = 555.21
+margin_top = 822.066
+margin_right = 1175.21
+margin_bottom = 872.066
+custom_fonts/font = SubResource( 10 )
+text = "Press O to select"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [connection signal="pressed" from="StartButton" to="." method="_on_Button_pressed"]
-[connection signal="pressed" from="ButtonAddPlayer1" to="." method="_on_ButtonAddPlayer1_pressed"]
-[connection signal="pressed" from="ButtonAddPlayer2" to="." method="_on_ButtonAddPlayer2_pressed"]
-[connection signal="pressed" from="ButtonAddPlayer3" to="." method="_on_ButtonAddPlayer3_pressed"]
-[connection signal="pressed" from="ButtonAddPlayer4" to="." method="_on_ButtonAddPlayer4_pressed"]

@@ -27,12 +27,16 @@ func _process(delta):
 			var players_all = get_tree().get_nodes_in_group("player")  # 
 			for player in players_all:  # range(1, num_players+1):
 				player.air_strike_label().visible = true
+				player.air_strike_label().get_node("TextFlash").play("font_blink")
+			$siren.playing = true
 	elif air_strike["on"] == true:
 		if randf()<0.001:
 			air_strike["on"] = false
 			var players_all = get_tree().get_nodes_in_group("player")  # 
 			for player in players_all:  # range(1, num_players+1):
 				player.air_strike_label().visible = false
+				player.air_strike_label().get_node("TextFlash").stop()
+			$siren.playing = false
 		var players_all = get_tree().get_nodes_in_group("player")  # 
 		for player in players_all:  # range(1, num_players+1):
 			if randf()<0.01:

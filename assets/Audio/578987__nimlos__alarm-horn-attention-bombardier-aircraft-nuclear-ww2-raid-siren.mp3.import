@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/578987__nimlos__alarm-horn-attention-bombardier-aircraft-nuclear-ww2-raid-siren.mp3-94827563f2f95f39af296c8d31a172cd.mp3str"
+
+[deps]
+
+source_file="res://assets/Audio/578987__nimlos__alarm-horn-attention-bombardier-aircraft-nuclear-ww2-raid-siren.mp3"
+dest_files=[ "res://.import/578987__nimlos__alarm-horn-attention-bombardier-aircraft-nuclear-ww2-raid-siren.mp3-94827563f2f95f39af296c8d31a172cd.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

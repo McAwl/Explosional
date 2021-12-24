@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/fonts/Square.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://logic/player.gd" type="Script" id=2]
@@ -6,6 +6,26 @@
 [sub_resource type="DynamicFont" id=1]
 size = 10
 font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 34
+font_data = ExtResource( 1 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "font_blink"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:custom_colors/font_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0.906344, 0.264627, 0.264627, 1 ), Color( 1, 1, 1, 1 ) ]
+}
 
 [node name="Player" type="Spatial" groups=["player"]]
 script = ExtResource( 2 )
@@ -35,15 +55,18 @@ __meta__ = {
 
 [node name="Label2" type="Label" parent="VC/CanvasLayer"]
 visible = false
-margin_left = 833.996
-margin_top = 459.708
-margin_right = 929.996
-margin_bottom = 471.708
+margin_left = 835.426
+margin_top = 465.793
+margin_right = 1007.43
+margin_bottom = 501.793
 rect_scale = Vector2( 2, 2 )
-custom_colors/font_color = Color( 0.894118, 0.168627, 0.168627, 1 )
-custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.945785, 0.574308, 0.574308, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "Air Strike!"
 align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="TextFlash" type="AnimationPlayer" parent="VC/CanvasLayer/Label2"]
+anims/font_blink = SubResource( 3 )

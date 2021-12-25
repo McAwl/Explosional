@@ -182,6 +182,7 @@ func _process(delta):
 			weapon_instance.rotation_degrees = rotation_degrees
 			weapons[0]["active"] = true
 			weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity)
+			weapon_instance.set_as_mine()
 			weapon_instance.set_as_toplevel(true)
 		elif weapon_select == 1:
 			fire_missile_or_rocket()

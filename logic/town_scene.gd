@@ -6,7 +6,7 @@ var missile_homing = false
 var num_players
 var players
 var rng = RandomNumberGenerator.new()
-var air_strike = {"on": false, "prob_per_minute": 1.0, "duration_min": 2.0, "on_rate_per_sec": 2.0, "circle_radius_m": 10.0}
+var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,37 +21,37 @@ func _ready():
 
 func _process(delta):
 	
-	if air_strike["on"] == false:
-		if randf()<0.001:
-			air_strike["on"] = true
-			var players_all = get_tree().get_nodes_in_group("player")  # 
-			for player in players_all:  # range(1, num_players+1):
-				player.air_strike_label().visible = true
-				player.air_strike_label().get_node("TextFlash").play("font_blink")
-			$siren.playing = true
-	elif air_strike["on"] == true:
-		if randf()<0.001:
-			air_strike["on"] = false
-			var players_all = get_tree().get_nodes_in_group("player")  # 
-			for player in players_all:  # range(1, num_players+1):
-				player.air_strike_label().visible = false
-				player.air_strike_label().get_node("TextFlash").stop()
-			$siren.playing = false
-		var players_all = get_tree().get_nodes_in_group("player")  # 
-		for player in players_all:  # range(1, num_players+1):
-			if randf()<0.01:
+	air_strike["interval_so_far_sec"] +=delta
+	air_strike["duration_so_far_sec"] += delta
+		
+	if air_strike["on"] == false and air_strike["interval_so_far_sec"] > air_strike["interval_sec"]:
+		air_strike["on"] = true
+		air_strike["interval_so_far_sec"] = 0.0
+		air_strike["duration_so_far_sec"] = 0.0
+		# var players = get_tree().get_nodes_in_group("player")  # 
+		print("len(players)="+str(len(players)))
+		for player in get_players():  # range(1, num_players+1):
+			player.air_strike_label().visible = true
+			player.air_strike_label().get_node("TextFlash").play("font_blink")
+		$siren.playing = true
+	elif air_strike["on"] == true and air_strike["duration_so_far_sec"] > air_strike["duration_sec"]:
+		air_strike["on"] = false
+		air_strike["interval_so_far_sec"] = 0.0
+		air_strike["duration_so_far_sec"] = 0.0
+		for player in get_players():  # range(1, num_players+1):
+			player.air_strike_label().visible = false
+			player.air_strike_label().get_node("TextFlash").stop()
+		$siren.playing = false
+		
+	if air_strike["on"] == true:
+		for player in get_players():  # range(1, num_players+1):
+			if randf()<0.005:
 				var weapon_instance = load("res://scenes/mine.tscn").instance()
 				add_child(weapon_instance) 
 				var speed = player.get_carbody().get_speed2()
 				var cbo = player.get_carbody().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
 				weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0))
-				#weapon_instance.translation.y += 20.0
-				weapon_instance.hit_on_contact = true
-				weapon_instance.get_node("MeshInstance").visible = false
-				weapon_instance.get_node("MeshInstance2").visible = false
-				weapon_instance.get_node("MeshInstance3").visible = true
-				weapon_instance.get_node("MeshInstance4").visible = true
-				weapon_instance.get_node("MeshInstance5").visible = true
+				weapon_instance.set_as_bomb()
 				weapon_instance.set_as_toplevel(true)
 
 	check_game_over_timer -= delta
@@ -89,14 +89,14 @@ func get_random_spawn_point():
 	
 func get_players(ignore_player_number=false):
 	var players_all = get_tree().get_nodes_in_group("player")  # 
-	var players = []
+	var players2 = []
 	for player in players_all:  # range(1, num_players+1):
 		if ignore_player_number == false:
-			players.append(get_player(player.player_number))
+			players2.append(get_player(player.player_number))
 		else:
 			if ignore_player_number != player.player_number:
-				players.append(get_player(player.player_number))
-	return players
+				players2.append(get_player(player.player_number))
+	return players2
 
 
 func get_player(player_number):

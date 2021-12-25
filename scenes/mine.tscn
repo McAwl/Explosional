@@ -129,9 +129,7 @@ func get_bombs():
 
 func _physics_process(_delta):
 	if bomb_stage == 4:
-		$MeshInstance3.visible = false
-		$MeshInstance4.visible = false
-		$MeshInstance5.visible = false
+		hide_meshinstances()
 		$explosion.playing = true
 		# $explosion.seek(1.0)
 		$Particles.global_transform.origin = global_transform.origin
@@ -180,7 +178,32 @@ func _on_Bomb_body_entered(body):
 	if hit_on_contact:
 		timer = BOMB_ACTIVE_WAIT
 		bomb_stage = 4
-		
+
+
+func set_as_mine():
+	hit_on_contact = false
+	$MeshInstance.visible = true
+	$MeshInstance2.visible = true
+	$MeshInstance3.visible = false
+	$MeshInstance4.visible = false
+	$MeshInstance5.visible = false
+
+
+func set_as_bomb():
+	hit_on_contact = true
+	$MeshInstance.visible = false
+	$MeshInstance2.visible = false
+	$MeshInstance3.visible = true
+	$MeshInstance4.visible = true
+	$MeshInstance5.visible = true
+	
+
+func hide_meshinstances():
+	$MeshInstance.visible = false
+	$MeshInstance2.visible = false
+	$MeshInstance3.visible = false
+	$MeshInstance4.visible = false
+	$MeshInstance5.visible = false
 "
 
 [sub_resource type="CylinderMesh" id=11]
@@ -285,6 +308,7 @@ draw_pass_1 = SubResource( 8 )
 
 [node name="explosion" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
+volume_db = -6.992
 
 [node name="SpotLight" type="SpotLight" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )

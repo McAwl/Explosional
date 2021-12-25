@@ -55,10 +55,10 @@ __meta__ = {
 
 [node name="Label2" type="Label" parent="VC/CanvasLayer"]
 visible = false
-margin_left = 835.426
-margin_top = 465.793
-margin_right = 1007.43
-margin_bottom = 501.793
+margin_left = 805.188
+margin_top = 496.031
+margin_right = 977.192
+margin_bottom = 532.031
 rect_scale = Vector2( 2, 2 )
 custom_colors/font_color = Color( 0.945785, 0.574308, 0.574308, 1 )
 custom_fonts/font = SubResource( 2 )

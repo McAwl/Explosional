@@ -195,7 +195,8 @@ __meta__ = {
 [node name="CarBody" type="VehicleBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
 physics_material_override = SubResource( 1 )
-contacts_reported = 2
+continuous_cd = true
+contacts_reported = 4
 contact_monitor = true
 script = ExtResource( 1 )
 
@@ -216,9 +217,8 @@ mesh = SubResource( 2 )
 material/0 = null
 
 [node name="RayCast" type="RayCast" parent="CarBody/Wheel1"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.118925, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.262533, -0.0640855, 0 )
 enabled = true
-collision_mask = 2
 collide_with_areas = true
 
 [node name="Wheel2" type="VehicleWheel" parent="CarBody"]
@@ -237,7 +237,7 @@ mesh = SubResource( 3 )
 material/0 = null
 
 [node name="RayCast" type="RayCast" parent="CarBody/Wheel2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.118925, 1.88756 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145094, -0.0793754, 0 )
 enabled = true
 collision_mask = 2
 collide_with_areas = true
@@ -259,7 +259,7 @@ mesh = SubResource( 4 )
 material/0 = null
 
 [node name="RayCast" type="RayCast" parent="CarBody/Wheel3"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.14736, 0.118925, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.220176, -0.0553332, 3.82662e-05 )
 enabled = true
 collision_mask = 2
 collide_with_areas = true
@@ -280,7 +280,7 @@ mesh = SubResource( 5 )
 material/0 = null
 
 [node name="RayCast" type="RayCast" parent="CarBody/Wheel4"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.14736, 0.118925, 1.88756 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
 enabled = true
 collision_mask = 2
 collide_with_areas = true
@@ -428,6 +428,10 @@ light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
 
+[node name="RayCast" type="RayCast" parent="CarBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.027562, 0 )
+enabled = true
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
 volume_db = -9.087
@@ -436,4 +440,4 @@ script = ExtResource( 6 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 
-[connection signal="body_entered" from="CarBody" to="CarBody" method="_on_Body_body_entered"]
+[connection signal="body_entered" from="CarBody" to="." method="_on_CarBody_body_entered"]

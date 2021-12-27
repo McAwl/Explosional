@@ -13,13 +13,13 @@ radius = 1.01069
 offsets = PoolRealArray( 0, 0.142857, 0.273292, 0.447205 )
 colors = PoolColorArray( 0.986816, 0.0077095, 0.0077095, 1, 0.983398, 1, 0, 1, 1, 0, 0, 1, 0.0258789, 0.0253735, 0.0253735, 1 )
 
-[sub_resource type="GradientTexture" id=27]
+[sub_resource type="GradientTexture" id=33]
 gradient = SubResource( 11 )
 
 [sub_resource type="Curve" id=12]
 _data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=28]
+[sub_resource type="CurveTexture" id=34]
 curve = SubResource( 12 )
 
 [sub_resource type="ParticlesMaterial" id=13]
@@ -28,16 +28,16 @@ spread = 180.0
 gravity = Vector3( 0, 0, 0 )
 initial_velocity = 1.0
 scale = 0.25
-scale_curve = SubResource( 28 )
-color_ramp = SubResource( 27 )
+scale_curve = SubResource( 34 )
+color_ramp = SubResource( 33 )
 
-[sub_resource type="SpatialMaterial" id=29]
+[sub_resource type="SpatialMaterial" id=35]
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
 
 [sub_resource type="SphereMesh" id=14]
-material = SubResource( 29 )
+material = SubResource( 35 )
 
 [sub_resource type="Gradient" id=18]
 offsets = PoolRealArray( 0, 0.477273, 1 )

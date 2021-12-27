@@ -1,31 +1,17 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://assets/fonts/Square.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://logic/player.gd" type="Script" id=2]
+[ext_resource path="res://assets/Icons/missile.png" type="Texture" id=3]
+[ext_resource path="res://assets/Icons/icon_mine.png" type="Texture" id=4]
+[ext_resource path="res://assets/Icons/rocket.png" type="Texture" id=5]
+[ext_resource path="res://assets/Icons/lifebar_fill.png" type="Texture" id=6]
+[ext_resource path="res://assets/Icons/energy_bar_fill.png" type="Texture" id=7]
+[ext_resource path="res://assets/Icons/lifebar_bg.png" type="Texture" id=8]
 
 [sub_resource type="DynamicFont" id=1]
 size = 10
 font_data = ExtResource( 1 )
-
-[sub_resource type="DynamicFont" id=2]
-size = 34
-font_data = ExtResource( 1 )
-
-[sub_resource type="Animation" id=3]
-resource_name = "font_blink"
-loop = true
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:custom_colors/font_color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 0.906344, 0.264627, 0.264627, 1 ), Color( 1, 1, 1, 1 ) ]
-}
 
 [node name="Player" type="Spatial" groups=["player"]]
 script = ExtResource( 2 )
@@ -53,20 +39,62 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label2" type="Label" parent="VC/CanvasLayer"]
-visible = false
-margin_left = 805.188
-margin_top = 496.031
-margin_right = 977.192
-margin_bottom = 532.031
-rect_scale = Vector2( 2, 2 )
-custom_colors/font_color = Color( 0.945785, 0.574308, 0.574308, 1 )
-custom_fonts/font = SubResource( 2 )
-text = "Air Strike!"
-align = 1
+[node name="icon_mine" type="TextureRect" parent="VC/CanvasLayer"]
+margin_left = 1816.48
+margin_top = 18.7215
+margin_right = 2165.48
+margin_bottom = 208.721
+rect_scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextFlash" type="AnimationPlayer" parent="VC/CanvasLayer/Label2"]
-anims/font_blink = SubResource( 3 )
+[node name="icon_rocket" type="TextureRect" parent="VC/CanvasLayer"]
+visible = false
+margin_left = 1808.19
+margin_top = 22.2224
+margin_right = 2245.19
+margin_bottom = 178.222
+rect_scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon_missile" type="TextureRect" parent="VC/CanvasLayer"]
+visible = false
+margin_left = 1814.8
+margin_top = 10.214
+margin_right = 2187.8
+margin_bottom = 262.214
+rect_scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="health" type="TextureProgress" parent="VC/CanvasLayer"]
+margin_left = 24.7004
+margin_top = 1008.56
+margin_right = 420.7
+margin_bottom = 1061.56
+max_value = 10.0
+value = 10.0
+texture_under = ExtResource( 8 )
+texture_progress = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="cooldown" type="TextureProgress" parent="VC/CanvasLayer"]
+margin_left = 1801.21
+margin_top = 55.2063
+margin_right = 2049.21
+margin_bottom = 95.2063
+rect_scale = Vector2( 0.4, 1 )
+value = 50.0
+texture_progress = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

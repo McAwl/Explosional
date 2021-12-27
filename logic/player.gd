@@ -24,7 +24,7 @@ func init(_player_number, _number_players, _missile_homing, _player_name, pos=fa
 	#get_carbody().missile_homing = _missile_homing
 	if pos:
 		get_carbody().global_transform.origin = pos
-	set_label(player_number, lives_left, get_carbody().total_damage, get_carbody().weapons[get_carbody().weapon_select]["name"], get_carbody().cooldown_timer, get_carbody().weapons[get_carbody().weapon_select]["damage"])
+	set_label(player_number, lives_left, get_carbody().total_damage, get_carbody().weapons[get_carbody().weapon_select]["damage"])
 
 	
 	name = "InstancePos"+str(_player_number)
@@ -140,17 +140,18 @@ func get_carbody():
 func get_label():
 	return $VC.get_node( "CanvasLayer/Label")
 
-func air_strike_label():
-	return $VC.get_node( "CanvasLayer/Label2")
-
 
 func set_label2(s):
 	get_label().text = s
 
 
-func set_label(_player_number, _lives_left, player_damage, weapon, cooldown_timer, weapon_damage):
+func get_CanvasLayer():
+	return get_viewport_container().get_node("CanvasLayer")
+
+
+func set_label(_player_number, _lives_left, player_damage, weapon_damage):
 	#get_label().text = "Player:"+str(_player_number)+" Lives:"+str(_lives_left)+" Damage:"+str(player_damage)+" Weapon:"+str(weapon)+" Cooldown:"+str(cooldown_timer)+" Weapon Damage:"+str(weapon_damage)
-	get_label().text = "Player"+str(_player_number)+":"+str(player_name)+" Lives:"+str(_lives_left)+" Damage:"+str(player_damage)+" Weapon:"+str(weapon)+" Cooldown:"+str(cooldown_timer)+" Weapon Damage:"+str(weapon_damage)
+	get_label().text = "Player"+str(_player_number)+":"+str(player_name)+" Lives:"+str(_lives_left)+" Damage:"+str(player_damage)+" Weapon Damage:"+str(weapon_damage)
 
 	
 

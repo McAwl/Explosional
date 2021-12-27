@@ -6,7 +6,7 @@ var missile_homing = false
 var num_players
 var players
 var rng = RandomNumberGenerator.new()
-var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
+var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 60.0, "interval_so_far_sec": 0.0, "interval_sec": 10.0, "circle_radius_m": 10.0}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -30,29 +30,28 @@ func _process(delta):
 		air_strike["duration_so_far_sec"] = 0.0
 		# var players = get_tree().get_nodes_in_group("player")  # 
 		print("len(players)="+str(len(players)))
-		for player in get_players():  # range(1, num_players+1):
-			player.air_strike_label().visible = true
-			player.air_strike_label().get_node("TextFlash").play("font_blink")
+		air_strike_label().visible = true
+		air_strike_label().get_node("TextFlash").play("font_blink")
 		$siren.playing = true
 	elif air_strike["on"] == true and air_strike["duration_so_far_sec"] > air_strike["duration_sec"]:
 		air_strike["on"] = false
 		air_strike["interval_so_far_sec"] = 0.0
 		air_strike["duration_so_far_sec"] = 0.0
-		for player in get_players():  # range(1, num_players+1):
-			player.air_strike_label().visible = false
-			player.air_strike_label().get_node("TextFlash").stop()
+		air_strike_label().visible = false
+		air_strike_label().get_node("TextFlash").stop()
 		$siren.playing = false
 		
 	if air_strike["on"] == true:
 		for player in get_players():  # range(1, num_players+1):
-			if randf()<0.005:
-				var weapon_instance = load("res://scenes/mine.tscn").instance()
-				add_child(weapon_instance) 
-				var speed = player.get_carbody().get_speed2()
-				var cbo = player.get_carbody().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
-				weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0))
-				weapon_instance.set_as_bomb()
-				weapon_instance.set_as_toplevel(true)
+			if player.get_carbody().lifetime_so_far_sec > 5.0:
+				if randf()<0.005:
+					var weapon_instance = load("res://scenes/mine.tscn").instance()
+					add_child(weapon_instance) 
+					var speed = player.get_carbody().get_speed2()
+					var cbo = player.get_carbody().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
+					weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0))
+					weapon_instance.set_as_bomb()
+					weapon_instance.set_as_toplevel(true)
 
 	check_game_over_timer -= delta
 	if Input.is_action_pressed("back"):
@@ -112,3 +111,5 @@ func reset_game():
 	var _ret_val = get_tree().change_scene("res://scenes/start.tscn")  #get_tree().reload_current_scene()
 
 
+func air_strike_label():
+	return $VC.get_node( "CL/LabelAirStrike")

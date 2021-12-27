@@ -29,7 +29,7 @@ func reset_car():
 		# get_parent().set_label("Player: "+str($Body.player_number)+" Game Over")
 		visible = false
 	else:
-		get_player().set_label($CarBody.player_number, get_player().lives_left, $CarBody.total_damage, $CarBody.weapons[$CarBody.weapon_select], $CarBody.weapons[$CarBody.weapon_select].cooldown_timer, $CarBody.weapons[$CarBody.weapon_select].damage)
+		get_player().set_label($CarBody.player_number, get_player().lives_left, $CarBody.total_damage, $CarBody.weapons[$CarBody.weapon_select].damage)
 		$CarBody.global_transform.origin = get_player().get_parent().get_random_spawn_point()  # Vector3(0.0, 0.0, 0.0)
 		$CarBody.linear_velocity = Vector3(0.0, 0.0, 0.0)
 		$CarBody.speed = 0.0
@@ -37,6 +37,13 @@ func reset_car():
 		$CarBody.rotation_degrees = Vector3(0.0, 0.0, 0.0)
 	$CarBody.reset_vals()
 	$CarBody.reset_car = false
+	$CarBody.get_node("Wheel1").visible = true
+	$CarBody.get_node("Wheel2").visible = true
+	$CarBody.get_node("Wheel3").visible = true
+	$CarBody.get_node("Wheel4").visible = true
+	$CarBody.get_node("Body").visible = true
+	$CarBody.get_node("Particles").visible = true
+	$CarBody.lifetime_so_far_sec = 0.0
 
 
 func _process(delta):
@@ -45,3 +52,8 @@ func _process(delta):
 		reset_car()
 			
 	print_timer += delta
+
+
+
+func _on_CarBody_body_entered():
+	print("_on_CarBody_body_entered")

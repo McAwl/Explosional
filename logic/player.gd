@@ -153,7 +153,6 @@ func set_label(_player_number, _lives_left, player_damage, weapon_damage):
 	#get_label().text = "Player:"+str(_player_number)+" Lives:"+str(_lives_left)+" Damage:"+str(player_damage)+" Weapon:"+str(weapon)+" Cooldown:"+str(cooldown_timer)+" Weapon Damage:"+str(weapon_damage)
 	get_label().text = "Player"+str(_player_number)+":"+str(player_name)+" Lives:"+str(_lives_left)+" Damage:"+str(player_damage)+" Weapon Damage:"+str(weapon_damage)
 
-	
 
 func set_global_transform_origin(o):
 	get_carbody().global_transform.origin = o

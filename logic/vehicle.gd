@@ -116,7 +116,7 @@ func _process(delta):
 	if Input.is_action_just_released("fire_player"+str(player_number)) and weapons[weapon_select]["active"] == false and weapons[weapon_select]["cooldown_timer"] <= 0.0:
 		weapons[weapon_select]["cooldown_timer"] = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select].name]
 		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
-		if weapon_select == 0:  # bomb (mine)
+		if weapon_select == 0:  # mine
 			var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
 			add_child(weapon_instance) 
 			weapon_instance.rotation_degrees = rotation_degrees

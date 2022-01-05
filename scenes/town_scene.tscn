@@ -28,7 +28,7 @@
 [ext_resource path="res://assets/town_scene_slot2_albedo_bump.packed_tex" type="Texture" id=26]
 [ext_resource path="res://assets/Audio/570464__nuclearboy__delta-7-evacuation-siren.wav" type="AudioStream" id=27]
 [ext_resource path="res://assets/fonts/Square.ttf" type="DynamicFontData" id=28]
-[ext_resource path="res://scenes/MeshInstance.gd" type="Script" id=29]
+[ext_resource path="res://logic/MeshInstance.gd" type="Script" id=29]
 [ext_resource path="res://assets/Materials/terrain/cement2.tres" type="Material" id=30]
 [ext_resource path="res://assets/Icons/nuclear-plant.png" type="Texture" id=31]
 

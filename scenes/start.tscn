@@ -62,20 +62,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Player1Name" type="TextEdit" parent="."]
+[node name="Player1Name" type="LineEdit" parent="."]
 margin_left = 349.445
 margin_top = 254.452
 margin_right = 517.445
 margin_bottom = 302.452
+focus_neighbour_left = NodePath(".")
+focus_neighbour_top = NodePath(".")
+focus_neighbour_right = NodePath("../Player4Name")
+focus_neighbour_bottom = NodePath("../Player4Name")
+focus_next = NodePath("../Player2Name")
+focus_previous = NodePath("../Player3Name")
 custom_fonts/font = SubResource( 1 )
 custom_styles/read_only = SubResource( 11 )
 custom_styles/normal = SubResource( 12 )
-readonly = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+max_length = 12
+editable = false
 
-[node name="Player2Name" type="TextEdit" parent="."]
+[node name="Player2Name" type="LineEdit" parent="."]
 margin_left = 353.74
 margin_top = 435.524
 margin_right = 525.16
@@ -83,12 +87,9 @@ margin_bottom = 483.524
 custom_fonts/font = SubResource( 7 )
 custom_styles/read_only = SubResource( 13 )
 custom_styles/normal = SubResource( 14 )
-readonly = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+editable = false
 
-[node name="Player3Name" type="TextEdit" parent="."]
+[node name="Player3Name" type="LineEdit" parent="."]
 margin_left = 354.359
 margin_top = 622.943
 margin_right = 523.859
@@ -96,12 +97,9 @@ margin_bottom = 670.943
 custom_fonts/font = SubResource( 8 )
 custom_styles/read_only = SubResource( 15 )
 custom_styles/normal = SubResource( 16 )
-readonly = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+editable = false
 
-[node name="Player4Name" type="TextEdit" parent="."]
+[node name="Player4Name" type="LineEdit" parent="."]
 margin_left = 353.854
 margin_top = 821.667
 margin_right = 523.934
@@ -109,10 +107,7 @@ margin_bottom = 869.667
 custom_fonts/font = SubResource( 9 )
 custom_styles/read_only = SubResource( 17 )
 custom_styles/normal = SubResource( 18 )
-readonly = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+editable = false
 
 [node name="LabelAddPlayers" type="Label" parent="."]
 margin_left = 818.394

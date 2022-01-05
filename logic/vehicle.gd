@@ -123,6 +123,7 @@ func _process(delta):
 			weapons[0]["active"] = true
 			weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity)
 			weapon_instance.set_as_mine()
+			weapon_instance.player_number = player_number
 			weapon_instance.set_as_toplevel(true)
 		elif weapon_select == 1:
 			fire_missile_or_rocket()

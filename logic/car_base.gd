@@ -54,6 +54,5 @@ func _process(delta):
 	print_timer += delta
 
 
-
-func _on_CarBody_body_entered():
+func _on_CarBody_body_entered(_body):
 	print("_on_CarBody_body_entered")

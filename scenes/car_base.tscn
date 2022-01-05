@@ -300,7 +300,7 @@ shape = SubResource( 7 )
 transform = Transform( 0.998172, 0, 0.0604388, 0, 1, 0, -0.0604388, 0, 0.998172, -0.0157232, 1.97449, -2.31076 )
 
 [node name="CamTargetForward" type="Spatial" parent="CarBody/CameraBase"]
-transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, -0.0367441, -1.10858, 0.866993 )
+transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, -0.0367441, -0.864255, 0.866993 )
 
 [node name="MeshInstance4" type="MeshInstance" parent="CarBody/CameraBase/CamTargetForward"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
@@ -320,7 +320,7 @@ skeleton = NodePath("../../Camera")
 material/0 = null
 
 [node name="CamTargetReverse" type="Spatial" parent="CarBody/CameraBase"]
-transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, -0.157038, -0.728379, 2.8537 )
+transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, -0.157038, -0.561681, 2.8537 )
 
 [node name="MeshInstance2" type="MeshInstance" parent="CarBody/CameraBase/CamTargetReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )

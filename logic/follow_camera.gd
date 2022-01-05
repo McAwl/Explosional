@@ -40,7 +40,6 @@ func _physics_process(delta):
 	var cam_base_reverse = get_parent().get_node("CamBaseReverse").get_global_transform()
 	
 	var linear_velocity = get_parent().get_parent().linear_velocity
-	var speed = linear_velocity.length()
 	var fwd_mps = get_parent().get_parent().transform.basis.xform_inv(linear_velocity).z
 	
 	if fwd_mps >= -2.0:

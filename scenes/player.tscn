@@ -31,7 +31,8 @@ render_target_update_mode = 3
 [node name="CanvasLayer" type="CanvasLayer" parent="VC"]
 
 [node name="Label" type="Label" parent="VC/CanvasLayer"]
-rect_scale = Vector2( 2, 2 )
+margin_right = 96.0
+margin_bottom = 12.0
 custom_fonts/font = SubResource( 1 )
 text = "Player x: Score: 2"
 align = 1
@@ -40,10 +41,10 @@ __meta__ = {
 }
 
 [node name="icon_mine" type="TextureRect" parent="VC/CanvasLayer"]
-margin_left = 1816.48
-margin_top = 18.7215
-margin_right = 2165.48
-margin_bottom = 208.721
+margin_left = 130.182
+margin_top = 9.3494
+margin_right = 479.182
+margin_bottom = 199.349
 rect_scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 4 )
 __meta__ = {
@@ -75,10 +76,11 @@ __meta__ = {
 }
 
 [node name="health" type="TextureProgress" parent="VC/CanvasLayer"]
-margin_left = 24.7004
-margin_top = 1008.56
-margin_right = 420.7
-margin_bottom = 1061.56
+margin_left = 228.058
+margin_top = 23.3368
+margin_right = 624.058
+margin_bottom = 76.3368
+rect_scale = Vector2( 0.2, 0.3 )
 max_value = 10.0
 value = 10.0
 texture_under = ExtResource( 8 )
@@ -88,13 +90,14 @@ __meta__ = {
 }
 
 [node name="cooldown" type="TextureProgress" parent="VC/CanvasLayer"]
-margin_left = 1801.21
-margin_top = 55.2063
-margin_right = 2049.21
-margin_bottom = 95.2063
-rect_scale = Vector2( 0.4, 1 )
+margin_left = 127.327
+margin_top = 51.0
+margin_right = 375.327
+margin_bottom = 91.0
+rect_scale = Vector2( 0.3, 0.5 )
 value = 50.0
 texture_progress = ExtResource( 7 )
+tint_over = Color( 1, 0, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

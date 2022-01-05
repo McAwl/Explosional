@@ -6,7 +6,7 @@ var missile_homing = false
 var num_players
 var players
 var rng = RandomNumberGenerator.new()
-var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 60.0, "interval_so_far_sec": 0.0, "interval_sec": 10.0, "circle_radius_m": 10.0}
+var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -32,6 +32,7 @@ func _process(delta):
 		print("len(players)="+str(len(players)))
 		air_strike_label().visible = true
 		air_strike_label().get_node("TextFlash").play("font_blink")
+		$VC/CL/IconRadiation.visible = true
 		$siren.playing = true
 	elif air_strike["on"] == true and air_strike["duration_so_far_sec"] > air_strike["duration_sec"]:
 		air_strike["on"] = false
@@ -39,6 +40,7 @@ func _process(delta):
 		air_strike["duration_so_far_sec"] = 0.0
 		air_strike_label().visible = false
 		air_strike_label().get_node("TextFlash").stop()
+		$VC/CL/IconRadiation.visible = false
 		$siren.playing = false
 		
 	if air_strike["on"] == true:
@@ -112,4 +114,4 @@ func reset_game():
 
 
 func air_strike_label():
-	return $VC.get_node( "CL/LabelAirStrike")
+	return $VC.get_node("CL/LabelAirStrike")

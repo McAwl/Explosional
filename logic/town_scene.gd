@@ -54,6 +54,8 @@ func _process(delta):
 					weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0))
 					weapon_instance.set_as_bomb()
 					weapon_instance.set_as_toplevel(true)
+					#$nuke_mushroom_cloud.emitting = true
+					#$nuke_mushroom_cloud2.emitting = true
 
 	check_game_over_timer -= delta
 	if Input.is_action_pressed("back"):

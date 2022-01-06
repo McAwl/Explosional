@@ -107,10 +107,12 @@ func _process(delta):
 					bomb_flash_state = 0
 	
 	if bomb_stage == 5:
-		if  bomb_proximity_timer_limit < 0.0 or ($Particles.emitting == false and $explosion.playing == false):
+		if bomb_proximity_timer_limit < 0.0 or ($Particles.emitting == false and $explosion.playing == false and $explosion_nuke.playing == false and $nuke_mushroom_cloud.emitting == false and $nuke_mushroom_cloud2.emitting == false):
 			# explosion particles have finished, explosion sound has finished, so disable the bomb
 			bomb_stage = 0
 			visible = false
+			if bomb_proximity_timer_limit < 0.0:
+				print("bomb_proximity_timer_limit < 0.0")
 
 
 func get_players():
@@ -124,10 +126,15 @@ func get_bombs():
 func _physics_process(_delta):
 	if bomb_stage == 4:
 		hide_meshinstances()
-		$explosion.playing = true
 		# $explosion.seek(1.0)
-		$Particles.global_transform.origin = global_transform.origin
-		$Particles.emitting = true
+		if type == TYPES.NUKE:
+			$explosion_nuke.playing = true
+			$nuke_mushroom_cloud.emitting = true
+			$nuke_mushroom_cloud2.emitting = true
+		else:
+			$explosion.playing = true
+			$Particles.global_transform.origin = global_transform.origin
+			$Particles.emitting = true
 		var targets = []
 		for player in get_players():  # i in range(1,5): # explosion toward all players
 			var target = player.get_carbody()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")

@@ -75,6 +75,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="icon_nuke" type="TextureRect" parent="VC/CanvasLayer"]
+visible = false
+margin_left = 1814.8
+margin_top = 10.214
+margin_right = 2187.8
+margin_bottom = 262.214
+rect_scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="health" type="TextureProgress" parent="VC/CanvasLayer"]
 margin_left = 228.058
 margin_top = 23.3368

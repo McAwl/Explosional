@@ -55,4 +55,7 @@ func _process(delta):
 
 
 func _on_CarBody_body_entered(_body):
-	print("_on_CarBody_body_entered")
+	print("car_base: on_CarBody_body_entered, _body.name="+str(_body.name))
+	if "Nuke" in _body.name:
+		$CarBody.weapons[3].enabled = true
+	

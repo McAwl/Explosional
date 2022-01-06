@@ -1,9 +1,10 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://assets/Materials/vehicles/car_blue_body.tres" type="Material" id=1]
 [ext_resource path="res://assets/Materials/terrain/cement.tres" type="Material" id=2]
 [ext_resource path="res://assets/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=3]
 [ext_resource path="res://scenes/mine.gd" type="Script" id=4]
+[ext_resource path="res://assets/sounds/587193__derplayer__explosion-big-02 - Copy2.ogg" type="AudioStream" id=5]
 
 [sub_resource type="PhysicsMaterial" id=1]
 bounce = 0.18
@@ -163,6 +164,10 @@ draw_pass_1 = SubResource( 8 )
 
 [node name="explosion" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
+volume_db = -6.992
+
+[node name="explosion_nuke" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
 volume_db = -6.992
 
 [node name="SpotLight" type="SpotLight" parent="."]

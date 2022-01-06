@@ -14,7 +14,7 @@ export var speed = 0.0
 var speed_low_limit = 5
 var rng = RandomNumberGenerator.new()
 
-const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "missile": 60.0}
+const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "missile": 60.0, "nuke": 0.0}
 var cooldown_timer = COOLDOWN_TIMER_DEFAULTS["mine"]
 var timer_0_1_sec = 0.1
 var timer_1_sec = 1.0  # timer to eg: check if car needs to turn light on 
@@ -25,9 +25,10 @@ var take_damage = true
 var wheel_positions = []
 var wheels = []
 var reset_car = false
-var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["mine"], "scene": "res://scenes/mine.tscn"}, \
-			   1: {"name": "rocket", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["rocket"], "scene": "res://scenes/missile.tscn"}, \
-			   2: {"name": "missile", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["missile"], "scene": "res://scenes/missile.tscn"}}
+var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["mine"], "scene": "res://scenes/mine.tscn", "enabled": true}, \
+			   1: {"name": "rocket", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["rocket"], "scene": "res://scenes/missile.tscn", "enabled": true}, \
+			   2: {"name": "missile", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["missile"], "scene": "res://scenes/missile.tscn", "enabled": true}, \
+			   3: {"name": "nuke", "damage": 10, "active": false, "cooldown_timer": 0.0, "scene": "res://scenes/mine.tscn", "enabled": false}}
 var weapon_select = 0
 var lights_disabled = false
 
@@ -105,24 +106,37 @@ func _process(delta):
 		
 	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
 		weapon_select += 1
-		if weapon_select > 2:
+		if weapon_select > 3:
+			weapon_select = 0
+		if weapons[weapon_select].enabled == false:
+			weapon_select += 1
+		if weapon_select > 3:
 			weapon_select = 0
 		get_player().get_CanvasLayer().get_node("icon_mine").hide()
 		get_player().get_CanvasLayer().get_node("icon_rocket").hide()
 		get_player().get_CanvasLayer().get_node("icon_missile").hide()
-		get_player().get_CanvasLayer().get_node("icon_"+weapons[weapon_select]["name"]).show()
+		get_player().get_CanvasLayer().get_node("icon_nuke").hide()
+		get_player().get_CanvasLayer().get_node("icon_"+weapons[weapon_select].name).show()
 		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
 	
 	if Input.is_action_just_released("fire_player"+str(player_number)) and weapons[weapon_select]["active"] == false and weapons[weapon_select]["cooldown_timer"] <= 0.0:
+		print("Player pressed fire")
 		weapons[weapon_select]["cooldown_timer"] = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select].name]
 		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
-		if weapon_select == 0:  # mine
+		if weapon_select == 0 or weapon_select == 3:  # mine or nuke
+			print("Firing weapon="+str(weapon_select))
 			var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
 			add_child(weapon_instance) 
 			weapon_instance.rotation_degrees = rotation_degrees
-			weapons[0]["active"] = true
-			weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity)
-			weapon_instance.set_as_mine()
+			weapons[weapon_select]["active"] = true
+			if weapon_select == 0:
+				weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity)
+				weapon_instance.set_as_mine()
+			else:
+				print("activating nuke")
+				weapon_instance.activate(get_node("/root/TownScene/NukeSpawnPoint").global_transform.origin, 0.0, 0.0)
+				weapon_instance.set_as_nuke()
+				weapons[weapon_select]["enabled"] = false
 			weapon_instance.player_number = player_number
 			weapon_instance.set_as_toplevel(true)
 		elif weapon_select == 1:
@@ -287,6 +301,6 @@ func lights_off():
 
 
 func _on_CarBody_body_entered(body):
-	print("_on_CarBody_body_entered name="+str(body.name))
+	print("vehicle: _on_CarBody_body_entered name="+str(body.name))
 	if "Lava" in body.name:
 		damage(10)

@@ -3,7 +3,7 @@
 [ext_resource path="res://assets/Materials/vehicles/car_blue_body.tres" type="Material" id=1]
 [ext_resource path="res://assets/Materials/terrain/cement.tres" type="Material" id=2]
 [ext_resource path="res://assets/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=3]
-[ext_resource path="res://scenes/mine.gd" type="Script" id=4]
+[ext_resource path="res://logic/mine.gd" type="Script" id=4]
 [ext_resource path="res://assets/sounds/587193__derplayer__explosion-big-02 - Copy2.ogg" type="AudioStream" id=5]
 
 [sub_resource type="PhysicsMaterial" id=1]
@@ -199,7 +199,7 @@ process_material = SubResource( 25 )
 draw_pass_1 = SubResource( 27 )
 
 [node name="nuke_mushroom_cloud2" type="Particles" parent="."]
-transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 21.0757, -0.00710678 )
+transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 21.076, 0 )
 emitting = false
 amount = 200
 lifetime = 9.0

@@ -28,7 +28,7 @@
 [ext_resource path="res://assets/town_scene_slot2_albedo_bump.packed_tex" type="Texture" id=26]
 [ext_resource path="res://assets/Audio/570464__nuclearboy__delta-7-evacuation-siren.wav" type="AudioStream" id=27]
 [ext_resource path="res://assets/fonts/Square.ttf" type="DynamicFontData" id=28]
-[ext_resource path="res://scenes/NukePowerUp.gd" type="Script" id=29]
+[ext_resource path="res://logic/NukePowerUp.gd" type="Script" id=29]
 [ext_resource path="res://assets/Materials/terrain/cement2.tres" type="Material" id=30]
 [ext_resource path="res://assets/Icons/nuclear-plant.png" type="Texture" id=31]
 
@@ -203,7 +203,8 @@ emission_operator = 0
 emission_on_uv2 = false
 
 [sub_resource type="Animation" id=37]
-length = 0.001
+length = 10.0
+loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Lava:material/0:albedo_color")
 tracks/0/interp = 1
@@ -211,10 +212,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 5.2, 10 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Color( 1, 0, 0, 1 ) ]
+"values": [ Color( 1, 0, 0, 1 ), Color( 1, 0.631373, 0, 1 ), Color( 1, 0, 0, 1 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Lava/OmniLight:light_color")
@@ -223,10 +224,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0, 5.2, 10 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Color( 1, 0, 0, 1 ) ]
+"values": [ Color( 1, 0, 0, 1 ), Color( 1, 0.631373, 0, 1 ), Color( 1, 0, 0, 1 ) ]
 }
 
 [sub_resource type="Animation" id=23]
@@ -294,6 +295,7 @@ height = 5.83
 [node name="TownScene" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 28.3188, 0, 82.1719 )
 script = ExtResource( 2 )
+start_clock_hrs = 0.0
 
 [node name="BackgroundMusic" type="Node" parent="."]
 script = ExtResource( 4 )
@@ -868,17 +870,18 @@ anims/font_blink = SubResource( 12 )
 
 [node name="IconRadiation" type="TextureRect" parent="VC/CL"]
 visible = false
-margin_left = 955.307
-margin_top = 665.928
-margin_right = 1153.31
-margin_bottom = 858.928
+margin_left = 1837.08
+margin_top = 996.788
+margin_right = 1912.08
+margin_bottom = 1071.79
 texture = ExtResource( 31 )
+expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Platform" type="MeshInstance" parent="."]
-transform = Transform( -0.0719752, -1.77569e-10, -9.17144, 0.0348567, 0.24402, -0.00439632, 2.28749, -0.00371838, -0.28851, 190.553, 9.14395, 66.5257 )
+transform = Transform( -0.0719752, -1.77569e-10, -9.17144, 0.0348567, 0.24402, -0.00439632, 2.28749, -0.00371838, -0.28851, 190.553, 13.5945, 66.4579 )
 mesh = SubResource( 16 )
 material/0 = ExtResource( 30 )
 
@@ -899,7 +902,7 @@ material/0 = ExtResource( 30 )
 shape = SubResource( 18 )
 
 [node name="NukePowerUp" type="MeshInstance" parent="."]
-transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 197.294, 10.4482, 67.268 )
+transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 197.294, 14.9265, 67.268 )
 mesh = SubResource( 19 )
 material/0 = SubResource( 20 )
 script = ExtResource( 29 )
@@ -915,6 +918,9 @@ light_color = Color( 0.913725, 0.862745, 0.121569, 1 )
 [node name="CollisionShape" type="CollisionShape" parent="NukePowerUp/NukeStaticBody"]
 shape = SubResource( 36 )
 
+[node name="Timer" type="Timer" parent="NukePowerUp"]
+wait_time = 60.0
+
 [node name="Lava" type="MeshInstance" parent="."]
 transform = Transform( 20.542, 0, 0, 0, 1, 0, 0, 0, 14.9284, 189.691, 0.947495, 67.3553 )
 mesh = SubResource( 21 )
@@ -922,6 +928,7 @@ material/0 = SubResource( 22 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Lava"]
 root_node = NodePath("../..")
+autoplay = "RESET"
 anims/RESET = SubResource( 37 )
 anims/colour = SubResource( 23 )
 
@@ -947,4 +954,6 @@ light_color = Color( 1, 0, 0, 1 )
 omni_range = 50.0
 
 [node name="NukeSpawnPoint" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 83.0877, 89.1592, 123.96 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 115.592, 126.977, 131.209 )
+
+[connection signal="timeout" from="NukePowerUp/Timer" to="NukePowerUp" method="_on_Timer_timeout"]

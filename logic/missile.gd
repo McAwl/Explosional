@@ -22,14 +22,20 @@ var rng = RandomNumberGenerator.new()
 
 var hit_something = false
 
-		
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	$ParticlesThrust.visible = true
+	$ParticlesExplosion.visible = false	
+
+
 func _process(delta):
 	lifetime_seconds -= delta
-	if homing:
+	if homing == true:
 		homing_check_target_timer -= delta
 	print_timer -= delta
 	
-	if hit_something == true and $explosion.playing == false and $Particles2.emitting == true:
+	if hit_something == true and $ExplosionSound.playing == false and $ParticlesExplosion.emitting == true:
 		# explosion noise finished
 		queue_free()
 	
@@ -38,8 +44,8 @@ func _process(delta):
 
 
 func _physics_process(delta):
-	if not hit_something:
-		if closest_target != null and homing: 
+	if hit_something == false:
+		if closest_target != null and homing == true: 
 			
 			velocity = initial_speed * ( ((1.0-homing_force)*velocity.normalized()) + (homing_force*closest_target_direction.normalized()) )  # update this periodically below
 			
@@ -70,28 +76,32 @@ func _physics_process(delta):
 							closest_target_direction_normalised = closest_target_direction.normalized()
 
 
+func activate(_parent_player_number, _homing):
+	homing = _homing
+	parent_player_number = _parent_player_number
+
+
 func _on_Missile_body_entered(body):
-	print("Missile hit something...")
-	$explosion.playing = true
-	$Particles2.emitting = true
-	hit_something = true
-	velocity = Vector3(0,0,0)
-		
-	if "CarBody" in body.name:
-		print("Missile hit "+str(body.name))
-		body.hit_by_missile["active"] = true
-		body.hit_by_missile["origin"] = transform.origin
-		body.hit_by_missile["velocity"] = velocity
-		body.hit_by_missile["homing"] = homing
-	else:
-		for player in get_node("/root/TownScene").get_players():  # in range(1, 5): # explosion toward all players
-			var target = player.get_carbody()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
-			#var target = get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
-			var distance = global_transform.origin.distance_to(target.global_transform.origin)
-			var direction = global_transform.origin - target.global_transform.origin
-			if distance < explosion_range:
-				target.apply_impulse( Vector3(0,0,0), 200*direction.normalized() )   # offset, impulse(=direction*force)
-				target.angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
-				target.damage(1)
-
-
+	if hit_something == false:
+		print("Missile hit something...")
+		$ExplosionSound.playing = true
+		$ParticlesExplosion.emitting = true
+		hit_something = true
+		velocity = Vector3(0,0,0)
+			
+		if "CarBody" in body.name:
+			print("Missile hit "+str(body.name))
+			body.hit_by_missile["active"] = true
+			body.hit_by_missile["origin"] = transform.origin
+			body.hit_by_missile["velocity"] = velocity
+			body.hit_by_missile["homing"] = homing
+		else:
+			for player in get_node("/root/TownScene").get_players():  # in range(1, 5): # explosion toward all players
+				var target = player.get_carbody()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+				#var target = get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+				var distance = global_transform.origin.distance_to(target.global_transform.origin)
+				var direction = global_transform.origin - target.global_transform.origin
+				if distance < explosion_range:
+					target.apply_impulse( Vector3(0,0,0), 200*direction.normalized() )   # offset, impulse(=direction*force)
+					target.angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
+					target.damage(1)

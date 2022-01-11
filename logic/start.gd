@@ -43,6 +43,9 @@ func _process(_delta):
 		players[4] = {"name": $Player4Name.text}
 		if len($Player4Name.text) > 12:
 			$Player4Name.editable = false
+			
+	if len(players)>0 and Input.is_action_just_released("ui_select"):
+		_on_Button_pressed()
 
 
 func _on_Button_pressed():

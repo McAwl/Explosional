@@ -10,23 +10,25 @@
 radius = 1.01069
 
 [sub_resource type="Gradient" id=11]
-offsets = PoolRealArray( 0, 0.142857, 0.273292, 0.447205 )
-colors = PoolColorArray( 0.986816, 0.0077095, 0.0077095, 1, 0.983398, 1, 0, 1, 1, 0, 0, 1, 0.0258789, 0.0253735, 0.0253735, 1 )
+offsets = PoolRealArray( 0, 0.291925, 0.639752, 1 )
+colors = PoolColorArray( 0.983398, 1, 0, 1, 1, 0, 0, 0.823529, 0.027451, 0.0235294, 0.0235294, 0.192157, 0, 0, 0, 0 )
 
 [sub_resource type="GradientTexture" id=33]
 gradient = SubResource( 11 )
 
 [sub_resource type="Curve" id=12]
-_data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 0.999161 ), 0.0, -0.252055, 0, 0, Vector2( 0.978261, 0.999161 ), -0.118322, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=34]
 curve = SubResource( 12 )
 
 [sub_resource type="ParticlesMaterial" id=13]
-direction = Vector3( 1, 1, 1 )
-spread = 180.0
+direction = Vector3( 0, 0, 1 )
+spread = 10.0
 gravity = Vector3( 0, 0, 0 )
-initial_velocity = 1.0
+initial_velocity = 5.0
+initial_velocity_random = 0.5
+damping = 10.0
 scale = 0.25
 scale_curve = SubResource( 34 )
 color_ramp = SubResource( 33 )
@@ -40,8 +42,8 @@ vertex_color_use_as_albedo = true
 material = SubResource( 35 )
 
 [sub_resource type="Gradient" id=18]
-offsets = PoolRealArray( 0, 0.477273, 1 )
-colors = PoolColorArray( 1, 0, 0, 1, 0.832031, 0.50773, 0.162506, 1, 0.605469, 0.54708, 0.231781, 1 )
+offsets = PoolRealArray( 0.00621118, 0.503106, 1 )
+colors = PoolColorArray( 0.989593, 1, 0, 1, 1, 0, 0, 0.807843, 0.603922, 0.54902, 0.231373, 0 )
 
 [sub_resource type="GradientTexture" id=30]
 gradient = SubResource( 18 )
@@ -58,10 +60,12 @@ spread = 180.0
 initial_velocity = 11.63
 damping = 13.73
 scale_curve = SubResource( 31 )
+color = Color( 1, 0.937255, 0, 1 )
 color_ramp = SubResource( 30 )
 
 [sub_resource type="SpatialMaterial" id=32]
-vertex_color_use_as_albedo = true
+flags_transparent = true
+flags_unshaded = true
 
 [sub_resource type="SphereMesh" id=24]
 material = SubResource( 32 )
@@ -82,18 +86,19 @@ material/0 = ExtResource( 3 )
 transform = Transform( 0.140476, 0, 0, 0, 0.126892, 0, 0, 0, 0.315844, 0, 0, 0 )
 shape = SubResource( 26 )
 
-[node name="Particles" type="Particles" parent="."]
+[node name="ParticlesThrust" type="Particles" parent="."]
 transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 0, 0.533099 )
 amount = 40
 lifetime = 1.21
+explosiveness = 0.1
 local_coords = false
 process_material = SubResource( 13 )
 draw_pass_1 = SubResource( 14 )
 
-[node name="explosion" type="AudioStreamPlayer" parent="."]
+[node name="ExplosionSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 2 )
 
-[node name="Particles2" type="Particles" parent="."]
+[node name="ParticlesExplosion" type="Particles" parent="."]
 emitting = false
 amount = 30
 lifetime = 0.26

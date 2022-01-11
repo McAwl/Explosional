@@ -20,6 +20,7 @@ var timer_0_1_sec = 0.1
 var timer_1_sec = 1.0  # timer to eg: check if car needs to turn light on 
 var lifetime_so_far_sec = 0.0  # to eg disable air strikes for a bit after re-spawn
 var hit_by_missile = {"active": false, "homing": null, "origin": null, "velocity": null}
+var max_damage = 10.0
 var total_damage = 0.0
 var take_damage = true
 var wheel_positions = []
@@ -28,20 +29,41 @@ var reset_car = false
 var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["mine"], "scene": "res://scenes/mine.tscn", "enabled": true}, \
 			   1: {"name": "rocket", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["rocket"], "scene": "res://scenes/missile.tscn", "enabled": true}, \
 			   2: {"name": "missile", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["missile"], "scene": "res://scenes/missile.tscn", "enabled": true}, \
-			   3: {"name": "nuke", "damage": 10, "active": false, "cooldown_timer": 0.0, "scene": "res://scenes/mine.tscn", "enabled": false}}
+			   3: {"name": "nuke", "damage": 10, "active": false, "cooldown_timer": 10.0, "scene": "res://scenes/mine.tscn", "enabled": false}}
 var weapon_select = 0
 var lights_disabled = false
 
 func _ready():
 	cooldown_timer = weapons[weapon_select]["cooldown_timer"]
 	lights_disabled = false
+	check_lights()
 
 	
 func check_lights():
 	if get_node("/root/TownScene/DirectionalLight").light_energy < 0.2:
+		print("turning lights on")
 		lights_on()
 	else:
+		print("turning lights off")
 		lights_off()
+
+func flicker_damaged_lights():
+	# damaged lights
+	# small chance of turning off when damaged. slightly bigger chance of turing back on (should flicker)
+	
+	if rng.randf() < 0.1*total_damage/max_damage:
+		print("damaged LightFrontLeft flickering off")
+		$LightFrontLeft.spot_range = 10  #100.0*(max_damage-total_damage)
+	elif rng.randf() < 0.5*total_damage/max_damage:
+		print("damaged LightFrontLeft flickering on")
+		$LightFrontLeft.spot_range = 100.0
+
+	if rng.randf() < 0.1*total_damage/max_damage:
+		print("damaged LightFrontRight flickering off")
+		$LightFrontRight.spot_range = 10  # 100.0*(max_damage-total_damage)
+	elif rng.randf() < 0.5*total_damage/max_damage:
+		print("damaged LightFrontRight flickering on")
+		$LightFrontRight.spot_range = 100.0
 
 
 func get_raycast(wheel_num):
@@ -49,26 +71,37 @@ func get_raycast(wheel_num):
 
 
 func check_ongoing_damage():
-	if get_raycast(1).is_colliding():
-		if "Lava" in get_raycast(1).get_collider().name:
-			return 1
-	if get_raycast(2).is_colliding():
-		if "Lava" in get_raycast(2).get_collider().name:
-			return 1
-	if get_raycast(3).is_colliding():
-		if "Lava" in get_raycast(3).get_collider().name:
-			return 1
-	if get_raycast(4).is_colliding():
-		if "Lava" in get_raycast(4).get_collider().name:
-			return 1
-	if $RayCast.is_colliding():
-		if "Lava" in $RayCast.get_collider().name:
-			return 1
-	return 0
+	if total_damage < max_damage:
+		if get_raycast(1).is_colliding():
+			if "Lava" in get_raycast(1).get_collider().name:
+				return 1
+		if get_raycast(2).is_colliding():
+			if "Lava" in get_raycast(2).get_collider().name:
+				return 1
+		if get_raycast(3).is_colliding():
+			if "Lava" in get_raycast(3).get_collider().name:
+				return 1
+		if get_raycast(4).is_colliding():
+			if "Lava" in get_raycast(4).get_collider().name:
+				return 1
+		if $RayCast.is_colliding():
+			if "Lava" in $RayCast.get_collider().name:
+				return 1
+		if $RayCast2.is_colliding():
+			if "Lava" in $RayCast2.get_collider().name:
+				return 1
+		return 0
 
 
 func _process(delta):
 	
+	if reset_car == true and $Explosion.emitting == false and $ExplosionSound.playing == false:
+		reset_vals()
+		get_parent().reset_car()
+		
+	if total_damage >= max_damage:
+		return
+		
 	timer_1_sec -= delta
 	if timer_1_sec <= 0.0:
 		timer_1_sec = 1.0
@@ -76,9 +109,10 @@ func _process(delta):
 		var ongoing_damage = check_ongoing_damage()
 		if ongoing_damage > 0:
 			damage(ongoing_damage)
-	
+
 	timer_0_1_sec -= delta
 	if timer_0_1_sec <= 0.0:
+		flicker_damaged_lights()
 		timer_0_1_sec = 0.1
 		if not ("instance" in weapons[weapon_select]):
 			#print(str(weapons[weapon_select]["name"])+" not in dict")
@@ -97,12 +131,8 @@ func _process(delta):
 		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
 		get_player().get_CanvasLayer().get_node("cooldown").max_value = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select]["name"]]
 		get_player().get_CanvasLayer().get_node("cooldown").value = cooldown_timer
-	
-	lifetime_so_far_sec += delta
 
-	if reset_car == true and $Explosion.emitting == false and $ExplosionSound.playing == false:
-		reset_vals()
-		get_parent().reset_car()
+	lifetime_so_far_sec += delta
 		
 	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
 		weapon_select += 1
@@ -130,14 +160,15 @@ func _process(delta):
 			weapon_instance.rotation_degrees = rotation_degrees
 			weapons[weapon_select]["active"] = true
 			if weapon_select == 0:
-				weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity)
 				weapon_instance.set_as_mine()
-			else:
+				weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number)
+			elif weapon_select == 3:
 				print("activating nuke")
-				weapon_instance.activate(get_node("/root/TownScene/NukeSpawnPoint").global_transform.origin, 0.0, 0.0)
 				weapon_instance.set_as_nuke()
-				weapons[weapon_select]["enabled"] = false
-			weapon_instance.player_number = player_number
+				weapon_instance.activate(get_node("/root/TownScene/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number)
+				weapons[weapon_select]["enabled"] = false  # so powerup is needed again
+			else:
+				print("Error! Shouldn't be here")
 			weapon_instance.set_as_toplevel(true)
 		elif weapon_select == 1:
 			fire_missile_or_rocket()
@@ -157,35 +188,37 @@ func _process(delta):
 	
 func _physics_process(delta):
 	
-	var fwd_mps = transform.basis.xform_inv(linear_velocity).x
-
-	steer_target = Input.get_action_strength("turn_left_player"+str(player_number)) - Input.get_action_strength("turn_right_player"+str(player_number))
-	steer_target *= STEER_LIMIT
-
-	if Input.is_action_pressed("accelerate_player"+str(player_number)):
-		# Increase engine force at low speeds to make the initial acceleration faster.
-		speed = linear_velocity.length()
-		if speed < speed_low_limit and speed != 0:
-			engine_force = clamp(engine_force_value * speed_low_limit / speed, 0, 100)
-		else:
-			engine_force = engine_force_value
-	else:
-		engine_force = 0
+	if total_damage < max_damage:
 		
-	if Input.is_action_pressed("reverse_player"+str(player_number)):
-		# Increase engine force at low speeds to make the initial acceleration faster.
-		if fwd_mps >= -1:
+		var fwd_mps = transform.basis.xform_inv(linear_velocity).x
+
+		steer_target = Input.get_action_strength("turn_left_player"+str(player_number)) - Input.get_action_strength("turn_right_player"+str(player_number))
+		steer_target *= STEER_LIMIT
+
+		if Input.is_action_pressed("accelerate_player"+str(player_number)):
+			# Increase engine force at low speeds to make the initial acceleration faster.
 			speed = linear_velocity.length()
 			if speed < speed_low_limit and speed != 0:
-				engine_force = -clamp(engine_force_value * speed_low_limit / speed, 0, 100)
+				engine_force = clamp(engine_force_value * speed_low_limit / speed, 0, 100)
 			else:
-				engine_force = -engine_force_value
+				engine_force = engine_force_value
 		else:
-			brake = 1
-	else:
-		brake = 0.0
+			engine_force = 0
+			
+		if Input.is_action_pressed("reverse_player"+str(player_number)):
+			# Increase engine force at low speeds to make the initial acceleration faster.
+			if fwd_mps >= -1:
+				speed = linear_velocity.length()
+				if speed < speed_low_limit and speed != 0:
+					engine_force = -clamp(engine_force_value * speed_low_limit / speed, 0, 100)
+				else:
+					engine_force = -engine_force_value
+			else:
+				brake = 1
+		else:
+			brake = 0.0
 
-	steering = move_toward(steering, steer_target, STEER_SPEED * delta)
+		steering = move_toward(steering, steer_target, STEER_SPEED * delta)
 	
 	if hit_by_missile["active"] == true:
 		print("Player "+str(player_number)+ " hit by missile!")
@@ -232,8 +265,8 @@ func damage(amount):
 	$Particles.amount *= 2  # increase engine smoke indicating damage
 	engine_force_value *= 0.75  # decrease engine power to indicate damage
 
-	if total_damage >= 10:
-		total_damage = 10
+	if total_damage >= max_damage:
+		total_damage = max_damage
 		$Explosion.emitting = true
 		$ExplosionSound.playing = true
 		reset_car = true
@@ -246,7 +279,7 @@ func damage(amount):
 		lights_disabled = true
 		lights_off()
 	get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
-	get_player().get_CanvasLayer().get_node("health").value = 10-total_damage
+	get_player().get_CanvasLayer().get_node("health").value = max_damage-total_damage
 
 
 func get_player():
@@ -261,7 +294,8 @@ func fire_missile_or_rocket():
 	
 	var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
 	weapons[weapon_select]["instance"] = weapon_instance
-	add_child(weapon_instance)  
+	add_child(weapon_instance)
+	
 	weapon_instance.velocity = transform.basis.z * weapon_instance.muzzle_velocity
 	weapon_instance.velocity[1] += 1.0 
 	weapon_instance.initial_speed = weapon_instance.velocity.length()
@@ -276,21 +310,19 @@ func fire_missile_or_rocket():
 		weapon_instance.rotation_degrees.x = 0.0
 		weapon_instance.rotation_degrees.y = 0.0
 		weapon_instance.rotation_degrees.z = 0.0
-	weapon_instance.parent_player_number = player_number
 	if weapon_select == 1:
-		weapon_instance.homing = false
+		weapon_instance.activate(player_number, false)  # homing = false
 	else:
-		weapon_instance.homing = true
+		weapon_instance.activate(player_number, true)  # homing = true
 	weapon_instance.set_as_toplevel(true)
 	weapons[weapon_select]["active"] = true
 	
 
 func lights_on():
-	if lights_disabled == false:
-		$LightFrontLeft.visible = true
-		$LightFrontRight.visible = true
-		$LightBackLeft.visible = true
-		$LightBackLeft.visible = true
+	$LightFrontLeft.visible = true
+	$LightFrontRight.visible = true
+	$LightBackLeft.visible = true
+	$LightBackLeft.visible = true
 
 
 func lights_off():
@@ -303,4 +335,5 @@ func lights_off():
 func _on_CarBody_body_entered(body):
 	print("vehicle: _on_CarBody_body_entered name="+str(body.name))
 	if "Lava" in body.name:
-		damage(10)
+		print("Taking max_damage damage")
+		damage(max_damage)

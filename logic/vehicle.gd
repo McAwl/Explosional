@@ -135,21 +135,9 @@ func _process(delta):
 	lifetime_so_far_sec += delta
 		
 	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
-		weapon_select += 1
-		if weapon_select > 3:
-			weapon_select = 0
-		if weapons[weapon_select].enabled == false:
-			weapon_select += 1
-		if weapon_select > 3:
-			weapon_select = 0
-		get_player().get_CanvasLayer().get_node("icon_mine").hide()
-		get_player().get_CanvasLayer().get_node("icon_rocket").hide()
-		get_player().get_CanvasLayer().get_node("icon_missile").hide()
-		get_player().get_CanvasLayer().get_node("icon_nuke").hide()
-		get_player().get_CanvasLayer().get_node("icon_"+weapons[weapon_select].name).show()
-		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
+		cycle_weapon()
 	
-	if Input.is_action_just_released("fire_player"+str(player_number)) and weapons[weapon_select]["active"] == false and weapons[weapon_select]["cooldown_timer"] <= 0.0:
+	if Input.is_action_just_released("fire_player"+str(player_number)) and weapons[weapon_select]["active"] == false and weapons[weapon_select]["cooldown_timer"] <= 0.0 and weapons[weapon_select]["enabled"] == true:
 		print("Player pressed fire")
 		weapons[weapon_select]["cooldown_timer"] = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select].name]
 		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
@@ -167,8 +155,10 @@ func _process(delta):
 				weapon_instance.set_as_nuke()
 				weapon_instance.activate(get_node("/root/TownScene/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number)
 				weapons[weapon_select]["enabled"] = false  # so powerup is needed again
+				cycle_weapon()
 			else:
 				print("Error! Shouldn't be here")
+			print("weapons[weapon_select]="+str(weapons[weapon_select]))
 			weapon_instance.set_as_toplevel(true)
 		elif weapon_select == 1:
 			fire_missile_or_rocket()
@@ -185,7 +175,23 @@ func _process(delta):
 	if cooldown_timer < 0.0:
 		cooldown_timer = 0.0
 
-	
+
+func cycle_weapon():
+		weapon_select += 1
+		if weapon_select > 3:
+			weapon_select = 0
+		if weapons[weapon_select].enabled == false:
+			weapon_select += 1
+		if weapon_select > 3:
+			weapon_select = 0
+		get_player().get_CanvasLayer().get_node("icon_mine").hide()
+		get_player().get_CanvasLayer().get_node("icon_rocket").hide()
+		get_player().get_CanvasLayer().get_node("icon_missile").hide()
+		get_player().get_CanvasLayer().get_node("icon_nuke").hide()
+		get_player().get_CanvasLayer().get_node("icon_"+weapons[weapon_select].name).show()
+		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
+
+
 func _physics_process(delta):
 	
 	if total_damage < max_damage:

@@ -7,7 +7,7 @@ var num_players
 var players
 var rng = RandomNumberGenerator.new()
 var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
-
+export var start_clock_hrs = 12.0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	num_players = len(players)
@@ -17,6 +17,11 @@ func _ready():
 		var pos = spawn_points[player_number-1].global_transform.origin
 		player_instance.init(player_number, num_players, missile_homing, players[player_number]["name"], pos)
 		add_child(player_instance)
+	var anim_time = start_clock_hrs + 12.0
+	if anim_time > 24.0:
+		anim_time -= 12.0
+	$DirectionalLight/DayNightAnimation.play("daynightcycle")
+	$DirectionalLight/DayNightAnimation.seek(anim_time)
 
 
 func _process(delta):
@@ -51,7 +56,7 @@ func _process(delta):
 					add_child(weapon_instance) 
 					var speed = player.get_carbody().get_speed2()
 					var cbo = player.get_carbody().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
-					weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0))
+					weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0), 1, 0)  # player 0 = no player
 					weapon_instance.set_as_bomb()
 					weapon_instance.set_as_toplevel(true)
 					#$nuke_mushroom_cloud.emitting = true

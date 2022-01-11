@@ -19,9 +19,9 @@ func disable():
 	print("disabling NukePowerUp")
 	visible = false
 	$Timer.start()
-	transform.origin.y -= 20.0
+	transform.origin.x += 20.0
 
 func _on_Timer_timeout():
 	print("Setting NukePowerUp")
 	visible = true
-	transform.origin.y += 20.0
+	transform.origin.x -= 20.0

@@ -39,6 +39,27 @@ vertex_color_use_as_albedo = true
 [sub_resource type="SphereMesh" id=8]
 material = SubResource( 20 )
 
+[sub_resource type="CapsuleMesh" id=21]
+
+[sub_resource type="SpatialMaterial" id=28]
+albedo_color = Color( 0.0431373, 0.368627, 0.109804, 1 )
+metallic = 0.21
+
+[sub_resource type="CubeMesh" id=22]
+
+[sub_resource type="SpatialMaterial" id=29]
+albedo_color = Color( 0.972549, 0.913725, 0.0196078, 1 )
+metallic = 0.4
+
+[sub_resource type="SpatialMaterial" id=30]
+albedo_color = Color( 0.972549, 0.913725, 0.0196078, 1 )
+metallic = 0.4
+
+[sub_resource type="CylinderMesh" id=11]
+height = 1.091
+
+[sub_resource type="CubeMesh" id=13]
+
 [sub_resource type="Gradient" id=31]
 offsets = PoolRealArray( 0, 0.10559, 0.540373, 0.795031, 1 )
 colors = PoolColorArray( 1, 0, 0, 1, 0.492188, 0.372375, 0.267242, 1, 0.242188, 0.234569, 0.193939, 1, 0.128906, 0.12682, 0.114304, 0.498039, 0, 0, 0, 0 )
@@ -120,27 +141,6 @@ scale_curve = SubResource( 39 )
 color = Color( 0.301961, 0.290196, 0.270588, 1 )
 color_ramp = SubResource( 35 )
 
-[sub_resource type="CapsuleMesh" id=21]
-
-[sub_resource type="SpatialMaterial" id=28]
-albedo_color = Color( 0.0431373, 0.368627, 0.109804, 1 )
-metallic = 0.21
-
-[sub_resource type="CubeMesh" id=22]
-
-[sub_resource type="SpatialMaterial" id=29]
-albedo_color = Color( 0.972549, 0.913725, 0.0196078, 1 )
-metallic = 0.4
-
-[sub_resource type="SpatialMaterial" id=30]
-albedo_color = Color( 0.972549, 0.913725, 0.0196078, 1 )
-metallic = 0.4
-
-[sub_resource type="CylinderMesh" id=11]
-height = 1.091
-
-[sub_resource type="CubeMesh" id=13]
-
 [node name="Bomb" type="RigidBody" groups=["bomb"]]
 mass = 20.0
 physics_material_override = SubResource( 1 )
@@ -162,7 +162,7 @@ local_coords = false
 process_material = SubResource( 6 )
 draw_pass_1 = SubResource( 8 )
 
-[node name="explosion" type="AudioStreamPlayer" parent="."]
+[node name="explosion_mine_bomb" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
 volume_db = -6.992
 
@@ -175,39 +175,6 @@ transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0
 light_color = Color( 1, 0, 0, 1 )
 spot_range = 154.993
 spot_angle = 11.97
-
-[node name="Particles2" type="Particles" parent="."]
-transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 1.18394, -0.0071068 )
-emitting = false
-amount = 20
-lifetime = 1.21
-local_coords = false
-process_material = SubResource( 25 )
-draw_pass_1 = SubResource( 27 )
-
-[node name="nuke_mushroom_cloud" type="Particles" parent="."]
-transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 0.017083, -0.0071068 )
-emitting = false
-amount = 110
-lifetime = 9.0
-one_shot = true
-explosiveness = 0.1
-randomness = 0.1
-local_coords = false
-process_material = SubResource( 25 )
-draw_pass_1 = SubResource( 27 )
-
-[node name="nuke_mushroom_cloud2" type="Particles" parent="."]
-transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 21.076, 0 )
-emitting = false
-amount = 200
-lifetime = 9.0
-one_shot = true
-explosiveness = 0.1
-randomness = 0.1
-local_coords = false
-process_material = SubResource( 40 )
-draw_pass_1 = SubResource( 27 )
 
 [node name="NukeMeshes" type="Spatial" parent="."]
 
@@ -270,5 +237,31 @@ visible = false
 mesh = SubResource( 13 )
 skeleton = NodePath("../..")
 material/0 = ExtResource( 2 )
+
+[node name="NukeMushroomClouds" type="Spatial" parent="."]
+
+[node name="Base" type="Particles" parent="NukeMushroomClouds"]
+transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 0, 0 )
+emitting = false
+amount = 110
+lifetime = 9.0
+one_shot = true
+explosiveness = 0.1
+randomness = 0.1
+local_coords = false
+process_material = SubResource( 25 )
+draw_pass_1 = SubResource( 27 )
+
+[node name="Top" type="Particles" parent="NukeMushroomClouds"]
+transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 20, 0 )
+emitting = false
+amount = 200
+lifetime = 9.0
+one_shot = true
+explosiveness = 0.1
+randomness = 0.1
+local_coords = false
+process_material = SubResource( 40 )
+draw_pass_1 = SubResource( 27 )
 
 [connection signal="body_entered" from="." to="." method="_on_Bomb_body_entered"]

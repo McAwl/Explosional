@@ -8,6 +8,8 @@ var players
 var rng = RandomNumberGenerator.new()
 var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 export var start_clock_hrs = 12.0
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	num_players = len(players)

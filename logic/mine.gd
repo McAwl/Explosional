@@ -6,7 +6,8 @@ var take_damage = false
 var timer = 1.0
 var bomb_stage = 0  # 0=turned on, 1=inactive waiting for timer to count to 0, 2=active, 3=triggered (car proximity), 4=explode, 5=animation and sound
 var print_timer = 0.0
-var player_number
+var launched_by_player_number
+var launched_by_player = null
 
 # This object acts as different kikds of weapons
 enum TYPES {NOT_SET, MINE, BOMB, NUKE}
@@ -111,13 +112,13 @@ func _process(delta):
 func no_animations_or_sound_playing():
 	if $Particles.emitting == true: 
 		return false
-	if $explosion.playing == true: 
+	if $explosion_mine_bomb.playing == true: 
 		return false
 	if $explosion_nuke.playing == true: 
 		return false
-	if $nuke_mushroom_cloud.emitting == true: 
+	if $NukeMushroomClouds/Base.emitting == true: 
 		return false
-	if $nuke_mushroom_cloud2.emitting == true: 
+	if $NukeMushroomClouds/Top.emitting == true: 
 		return false
 	else:
 		return true
@@ -140,21 +141,21 @@ func _physics_process(_delta):
 		if type == TYPES.NUKE:
 			print("type == TYPES.NUKE")
 			$explosion_nuke.playing = true
-			$nuke_mushroom_cloud.emitting = true
-			$nuke_mushroom_cloud.rotation_degrees = Vector3(0.0, 0.0, 0.0)
+			$NukeMushroomClouds/Top.emitting = true
+			$NukeMushroomClouds/Top.rotation_degrees = Vector3(0.0, 0.0, 0.0)
 			# $nuke_mushroom_cloud.angular_velocity = Vector3(0.0, 0.0, 0.0)
-			$nuke_mushroom_cloud2.emitting = true
-			$nuke_mushroom_cloud2.rotation_degrees = Vector3(0.0, 0.0, 0.0)
+			$NukeMushroomClouds/Base.emitting = true
+			$NukeMushroomClouds/Base.rotation_degrees = Vector3(0.0, 0.0, 0.0)
 			# $nuke_mushroom_cloud2.angular_velocity = Vector3(0.0, 0.0, 0.0)
 		else:
 			print("type == "+str(type))
-			$explosion.playing = true
+			$explosion_mine_bomb.playing = true
 			$Particles.global_transform.origin = global_transform.origin
 			$Particles.emitting = true
 		var targets = []
-		for player in get_players():  # i in range(1,5): # explosion toward all players
-			var target = player.get_carbody()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
-			targets.append(target)
+		for target in get_players():  # i in range(1,5): # explosion toward all players
+			var target_body = target.get_carbody()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
+			targets.append(target_body)
 		for bomb in get_bombs():  # i in range(1,5):  # explosion toward all bombs
 			# if i != player_number:
 			var target = bomb  # get_node("../Bomb"+str(i)+"/Body")
@@ -166,13 +167,13 @@ func _physics_process(_delta):
 				var direction = target.transform.origin - transform.origin  
 				# direction[2]+=5.0  # slight upward force as well
 				var explosion_force = explosion_strength[type]/pow((explosion_decrease[type]*distance)+1.0, explosion_exponent[type])  # inverse square of distance
-				if type == TYPES.NUKE and target.player_number == player_number:
+				if type == TYPES.NUKE and target.player_number == launched_by_player_number:
 					explosion_force = 0.0
 				target.apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 				target.angular_velocity  = Vector3(5.0*randf(),5.0*randf(),5.0*randf())
 				if target.take_damage == true:
 					if type == TYPES.NUKE:
-						if target.player_number != player_number:
+						if target.player_number != launched_by_player_number:
 							target.damage(10)
 						# else don't take damage from player that launched it
 					else:
@@ -188,7 +189,7 @@ func material_override(material):
 	$MineMeshes/Top.material_override = material
 
 
-func activate(pos, linear_velocity, angular_velocity, stage, _player_number):
+func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player_number, _launched_by_player=null):
 	visible = true
 	global_transform.origin = pos
 	bomb_stage = stage
@@ -200,7 +201,10 @@ func activate(pos, linear_velocity, angular_velocity, stage, _player_number):
 	linear_velocity = linear_velocity
 	angular_velocity = angular_velocity
 	rotation_degrees = Vector3(0.0, 0.0, 0.0)
-	player_number = _player_number
+	launched_by_player_number = _launched_by_player_number
+	if _launched_by_player != null:
+		launched_by_player = _launched_by_player
+		print("launched_by_player"+str(launched_by_player.player_name))
 
 
 func _on_Bomb_body_entered(_body):

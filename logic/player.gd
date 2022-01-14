@@ -23,7 +23,7 @@ func init(_player_number, _number_players, _missile_homing, _player_name, pos=nu
 	get_carbody().player_number = player_number
 	#get_carbody().missile_homing = _missile_homing
 	if pos != null:
-		get_carbody().global_transform.origin = pos
+		get_carbody().set_global_transform_origin(pos)
 	set_label(player_number, lives_left, get_carbody().total_damage, get_carbody().weapons[get_carbody().weapon_select]["damage"])
 
 	
@@ -100,6 +100,7 @@ func set_viewport_container(_left, _right, _bottom, _top, size_x, size_y):
 	#print("LRTB="+str([_left, _right, _bottom, _top]))
 	print("$VC margins LRBT="+str([$VC.margin_left, $VC.margin_right, $VC.margin_bottom, $VC.margin_top]))
 	print("$VC.rect_size="+str($VC.rect_size))
+	print("$V size="+str([$VC/V.size]))
 	print("label rect_size="+str(get_label().rect_size))
 	print("label align="+str(get_label().align))
 	print("label LRBT="+str([get_label().margin_left, get_label().margin_right, get_label().margin_bottom, get_label().margin_top]))
@@ -138,15 +139,15 @@ func get_carbody():
 
 
 func get_label():
-	return $VC.get_node( "CanvasLayer/Label")
+	return $VC/V/CanvasLayer/Label
 
 
 func set_label2(s):
 	get_label().text = s
 
 
-func get_CanvasLayer():
-	return get_viewport_container().get_node("CanvasLayer")
+func get_canvaslayer():
+	return $VC/V/CanvasLayer
 
 
 func set_label(_player_number, _lives_left, player_damage, weapon_damage):

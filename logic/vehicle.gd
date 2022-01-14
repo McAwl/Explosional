@@ -149,24 +149,7 @@ func _process(delta):
 		weapons[weapon_select]["cooldown_timer"] = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select].name]
 		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
 		if weapon_select == 0 or weapon_select == 3:  # mine or nuke
-			print("Firing weapon="+str(weapon_select))
-			var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
-			add_child(weapon_instance) 
-			weapon_instance.rotation_degrees = rotation_degrees
-			weapons[weapon_select]["active"] = true
-			if weapon_select == 0:
-				weapon_instance.set_as_mine()
-				weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
-			elif weapon_select == 3:
-				print("activating nuke")
-				weapon_instance.set_as_nuke()
-				weapon_instance.activate(get_node("/root/TownScene/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
-				weapons[weapon_select]["enabled"] = false  # so powerup is needed again
-				cycle_weapon()  # de-select nuke, as it's not available any more
-			else:
-				print("Error! Shouldn't be here")
-			print("weapons[weapon_select]="+str(weapons[weapon_select]))
-			weapon_instance.set_as_toplevel(true)
+			fire_mine_or_nuke()
 		elif weapon_select == 1:
 			fire_missile_or_rocket()
 		elif weapon_select == 2:
@@ -302,6 +285,27 @@ func get_player():
 func get_wheel(num):
 	return get_node("Wheel"+str(num))
 	
+
+func fire_mine_or_nuke():
+	print("Firing weapon="+str(weapon_select))
+	var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
+	add_child(weapon_instance) 
+	weapon_instance.rotation_degrees = rotation_degrees
+	weapons[weapon_select]["active"] = true
+	if weapon_select == 0:
+		weapon_instance.set_as_mine()
+		weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
+	elif weapon_select == 3:
+		print("activating nuke")
+		weapon_instance.set_as_nuke()
+		weapon_instance.activate(get_node("/root/TownScene/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
+		weapons[weapon_select]["enabled"] = false  # so powerup is needed again
+		cycle_weapon()  # de-select nuke, as it's not available any more
+	else:
+		print("Error! Shouldn't be here")
+	print("weapons[weapon_select]="+str(weapons[weapon_select]))
+	weapon_instance.set_as_toplevel(true)
+
 
 func fire_missile_or_rocket():
 	

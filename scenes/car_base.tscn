@@ -434,6 +434,12 @@ transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 1.08
 enabled = true
 collide_with_areas = true
 
+[node name="LavaLight1" type="OmniLight" parent="CarBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.97684, -0.387057 )
+visible = false
+light_color = Color( 1, 0.188235, 0, 1 )
+omni_range = 20.0
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
 volume_db = -9.087

@@ -19,14 +19,29 @@ operation = 2
 use_collision = true
 
 [node name="CSGBox" type="CSGBox" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.93092, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0 )
 width = 250.0
 height = 20.0
 depth = 250.0
 material = SubResource( 1 )
 
+[node name="CSGBox2" type="CSGBox" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
+operation = 2
+width = 240.0
+height = 20.0
+depth = 240.0
+material = SubResource( 1 )
+
+[node name="CSGBox3" type="CSGBox" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.997081, -0.442272, 0, 0.0763536, 5.77551, 0, -73.1401, -4.87324 )
+width = 20.0
+height = 20.0
+depth = 20.0
+material = SubResource( 1 )
+
 [node name="CSGTorus" type="CSGTorus" parent="."]
-transform = Transform( 19.9804, 0, 0, 0, 3.22878, 0, 0, 0, 24.0578, 0, 9.06394, 0 )
+transform = Transform( 11.7542, 0, 0, 0, 3.22878, 0, 0, 0, 11.7944, 0, 0.62967, 0 )
 operation = 2
 inner_radius = 1.62843
 outer_radius = 4.44735
@@ -35,21 +50,21 @@ ring_sides = 12
 material = SubResource( 2 )
 
 [node name="CSGSphere" type="CSGSphere" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -50.1919, 74.1312, 0 )
-radius = 40.0
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3894, -110.112, 0 )
+radius = 100.0
 radial_segments = 6
 rings = 12
 material = SubResource( 3 )
 
 [node name="CSGSphere2" type="CSGSphere" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 151.795, 89.0535, 43.8463 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 151.795, -110.867, 43.8463 )
 radius = 40.0
 radial_segments = 6
 rings = 12
 material = SubResource( 3 )
 
 [node name="CSGSphere3" type="CSGSphere" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 31.8341, 55.0864, -128.898 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 31.8341, -125.118, -128.898 )
 radius = 40.0
 radial_segments = 6
 rings = 12

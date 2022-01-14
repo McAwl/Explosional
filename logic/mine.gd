@@ -175,9 +175,11 @@ func _physics_process(_delta):
 					if type == TYPES.NUKE:
 						if target.player_number != launched_by_player_number:
 							target.damage(10)
+							print("target took nuke damage launched_by_player_number "+str(launched_by_player_number))
 						# else don't take damage from player that launched it
 					else:
 						target.damage(2)
+						print("target took mine damage launched_by_player_number "+str(launched_by_player_number))
 
 		print("setting bomb_stage = 5")
 		bomb_stage = 5
@@ -196,15 +198,16 @@ func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player
 	timer = BOMB_START_WAIT
 	if type == TYPES.MINE:
 		material_override(material_green)
-	else:
-		print("type ="+str(type))
+	
 	linear_velocity = linear_velocity
 	angular_velocity = angular_velocity
 	rotation_degrees = Vector3(0.0, 0.0, 0.0)
 	launched_by_player_number = _launched_by_player_number
+	var player_str = ""
 	if _launched_by_player != null:
 		launched_by_player = _launched_by_player
-		print("launched_by_player"+str(launched_by_player.player_name))
+		player_str = " (player "+str(launched_by_player.player_name)+")"
+	print("weapon of type "+str(TYPES.keys()[type]) + " launched by player_number "+str(launched_by_player_number)+player_str)
 
 
 func _on_Bomb_body_entered(_body):

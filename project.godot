@@ -50,7 +50,7 @@ window/width=1280
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/zylann.hterrain/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/waterways/plugin.cfg", "res://addons/zylann.hterrain/plugin.cfg" )
 
 [global]
 

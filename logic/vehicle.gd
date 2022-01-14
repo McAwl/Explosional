@@ -41,28 +41,29 @@ func _ready():
 	
 func check_lights():
 	if get_node("/root/TownScene/DirectionalLight").light_energy < 0.2:
-		print("turning lights on")
+		# print("turning lights on")
 		lights_on()
 	else:
-		print("turning lights off")
+		# print("turning lights off")
 		lights_off()
+
 
 func flicker_damaged_lights():
 	# damaged lights
 	# small chance of turning off when damaged. slightly bigger chance of turing back on (should flicker)
 	
 	if rng.randf() < 0.1*total_damage/max_damage:
-		print("damaged LightFrontLeft flickering off")
+		# print("damaged LightFrontLeft flickering off")
 		$LightFrontLeft.spot_range = 10  #100.0*(max_damage-total_damage)
 	elif rng.randf() < 0.5*total_damage/max_damage:
-		print("damaged LightFrontLeft flickering on")
+		# print("damaged LightFrontLeft flickering on")
 		$LightFrontLeft.spot_range = 100.0
 
 	if rng.randf() < 0.1*total_damage/max_damage:
-		print("damaged LightFrontRight flickering off")
+		# print("damaged LightFrontRight flickering off")
 		$LightFrontRight.spot_range = 10  # 100.0*(max_damage-total_damage)
 	elif rng.randf() < 0.5*total_damage/max_damage:
-		print("damaged LightFrontRight flickering on")
+		# print("damaged LightFrontRight flickering on")
 		$LightFrontRight.spot_range = 100.0
 
 
@@ -74,21 +75,27 @@ func check_ongoing_damage():
 	if total_damage < max_damage:
 		if get_raycast(1).is_colliding():
 			if "Lava" in get_raycast(1).get_collider().name:
+				print("get_raycast(1) collision")
 				return 1
 		if get_raycast(2).is_colliding():
 			if "Lava" in get_raycast(2).get_collider().name:
+				print("get_raycast(2) collision")
 				return 1
 		if get_raycast(3).is_colliding():
 			if "Lava" in get_raycast(3).get_collider().name:
+				print("get_raycast(3) collision")
 				return 1
 		if get_raycast(4).is_colliding():
 			if "Lava" in get_raycast(4).get_collider().name:
+				print("get_raycast(4) collision")
 				return 1
 		if $RayCast.is_colliding():
 			if "Lava" in $RayCast.get_collider().name:
+				print("$RayCast collision")
 				return 1
 		if $RayCast2.is_colliding():
 			if "Lava" in $RayCast2.get_collider().name:
+				print("$RayCast collision")
 				return 1
 		return 0
 
@@ -129,8 +136,8 @@ func _process(delta):
 		#else:
 		#	print(str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
 		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
-		get_player().get_CanvasLayer().get_node("cooldown").max_value = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select]["name"]]
-		get_player().get_CanvasLayer().get_node("cooldown").value = cooldown_timer
+		get_player().get_canvaslayer().get_node("cooldown").max_value = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select]["name"]]
+		get_player().get_canvaslayer().get_node("cooldown").value = cooldown_timer
 
 	lifetime_so_far_sec += delta
 		
@@ -149,13 +156,13 @@ func _process(delta):
 			weapons[weapon_select]["active"] = true
 			if weapon_select == 0:
 				weapon_instance.set_as_mine()
-				weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number)
+				weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
 			elif weapon_select == 3:
 				print("activating nuke")
 				weapon_instance.set_as_nuke()
-				weapon_instance.activate(get_node("/root/TownScene/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number)
+				weapon_instance.activate(get_node("/root/TownScene/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
 				weapons[weapon_select]["enabled"] = false  # so powerup is needed again
-				cycle_weapon()
+				cycle_weapon()  # de-select nuke, as it's not available any more
 			else:
 				print("Error! Shouldn't be here")
 			print("weapons[weapon_select]="+str(weapons[weapon_select]))
@@ -184,11 +191,11 @@ func cycle_weapon():
 			weapon_select += 1
 		if weapon_select > 3:
 			weapon_select = 0
-		get_player().get_CanvasLayer().get_node("icon_mine").hide()
-		get_player().get_CanvasLayer().get_node("icon_rocket").hide()
-		get_player().get_CanvasLayer().get_node("icon_missile").hide()
-		get_player().get_CanvasLayer().get_node("icon_nuke").hide()
-		get_player().get_CanvasLayer().get_node("icon_"+weapons[weapon_select].name).show()
+		get_player().get_canvaslayer().get_node("icon_mine").hide()
+		get_player().get_canvaslayer().get_node("icon_rocket").hide()
+		get_player().get_canvaslayer().get_node("icon_missile").hide()
+		get_player().get_canvaslayer().get_node("icon_nuke").hide()
+		get_player().get_canvaslayer().get_node("icon_"+weapons[weapon_select].name).show()
 		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
 
 
@@ -285,7 +292,7 @@ func damage(amount):
 		lights_disabled = true
 		lights_off()
 	get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
-	get_player().get_CanvasLayer().get_node("health").value = max_damage-total_damage
+	get_player().get_canvaslayer().get_node("health").value = max_damage-total_damage
 
 
 func get_player():
@@ -338,6 +345,10 @@ func lights_off():
 	$LightBackLeft.visible = false
 
 
+func set_global_transform_origin(pos):
+	global_transform.origin = pos
+
+ 
 func _on_CarBody_body_entered(body):
 	print("vehicle: _on_CarBody_body_entered name="+str(body.name))
 	if "Lava" in body.name:

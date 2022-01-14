@@ -82,7 +82,7 @@ surfaces/0 = {
 "format": 98051,
 "index_count": 348,
 "material": ExtResource( 2 ),
-"name": "Material.001",
+"name": "Panels",
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 198
@@ -95,7 +95,7 @@ surfaces/1 = {
 "format": 98051,
 "index_count": 60,
 "material": ExtResource( 3 ),
-"name": "Material.002",
+"name": "Windows",
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 36
@@ -108,7 +108,7 @@ surfaces/2 = {
 "format": 98051,
 "index_count": 36,
 "material": ExtResource( 4 ),
-"name": "Material.003",
+"name": "FrontGrill",
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 24
@@ -427,10 +427,12 @@ shadow_enabled = true
 [node name="RayCast" type="RayCast" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.027562, 0 )
 enabled = true
+collide_with_areas = true
 
 [node name="RayCast2" type="RayCast" parent="CarBody"]
-transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 1.1549, -0.322395 )
+transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 1.08022, -0.322395 )
 enabled = true
+collide_with_areas = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

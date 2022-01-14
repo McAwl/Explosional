@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://assets/fonts/Square.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://logic/player.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://assets/Icons/energy_bar_fill.png" type="Texture" id=7]
 [ext_resource path="res://assets/Icons/lifebar_bg.png" type="Texture" id=8]
 [ext_resource path="res://assets/Icons/nuke.png" type="Texture" id=9]
+[ext_resource path="res://assets/Icons/energy_bar_bg.png" type="Texture" id=10]
 
 [sub_resource type="DynamicFont" id=1]
 size = 10
@@ -29,71 +30,75 @@ size = Vector2( 960, 540 )
 handle_input_locally = false
 render_target_update_mode = 3
 
-[node name="CanvasLayer" type="CanvasLayer" parent="VC"]
+[node name="CanvasLayer" type="CanvasLayer" parent="VC/V"]
 
-[node name="Label" type="Label" parent="VC/CanvasLayer"]
-margin_right = 96.0
-margin_bottom = 12.0
-custom_fonts/font = SubResource( 1 )
-text = "Player x: Score: 2"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="icon_mine" type="TextureRect" parent="VC/CanvasLayer"]
-margin_left = 1818.48
-margin_top = 16.9089
-margin_right = 2167.48
-margin_bottom = 206.909
-rect_scale = Vector2( 0.2, 0.2 )
+[node name="icon_mine" type="TextureRect" parent="VC/V/CanvasLayer"]
+anchor_right = 120.0
+anchor_bottom = 20.0
+margin_left = 120.0
+margin_top = 20.0
+margin_right = -229931.0
+margin_bottom = -21390.0
+rect_scale = Vector2( 0.03, 0.03 )
 texture = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="icon_rocket" type="TextureRect" parent="VC/CanvasLayer"]
+[node name="icon_rocket" type="TextureRect" parent="VC/V/CanvasLayer"]
 visible = false
-margin_left = 1808.19
-margin_top = 22.2224
-margin_right = 2245.19
-margin_bottom = 178.222
-rect_scale = Vector2( 0.2, 0.2 )
+margin_left = 120.0
+margin_top = 20.0
+margin_right = 537.0
+margin_bottom = 156.0
+rect_scale = Vector2( 0.03, 0.03 )
 texture = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="icon_missile" type="TextureRect" parent="VC/CanvasLayer"]
+[node name="icon_missile" type="TextureRect" parent="VC/V/CanvasLayer"]
 visible = false
-margin_left = 1814.8
-margin_top = 10.214
-margin_right = 2187.8
-margin_bottom = 262.214
-rect_scale = Vector2( 0.2, 0.2 )
+margin_left = 120.0
+margin_top = 20.0
+margin_right = 473.0
+margin_bottom = 252.0
+rect_scale = Vector2( 0.03, 0.03 )
 texture = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="icon_nuke" type="TextureRect" parent="VC/CanvasLayer"]
+[node name="icon_nuke" type="TextureRect" parent="VC/V/CanvasLayer"]
 visible = false
-margin_left = 1815.0
-margin_top = 10.0
-margin_right = 2137.0
-margin_bottom = 364.0
-rect_scale = Vector2( 0.2, 0.2 )
+margin_left = 120.0
+margin_top = 20.0
+margin_right = 100.0
+rect_scale = Vector2( 0.03, 0.03 )
 texture = ExtResource( 9 )
-expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="health" type="TextureProgress" parent="VC/CanvasLayer"]
-margin_left = 228.058
-margin_top = 23.3368
-margin_right = 624.058
-margin_bottom = 76.3368
+[node name="cooldown" type="TextureProgress" parent="VC/V/CanvasLayer"]
+margin_left = 20.0
+margin_top = 40.0
+margin_right = 268.0
+margin_bottom = 80.0
+rect_scale = Vector2( 0.3, 0.5 )
+value = 50.0
+texture_under = ExtResource( 10 )
+texture_progress = ExtResource( 7 )
+tint_over = Color( 1, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="health" type="TextureProgress" parent="VC/V/CanvasLayer"]
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 416.0
+margin_bottom = 73.0
 rect_scale = Vector2( 0.2, 0.3 )
 max_value = 10.0
 value = 10.0
@@ -103,15 +108,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="cooldown" type="TextureProgress" parent="VC/CanvasLayer"]
-margin_left = 127.327
-margin_top = 51.0
-margin_right = 375.327
-margin_bottom = 91.0
-rect_scale = Vector2( 0.3, 0.5 )
-value = 50.0
-texture_progress = ExtResource( 7 )
-tint_over = Color( 1, 0, 0, 1 )
+[node name="Label" type="Label" parent="VC/V/CanvasLayer"]
+margin_right = 96.0
+margin_bottom = 12.0
+custom_fonts/font = SubResource( 1 )
+text = "Player x: Score: 2"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }

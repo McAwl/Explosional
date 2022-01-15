@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://assets/fonts/Square.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://assets/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://assets/Music/logo.ogg" type="AudioStream" id=2]
 [ext_resource path="res://assets/logo/logo.png" type="Texture" id=3]
 [ext_resource path="res://assets/logo/logo - left.png" type="Texture" id=4]
@@ -21,7 +21,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 2 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 885, -226 ), Vector2( 885, 550 ) ]
+"values": [ Vector2( 875, -226 ), Vector2( 875, 550 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("TextureRect2:rect_position")
@@ -150,11 +150,12 @@ __meta__ = {
 [node name="logo" type="RichTextLabel" parent="."]
 anchor_right = 0.989
 margin_top = 464.656
-margin_right = 272.0
+margin_right = 297.0
 margin_bottom = 533.656
 custom_colors/default_color = Color( 0.831373, 0.0705882, 0.0705882, 1 )
 custom_fonts/normal_font = SubResource( 1 )
-text = "McAwil"
+text = "McAwl"
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }

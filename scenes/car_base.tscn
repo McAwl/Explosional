@@ -219,6 +219,7 @@ material/0 = null
 [node name="RayCast" type="RayCast" parent="CarBody/Wheel1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.262533, -0.0640855, 0 )
 enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
 [node name="Wheel2" type="VehicleWheel" parent="CarBody"]
@@ -239,6 +240,7 @@ material/0 = null
 [node name="RayCast" type="RayCast" parent="CarBody/Wheel2"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145094, -0.0793754, 0 )
 enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
 collision_mask = 2
 collide_with_areas = true
 
@@ -261,6 +263,7 @@ material/0 = null
 [node name="RayCast" type="RayCast" parent="CarBody/Wheel3"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.220176, -0.0553332, 3.82662e-05 )
 enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
 collision_mask = 2
 collide_with_areas = true
 
@@ -282,6 +285,7 @@ material/0 = null
 [node name="RayCast" type="RayCast" parent="CarBody/Wheel4"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
 enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
 collision_mask = 2
 collide_with_areas = true
 
@@ -313,6 +317,16 @@ material/0 = null
 transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, 0.077272, 0.0948564, -1.01603 )
 
 [node name="MeshInstance3" type="MeshInstance" parent="CarBody/CameraBase/CamBaseForward"]
+transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
+visible = false
+mesh = SubResource( 29 )
+skeleton = NodePath("../../Camera")
+material/0 = null
+
+[node name="CamBaseForward2" type="Spatial" parent="CarBody/CameraBase"]
+transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, 0.801016, 3.1739, -12.969 )
+
+[node name="MeshInstance3" type="MeshInstance" parent="CarBody/CameraBase/CamBaseForward2"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
@@ -351,7 +365,7 @@ transform = Transform( -0.998921, -0.0112154, 0.0450581, -2.11161e-08, 0.970391,
 current = true
 fov = 74.0
 near = 0.1
-far = 201.5
+far = 500.0
 script = ExtResource( 5 )
 min_distance = 3.0
 height = 1.25

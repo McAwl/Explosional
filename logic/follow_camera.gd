@@ -48,9 +48,9 @@ func _physics_process(delta):
 	var fwd_mps = get_parent().get_parent().transform.basis.xform_inv(linear_velocity).z
 	var angular_velocity = get_parent().get_parent().angular_velocity
 	
-	
-	# when launched by explosion, angular velocity is high and fwd_mps swaps from + to - and is also high
+	# when launched by explosion, angular velocity is high and fwd_mps swaps from + to (and is also high)
 	# this stops the fast switching in this case - zooms out and stops rotating the camera so fast
+	# fix is to follow the target faster, but follow the base more slowly
 	var follow_speed_multiplier = 1.0 + 0.01*angular_velocity.length()*abs(fwd_mps)
 	
 	if fwd_mps >= -2.0:
@@ -61,9 +61,6 @@ func _physics_process(delta):
 		target = target.interpolate_with(target_reverse, delta * FOLLOW_SPEED * follow_speed_multiplier)
 	
 	if timer_0_5s < 0:
-		# print("angular_velocity.length() = "+str(get_parent().get_parent().angular_velocity.length()))
-		# print("linear_velocity = "+str(linear_velocity))
-		# print("fwd_mps = "+str(fwd_mps))
 		timer_0_5s = 0.5
 		
 	look_at(target.origin, Vector3.UP)

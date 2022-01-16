@@ -5,3 +5,7 @@ resource_name = "Material.001"
 albedo_color = Color( 0.256549, 0.225529, 0, 1 )
 metallic = 0.1
 roughness = 0.6
+ao_enabled = true
+ao_light_affect = 0.0
+ao_on_uv2 = false
+ao_texture_channel = 0

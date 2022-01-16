@@ -29,6 +29,7 @@ __meta__ = {
 size = Vector2( 960, 540 )
 handle_input_locally = false
 render_target_update_mode = 3
+shadow_atlas_size = 32
 
 [node name="CanvasLayer" type="CanvasLayer" parent="VC/V"]
 

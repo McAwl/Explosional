@@ -346,14 +346,14 @@ func lights_on():
 	$LightFrontLeft.visible = true
 	$LightFrontRight.visible = true
 	$LightBackLeft.visible = true
-	$LightBackLeft.visible = true
+	$LightBackRight.visible = true
 
 
 func lights_off():
 	$LightFrontLeft.visible = false
 	$LightFrontRight.visible = false
 	$LightBackLeft.visible = false
-	$LightBackLeft.visible = false
+	$LightBackRight.visible = false
 
 
 func set_global_transform_origin(pos):

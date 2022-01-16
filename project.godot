@@ -57,6 +57,7 @@ enabled=PoolStringArray( "res://addons/waterways/plugin.cfg", "res://addons/zyla
 back=false
 background=false
 color=false
+shadows=false
 
 [input]
 

@@ -4,3 +4,7 @@
 resource_name = "vertexColorBIBase"
 albedo_color = Color( 0.332031, 0.0233459, 0.0233459, 1 )
 roughness = 0.6
+ao_enabled = true
+ao_light_affect = 0.0
+ao_on_uv2 = false
+ao_texture_channel = 0

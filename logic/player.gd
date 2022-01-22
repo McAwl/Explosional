@@ -27,7 +27,7 @@ func init(_player_number, _number_players, _missile_homing, _player_name, pos=nu
 	set_label(player_number, lives_left, get_carbody().total_damage, get_carbody().weapons[get_carbody().weapon_select]["damage"])
 
 	
-	name = "InstancePos"+str(_player_number)
+	name = "Player"+str(_player_number)
 	print("_number_players="+str(_number_players))
 	if _number_players == 1:
 		set_viewport_container_one(_player_number)

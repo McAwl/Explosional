@@ -6,7 +6,7 @@ var missile_homing = false
 var num_players
 var players
 var rng = RandomNumberGenerator.new()
-var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
+var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 10.0, "interval_so_far_sec": 0.0, "interval_sec": 1.0, "circle_radius_m": 10.0}
 export var start_clock_hrs = 12.0
 
 
@@ -26,29 +26,44 @@ func _ready():
 	$DirectionalLight/DayNightAnimation.seek(anim_time)
 
 
+func turn_airstrike_on():
+	air_strike["on"] = true
+	air_strike["interval_so_far_sec"] = 0.0
+	air_strike["duration_so_far_sec"] = 0.0
+	# var players = get_tree().get_nodes_in_group("player")  # 
+	print("len(players)="+str(len(players)))
+	air_strike_label().visible = true
+	air_strike_label().get_node("TextFlash").play("font_blink")
+	$VC/CL/IconRadiation.visible = true
+	$siren.playing = true
+
+
+func turn_airstrike_off():
+	air_strike["on"] = false
+	air_strike["interval_so_far_sec"] = 0.0
+	air_strike["duration_so_far_sec"] = 0.0
+	air_strike_label().visible = false
+	air_strike_label().get_node("TextFlash").stop()
+	$VC/CL/IconRadiation.visible = false
+	$siren.playing = false
+	
+
 func _process(delta):
 	
 	air_strike["interval_so_far_sec"] +=delta
 	air_strike["duration_so_far_sec"] += delta
 		
 	if air_strike["on"] == false and air_strike["interval_so_far_sec"] > air_strike["interval_sec"]:
-		air_strike["on"] = true
-		air_strike["interval_so_far_sec"] = 0.0
-		air_strike["duration_so_far_sec"] = 0.0
-		# var players = get_tree().get_nodes_in_group("player")  # 
-		print("len(players)="+str(len(players)))
-		air_strike_label().visible = true
-		air_strike_label().get_node("TextFlash").play("font_blink")
-		$VC/CL/IconRadiation.visible = true
-		$siren.playing = true
+		turn_airstrike_on()
 	elif air_strike["on"] == true and air_strike["duration_so_far_sec"] > air_strike["duration_sec"]:
-		air_strike["on"] = false
-		air_strike["interval_so_far_sec"] = 0.0
-		air_strike["duration_so_far_sec"] = 0.0
-		air_strike_label().visible = false
-		air_strike_label().get_node("TextFlash").stop()
-		$VC/CL/IconRadiation.visible = false
-		$siren.playing = false
+		turn_airstrike_off()
+		print("Turing airstrike off")
+		for node in get_tree().root.get_node("TownScene").get_children():  #find_node("*Bomb*":
+			print("After airstrike finished, found root.get_children() objects: "+str(node.name))
+			if "omb" in node.name:
+				print("  Found bomb: stage = "+str(node.bomb_stage))
+				print("  type = "+str(node.type))
+			
 		
 	if air_strike["on"] == true:
 		for player in get_players():  # range(1, num_players+1):
@@ -61,6 +76,8 @@ func _process(delta):
 					weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0), 1, 0)  # player 0 = no player
 					weapon_instance.set_as_bomb()
 					weapon_instance.set_as_toplevel(true)
+					print("Launched bomb during airstrike at Player "+str(player.player_number))
+					print("Bomb name "+str(weapon_instance.name))
 					#$nuke_mushroom_cloud.emitting = true
 					#$nuke_mushroom_cloud2.emitting = true
 
@@ -110,7 +127,7 @@ func get_players(ignore_player_number=false):
 
 
 func get_player(player_number):
-	return get_node("InstancePos"+str(player_number))
+	return get_node("Player"+str(player_number))
 	
 
 func get_bombs():

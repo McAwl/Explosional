@@ -28,8 +28,11 @@ __meta__ = {
 [node name="V" type="Viewport" parent="VC"]
 size = Vector2( 960, 540 )
 handle_input_locally = false
+msaa = 1
+fxaa = true
+debanding = true
 render_target_update_mode = 3
-shadow_atlas_size = 32
+shadow_atlas_size = 128
 
 [node name="CanvasLayer" type="CanvasLayer" parent="VC/V"]
 

@@ -19,7 +19,7 @@ var cooldown_timer = COOLDOWN_TIMER_DEFAULTS["mine"]
 var timer_0_1_sec = 0.1
 var timer_1_sec = 1.0  # timer to eg: check if car needs to turn light on 
 var lifetime_so_far_sec = 0.0  # to eg disable air strikes for a bit after re-spawn
-var hit_by_missile = {"active": false, "homing": null, "origin": null, "velocity": null}
+var hit_by_missile = {"active": false, "homing": null, "origin": null, "velocity": null, "direct_hit": null}
 var max_damage = 10.0
 var total_damage = 0.0
 var take_damage = true
@@ -223,7 +223,7 @@ func _physics_process(delta):
 
 		steering = move_toward(steering, steer_target, STEER_SPEED * delta)
 	
-	if hit_by_missile["active"] == true:
+	if hit_by_missile["active"] == true and hit_by_missile["direct_hit"] == true:
 		print("Player "+str(player_number)+ " hit by missile!")
 		#var direction = hit_by_missile_origin - $Body.transform.origin  
 		var direction = hit_by_missile["velocity"]  # $Body.transform.origin - hit_by_missile_origin 

@@ -173,7 +173,7 @@ volume_db = -6.992
 [node name="SpotLight" type="SpotLight" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
 light_color = Color( 1, 0, 0, 1 )
-spot_range = 154.993
+spot_range = 150.0
 spot_angle = 11.97
 
 [node name="NukeMeshes" type="Spatial" parent="."]

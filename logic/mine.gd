@@ -47,6 +47,7 @@ func _ready():
 	material_orange.albedo_color = Color(1.0, 0.5, 0.0, 1.0) #Set color of new material
 	material_black = SpatialMaterial.new() #Make a new Spatial Material
 	material_black.albedo_color = Color(0.0, 0.0, 0.0, 0.0) #Set color of new material
+	$SpotLight.spot_range = 0.0
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -100,13 +101,16 @@ func _process(delta):
 					bomb_flash_state = 0
 	
 	if bomb_stage == 5:
+		$SpotLight.hide()
 		if (type == TYPES.MINE and bomb_proximity_timer_limit < 0.0 and no_animations_or_sound_playing()) or (type != TYPES.MINE and no_animations_or_sound_playing()):
 			# explosion particles have finished, explosion sound has finished, so disable the bomb
-			print("setting bomb_stage = 0")
-			bomb_stage = 0
+			#print("setting bomb_stage = 0")
+			#bomb_stage = 0
 			visible = false
 			if bomb_proximity_timer_limit < 0.0:
 				print("bomb_proximity_timer_limit < 0.0")
+			print("queue_free: bomb"+str(name))
+			queue_free()
 
 
 func no_animations_or_sound_playing():
@@ -225,6 +229,7 @@ func set_as_mine():
 	bomb_meshes(false)
 	nuke_meshes(false)
 	type = TYPES.MINE
+	$SpotLight.hide()
 
 
 func set_as_bomb():
@@ -234,6 +239,8 @@ func set_as_bomb():
 	bomb_meshes(true)
 	nuke_meshes(false)
 	type = TYPES.BOMB
+	$SpotLight.show()
+	$SpotLight.spot_range = 150
 
 
 func set_as_nuke():
@@ -243,6 +250,8 @@ func set_as_nuke():
 	bomb_meshes(false)
 	nuke_meshes(true)
 	type = TYPES.NUKE
+	$SpotLight.show()
+	$SpotLight.spot_range = 150.0
 
 
 func hide_meshinstances():

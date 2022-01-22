@@ -95,7 +95,7 @@ func _on_Missile_body_entered(body):
 			body.hit_by_missile["origin"] = transform.origin
 			body.hit_by_missile["velocity"] = velocity
 			body.hit_by_missile["homing"] = homing
-		else:
+		else:  # TODO: mvoe this to physics method
 			for player in get_node("/root/TownScene").get_players():  # in range(1, 5): # explosion toward all players
 				var target = player.get_carbody()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 				#var target = get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")

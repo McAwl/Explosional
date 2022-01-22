@@ -1,8 +1,20 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/town_scene_slot2_albedo_bump.packed_tex" type="Texture" id=1]
-[ext_resource path="res://assets/Materials/terrain/grass.tres" type="Material" id=2]
+[ext_resource path="res://assets/Images/grass.png" type="Texture" id=2]
 [ext_resource path="res://assets/Materials/terrain/cement2.tres" type="Material" id=3]
+
+[sub_resource type="SpatialMaterial" id=4]
+albedo_texture = ExtResource( 2 )
+uv1_scale = Vector3( 10, 10, 0 )
+
+[sub_resource type="SpatialMaterial" id=5]
+albedo_texture = ExtResource( 2 )
+uv1_scale = Vector3( 10, 10, 1 )
+
+[sub_resource type="SpatialMaterial" id=6]
+albedo_texture = ExtResource( 2 )
+uv1_scale = Vector3( 10, 10, 1 )
 
 [sub_resource type="SpatialMaterial" id=3]
 albedo_texture = ExtResource( 1 )
@@ -17,7 +29,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0 )
 width = 250.0
 height = 20.0
 depth = 250.0
-material = ExtResource( 2 )
+material = SubResource( 4 )
 
 [node name="MainTerrainCutout" type="CSGBox" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
@@ -25,6 +37,7 @@ operation = 2
 width = 240.0
 height = 20.0
 depth = 240.0
+material = SubResource( 5 )
 
 [node name="Wall1" type="CSGBox" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, -7.5, -113.245 )
@@ -61,6 +74,7 @@ inner_radius = 1.62843
 outer_radius = 4.44735
 sides = 24
 ring_sides = 12
+material = SubResource( 6 )
 
 [node name="CSGSphere" type="CSGSphere" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3894, -110.112, 0 )

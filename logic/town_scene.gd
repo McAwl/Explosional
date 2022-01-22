@@ -6,7 +6,7 @@ var missile_homing = false
 var num_players
 var players
 var rng = RandomNumberGenerator.new()
-var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 10.0, "interval_so_far_sec": 0.0, "interval_sec": 1.0, "circle_radius_m": 10.0}
+var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 export var start_clock_hrs = 12.0
 
 

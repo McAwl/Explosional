@@ -19,7 +19,7 @@ var cooldown_timer = COOLDOWN_TIMER_DEFAULTS["mine"]
 var timer_0_1_sec = 0.1
 var timer_1_sec = 1.0  # timer to eg: check if car needs to turn light on 
 var lifetime_so_far_sec = 0.0  # to eg disable air strikes for a bit after re-spawn
-var hit_by_missile = {"active": false, "homing": null, "origin": null, "velocity": null, "direct_hit": null}
+var hit_by_missile = {"active": false, "homing": null, "origin": null, "velocity": null, "direct_hit": null, "distance": null}
 var max_damage = 10.0
 var total_damage = 0.0
 var take_damage = true
@@ -223,19 +223,29 @@ func _physics_process(delta):
 
 		steering = move_toward(steering, steer_target, STEER_SPEED * delta)
 	
-	if hit_by_missile["active"] == true and hit_by_missile["direct_hit"] == true:
+	if hit_by_missile["active"] == true:
 		print("Player "+str(player_number)+ " hit by missile!")
 		#var direction = hit_by_missile_origin - $Body.transform.origin  
-		var direction = hit_by_missile["velocity"]  # $Body.transform.origin - hit_by_missile_origin 
+		var direction = hit_by_missile["direction_for_explosion"]  # $Body.transform.origin - hit_by_missile_origin 
 		direction[1] += 5.0
-		var explosion_force = 400  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
-		apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
-		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
-		hit_by_missile["active"] = false
-		if hit_by_missile["homing"]:
-			damage(weapons[2].damage)
+		# remove downwards force - as vehicles can be blown through the terrain
+		if direction[1] < 0:
+			direction[1] = 0
+		var explosion_force = 200  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
+		if hit_by_missile["direct_hit"] == true:
+			apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
+			if hit_by_missile["homing"]:
+				damage(weapons[2].damage)
+			else:
+				damage(weapons[1].damage)
 		else:
-			damage(weapons[1].damage)
+			var indirect_explosion_force = explosion_force/hit_by_missile["distance"]
+			
+			apply_impulse( Vector3(0,0,0), indirect_explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
+			damage(1)
+		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
+			
+		hit_by_missile["active"] = false
 
 
 func reset_vals():
@@ -347,6 +357,11 @@ func lights_on():
 	$LightFrontRight.visible = true
 	$LightBackLeft.visible = true
 	$LightBackRight.visible = true
+	$LightUnder1.show()
+	$LightUnder2.show()
+	$LightUnder3.show()
+	$LightUnder4.show()
+	$LightUnder5.show()
 
 
 func lights_off():
@@ -354,6 +369,11 @@ func lights_off():
 	$LightFrontRight.visible = false
 	$LightBackLeft.visible = false
 	$LightBackRight.visible = false
+	$LightUnder1.hide()
+	$LightUnder2.hide()
+	$LightUnder3.hide()
+	$LightUnder4.hide()
+	$LightUnder5.hide()
 
 
 func set_global_transform_origin(pos):

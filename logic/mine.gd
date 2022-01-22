@@ -14,7 +14,7 @@ enum TYPES {NOT_SET, MINE, BOMB, NUKE}
 var type = TYPES.NOT_SET
 
 # explosion force = explosion_strength / (explosion_decrease*distance)+1.0 ^ explosion_exponent)
-var explosion_strength = {TYPES.NOT_SET: 0.0, TYPES.MINE: 10000.0, TYPES.BOMB: 10000.0, TYPES.NUKE: 10000.0}
+var explosion_strength = {TYPES.NOT_SET: 0.0, TYPES.MINE: 5000.0, TYPES.BOMB: 5000.0, TYPES.NUKE: 5000.0}
 var explosion_range = {TYPES.NOT_SET: 0.0, TYPES.MINE: 10.0, TYPES.BOMB: 10.0, TYPES.NUKE: 1000.0}
 var explosion_exponent = {TYPES.NOT_SET: 1.5, TYPES.MINE: 1.5, TYPES.BOMB: 1.5, TYPES.NUKE: 1.05}
 var explosion_decrease = {TYPES.NOT_SET: 1.0, TYPES.MINE: 1.0, TYPES.BOMB: 1.0, TYPES.NUKE: 0.05}
@@ -169,7 +169,10 @@ func _physics_process(_delta):
 			#print("target.name="+str(target.name))
 			if distance < explosion_range[type] and "CarBody" in target.name:
 				var direction = target.transform.origin - transform.origin  
-				# direction[2]+=5.0  # slight upward force as well
+				# direction[2]+=5.0  # slight upward force as well - isn't [1] up/down?
+				# remove downwards force - as vehicles can be blown through the terrain
+				if direction[1] < 0:
+					direction[1] = 0
 				var explosion_force = explosion_strength[type]/pow((explosion_decrease[type]*distance)+1.0, explosion_exponent[type])  # inverse square of distance
 				if type == TYPES.NUKE and target.player_number == launched_by_player_number:
 					explosion_force = 0.0
@@ -183,7 +186,9 @@ func _physics_process(_delta):
 						# else don't take damage from player that launched it
 					else:
 						target.damage(2)
-						print("target took mine damage launched_by_player_number "+str(launched_by_player_number))
+						print("target took damage launched_by_player_number "+str(launched_by_player_number))
+						print("direction="+str(direction))
+				
 
 		print("setting bomb_stage = 5")
 		bomb_stage = 5

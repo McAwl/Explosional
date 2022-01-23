@@ -520,7 +520,7 @@ enabled = true
 collide_with_areas = true
 
 [node name="RayCast2" type="RayCast" parent="CarBody"]
-transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 1.08022, -0.322395 )
+transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.676265, 0.533783 )
 enabled = true
 collide_with_areas = true
 

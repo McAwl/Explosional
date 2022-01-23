@@ -7,4 +7,3 @@ extends Spatial
 func _ready():
 	
 	# $Body.visible = false
-

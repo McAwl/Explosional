@@ -114,9 +114,9 @@ func _process(delta):
 
 
 func no_animations_or_sound_playing():
-	print("bomb "+name+":")
+	#print("bomb "+name+":")
 	if $Particles.emitting == true: 
-		print("$Particles.emitting == true")
+		#print("$Particles.emitting == true")
 		return false
 	if $explosion_mine_bomb.playing == true: 
 		return false
@@ -127,7 +127,7 @@ func no_animations_or_sound_playing():
 	if $NukeMushroomClouds/Top.emitting == true: 
 		return false
 	else:
-		print("returned true")
+		#print("returned true")
 		return true
 
 

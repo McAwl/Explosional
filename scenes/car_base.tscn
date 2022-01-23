@@ -12,6 +12,7 @@
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
+absorbent = true
 
 [sub_resource type="ArrayMesh" id=2]
 surfaces/0 = {
@@ -115,7 +116,7 @@ surfaces/2 = {
 }
 
 [sub_resource type="BoxShape" id=7]
-extents = Vector3( 0.477039, 0.5, 1.16331 )
+extents = Vector3( 0.477039, 0.5, 1.0831 )
 
 [sub_resource type="SphereMesh" id=29]
 
@@ -196,7 +197,7 @@ __meta__ = {
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
 physics_material_override = SubResource( 1 )
 continuous_cd = true
-contacts_reported = 4
+contacts_reported = 8
 contact_monitor = true
 script = ExtResource( 1 )
 
@@ -313,10 +314,30 @@ mesh = SubResource( 29 )
 skeleton = NodePath("../../Camera")
 material/0 = null
 
+[node name="CamTargetForward_UD" type="Spatial" parent="CarBody/CameraBase"]
+transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, -0.0367441, -2.77758, 0.866993 )
+
+[node name="MeshInstance4" type="MeshInstance" parent="CarBody/CameraBase/CamTargetForward_UD"]
+transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
+visible = false
+mesh = SubResource( 29 )
+skeleton = NodePath("../../Camera")
+material/0 = null
+
 [node name="CamBaseForward" type="Spatial" parent="CarBody/CameraBase"]
 transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, 0.077272, 0.0948564, -1.01603 )
 
 [node name="MeshInstance3" type="MeshInstance" parent="CarBody/CameraBase/CamBaseForward"]
+transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
+visible = false
+mesh = SubResource( 29 )
+skeleton = NodePath("../../Camera")
+material/0 = null
+
+[node name="CamBaseForward_UD" type="Spatial" parent="CarBody/CameraBase"]
+transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, 0.077272, -2.91146, -1.01603 )
+
+[node name="MeshInstance3" type="MeshInstance" parent="CarBody/CameraBase/CamBaseForward_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
@@ -333,6 +354,16 @@ mesh = SubResource( 29 )
 skeleton = NodePath("../../Camera")
 material/0 = null
 
+[node name="CamBaseForward2_UD" type="Spatial" parent="CarBody/CameraBase"]
+transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, 0.801016, -5.59849, -12.969 )
+
+[node name="MeshInstance3" type="MeshInstance" parent="CarBody/CameraBase/CamBaseForward2_UD"]
+transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
+visible = false
+mesh = SubResource( 29 )
+skeleton = NodePath("../../Camera")
+material/0 = null
+
 [node name="CamTargetReverse" type="Spatial" parent="CarBody/CameraBase"]
 transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, -0.157038, -0.561681, 2.8537 )
 
@@ -343,10 +374,30 @@ mesh = SubResource( 29 )
 skeleton = NodePath("../../Camera")
 material/0 = null
 
+[node name="CamTargetReverse_UD" type="Spatial" parent="CarBody/CameraBase"]
+transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, -0.157038, -2.51091, 2.8537 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="CarBody/CameraBase/CamTargetReverse_UD"]
+transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
+visible = false
+mesh = SubResource( 29 )
+skeleton = NodePath("../../Camera")
+material/0 = null
+
 [node name="CamBaseReverse" type="Spatial" parent="CarBody/CameraBase"]
 transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, -0.286334, 0.0825521, 4.98907 )
 
 [node name="MeshInstance" type="MeshInstance" parent="CarBody/CameraBase/CamBaseReverse"]
+transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
+visible = false
+mesh = SubResource( 29 )
+skeleton = NodePath("../../Camera")
+material/0 = null
+
+[node name="CamBaseReverse_UD" type="Spatial" parent="CarBody/CameraBase"]
+transform = Transform( 0.998172, 0, -0.0604388, 0, 1, 0, 0.0604388, 0, 0.998172, -0.286334, -3.12503, 4.98907 )
+
+[node name="MeshInstance" type="MeshInstance" parent="CarBody/CameraBase/CamBaseReverse_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
 visible = false
 mesh = SubResource( 29 )

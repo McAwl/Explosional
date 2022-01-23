@@ -33,11 +33,16 @@ func _ready():
 	set_as_toplevel(true)
 
 
+func get_carbody():
+	return get_parent().get_parent()
+
+
 func _physics_process(delta):
 	
 	timer_0_5s -= delta
 		
 	#var target = get_parent().get_global_transform().origin  # parent is CameraBase pos behind and above the vehicle
+	
 	var target_forward = get_parent().get_node("CamTargetForward").get_global_transform()
 	var target_reverse = get_parent().get_node("CamTargetReverse").get_global_transform()
 	var cam_base_forward = get_parent().get_node("CamBaseForward").get_global_transform()
@@ -48,6 +53,13 @@ func _physics_process(delta):
 	var fwd_mps = get_parent().get_parent().transform.basis.xform_inv(linear_velocity).z
 	var angular_velocity = get_parent().get_parent().angular_velocity
 	
+	if abs(fwd_mps) < 0.5:
+		if abs(get_carbody().rotation_degrees[0]) > 90 or abs(get_carbody().rotation_degrees[2]) > 90:
+			target_forward = get_parent().get_node("CamTargetForward_UD").get_global_transform()
+			target_reverse = get_parent().get_node("CamTargetReverse_UD").get_global_transform()
+			cam_base_forward = get_parent().get_node("CamBaseForward_UD").get_global_transform()
+			cam_base_reverse = get_parent().get_node("CamBaseReverse_UD").get_global_transform()
+
 	# when launched by explosion, angular velocity is high and fwd_mps swaps from + to (and is also high)
 	# this stops the fast switching in this case - zooms out and stops rotating the camera so fast
 	# fix is to follow the target faster, but follow the base more slowly
@@ -62,8 +74,17 @@ func _physics_process(delta):
 	
 	if timer_0_5s < 0:
 		timer_0_5s = 0.5
+		#print("abs(fwd_mps)="+str(abs(fwd_mps)))
+		print("get_carbody().rotation_degrees="+str(get_carbody().rotation_degrees))
+		#print("get_transform().basis="+str(get_transform().basis))
+		#$print("get_transform().basis.y="+str(get_transform().basis.y))
+		#$print("get_transform().basis[1][1]="+str(get_transform().basis[1][1]))
+		#print("get_transform()="+str(get_transform()))
+		#print("get_global_transform().basis="+str(get_global_transform().basis))
+		# print("  Vector3.UP.angle_to(global_transform.origin)="+str(Vector3.UP.angle_to(global_transform.origin)))
 		
 	look_at(target.origin, Vector3.UP)
+	
 	
 	# Turn a little up or down
 	var t = get_transform()

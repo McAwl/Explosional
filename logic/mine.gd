@@ -102,7 +102,7 @@ func _process(delta):
 	
 	if bomb_stage == 5:
 		$SpotLight.hide()
-		if (type == TYPES.MINE and bomb_proximity_timer_limit < 0.0 and no_animations_or_sound_playing()) or (type != TYPES.MINE and no_animations_or_sound_playing()):
+		if no_animations_or_sound_playing() or bomb_proximity_timer_limit < 0.0:
 			# explosion particles have finished, explosion sound has finished, so disable the bomb
 			#print("setting bomb_stage = 0")
 			#bomb_stage = 0
@@ -114,7 +114,9 @@ func _process(delta):
 
 
 func no_animations_or_sound_playing():
+	print("bomb "+name+":")
 	if $Particles.emitting == true: 
+		print("$Particles.emitting == true")
 		return false
 	if $explosion_mine_bomb.playing == true: 
 		return false
@@ -125,6 +127,7 @@ func no_animations_or_sound_playing():
 	if $NukeMushroomClouds/Top.emitting == true: 
 		return false
 	else:
+		print("returned true")
 		return true
 
 

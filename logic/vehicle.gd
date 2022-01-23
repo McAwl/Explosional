@@ -264,11 +264,10 @@ func get_speed2():
 
 
 func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z):
-	var local_pos = to_local(global_transform.origin)
-	local_pos -= (offset_z*mult_z)*Vector3.FORWARD
-	local_pos += (offset_y*mult_y)*Vector3.UP
-	var global_pos = to_global(local_pos)
-	return global_pos  # get_transform().basis.xform(localTranslate)
+	var global_pos = global_transform.origin
+	global_pos -= (offset_z*mult_z)*Vector3.FORWARD
+	global_pos += (offset_y*mult_y)*Vector3.UP
+	return global_pos
 
 
 func damage(amount):

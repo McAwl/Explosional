@@ -75,32 +75,32 @@ func check_ongoing_damage():
 	if total_damage < max_damage:
 		if get_raycast(1).is_colliding():
 			if "Lava" in get_raycast(1).get_collider().name:
-				print("get_raycast(1) collision")
+				print("get_raycast(1) Lava collision")
 				$LavaLight1.visible = true
 				return 1
 		if get_raycast(2).is_colliding():
 			if "Lava" in get_raycast(2).get_collider().name:
-				print("get_raycast(2) collision")
+				print("get_raycast(2) Lava collision")
 				$LavaLight1.visible = true
 				return 1
 		if get_raycast(3).is_colliding():
 			if "Lava" in get_raycast(3).get_collider().name:
-				print("get_raycast(3) collision")
+				print("get_raycast(3) Lava collision")
 				$LavaLight1.visible = true
 				return 1
 		if get_raycast(4).is_colliding():
 			if "Lava" in get_raycast(4).get_collider().name:
-				print("get_raycast(4) collision")
+				print("get_raycast(4) Lava collision")
 				$LavaLight1.visible = true
 				return 1
 		if $RayCast.is_colliding():
 			if "Lava" in $RayCast.get_collider().name:
-				print("$RayCast collision")
+				print("$RayCast Lava collision")
 				$LavaLight1.visible = true
 				return 1
 		if $RayCast2.is_colliding():
 			if "Lava" in $RayCast2.get_collider().name:
-				print("$RayCast collision")
+				print("$RayCast2 Lava collision")
 				$LavaLight1.visible = true
 				return 1
 		$LavaLight1.visible = false

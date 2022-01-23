@@ -74,14 +74,6 @@ func _physics_process(delta):
 	
 	if timer_0_5s < 0:
 		timer_0_5s = 0.5
-		#print("abs(fwd_mps)="+str(abs(fwd_mps)))
-		print("get_carbody().rotation_degrees="+str(get_carbody().rotation_degrees))
-		#print("get_transform().basis="+str(get_transform().basis))
-		#$print("get_transform().basis.y="+str(get_transform().basis.y))
-		#$print("get_transform().basis[1][1]="+str(get_transform().basis[1][1]))
-		#print("get_transform()="+str(get_transform()))
-		#print("get_global_transform().basis="+str(get_global_transform().basis))
-		# print("  Vector3.UP.angle_to(global_transform.origin)="+str(Vector3.UP.angle_to(global_transform.origin)))
 		
 	look_at(target.origin, Vector3.UP)
 	

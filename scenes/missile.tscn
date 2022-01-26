@@ -1,8 +1,8 @@
 [gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://logic/missile.gd" type="Script" id=1]
-[ext_resource path="res://assets/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=2]
-[ext_resource path="res://assets/Materials/vehicles/car_grill.tres" type="Material" id=3]
+[ext_resource path="res://assets/audio/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=2]
+[ext_resource path="res://assets/materials/vehicles/car_grill.tres" type="Material" id=3]
 
 [sub_resource type="CapsuleMesh" id=25]
 
@@ -66,6 +66,7 @@ color_ramp = SubResource( 30 )
 [sub_resource type="SpatialMaterial" id=32]
 flags_transparent = true
 flags_unshaded = true
+vertex_color_use_as_albedo = true
 
 [sub_resource type="SphereMesh" id=24]
 material = SubResource( 32 )

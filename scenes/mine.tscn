@@ -1,10 +1,10 @@
 [gd_scene load_steps=38 format=2]
 
-[ext_resource path="res://assets/Materials/vehicles/car_blue_body.tres" type="Material" id=1]
-[ext_resource path="res://assets/Materials/terrain/cement.tres" type="Material" id=2]
-[ext_resource path="res://assets/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=3]
+[ext_resource path="res://assets/materials/vehicles/car_blue_body.tres" type="Material" id=1]
+[ext_resource path="res://assets/materials/terrain/cement.tres" type="Material" id=2]
+[ext_resource path="res://assets/audio/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=3]
 [ext_resource path="res://logic/mine.gd" type="Script" id=4]
-[ext_resource path="res://assets/sounds/587193__derplayer__explosion-big-02 - Copy2.ogg" type="AudioStream" id=5]
+[ext_resource path="res://assets/audio/sounds/587193__derplayer__explosion-big-02 - Copy2.ogg" type="AudioStream" id=5]
 
 [sub_resource type="PhysicsMaterial" id=1]
 bounce = 0.18

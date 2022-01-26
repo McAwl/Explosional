@@ -1,15 +1,16 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://assets/fonts/Square.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://assets/display/fonts/Square.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://logic/player.gd" type="Script" id=2]
-[ext_resource path="res://assets/Icons/missile.png" type="Texture" id=3]
-[ext_resource path="res://assets/Icons/icon_mine.png" type="Texture" id=4]
-[ext_resource path="res://assets/Icons/rocket.png" type="Texture" id=5]
-[ext_resource path="res://assets/Icons/lifebar_fill.png" type="Texture" id=6]
-[ext_resource path="res://assets/Icons/energy_bar_fill.png" type="Texture" id=7]
-[ext_resource path="res://assets/Icons/lifebar_bg.png" type="Texture" id=8]
-[ext_resource path="res://assets/Icons/nuke.png" type="Texture" id=9]
-[ext_resource path="res://assets/Icons/energy_bar_bg.png" type="Texture" id=10]
+[ext_resource path="res://assets/display/icons/missile.png" type="Texture" id=3]
+[ext_resource path="res://assets/display/icons/icon_mine.png" type="Texture" id=4]
+[ext_resource path="res://assets/display/icons/rocket.png" type="Texture" id=5]
+[ext_resource path="res://assets/display/icons/lifebar_fill.png" type="Texture" id=6]
+[ext_resource path="res://assets/display/icons/energy_bar_fill.png" type="Texture" id=7]
+[ext_resource path="res://assets/display/icons/lifebar_bg.png" type="Texture" id=8]
+[ext_resource path="res://assets/display/icons/nuke.png" type="Texture" id=9]
+[ext_resource path="res://assets/display/icons/energy_bar_bg.png" type="Texture" id=10]
+[ext_resource path="res://assets/display/icons/heart.png" type="Texture" id=11]
 
 [sub_resource type="DynamicFont" id=1]
 size = 10
@@ -37,12 +38,10 @@ shadow_atlas_size = 128
 [node name="CanvasLayer" type="CanvasLayer" parent="VC/V"]
 
 [node name="icon_mine" type="TextureRect" parent="VC/V/CanvasLayer"]
-anchor_right = 120.0
-anchor_bottom = 20.0
-margin_left = 120.0
-margin_top = 20.0
-margin_right = -229931.0
-margin_bottom = -21390.0
+anchor_left = 0.183
+anchor_top = 0.028
+anchor_right = 0.183
+anchor_bottom = 0.028
 rect_scale = Vector2( 0.03, 0.03 )
 texture = ExtResource( 4 )
 __meta__ = {
@@ -50,11 +49,10 @@ __meta__ = {
 }
 
 [node name="icon_rocket" type="TextureRect" parent="VC/V/CanvasLayer"]
-visible = false
-margin_left = 120.0
-margin_top = 20.0
-margin_right = 537.0
-margin_bottom = 156.0
+anchor_left = 0.166
+anchor_top = 0.028
+anchor_right = 0.174
+anchor_bottom = 0.037
 rect_scale = Vector2( 0.03, 0.03 )
 texture = ExtResource( 5 )
 __meta__ = {
@@ -62,11 +60,8 @@ __meta__ = {
 }
 
 [node name="icon_missile" type="TextureRect" parent="VC/V/CanvasLayer"]
-visible = false
-margin_left = 120.0
-margin_top = 20.0
-margin_right = 473.0
-margin_bottom = 252.0
+anchor_left = 0.147
+anchor_right = 0.174
 rect_scale = Vector2( 0.03, 0.03 )
 texture = ExtResource( 3 )
 __meta__ = {
@@ -74,21 +69,22 @@ __meta__ = {
 }
 
 [node name="icon_nuke" type="TextureRect" parent="VC/V/CanvasLayer"]
-visible = false
-margin_left = 120.0
-margin_top = 20.0
-margin_right = 100.0
+anchor_left = 0.147
+anchor_top = 0.028
+anchor_right = 0.184
+anchor_bottom = 0.037
 rect_scale = Vector2( 0.03, 0.03 )
+rect_clip_content = true
 texture = ExtResource( 9 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="cooldown" type="TextureProgress" parent="VC/V/CanvasLayer"]
-margin_left = 20.0
-margin_top = 40.0
-margin_right = 268.0
-margin_bottom = 80.0
+anchor_left = 0.046
+anchor_top = 0.064
+anchor_right = 0.046
+anchor_bottom = 0.11
 rect_scale = Vector2( 0.3, 0.5 )
 value = 50.0
 texture_under = ExtResource( 10 )
@@ -99,10 +95,10 @@ __meta__ = {
 }
 
 [node name="health" type="TextureProgress" parent="VC/V/CanvasLayer"]
-margin_left = 20.0
-margin_top = 20.0
-margin_right = 416.0
-margin_bottom = 73.0
+anchor_left = 0.055
+anchor_top = 0.028
+anchor_right = 0.055
+anchor_bottom = 0.055
 rect_scale = Vector2( 0.2, 0.3 )
 max_value = 10.0
 value = 10.0
@@ -121,3 +117,13 @@ align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="heart" type="TextureRect" parent="VC/V/CanvasLayer"]
+anchor_left = 0.013
+anchor_top = 0.009
+anchor_right = 0.037
+anchor_bottom = 0.064
+margin_right = 40.0
+margin_bottom = 40.0
+rect_scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 11 )

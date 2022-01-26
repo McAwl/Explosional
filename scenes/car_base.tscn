@@ -451,7 +451,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.48442
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.05756, 1.20003 )
 
 [node name="RocketPosition" type="Position3D" parent="CarBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.499051, 1.69379 )
+transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.499051, 1.69379 )
 
 [node name="Particles" type="Particles" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.514265, 0.879329 )

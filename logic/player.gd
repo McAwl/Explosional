@@ -7,8 +7,10 @@ var lives_left = 3
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
-	pass
+	$VC/V/CanvasLayer/icon_mine.visible = true
+	$VC/V/CanvasLayer/icon_rocket.visible = false
+	$VC/V/CanvasLayer/icon_missile.visible = false
+	$VC/V/CanvasLayer/icon_nuke.visible = false
 
 
 func init(_player_number, _number_players, _player_name, pos=null):

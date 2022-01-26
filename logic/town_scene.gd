@@ -2,13 +2,12 @@ extends Spatial
 
 var town = null
 var check_game_over_timer = 1.0
-var missile_homing = false
 var num_players
 var players
 var rng = RandomNumberGenerator.new()
 var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 export var start_clock_hrs = 12.0
-
+export var test_nuke = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -17,7 +16,9 @@ func _ready():
 	for player_number in range(1, num_players+1):
 		var player_instance = load("res://scenes/player.tscn").instance()
 		var pos = spawn_points[player_number-1].global_transform.origin
-		player_instance.init(player_number, num_players, missile_homing, players[player_number]["name"], pos)
+		player_instance.init(player_number, num_players, players[player_number]["name"], pos)
+		player_instance.get_carbody().weapons[3].enabled = test_nuke
+		player_instance.get_carbody().weapons[3].test_mode = test_nuke
 		add_child(player_instance)
 	var anim_time = start_clock_hrs + 12.0
 	if anim_time > 24.0:

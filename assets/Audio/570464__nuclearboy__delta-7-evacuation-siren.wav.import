@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/570464__nuclearboy__delta-7-evacuation-siren.wav-5c6dcf6b5ccd5ff0839a6011559eb063.sample"
+path="res://.import/570464__nuclearboy__delta-7-evacuation-siren.wav-7e3725038e34714e038ce1b333928e12.sample"
 
 [deps]
 
-source_file="res://assets/Audio/570464__nuclearboy__delta-7-evacuation-siren.wav"
-dest_files=[ "res://.import/570464__nuclearboy__delta-7-evacuation-siren.wav-5c6dcf6b5ccd5ff0839a6011559eb063.sample" ]
+source_file="res://assets/audio/570464__nuclearboy__delta-7-evacuation-siren.wav"
+dest_files=[ "res://.import/570464__nuclearboy__delta-7-evacuation-siren.wav-7e3725038e34714e038ce1b333928e12.sample" ]
 
 [params]
 

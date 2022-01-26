@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3-b4706289f10314b83f8d5d13c977552e.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/sounds/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3"
+dest_files=[ "res://.import/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3-b4706289f10314b83f8d5d13c977552e.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=3.12

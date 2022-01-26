@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/587193__derplayer__explosion-big-02.ogg-6afb790feec1b65520e69194cb1dbbed.oggstr"
+
+[deps]
+
+source_file="res://assets/audio/sounds/587193__derplayer__explosion-big-02.ogg"
+dest_files=[ "res://.import/587193__derplayer__explosion-big-02.ogg-6afb790feec1b65520e69194cb1dbbed.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

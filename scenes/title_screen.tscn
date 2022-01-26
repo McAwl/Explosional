@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://assets/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://assets/display/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://logic/title_screen.gd" type="Script" id=2]
-[ext_resource path="res://assets/particle.png" type="Texture" id=3]
+[ext_resource path="res://assets/textures/particle.png" type="Texture" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 size = 83

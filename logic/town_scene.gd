@@ -8,9 +8,16 @@ var rng = RandomNumberGenerator.new()
 var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 export var start_clock_hrs = 12.0
 export var test_nuke = false
+export var fake_sun_omni_light = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if fake_sun_omni_light == true:
+		$Sun/OmniLight.visible = true
+		$DirectionalLight.visible = false
+	else:
+		$Sun/OmniLight.visible = false
+		$DirectionalLight.visible = true
 	num_players = len(players)
 	var spawn_points = get_spawn_points()
 	for player_number in range(1, num_players+1):

@@ -68,43 +68,26 @@ func flicker_damaged_lights():
 
 
 func get_raycast(wheel_num):
-	return get_wheel(wheel_num).get_node("RayCast")
+	return get_wheel(wheel_num).get_node("RayCastWheel"+str(wheel_num))
 
 
 func check_ongoing_damage():
 	if total_damage < max_damage:
-		if get_raycast(1).is_colliding():
-			if "Lava" in get_raycast(1).get_collider().name:
-				print("get_raycast(1) Lava collision")
-				$LavaLight1.visible = true
-				return 1
-		if get_raycast(2).is_colliding():
-			if "Lava" in get_raycast(2).get_collider().name:
-				print("get_raycast(2) Lava collision")
-				$LavaLight1.visible = true
-				return 1
-		if get_raycast(3).is_colliding():
-			if "Lava" in get_raycast(3).get_collider().name:
-				print("get_raycast(3) Lava collision")
-				$LavaLight1.visible = true
-				return 1
-		if get_raycast(4).is_colliding():
-			if "Lava" in get_raycast(4).get_collider().name:
-				print("get_raycast(4) Lava collision")
-				$LavaLight1.visible = true
-				return 1
-		if $RayCast.is_colliding():
-			if "Lava" in $RayCast.get_collider().name:
-				print("$RayCast Lava collision")
-				$LavaLight1.visible = true
-				return 1
-		if $RayCast2.is_colliding():
-			if "Lava" in $RayCast2.get_collider().name:
-				print("$RayCast2 Lava collision")
-				$LavaLight1.visible = true
+		for raycast in [get_raycast(1), get_raycast(2), get_raycast(3), get_raycast(4), $OtherRaycasts/RayCastCentreDown, $OtherRaycasts/RayCastBonnetUp, $OtherRaycasts/RayCastForward, $OtherRaycasts/RayCastBackward, $OtherRaycasts/RayCastLeft, $OtherRaycasts/RayCastRight]:
+			if check_raycast("lava", raycast) == true:
+				print("Player taking damage 1")
 				return 1
 		$LavaLight1.visible = false
 		return 0
+
+
+func check_raycast(substring_in_hit_name, raycast):
+	if raycast.is_colliding():
+		if substring_in_hit_name.to_lower() in raycast.get_collider().name.to_lower():
+			print("Vehicle raycast "+str(raycast.name)+": collision matches substring: "+str(substring_in_hit_name))
+			$LavaLight1.visible = true
+			return true
+	return false
 
 
 func _process(delta):

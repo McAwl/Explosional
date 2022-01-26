@@ -217,7 +217,7 @@ _import_path = NodePath("BODY-vehicle/wheel1-wheel")
 mesh = SubResource( 2 )
 material/0 = null
 
-[node name="RayCast" type="RayCast" parent="CarBody/Wheel1"]
+[node name="RayCastWheel1" type="RayCast" parent="CarBody/Wheel1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.262533, -0.0640855, 0 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
@@ -238,7 +238,7 @@ _import_path = NodePath("BODY-vehicle/wheel2-wheel")
 mesh = SubResource( 3 )
 material/0 = null
 
-[node name="RayCast" type="RayCast" parent="CarBody/Wheel2"]
+[node name="RayCastWheel2" type="RayCast" parent="CarBody/Wheel2"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145094, -0.0793754, 0 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
@@ -261,7 +261,7 @@ _import_path = NodePath("BODY-vehicle/wheel3-wheel")
 mesh = SubResource( 4 )
 material/0 = null
 
-[node name="RayCast" type="RayCast" parent="CarBody/Wheel3"]
+[node name="RayCastWheel3" type="RayCast" parent="CarBody/Wheel3"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.220176, -0.0553332, 3.82662e-05 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
@@ -283,7 +283,7 @@ _import_path = NodePath("BODY-vehicle/wheel4-wheel")
 mesh = SubResource( 5 )
 material/0 = null
 
-[node name="RayCast" type="RayCast" parent="CarBody/Wheel4"]
+[node name="RayCastWheel4" type="RayCast" parent="CarBody/Wheel4"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
@@ -514,21 +514,43 @@ transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.99959
 light_energy = 2.0
 shadow_enabled = true
 
-[node name="RayCast" type="RayCast" parent="CarBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.027562, 0 )
-enabled = true
-collide_with_areas = true
-
-[node name="RayCast2" type="RayCast" parent="CarBody"]
-transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.676265, 0.533783 )
-enabled = true
-collide_with_areas = true
-
 [node name="LavaLight1" type="OmniLight" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.97684, -0.387057 )
 visible = false
 light_color = Color( 1, 0.188235, 0, 1 )
 omni_range = 20.0
+
+[node name="OtherRaycasts" type="Spatial" parent="CarBody"]
+
+[node name="RayCastCentreDown" type="RayCast" parent="CarBody/OtherRaycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.027562, 0 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastBonnetUp" type="RayCast" parent="CarBody/OtherRaycasts"]
+transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.9362, 0.533783 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastForward" type="RayCast" parent="CarBody/OtherRaycasts"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.9362, 1.0708 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastBackward" type="RayCast" parent="CarBody/OtherRaycasts"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.20863, -0.759133 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastLeft" type="RayCast" parent="CarBody/OtherRaycasts"]
+transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.285423, 0.9362, 0.533783 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastRight" type="RayCast" parent="CarBody/OtherRaycasts"]
+transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.260324, 0.9362, 0.533783 )
+enabled = true
+collide_with_areas = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

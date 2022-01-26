@@ -83,14 +83,14 @@ func activate(_parent_player_number, _homing):
 
 func _on_Missile_body_entered(body):
 	if hit_something == false:
-		print("Missile hit something...")
+		# print("Missile hit something...")
 		$ExplosionSound.playing = true
 		$ParticlesExplosion.emitting = true
 		hit_something = true
 		#  velocity = Vector3(0,0,0)  # ??????
 			
 		if "CarBody" in body.name:
-			print("Missile hit "+str(body.name))
+			# print("Missile hit "+str(body.name))
 			body.hit_by_missile["active"] = true
 			body.hit_by_missile["origin"] = transform.origin
 			body.hit_by_missile["direction_for_explosion"] = velocity
@@ -103,7 +103,7 @@ func _on_Missile_body_entered(body):
 				var direction = global_transform.origin - target.global_transform.origin
 				var distance = global_transform.origin.distance_to(target.global_transform.origin)
 				if distance < explosion_range:
-					print("Missile hit "+str(body.name))
+					# print("Missile hit "+str(body.name))
 					target.hit_by_missile["active"] = true
 					target.hit_by_missile["origin"] = transform.origin
 					target.hit_by_missile["direction_for_explosion"] = direction

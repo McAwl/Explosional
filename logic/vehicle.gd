@@ -315,19 +315,15 @@ func fire_missile_or_rocket():
 	add_child(weapon_instance)
 	
 	weapon_instance.velocity = transform.basis.z * weapon_instance.muzzle_velocity
-	weapon_instance.velocity[1] += 1.0 
 	weapon_instance.initial_speed = weapon_instance.velocity.length()
 	weapon_instance.linear_velocity = linear_velocity
 	weapon_instance.angular_velocity = angular_velocity
 	if weapon_select == 2:
+		weapon_instance.velocity[1] += 1.0   # angle it up a bit
 		weapon_instance.global_transform.origin = $MissilePosition.global_transform.origin
-		weapon_instance.rotation_degrees = $MissilePosition.rotation_degrees
 	else:
 		weapon_instance.global_transform.origin = $RocketPosition.global_transform.origin
-		weapon_instance.rotation_degrees = $RocketPosition.rotation_degrees
-		weapon_instance.rotation_degrees.x = 0.0
-		weapon_instance.rotation_degrees.y = 0.0
-		weapon_instance.rotation_degrees.z = 0.0
+		weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
 	if weapon_select == 1:
 		weapon_instance.activate(player_number, false)  # homing = false
 	else:

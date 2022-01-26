@@ -5,7 +5,7 @@ var take_damage = false
 # Declare member variables here. 
 var timer = 1.0
 var bomb_stage = 0  # 0=turned on, 1=inactive waiting for timer to count to 0, 2=active, 3=triggered (car proximity), 4=explode, 5=animation and sound
-var print_timer = 0.0
+var timer_1s = 1.0
 var launched_by_player_number
 var launched_by_player = null
 
@@ -53,7 +53,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 
-	print_timer += delta
+	timer_1s -= delta
 	flash_timer -= delta
 	bomb_proximity_check_timer -= delta
 	bomb_proximity_timer_limit -= delta
@@ -101,16 +101,27 @@ func _process(delta):
 					bomb_flash_state = 0
 	
 	if bomb_stage == 5:
+		if type != TYPES.MINE:
+			axis_lock_angular_x = true
+			axis_lock_angular_y = true
+			axis_lock_angular_z = true
+			axis_lock_linear_x = true
+			axis_lock_linear_y = true
+			axis_lock_linear_z = true
+			
 		$SpotLight.hide()
 		if no_animations_or_sound_playing() or bomb_proximity_timer_limit < 0.0:
 			# explosion particles have finished, explosion sound has finished, so disable the bomb
 			#print("setting bomb_stage = 0")
 			#bomb_stage = 0
 			visible = false
-			if bomb_proximity_timer_limit < 0.0:
-				print("bomb_proximity_timer_limit < 0.0")
-			print("queue_free: bomb"+str(name))
+			# if bomb_proximity_timer_limit < 0.0:
+			#	print("bomb_proximity_timer_limit < 0.0")
+			# print("queue_free: bomb"+str(name))
 			queue_free()
+
+	if timer_1s < 0.0:
+		timer_1s = 1.0
 
 
 func no_animations_or_sound_playing():
@@ -142,20 +153,19 @@ func get_bombs():
 func _physics_process(_delta):
 	
 	if bomb_stage == 4:
-		print("bomb_stage == 4")
+		# print("bomb_stage == 4")
 		hide_meshinstances()
 		# $explosion.seek(1.0)
 		if type == TYPES.NUKE:
-			print("type == TYPES.NUKE")
+			# print("type == TYPES.NUKE")
 			$explosion_nuke.playing = true
 			$NukeMushroomClouds/Top.emitting = true
-			$NukeMushroomClouds/Top.rotation_degrees = Vector3(0.0, 0.0, 0.0)
-			# $nuke_mushroom_cloud.angular_velocity = Vector3(0.0, 0.0, 0.0)
 			$NukeMushroomClouds/Base.emitting = true
-			$NukeMushroomClouds/Base.rotation_degrees = Vector3(0.0, 0.0, 0.0)
-			# $nuke_mushroom_cloud2.angular_velocity = Vector3(0.0, 0.0, 0.0)
 		else:
-			print("type == "+str(type))
+			linear_velocity = Vector3(0.0, 0.0, 0.0)
+			angular_velocity = Vector3(0.0, 0.0, 0.0)
+			rotation_degrees = Vector3(0.0, 0.0, 0.0)
+			# print("type == "+str(type))
 			$explosion_mine_bomb.playing = true
 			$Particles.global_transform.origin = global_transform.origin
 			$Particles.emitting = true
@@ -185,17 +195,22 @@ func _physics_process(_delta):
 					if type == TYPES.NUKE:
 						if target.player_number != launched_by_player_number:
 							target.damage(10)
-							print("target took nuke damage launched_by_player_number "+str(launched_by_player_number))
+							# print("target took nuke damage launched_by_player_number "+str(launched_by_player_number))
 						# else don't take damage from player that launched it
 					else:
 						target.damage(2)
-						print("target took damage launched_by_player_number "+str(launched_by_player_number))
-						print("direction="+str(direction))
+						# print("target took damage launched_by_player_number "+str(launched_by_player_number))
+						# print("direction="+str(direction))
 				
 
-		print("setting bomb_stage = 5")
+		# print("setting bomb_stage = 5")
 		bomb_stage = 5
 		bomb_proximity_check_timer = BOMB_ACTIVE_WAIT *4  # to ensure we don't wait forever
+
+	if bomb_stage == 5:  # stop rotation of bombs/nukes after they hit, otherwise animations rotation/move/etc weirddly
+		# linear_velocity = Vector3(0.0, 0.0, 0.0)
+		# angular_velocity = Vector3(0.0, 0.0, 0.0)
+		rotation_degrees = Vector3(0.0, 0.0, 0.0)
 
 
 func material_override(material):
@@ -210,10 +225,12 @@ func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player
 	timer = BOMB_START_WAIT
 	if type == TYPES.MINE:
 		material_override(material_green)
-	
-	linear_velocity = linear_velocity
-	angular_velocity = angular_velocity
-	rotation_degrees = Vector3(0.0, 0.0, 0.0)
+		linear_velocity = linear_velocity
+		angular_velocity = angular_velocity
+	else:
+		linear_velocity = Vector3(0.0, 0.0, 0.0)
+		angular_velocity = Vector3(0.0, 0.0, 0.0)
+		rotation_degrees = Vector3(0.0, 0.0, 0.0)
 	launched_by_player_number = _launched_by_player_number
 	var player_str = ""
 	if _launched_by_player != null:
@@ -231,7 +248,7 @@ func _on_Bomb_body_entered(_body):
 
 
 func set_as_mine():
-	print("set_as_mine()")
+	# print("set_as_mine()")
 	hit_on_contact = false
 	mine_meshes(true)
 	bomb_meshes(false)
@@ -241,7 +258,7 @@ func set_as_mine():
 
 
 func set_as_bomb():
-	print("set_as_bomb()")
+	# print("set_as_bomb()")
 	hit_on_contact = true
 	mine_meshes(false)
 	bomb_meshes(true)
@@ -252,7 +269,7 @@ func set_as_bomb():
 
 
 func set_as_nuke():
-	print("set_as_nuke()")
+	# print("set_as_nuke()")
 	hit_on_contact = true
 	mine_meshes(false)
 	bomb_meshes(false)
@@ -263,27 +280,27 @@ func set_as_nuke():
 
 
 func hide_meshinstances():
-	print("Hiding all meshinstances in object mine[/bomb/nuke/etc?]")
+	# print("Hiding all meshinstances in object mine[/bomb/nuke/etc?]")
 	mine_meshes(false)
 	bomb_meshes(false)
 	nuke_meshes(false)
 
 
 func mine_meshes(_show):
-	print("Setting mine meshinstances to "+str(_show))
+	# print("Setting mine meshinstances to "+str(_show))
 	$MineMeshes/Main.visible = _show
 	$MineMeshes/Top.visible = _show
 
 
 func bomb_meshes(_show):
-	print("Setting bomb meshinstances to "+str(_show))
+	# print("Setting bomb meshinstances to "+str(_show))
 	$BombMeshes/Body.visible = _show
 	$BombMeshes/Fin1.visible = _show
 	$BombMeshes/Fin2.visible = _show
 
 
 func nuke_meshes(_show):
-	print("Setting nuke meshinstances to "+str(_show))
+	# print("Setting nuke meshinstances to "+str(_show))
 	$NukeMeshes/Body.visible = _show
 	$NukeMeshes/Fin1.visible = _show
 	$NukeMeshes/Fin2.visible = _show

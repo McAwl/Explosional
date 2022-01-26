@@ -110,5 +110,4 @@ func _on_Missile_body_entered(body):
 					target.hit_by_missile["homing"] = homing
 					target.hit_by_missile["direct_hit"] = false
 					target.hit_by_missile["distance"] = distance
-				
-					
+

@@ -1,16 +1,11 @@
 extends Spatial
 
-var real_bomb
-var bomb_dropped = false
-var bomb_exploded = false
-var bomb_timer = 0.0
+
 var print_timer = 0.0
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	# reset_car()
-	# get_player().lives_left += 1
 	pass
 
 

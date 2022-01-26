@@ -12,7 +12,7 @@ func _ready():
 
 
 func init(_player_number, _number_players, _player_name, pos=null):
-	print("init")
+	# print("init")
 	# Add a car to the player
 	var carbase = load("res://scenes/car_base.tscn").instance()
 	# carbase = load("res://scenes/trailer_truck.tscn").instance()
@@ -27,7 +27,7 @@ func init(_player_number, _number_players, _player_name, pos=null):
 
 	
 	name = "Player"+str(_player_number)
-	print("_number_players="+str(_number_players))
+	# print("_number_players="+str(_number_players))
 	if _number_players == 1:
 		set_viewport_container_one(_player_number)
 	elif _number_players == 2:

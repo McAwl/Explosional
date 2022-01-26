@@ -76,7 +76,7 @@ func check_ongoing_damage():
 	if total_damage < max_damage:
 		for raycast in [get_raycast(1), get_raycast(2), get_raycast(3), get_raycast(4), $OtherRaycasts/RayCastCentreDown, $OtherRaycasts/RayCastBonnetUp, $OtherRaycasts/RayCastForward, $OtherRaycasts/RayCastBackward, $OtherRaycasts/RayCastLeft, $OtherRaycasts/RayCastRight]:
 			if check_raycast("lava", raycast) == true:
-				print("Player taking damage 1")
+				# print("Player taking damage 1")
 				return 1
 		$LavaLight1.visible = false
 		return 0
@@ -85,7 +85,7 @@ func check_ongoing_damage():
 func check_raycast(substring_in_hit_name, raycast):
 	if raycast.is_colliding():
 		if substring_in_hit_name.to_lower() in raycast.get_collider().name.to_lower():
-			print("Vehicle raycast "+str(raycast.name)+": collision matches substring: "+str(substring_in_hit_name))
+			# print("Vehicle raycast "+str(raycast.name)+": collision matches substring: "+str(substring_in_hit_name))
 			$LavaLight1.visible = true
 			return true
 	return false
@@ -136,7 +136,7 @@ func _process(delta):
 		cycle_weapon()
 	
 	if Input.is_action_just_released("fire_player"+str(player_number)) and weapons[weapon_select]["active"] == false and weapons[weapon_select]["cooldown_timer"] <= 0.0 and weapons[weapon_select]["enabled"] == true:
-		print("Player pressed fire")
+		# print("Player pressed fire")
 		weapons[weapon_select]["cooldown_timer"] = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select].name]
 		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
 		if weapon_select == 0 or weapon_select == 3:  # mine or nuke
@@ -208,7 +208,7 @@ func _physics_process(delta):
 		steering = move_toward(steering, steer_target, STEER_SPEED * delta)
 	
 	if hit_by_missile["active"] == true:
-		print("Player "+str(player_number)+ " hit by missile!")
+		# print("Player "+str(player_number)+ " hit by missile!")
 		#var direction = hit_by_missile_origin - $Body.transform.origin  
 		var direction = hit_by_missile["direction_for_explosion"]  # $Body.transform.origin - hit_by_missile_origin 
 		direction[1] += 5.0
@@ -287,7 +287,7 @@ func get_wheel(num):
 	
 
 func fire_mine_or_nuke():
-	print("Firing weapon="+str(weapon_select))
+	# print("Firing weapon="+str(weapon_select))
 	var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
 	add_child(weapon_instance) 
 	weapon_instance.rotation_degrees = rotation_degrees
@@ -296,7 +296,7 @@ func fire_mine_or_nuke():
 		weapon_instance.set_as_mine()
 		weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
 	elif weapon_select == 3:
-		print("activating nuke")
+		# print("activating nuke")
 		weapon_instance.set_as_nuke()
 		weapon_instance.activate(get_node("/root/TownScene/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
 		if weapons[3].test_mode == false:
@@ -304,7 +304,7 @@ func fire_mine_or_nuke():
 			cycle_weapon()  # de-select nuke, as it's not available any more
 	else:
 		print("Error! Shouldn't be here")
-	print("weapons[weapon_select]="+str(weapons[weapon_select]))
+	# print("weapons[weapon_select]="+str(weapons[weapon_select]))
 	weapon_instance.set_as_toplevel(true)
 
 
@@ -361,7 +361,7 @@ func set_global_transform_origin(pos):
 
  
 func _on_CarBody_body_entered(body):
-	print("vehicle: _on_CarBody_body_entered name="+str(body.name))
+	# print("vehicle: _on_CarBody_body_entered name="+str(body.name))
 	if "Lava" in body.name:
-		print("Taking max_damage damage")
+		# print("Taking max_damage damage")
 		damage(max_damage)

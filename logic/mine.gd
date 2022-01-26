@@ -242,8 +242,8 @@ func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player
 func _on_Bomb_body_entered(_body):
 	if hit_on_contact == true and bomb_stage < 4:
 		timer = BOMB_ACTIVE_WAIT
-		print("mine: _on_Bomb_body_entered(_body):")
-		print("body.name="+str(_body.name))
+		# print("mine: _on_Bomb_body_entered(_body):")
+		# print("body.name="+str(_body.name))
 		bomb_stage = 4
 
 

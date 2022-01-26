@@ -50,7 +50,7 @@ func _process(delta):
 
 
 func _on_CarBody_body_entered(_body):
-	print("car_base: on_CarBody_body_entered, _body.name="+str(_body.name))
+	# print("car_base: on_CarBody_body_entered, _body.name="+str(_body.name))
 	if "Nuke" in _body.name:
 		$CarBody.weapons[3].enabled = true
 		_body.get_parent().disable()  # disable the nuke powerup on a timer

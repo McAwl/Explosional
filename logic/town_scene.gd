@@ -39,7 +39,7 @@ func turn_airstrike_on():
 	air_strike["interval_so_far_sec"] = 0.0
 	air_strike["duration_so_far_sec"] = 0.0
 	# var players = get_tree().get_nodes_in_group("player")  # 
-	print("len(players)="+str(len(players)))
+	# print("len(players)="+str(len(players)))
 	air_strike_label().visible = true
 	air_strike_label().get_node("TextFlash").play("font_blink")
 	$VC/CL/IconRadiation.visible = true
@@ -65,12 +65,12 @@ func _process(delta):
 		turn_airstrike_on()
 	elif air_strike["on"] == true and air_strike["duration_so_far_sec"] > air_strike["duration_sec"]:
 		turn_airstrike_off()
-		print("Turing airstrike off")
-		for node in get_tree().root.get_node("TownScene").get_children():  #find_node("*Bomb*":
-			print("After airstrike finished, found root.get_children() objects: "+str(node.name))
-			if "omb" in node.name:
-				print("  Found bomb: stage = "+str(node.bomb_stage))
-				print("  type = "+str(node.type))
+		# print("Turing airstrike off")
+		#for node in get_tree().root.get_node("TownScene").get_children():  #find_node("*Bomb*":
+			# print("After airstrike finished, found root.get_children() objects: "+str(node.name))
+			#if "omb" in node.name:
+			#	print("  Found bomb: stage = "+str(node.bomb_stage))
+			#	print("  type = "+str(node.type))
 			
 		
 	if air_strike["on"] == true:

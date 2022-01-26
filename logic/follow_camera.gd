@@ -46,7 +46,7 @@ func _physics_process(delta):
 	var target_forward = get_parent().get_node("CamTargetForward").get_global_transform()
 	var target_reverse = get_parent().get_node("CamTargetReverse").get_global_transform()
 	var cam_base_forward = get_parent().get_node("CamBaseForward").get_global_transform()
-	var cam_base_forward2 = get_parent().get_node("CamBaseForward2").get_global_transform()
+	# var cam_base_forward2 = get_parent().get_node("CamBaseForward2").get_global_transform()
 	var cam_base_reverse = get_parent().get_node("CamBaseReverse").get_global_transform()
 	
 	var linear_velocity = get_parent().get_parent().linear_velocity

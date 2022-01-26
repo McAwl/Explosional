@@ -11,7 +11,7 @@ func _ready():
 	pass
 
 
-func init(_player_number, _number_players, _missile_homing, _player_name, pos=null):
+func init(_player_number, _number_players, _player_name, pos=null):
 	print("init")
 	# Add a car to the player
 	var carbase = load("res://scenes/car_base.tscn").instance()
@@ -21,7 +21,6 @@ func init(_player_number, _number_players, _missile_homing, _player_name, pos=nu
 	player_name = _player_name
 	get_viewport().add_child(carbase)
 	get_carbody().player_number = player_number
-	#get_carbody().missile_homing = _missile_homing
 	if pos != null:
 		get_carbody().set_global_transform_origin(pos)
 	set_label(player_number, lives_left, get_carbody().total_damage, get_carbody().weapons[get_carbody().weapon_select]["damage"])

@@ -14,7 +14,7 @@ export var speed = 0.0
 var speed_low_limit = 5
 var rng = RandomNumberGenerator.new()
 
-const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "missile": 60.0, "nuke": 0.0}
+const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "missile": 60.0, "nuke": 10.0}
 var cooldown_timer = COOLDOWN_TIMER_DEFAULTS["mine"]
 var timer_0_1_sec = 0.1
 var timer_1_sec = 1.0  # timer to eg: check if car needs to turn light on 
@@ -29,9 +29,10 @@ var reset_car = false
 var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["mine"], "scene": "res://scenes/mine.tscn", "enabled": true}, \
 			   1: {"name": "rocket", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["rocket"], "scene": "res://scenes/missile.tscn", "enabled": true}, \
 			   2: {"name": "missile", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["missile"], "scene": "res://scenes/missile.tscn", "enabled": true}, \
-			   3: {"name": "nuke", "damage": 10, "active": false, "cooldown_timer": 10.0, "scene": "res://scenes/mine.tscn", "enabled": false}}
+			   3: {"name": "nuke", "damage": 10, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["nuke"], "scene": "res://scenes/mine.tscn", "enabled": false, "test_mode": false}}
 var weapon_select = 0
 var lights_disabled = false
+
 
 func _ready():
 	cooldown_timer = weapons[weapon_select]["cooldown_timer"]
@@ -54,17 +55,17 @@ func flicker_damaged_lights():
 	
 	if rng.randf() < 0.1*total_damage/max_damage:
 		# print("damaged LightFrontLeft flickering off")
-		$LightFrontLeft.spot_range = 10  #100.0*(max_damage-total_damage)
+		$Lights/LightFrontLeft.spot_range = 10  #100.0*(max_damage-total_damage)
 	elif rng.randf() < 0.5*total_damage/max_damage:
 		# print("damaged LightFrontLeft flickering on")
-		$LightFrontLeft.spot_range = 100.0
+		$Lights/LightFrontLeft.spot_range = 100.0
 
 	if rng.randf() < 0.1*total_damage/max_damage:
 		# print("damaged LightFrontRight flickering off")
-		$LightFrontRight.spot_range = 10  # 100.0*(max_damage-total_damage)
+		$Lights/LightFrontRight.spot_range = 10  # 100.0*(max_damage-total_damage)
 	elif rng.randf() < 0.5*total_damage/max_damage:
 		# print("damaged LightFrontRight flickering on")
-		$LightFrontRight.spot_range = 100.0
+		$Lights/LightFrontRight.spot_range = 100.0
 
 
 func get_raycast(wheel_num):
@@ -298,8 +299,9 @@ func fire_mine_or_nuke():
 		print("activating nuke")
 		weapon_instance.set_as_nuke()
 		weapon_instance.activate(get_node("/root/TownScene/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
-		weapons[weapon_select]["enabled"] = false  # so powerup is needed again
-		cycle_weapon()  # de-select nuke, as it's not available any more
+		if weapons[3].test_mode == false:
+			weapons[3]["enabled"] = false  # so powerup is needed again
+			cycle_weapon()  # de-select nuke, as it's not available any more
 	else:
 		print("Error! Shouldn't be here")
 	print("weapons[weapon_select]="+str(weapons[weapon_select]))
@@ -335,27 +337,23 @@ func fire_missile_or_rocket():
 	
 
 func lights_on():
-	$LightFrontLeft.visible = true
-	$LightFrontRight.visible = true
-	$LightBackLeft.visible = true
-	$LightBackRight.visible = true
-	$LightUnder1.show()
-	$LightUnder2.show()
-	$LightUnder3.show()
-	$LightUnder4.show()
-	$LightUnder5.show()
+	set_all_lights(true)
 
 
 func lights_off():
-	$LightFrontLeft.visible = false
-	$LightFrontRight.visible = false
-	$LightBackLeft.visible = false
-	$LightBackRight.visible = false
-	$LightUnder1.hide()
-	$LightUnder2.hide()
-	$LightUnder3.hide()
-	$LightUnder4.hide()
-	$LightUnder5.hide()
+	set_all_lights(false)
+
+
+func set_all_lights(state):
+	$Lights/LightFrontLeft.visible = state
+	$Lights/LightFrontRight.visible = state
+	$Lights/LightBackLeft.visible = state
+	$Lights/LightBackRight.visible = state
+	$Lights/LightUnder1.visible = state
+	$Lights/LightUnder2.visible = state
+	$Lights/LightUnder3.visible = state
+	$Lights/LightUnder4.visible = state
+	$Lights/LightUnder5.visible = state
 
 
 func set_global_transform_origin(pos):

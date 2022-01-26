@@ -459,61 +459,6 @@ draw_pass_1 = SubResource( 28 )
 [node name="ExplosionSound" type="AudioStreamPlayer" parent="CarBody"]
 stream = ExtResource( 8 )
 
-[node name="LightFrontLeft" type="SpotLight" parent="CarBody"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.163859, 1.39401 )
-light_energy = 10.0
-shadow_enabled = true
-spot_range = 100.0
-spot_attenuation = 4.75683
-spot_angle = 16.93
-spot_angle_attenuation = 1.93187
-
-[node name="LightFrontRight" type="SpotLight" parent="CarBody"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.39401 )
-light_energy = 10.0
-shadow_enabled = true
-spot_range = 100.0
-spot_attenuation = 4.75683
-spot_angle = 16.93
-spot_angle_attenuation = 1.93187
-
-[node name="LightBackRight" type="OmniLight" parent="CarBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.29508 )
-light_color = Color( 1, 0, 0, 1 )
-light_energy = 0.1
-shadow_enabled = true
-
-[node name="LightBackLeft" type="OmniLight" parent="CarBody"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.362708, 0.190666, -1.31362 )
-light_color = Color( 1, 0, 0, 1 )
-light_energy = 0.1
-shadow_enabled = true
-
-[node name="LightUnder1" type="OmniLight" parent="CarBody"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 0 )
-light_energy = 2.0
-shadow_enabled = true
-
-[node name="LightUnder2" type="OmniLight" parent="CarBody"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 1 )
-light_energy = 2.0
-shadow_enabled = true
-
-[node name="LightUnder3" type="OmniLight" parent="CarBody"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, -1 )
-light_energy = 2.0
-shadow_enabled = true
-
-[node name="LightUnder4" type="OmniLight" parent="CarBody"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, -0.528934, -0.1, -0.0325493 )
-light_energy = 2.0
-shadow_enabled = true
-
-[node name="LightUnder5" type="OmniLight" parent="CarBody"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.496284, -0.1, 0.012954 )
-light_energy = 2.0
-shadow_enabled = true
-
 [node name="LavaLight1" type="OmniLight" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.97684, -0.387057 )
 visible = false
@@ -551,6 +496,63 @@ collide_with_areas = true
 transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.260324, 0.9362, 0.533783 )
 enabled = true
 collide_with_areas = true
+
+[node name="Lights" type="Spatial" parent="CarBody"]
+
+[node name="LightFrontLeft" type="SpotLight" parent="CarBody/Lights"]
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.163859, 1.39401 )
+light_energy = 10.0
+shadow_enabled = true
+spot_range = 100.0
+spot_attenuation = 4.75683
+spot_angle = 16.93
+spot_angle_attenuation = 1.93187
+
+[node name="LightFrontRight" type="SpotLight" parent="CarBody/Lights"]
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.39401 )
+light_energy = 10.0
+shadow_enabled = true
+spot_range = 100.0
+spot_attenuation = 4.75683
+spot_angle = 16.93
+spot_angle_attenuation = 1.93187
+
+[node name="LightBackRight" type="OmniLight" parent="CarBody/Lights"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.29508 )
+light_color = Color( 1, 0, 0, 1 )
+light_energy = 0.1
+shadow_enabled = true
+
+[node name="LightBackLeft" type="OmniLight" parent="CarBody/Lights"]
+transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.362708, 0.190666, -1.31362 )
+light_color = Color( 1, 0, 0, 1 )
+light_energy = 0.1
+shadow_enabled = true
+
+[node name="LightUnder1" type="OmniLight" parent="CarBody/Lights"]
+transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 0 )
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="LightUnder2" type="OmniLight" parent="CarBody/Lights"]
+transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 1 )
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="LightUnder3" type="OmniLight" parent="CarBody/Lights"]
+transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, -1 )
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="LightUnder4" type="OmniLight" parent="CarBody/Lights"]
+transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, -0.528934, -0.1, -0.0325493 )
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="LightUnder5" type="OmniLight" parent="CarBody/Lights"]
+transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.496284, -0.1, 0.012954 )
+light_energy = 2.0
+shadow_enabled = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

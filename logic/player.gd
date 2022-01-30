@@ -92,10 +92,10 @@ func set_viewport_container(_left, _right, _bottom, _top, size_x, size_y):
 	get_viewport().size.x = size_x
 	get_viewport().size.y = size_y
 	# label stuff is relative to the container, not window...
-	get_label().margin_left = _left
+	# get_label().margin_left = _left
 	get_label().margin_right = 0
 	# get_label().margin_bottom = 0
-	get_label().margin_top = _top
+	# get_label().margin_top = _top
 	# get_label().rect_size.x = size_x
 	# get_label().rect_size.y = size_y
 	#print("LRTB="+str([_left, _right, _bottom, _top]))

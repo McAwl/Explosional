@@ -9,6 +9,7 @@ var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0,
 export var start_clock_hrs = 12.0
 export var test_nuke = false
 export var fake_sun_omni_light = false
+export var test_turn_off_airstrike = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -61,7 +62,7 @@ func _process(delta):
 	air_strike["interval_so_far_sec"] +=delta
 	air_strike["duration_so_far_sec"] += delta
 		
-	if air_strike["on"] == false and air_strike["interval_so_far_sec"] > air_strike["interval_sec"]:
+	if air_strike["on"] == false and air_strike["interval_so_far_sec"] > air_strike["interval_sec"] and test_turn_off_airstrike == false:
 		turn_airstrike_on()
 	elif air_strike["on"] == true and air_strike["duration_so_far_sec"] > air_strike["duration_sec"]:
 		turn_airstrike_off()

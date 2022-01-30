@@ -1,0 +1,26 @@
+[gd_resource type="SpatialMaterial" load_steps=6 format=2]
+
+[ext_resource path="res://assets/textures/StylizedSand001_1K-JPG/Stylized_Sand_001_basecolor.jpg" type="Texture" id=1]
+[ext_resource path="res://assets/textures/StylizedSand001_1K-JPG/Stylized_Sand_001_ambientOcclusion.jpg" type="Texture" id=2]
+[ext_resource path="res://assets/textures/StylizedSand001_1K-JPG/Stylized_Sand_001_normal.jpg" type="Texture" id=3]
+[ext_resource path="res://assets/textures/StylizedSand001_1K-JPG/Stylized_Sand_001_roughness.jpg" type="Texture" id=4]
+[ext_resource path="res://assets/textures/StylizedSand001_1K-JPG/Stylized_Sand_001_height.png" type="Texture" id=5]
+
+[resource]
+albedo_texture = ExtResource( 1 )
+roughness_texture = ExtResource( 4 )
+normal_enabled = true
+normal_scale = 1.0
+normal_texture = ExtResource( 3 )
+ao_enabled = true
+ao_light_affect = 0.0
+ao_texture = ExtResource( 2 )
+ao_on_uv2 = false
+ao_texture_channel = 0
+depth_enabled = true
+depth_scale = 0.05
+depth_deep_parallax = false
+depth_flip_tangent = false
+depth_flip_binormal = false
+depth_texture = ExtResource( 5 )
+uv1_scale = Vector3( 20, 20, 1 )

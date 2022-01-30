@@ -238,6 +238,7 @@ shadow_filter=3
 
 quality/intended_usage/framebuffer_allocation=3
 vram_compression/import_etc=true
+quality/directional_shadow/size=8192
 quality/shadows/filter_mode=2
 quality/filters/anisotropic_filter_level=16
 quality/filters/msaa=2

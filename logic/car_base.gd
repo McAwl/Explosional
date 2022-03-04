@@ -37,7 +37,8 @@ func reset_car():
 	$CarBody.get_node("Wheel3").visible = true
 	$CarBody.get_node("Wheel4").visible = true
 	$CarBody.get_node("Body").visible = true
-	$CarBody.get_node("Particles").visible = true
+	$CarBody.get_node("ParticlesSmoke").visible = true
+	$CarBody.get_node("Flames3D").visible = true
 	$CarBody.lifetime_so_far_sec = 0.0
 
 

@@ -37,15 +37,15 @@ shadow_atlas_size = 128
 
 [node name="CanvasLayer" type="CanvasLayer" parent="VC/V"]
 
-[node name="icon_mine" type="TextureRect" parent="VC/V/CanvasLayer"]
+[node name="icon_mine" type="TextureProgress" parent="VC/V/CanvasLayer"]
 margin_left = 120.0
 margin_top = 20.0
 rect_scale = Vector2( 0.1, 0.1 )
-texture = ExtResource( 4 )
-stretch_mode = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+step = 1.005
+value = 50.0
+texture_under = ExtResource( 4 )
+texture_progress = ExtResource( 7 )
+fill_mode = 1
 
 [node name="icon_rocket" type="TextureRect" parent="VC/V/CanvasLayer"]
 margin_left = 120.0
@@ -70,7 +70,7 @@ __meta__ = {
 [node name="icon_nuke" type="TextureRect" parent="VC/V/CanvasLayer"]
 margin_left = 120.0
 margin_top = 20.0
-rect_scale = Vector2( 0.1, 0.1 )
+rect_scale = Vector2( 0.36, 0.36 )
 rect_clip_content = true
 texture = ExtResource( 9 )
 stretch_mode = 3

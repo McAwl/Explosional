@@ -26,10 +26,10 @@ var take_damage = true
 var wheel_positions = []
 var wheels = []
 var reset_car = false
-var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["mine"], "scene": "res://scenes/mine.tscn", "enabled": true}, \
+var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["mine"], "scene": "res://scenes/explosive.tscn", "enabled": true}, \
 			   1: {"name": "rocket", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["rocket"], "scene": "res://scenes/missile.tscn", "enabled": true}, \
 			   2: {"name": "missile", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["missile"], "scene": "res://scenes/missile.tscn", "enabled": true}, \
-			   3: {"name": "nuke", "damage": 10, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["nuke"], "scene": "res://scenes/mine.tscn", "enabled": false, "test_mode": false}}
+			   3: {"name": "nuke", "damage": 10, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["nuke"], "scene": "res://scenes/explosive.tscn", "enabled": false, "test_mode": false}}
 var weapon_select = 0
 var lights_disabled = false
 
@@ -38,6 +38,8 @@ func _ready():
 	cooldown_timer = weapons[weapon_select]["cooldown_timer"]
 	lights_disabled = false
 	check_lights()
+	$ParticlesSmoke.emitting = false
+	$ParticlesSmoke.amount = 1
 
 	
 func check_lights():
@@ -93,7 +95,7 @@ func check_raycast(substring_in_hit_name, raycast):
 
 func _process(delta):
 	
-	if reset_car == true and $Explosion.emitting == false and $ExplosionSound.playing == false:
+	if reset_car == true and $Explosion/AnimationPlayer.current_animation != "explosion":
 		reset_vals()
 		get_parent().reset_car()
 		
@@ -234,8 +236,10 @@ func _physics_process(delta):
 
 func reset_vals():
 	engine_force_value = ENGINE_FORCE_VALUE
-	$Particles.emitting = false
-	$Particles.amount = 1
+	$ParticlesSmoke.emitting = false
+	$Flames3D.emitting = false
+	$ParticlesSmoke.amount = 1
+	$Flames3D.amount = 1
 	total_damage = 0.0
 
 
@@ -256,22 +260,24 @@ func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z):
 
 func damage(amount):
 	total_damage += amount
-	if $Particles.emitting == false:
-		$Particles.emitting = true
-	$Particles.amount *= 2  # increase engine smoke indicating damage
+	if $ParticlesSmoke.emitting == false:
+		$ParticlesSmoke.emitting = true
+		$Flames3D.emitting = true
+	$ParticlesSmoke.amount *= 2  # increase engine smoke indicating damage
+	$Flames3D.amount *= 5
 	engine_force_value *= 0.75  # decrease engine power to indicate damage
 
 	if total_damage >= max_damage:
 		total_damage = max_damage
-		$Explosion.emitting = true
-		$ExplosionSound.playing = true
+		$Explosion/AnimationPlayer.play("explosion")
 		reset_car = true
 		$Body.visible = false
 		$Wheel1.visible = false
 		$Wheel2.visible = false
 		$Wheel3.visible = false
 		$Wheel4.visible = false
-		$Particles.visible = false
+		$ParticlesSmoke.visible = false
+		$Flames3D.visible = false
 		lights_disabled = true
 		lights_off()
 	get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
@@ -303,7 +309,7 @@ func fire_mine_or_nuke():
 			weapons[3]["enabled"] = false  # so powerup is needed again
 			cycle_weapon()  # de-select nuke, as it's not available any more
 	else:
-		print("Error! Shouldn't be here")
+		print("fire_mine_or_nuke(): Error! Shouldn't be here")
 	# print("weapons[weapon_select]="+str(weapons[weapon_select]))
 	weapon_instance.set_as_toplevel(true)
 

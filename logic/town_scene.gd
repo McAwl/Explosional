@@ -5,7 +5,8 @@ var check_game_over_timer = 1.0
 var num_players
 var players
 var rng = RandomNumberGenerator.new()
-var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
+
+export var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 export var start_clock_hrs = 12.0
 export var test_nuke = false
 export var fake_sun_omni_light = false
@@ -78,7 +79,7 @@ func _process(delta):
 		for player in get_players():  # range(1, num_players+1):
 			if player.get_carbody().lifetime_so_far_sec > 5.0:
 				if randf()<0.005:
-					var weapon_instance = load("res://scenes/mine.tscn").instance()
+					var weapon_instance = load("res://scenes/explosive.tscn").instance()
 					add_child(weapon_instance) 
 					var speed = player.get_carbody().get_speed2()
 					var cbo = player.get_carbody().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)

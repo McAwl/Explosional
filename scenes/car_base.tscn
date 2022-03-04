@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://logic/vehicle.gd" type="Script" id=1]
 [ext_resource path="res://assets/materials/vehicles/car_red_body.tres" type="Material" id=2]
@@ -7,8 +7,14 @@
 [ext_resource path="res://logic/follow_camera.gd" type="Script" id=5]
 [ext_resource path="res://logic/audio_stream_player.gd" type="Script" id=6]
 [ext_resource path="res://assets/audio/sounds/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3" type="AudioStream" id=7]
-[ext_resource path="res://assets/audio/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=8]
+[ext_resource path="res://scenes/explosion.tscn" type="PackedScene" id=8]
 [ext_resource path="res://logic/car_base.gd" type="Script" id=9]
+[ext_resource path="res://scenes/flames.tscn" type="PackedScene" id=10]
+[ext_resource path="res://assets/textures/dot.png" type="Texture" id=11]
+[ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=12]
+[ext_resource path="res://assets/materials/shield.tres" type="Material" id=13]
+[ext_resource path="res://logic/Shield.gd" type="Script" id=14]
+[ext_resource path="res://assets/materials/shield_outer.tres" type="Material" id=15]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
@@ -128,70 +134,33 @@ extents = Vector3( 0.468997, 0.227406, 0.798583 )
 
 [sub_resource type="CapsuleMesh" id=30]
 
-[sub_resource type="SpatialMaterial" id=17]
-flags_transparent = true
-vertex_color_use_as_albedo = true
-albedo_color = Color( 0.772549, 0.772549, 0.772549, 1 )
+[sub_resource type="Gradient" id=33]
+offsets = PoolRealArray( 0, 0.242236, 0.732919, 0.993789, 1 )
+colors = PoolColorArray( 0.498039, 0.498039, 0.498039, 0, 0.513726, 0.513726, 0.513726, 0.533333, 0.509804, 0.509804, 0.509804, 0.54902, 0.505882, 0.505882, 0.505882, 0, 0.529412, 0.529412, 0.529412, 0 )
 
-[sub_resource type="Gradient" id=11]
-offsets = PoolRealArray( 0, 0.322981, 1 )
-colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0.27451, 1, 1, 1, 0 )
+[sub_resource type="GradientTexture" id=34]
+gradient = SubResource( 33 )
 
-[sub_resource type="GradientTexture" id=20]
-gradient = SubResource( 11 )
-
-[sub_resource type="Curve" id=12]
-_data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
-
-[sub_resource type="CurveTexture" id=21]
-curve = SubResource( 12 )
-
-[sub_resource type="ParticlesMaterial" id=14]
+[sub_resource type="ParticlesMaterial" id=35]
+lifetime_randomness = 0.22
 direction = Vector3( 0, 1, 0 )
-spread = 15.88
-gravity = Vector3( 0, 0, 0 )
+gravity = Vector3( 0, 1, 0 )
 initial_velocity = 1.0
-scale = 0.2
-scale_curve = SubResource( 21 )
-color = Color( 0.113725, 0.0980392, 0.0980392, 1 )
-color_ramp = SubResource( 20 )
+damping = 1.5
+damping_random = 0.35
+color_ramp = SubResource( 34 )
 
-[sub_resource type="SpatialMaterial" id=22]
+[sub_resource type="SpatialMaterial" id=36]
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
+params_billboard_mode = 1
+params_billboard_keep_scale = true
+albedo_color = Color( 0, 0, 0, 0.180392 )
+albedo_texture = ExtResource( 11 )
 
-[sub_resource type="SphereMesh" id=16]
-material = SubResource( 22 )
-
-[sub_resource type="Gradient" id=23]
-offsets = PoolRealArray( 0, 0.477273, 1 )
-colors = PoolColorArray( 1, 0, 0, 1, 0.832031, 0.50773, 0.162506, 1, 0.605469, 0.54708, 0.231781, 1 )
-
-[sub_resource type="GradientTexture" id=24]
-gradient = SubResource( 23 )
-
-[sub_resource type="Curve" id=25]
-_data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
-
-[sub_resource type="CurveTexture" id=15]
-curve = SubResource( 25 )
-
-[sub_resource type="ParticlesMaterial" id=26]
-direction = Vector3( 0, 1, 0 )
-spread = 75.88
-initial_velocity = 11.63
-damping = 13.73
-scale_curve = SubResource( 15 )
-color_ramp = SubResource( 24 )
-
-[sub_resource type="SpatialMaterial" id=27]
-flags_transparent = true
-flags_unshaded = true
-vertex_color_use_as_albedo = true
-
-[sub_resource type="SphereMesh" id=28]
-material = SubResource( 27 )
+[sub_resource type="QuadMesh" id=37]
+material = SubResource( 36 )
 
 [node name="CarBase" type="Spatial"]
 _import_path = NodePath(".")
@@ -223,7 +192,7 @@ damping_compression = 0.88
 [node name="Wheel1" type="MeshInstance" parent="CarBody/Wheel1"]
 _import_path = NodePath("BODY-vehicle/wheel1-wheel")
 mesh = SubResource( 2 )
-material/0 = null
+material/0 = ExtResource( 12 )
 
 [node name="RayCastWheel1" type="RayCast" parent="CarBody/Wheel1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.262533, -0.0640855, 0 )
@@ -244,7 +213,7 @@ damping_compression = 0.88
 [node name="Wheel2" type="MeshInstance" parent="CarBody/Wheel2"]
 _import_path = NodePath("BODY-vehicle/wheel2-wheel")
 mesh = SubResource( 3 )
-material/0 = null
+material/0 = ExtResource( 12 )
 
 [node name="RayCastWheel2" type="RayCast" parent="CarBody/Wheel2"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145094, -0.0793754, 0 )
@@ -267,7 +236,7 @@ damping_compression = 0.88
 [node name="Wheel3" type="MeshInstance" parent="CarBody/Wheel3"]
 _import_path = NodePath("BODY-vehicle/wheel3-wheel")
 mesh = SubResource( 4 )
-material/0 = null
+material/0 = ExtResource( 12 )
 
 [node name="RayCastWheel3" type="RayCast" parent="CarBody/Wheel3"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.220176, -0.0553332, 3.82662e-05 )
@@ -289,7 +258,7 @@ damping_compression = 0.88
 [node name="Wheel4" type="MeshInstance" parent="CarBody/Wheel4"]
 _import_path = NodePath("BODY-vehicle/wheel4-wheel")
 mesh = SubResource( 5 )
-material/0 = null
+material/0 = ExtResource( 12 )
 
 [node name="RayCastWheel4" type="RayCast" parent="CarBody/Wheel4"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
@@ -433,7 +402,7 @@ transform = Transform( -0.998921, -0.0112154, 0.0450581, -2.11161e-08, 0.970391,
 current = true
 fov = 74.0
 near = 0.1
-far = 500.0
+far = 1000.0
 script = ExtResource( 5 )
 min_distance = 3.0
 height = 1.25
@@ -452,29 +421,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.05756, 1.20003 )
 
 [node name="RocketPosition" type="Position3D" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.499051, 1.69379 )
-
-[node name="Particles" type="Particles" parent="CarBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.514265, 0.879329 )
-material_override = SubResource( 17 )
-emitting = false
-amount = 1
-lifetime = 1.48
-local_coords = false
-process_material = SubResource( 14 )
-draw_pass_1 = SubResource( 16 )
-
-[node name="Explosion" type="Particles" parent="CarBody"]
-emitting = false
-amount = 60
-lifetime = 0.8
-one_shot = true
-explosiveness = 0.77
-local_coords = false
-process_material = SubResource( 26 )
-draw_pass_1 = SubResource( 28 )
-
-[node name="ExplosionSound" type="AudioStreamPlayer" parent="CarBody"]
-stream = ExtResource( 8 )
 
 [node name="LavaLight1" type="OmniLight" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.97684, -0.387057 )
@@ -570,6 +516,37 @@ shadow_enabled = true
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.496284, -0.1, 0.012954 )
 light_energy = 2.0
 shadow_enabled = true
+
+[node name="Flames3D" parent="CarBody" instance=ExtResource( 10 )]
+transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -3.37604e-09, 0, 0 )
+emitting = false
+
+[node name="ParticlesSmoke" type="Particles" parent="CarBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.303509, 0.715798 )
+amount = 46
+lifetime = 5.0
+explosiveness = 0.16
+randomness = 0.56
+visibility_aabb = AABB( -4, -4.29736, -4, 8, 8, 8 )
+local_coords = false
+process_material = SubResource( 35 )
+draw_pass_1 = SubResource( 37 )
+
+[node name="Shield" type="Spatial" parent="CarBody"]
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
+visible = false
+script = ExtResource( 14 )
+
+[node name="Outer_shell" type="CSGSphere" parent="CarBody/Shield"]
+radial_segments = 24
+material = ExtResource( 13 )
+
+[node name="Inner_cut" type="CSGSphere" parent="CarBody/Shield"]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+radial_segments = 24
+material = ExtResource( 15 )
+
+[node name="Explosion" parent="CarBody" instance=ExtResource( 8 )]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

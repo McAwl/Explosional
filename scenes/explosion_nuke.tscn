@@ -317,7 +317,7 @@ tracks/17/keys = {
 "values": [ 3.0 ]
 }
 tracks/18/type = "value"
-tracks/18/path = NodePath("Particles:emitting")
+tracks/18/path = NodePath("GroundDust:emitting")
 tracks/18/interp = 1
 tracks/18/loop_wrap = true
 tracks/18/imported = false
@@ -327,6 +327,18 @@ tracks/18/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ false, false ]
+}
+tracks/19/type = "value"
+tracks/19/path = NodePath("GroundDust:amount")
+tracks/19/interp = 1
+tracks/19/loop_wrap = true
+tracks/19/imported = false
+tracks/19/enabled = true
+tracks/19/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 500 ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -526,7 +538,7 @@ tracks/15/keys = {
 "values": [ 4.0, 12.0 ]
 }
 tracks/16/type = "value"
-tracks/16/path = NodePath("Particles:emitting")
+tracks/16/path = NodePath("GroundDust:emitting")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/imported = false
@@ -547,7 +559,7 @@ gradient = SubResource( 18 )
 
 [sub_resource type="ParticlesMaterial" id=20]
 emission_shape = 5
-emission_ring_radius = 50.0
+emission_ring_radius = 100.0
 emission_ring_inner_radius = 0.0
 emission_ring_height = 1.0
 emission_ring_axis = Vector3( 0, 0, 1 )
@@ -590,7 +602,7 @@ draw_pass_1 = SubResource( 7 )
 [node name="top" type="Spatial" parent="."]
 
 [node name="OmniLight" type="OmniLight" parent="top"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 32.118, 0 )
 light_color = Color( 1, 0.937255, 0, 1 )
 omni_range = 250.0
 
@@ -615,7 +627,7 @@ playback_speed = 0.5
 anims/RESET = SubResource( 1 )
 anims/nuke = SubResource( 2 )
 
-[node name="Particles" type="Particles" parent="."]
+[node name="GroundDust" type="Particles" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
 emitting = false
 amount = 500

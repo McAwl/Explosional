@@ -117,14 +117,14 @@ func _process(delta):
 			axis_lock_linear_z = true
 			
 		$SpotLight.hide()
-		if no_animations_or_sound_playing() or explosive_proximity_timer_limit < 0.0:
+		if no_animations_or_sound_playing() or (type == TYPES.MINE and explosive_proximity_timer_limit < 0.0):
 			# explosion particles have finished, explosion sound has finished, so disable the bomb
-			print("explosive_stage == 5 no_animations_or_sound_playing() or explosive_proximity_timer_limit < 0.00")
+			# print("explosive_stage == 5 no_animations_or_sound_playing() or (type == TYPES.MINE and explosive_proximity_timer_limit < 0.0) or or (type == TYPES.BOMB and explosive_proximity_timer_limit < 0.0)")
 			#explosive_stage = 0
 			visible = false
 			# if explosive_proximity_timer_limit < 0.0:
 			#	print("explosive_proximity_timer_limit < 0.0")
-			print("queue_free: "+str(name))
+			# print("queue_free: "+str(name))
 			queue_free()
 
 	if timer_1s < 0.0:
@@ -132,19 +132,20 @@ func _process(delta):
 
 
 func no_animations_or_sound_playing():
-	#print("bomb "+name+":")
+	# print("explosive_stage ==  "+str(explosive_stage))
 	if $ParticlesExplosion.emitting == true: 
-		print("$ParticlesExplosion.emitting == true")
+		# print("$ParticlesExplosion.emitting == true")
 		return false
 	if $explosion_sound_mine_bomb.playing == true: 
-		print("$explosion_sound_mine_bomb.playing == true")
+		# print("$explosion_sound_mine_bomb.playing == true")
 		return false
 	if $ExplosionNuke/AnimationPlayer.current_animation == "nuke":
-		print("$ExplosionNuke/AnimationPlayer.current_animation == nuke")
+		# print("$ExplosionNuke/AnimationPlayer.current_animation == nuke")
+		# print(str($ExplosionNuke/AnimationPlayer.current_animation_position))
 		return false
 	else:
-		print("no_animations_or_sound_playing(): returned true")
-		print("$ExplosionNuke/AnimationPlayer.current_animation="+str($ExplosionNuke/AnimationPlayer.current_animation))
+		# print("no_animations_or_sound_playing(): returned true")
+		# print("$ExplosionNuke/AnimationPlayer.current_animation="+str($ExplosionNuke/AnimationPlayer.current_animation))
 		return true
 
 
@@ -159,10 +160,10 @@ func get_bombs():
 func _physics_process(_delta):
 	
 	if explosive_stage == 4:
-		print("explosive_stage == 4")
+		# print("explosive_stage == 4")
 		hide_meshinstances()
 		if type == TYPES.NUKE:
-			print("_physics_process(): explosive_stage == 4 type == TYPES.NUKE")
+			# print("_physics_process(): explosive_stage == 4 type == TYPES.NUKE")
 			linear_velocity = Vector3(0.0, 0.0, 0.0)
 			angular_velocity = Vector3(0.0, 0.0, 0.0)
 			rotation_degrees = Vector3(0.0, 0.0, 0.0)
@@ -173,10 +174,12 @@ func _physics_process(_delta):
 			$ExplosionNuke/explosion_nuke_sound.playing = true
 		elif type == TYPES.MINE:
 			$ParticlesExplosion.global_transform.origin = global_transform.origin
+			# print("type == TYPES.MINE setting $ParticlesExplosion.emitting = true")
 			$ParticlesExplosion.emitting = true
 			$explosion_sound_mine_bomb.playing = true
 		elif type == TYPES.BOMB:
 			$explosion_sound_mine_bomb.playing = true
+			# print(" type == TYPES.BOMB setting $ParticlesExplosion.emitting = true")
 			$ParticlesExplosion.emitting = true
 		var targets = []
 		for target in get_players():  # i in range(1,5): # explosion toward all players

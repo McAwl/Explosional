@@ -96,6 +96,7 @@ func check_raycast(substring_in_hit_name, raycast):
 func _process(delta):
 	
 	if reset_car == true and $Explosion/AnimationPlayer.current_animation != "explosion":
+		print("reset_car == true and $Explosion/AnimationPlayer.current_animation != 'explosion'")
 		reset_vals()
 		get_parent().reset_car()
 		
@@ -268,6 +269,7 @@ func damage(amount):
 	engine_force_value *= 0.75  # decrease engine power to indicate damage
 
 	if total_damage >= max_damage:
+		print("total_damage >= max_damage")
 		total_damage = max_damage
 		$Explosion/AnimationPlayer.play("explosion")
 		reset_car = true

@@ -156,7 +156,7 @@ flags_unshaded = true
 vertex_color_use_as_albedo = true
 params_billboard_mode = 1
 params_billboard_keep_scale = true
-albedo_color = Color( 0, 0, 0, 0.180392 )
+albedo_color = Color( 0, 0, 0, 0.658824 )
 albedo_texture = ExtResource( 11 )
 
 [sub_resource type="QuadMesh" id=37]
@@ -523,7 +523,6 @@ emitting = false
 
 [node name="ParticlesSmoke" type="Particles" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.303509, 0.715798 )
-amount = 46
 lifetime = 5.0
 explosiveness = 0.16
 randomness = 0.56

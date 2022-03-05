@@ -18,7 +18,7 @@ func get_player():
 
 
 func reset_car():
-	print("reset_car()")
+	# print("reset_car()")
 	get_player().lives_left -= 1
 	if get_player().lives_left < 0:
 		# get_parent().set_label("Player: "+str($Body.player_number)+" Game Over")

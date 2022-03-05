@@ -6,7 +6,6 @@
 
 [sub_resource type="Animation" id=82]
 length = 0.001
-loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("smoke:emitting")
 tracks/0/interp = 1
@@ -179,7 +178,6 @@ tracks/13/keys = {
 [sub_resource type="Animation" id=83]
 resource_name = "explosion"
 length = 3.16
-loop = true
 step = 0.05
 tracks/0/type = "value"
 tracks/0/path = NodePath("smoke:emitting")

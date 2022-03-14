@@ -6,3 +6,14 @@ export_presets.cfg
 
 # Mono-specific ignores
 .mono/
+
+/addons/godot-git-plugin/git_api.gdnlib
+/addons/godot-git-plugin/git_api.gdns
+/addons/godot-git-plugin/LICENSE
+/addons/godot-git-plugin/osx/release/libgitapi.dylib
+/addons/godot-git-plugin/plugin.cfg
+/addons/godot-git-plugin/THIRDPARTY.md
+/addons/godot-git-plugin/win64/release/libgitapi.dll
+/addons/godot-git-plugin/win64/release/libgitapi.exp
+/addons/godot-git-plugin/win64/release/libgitapi.lib
+/addons/godot-git-plugin/x11/release/libgitapi.so

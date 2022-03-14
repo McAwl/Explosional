@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://assets/display/fonts/Square.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://logic/player.gd" type="Script" id=2]
@@ -7,9 +7,7 @@
 [ext_resource path="res://assets/display/icons/rocket.png" type="Texture" id=5]
 [ext_resource path="res://assets/display/icons/lifebar_fill.png" type="Texture" id=6]
 [ext_resource path="res://assets/display/icons/energy_bar_fill.png" type="Texture" id=7]
-[ext_resource path="res://assets/display/icons/lifebar_bg.png" type="Texture" id=8]
 [ext_resource path="res://assets/display/icons/nuke.png" type="Texture" id=9]
-[ext_resource path="res://assets/display/icons/energy_bar_bg.png" type="Texture" id=10]
 [ext_resource path="res://assets/display/icons/heart.png" type="Texture" id=11]
 
 [sub_resource type="DynamicFont" id=1]
@@ -37,10 +35,11 @@ shadow_atlas_size = 128
 
 [node name="CanvasLayer" type="CanvasLayer" parent="VC/V"]
 
-[node name="icon_mine" type="TextureProgress" parent="VC/V/CanvasLayer"]
-margin_left = 120.0
+[node name="icon_mine_old" type="TextureProgress" parent="VC/V/CanvasLayer"]
+visible = false
+margin_left = 121.0
 margin_top = 20.0
-rect_scale = Vector2( 0.1, 0.1 )
+rect_scale = Vector2( 0.105, 0.105 )
 step = 1.005
 value = 50.25
 texture_under = ExtResource( 4 )
@@ -48,19 +47,31 @@ texture_progress = ExtResource( 7 )
 fill_mode = 1
 
 [node name="icon_rocket" type="TextureRect" parent="VC/V/CanvasLayer"]
-margin_left = 120.0
-margin_top = 20.0
-rect_scale = Vector2( 0.1, 0.1 )
+visible = false
+margin_left = 121.0
+margin_top = 21.0
+rect_scale = Vector2( 0.105, 0.105 )
 texture = ExtResource( 5 )
 stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="icon_mine" type="TextureRect" parent="VC/V/CanvasLayer"]
+margin_left = 121.0
+margin_top = 21.0
+rect_scale = Vector2( 0.105, 0.105 )
+texture = ExtResource( 4 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="icon_missile" type="TextureRect" parent="VC/V/CanvasLayer"]
+visible = false
 margin_left = 120.0
 margin_top = 20.0
-rect_scale = Vector2( 0.1, 0.1 )
+rect_scale = Vector2( 0.105, 0.105 )
 texture = ExtResource( 3 )
 stretch_mode = 1
 __meta__ = {
@@ -68,6 +79,7 @@ __meta__ = {
 }
 
 [node name="icon_nuke" type="TextureRect" parent="VC/V/CanvasLayer"]
+visible = false
 margin_left = 120.0
 margin_top = 20.0
 rect_scale = Vector2( 0.36, 0.36 )
@@ -79,27 +91,14 @@ __meta__ = {
 }
 
 [node name="cooldown" type="TextureProgress" parent="VC/V/CanvasLayer"]
-margin_left = 112.0
-margin_top = 98.0
-margin_right = 348.0
-margin_bottom = 140.0
-rect_scale = Vector2( 0.35, 0.5 )
-value = 50.0
-texture_under = ExtResource( 10 )
+margin_left = 127.0
+margin_top = 1.0
+margin_right = 360.0
+margin_bottom = 85.0
+rect_scale = Vector2( 0.25, 2.9 )
+value = 100.0
 texture_progress = ExtResource( 7 )
-tint_over = Color( 1, 0, 0, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="health" type="TextureProgress" parent="VC/V/CanvasLayer"]
-margin_left = 15.0
-margin_top = 100.0
-rect_scale = Vector2( 0.2, 0.32 )
-max_value = 10.0
-value = 10.0
-texture_under = ExtResource( 8 )
-texture_progress = ExtResource( 6 )
+tint_progress = Color( 1, 0, 0, 0.501961 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -114,8 +113,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="heart" type="TextureRect" parent="VC/V/CanvasLayer"]
+[node name="health" type="TextureProgress" parent="VC/V/CanvasLayer"]
 margin_left = 20.0
-margin_top = 20.0
-rect_scale = Vector2( 0.1, 0.1 )
+margin_top = 12.0
+margin_right = 416.0
+margin_bottom = 64.0
+rect_scale = Vector2( 0.16, 1.75 )
+max_value = 10.0
+value = 10.0
+texture_progress = ExtResource( 6 )
+tint_progress = Color( 1, 0.423529, 0, 0.494118 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="heart" type="TextureRect" parent="VC/V/CanvasLayer/health"]
+show_behind_parent = true
+margin_left = -51.0
+margin_top = 5.0
+margin_right = 722.0
+margin_bottom = 734.667
+rect_scale = Vector2( 0.7, 0.06 )
 texture = ExtResource( 11 )

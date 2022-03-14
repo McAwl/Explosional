@@ -284,6 +284,12 @@ func damage(amount):
 		lights_off()
 	get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
 	get_player().get_canvaslayer().get_node("health").value = max_damage-total_damage
+	if max_damage-total_damage >= 7.0:
+		get_player().get_canvaslayer().get_node("health").tint_progress = "#7e00ff00"  # green
+	elif max_damage-total_damage <= 3.0:
+		get_player().get_canvaslayer().get_node("health").tint_progress = "#7eff0000"  # red
+	else:
+		get_player().get_canvaslayer().get_node("health").tint_progress = "#7eff6c00"  # orange
 
 
 func get_player():

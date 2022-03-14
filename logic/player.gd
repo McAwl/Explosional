@@ -11,8 +11,14 @@ func _ready():
 	$VC/V/CanvasLayer/icon_rocket.visible = false
 	$VC/V/CanvasLayer/icon_missile.visible = false
 	$VC/V/CanvasLayer/icon_nuke.visible = false
+	$VC/V/CanvasLayer/health.tint_progress = "#7e00ff00"  # green
 
 
+func reset_health():
+	$VC/V/CanvasLayer/health.value = get_carbody().max_damage
+	$VC/V/CanvasLayer/health.tint_progress = "#7e00ff00"  # green
+	
+	
 func init(_player_number, _number_players, _player_name, pos=null):
 	# print("init")
 	# Add a car to the player

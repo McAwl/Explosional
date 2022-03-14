@@ -101,8 +101,7 @@ stream = ExtResource( 2 )
 
 [node name="ParticlesExplosion" type="Particles" parent="."]
 emitting = false
-amount = 30
-lifetime = 0.26
+amount = 100
 one_shot = true
 explosiveness = 0.54
 local_coords = false

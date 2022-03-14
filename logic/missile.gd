@@ -27,6 +27,7 @@ var hit_something = false
 func _ready():
 	$ParticlesThrust.visible = true
 	$OmniLight.visible = true
+	$ParticlesExplosion.emitting = false
 	$ParticlesExplosion.visible = false
 	$MeshInstance.visible = true
 
@@ -37,11 +38,23 @@ func _process(delta):
 		homing_check_target_timer -= delta
 	print_timer -= delta
 	
+	if print_timer < 0.0:
+		print(" hit_something="+str(hit_something))
+		print("$ParticlesExplosion.visible="+str($ParticlesExplosion.visible))
+		print("$ParticlesExplosion.emitting="+str($ParticlesExplosion.emitting))
+		print("$ExplosionSound.playing="+str($ExplosionSound.playing))
+		print_timer = 0.1
+	
 	if hit_something == true:
-		if $ExplosionSound.playing == false and $ParticlesExplosion.emitting == true:
+		lifetime_seconds = 2.0  # otherwise it might cut off the explosion anim/sound
+		if $ExplosionSound.playing == false and $ParticlesExplosion.emitting == false:
 			# explosion noise finished
+			print("missile: queue_free()")
 			queue_free()
-	elif lifetime_seconds < 0.0:
+		else:
+			print("playing something?")
+	
+	if lifetime_seconds < 0.0:
 		queue_free()
 
 
@@ -88,6 +101,7 @@ func _on_Missile_body_entered(body):
 		# print("Missile hit something...")
 		$ExplosionSound.playing = true
 		$ParticlesExplosion.emitting = true
+		$ParticlesExplosion.visible = true
 		hit_something = true
 		$MeshInstance.visible = false
 		$OmniLight.visible = false

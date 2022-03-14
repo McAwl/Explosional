@@ -35,11 +35,11 @@ func _process(delta):
 		homing_check_target_timer -= delta
 	print_timer -= delta
 	
-	if hit_something == true and $ExplosionSound.playing == false and $ParticlesExplosion.emitting == true:
-		# explosion noise finished
-		queue_free()
-	
-	if lifetime_seconds < 0.0:
+	if hit_something == true:
+		if $ExplosionSound.playing == false and $ParticlesExplosion.emitting == true:
+			# explosion noise finished
+			queue_free()
+	elif lifetime_seconds < 0.0:
 		queue_free()
 
 

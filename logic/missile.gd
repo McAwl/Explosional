@@ -26,7 +26,8 @@ var hit_something = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$ParticlesThrust.visible = true
-	$ParticlesExplosion.visible = false	
+	$ParticlesExplosion.visible = false
+	$MeshInstance.visible = true
 
 
 func _process(delta):
@@ -87,6 +88,8 @@ func _on_Missile_body_entered(body):
 		$ExplosionSound.playing = true
 		$ParticlesExplosion.emitting = true
 		hit_something = true
+		$MeshInstance.visible = false
+		$ParticlesThrust.visible = false
 		#  velocity = Vector3(0,0,0)  # ??????
 			
 		if "CarBody" in body.name:

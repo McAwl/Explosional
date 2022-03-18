@@ -24,7 +24,8 @@ func reset_car():
 		# get_parent().set_label("Player: "+str($Body.player_number)+" Game Over")
 		visible = false
 	else:
-		get_player().set_label($CarBody.player_number, get_player().lives_left, $CarBody.total_damage, $CarBody.weapons[$CarBody.weapon_select].damage)
+		get_player().set_label_player_name()
+		get_player().set_label_lives_left()
 		get_player().reset_health()
 		$CarBody.global_transform.origin = get_player().get_parent().get_random_spawn_point()  # Vector3(0.0, 0.0, 0.0)
 		$CarBody.linear_velocity = Vector3(0.0, 0.0, 0.0)

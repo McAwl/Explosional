@@ -129,7 +129,8 @@ func _process(delta):
 			cooldown_timer = weapons[weapon_select]["cooldown_timer"]
 		#else:
 		#	print(str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
-		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
+		get_player().set_label_player_name()  # , total_damage, weapons[weapon_select].damage)
+		get_player().set_label_lives_left()
 		get_player().get_canvaslayer().get_node("cooldown").max_value = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select]["name"]]
 		get_player().get_canvaslayer().get_node("cooldown").value = cooldown_timer
 
@@ -141,7 +142,8 @@ func _process(delta):
 	if Input.is_action_just_released("fire_player"+str(player_number)) and weapons[weapon_select]["active"] == false and weapons[weapon_select]["cooldown_timer"] <= 0.0 and weapons[weapon_select]["enabled"] == true:
 		# print("Player pressed fire")
 		weapons[weapon_select]["cooldown_timer"] = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select].name]
-		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
+		get_player().set_label_player_name()
+		get_player().set_label_lives_left()
 		if weapon_select == 0 or weapon_select == 3:  # mine or nuke
 			fire_mine_or_nuke()
 		elif weapon_select == 1:
@@ -173,7 +175,8 @@ func cycle_weapon():
 		get_player().get_canvaslayer().get_node("icon_missile").hide()
 		get_player().get_canvaslayer().get_node("icon_nuke").hide()
 		get_player().get_canvaslayer().get_node("icon_"+weapons[weapon_select].name).show()
-		get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
+		get_player().set_label_player_name()
+		get_player().set_label_lives_left()
 
 
 func _physics_process(delta):
@@ -282,7 +285,8 @@ func damage(amount):
 		$Flames3D.visible = false
 		lights_disabled = true
 		lights_off()
-	get_player().set_label(player_number, get_player().lives_left, total_damage, weapons[weapon_select].damage)
+	get_player().set_label_player_name()
+	get_player().set_label_lives_left()
 	get_player().get_canvaslayer().get_node("health").value = max_damage-total_damage
 	if max_damage-total_damage >= 7.0:
 		get_player().get_canvaslayer().get_node("health").tint_progress = "#7e00ff00"  # green

@@ -109,15 +109,27 @@ func _process(delta):
 	
 	if check_accel_damage_timer <= 0.0:
 		if acceleration_calc_for_damage > accel_damage_threshold:
-			if $OtherRaycasts/RayCastFrontRamDamge.is_colliding():
-				var collider_name = $OtherRaycasts/RayCastFrontRamDamge.get_collider().name
+			var rammed_another_car = false
+			$crash_sound.playing = true
+			if $OtherRaycasts/RayCastFrontRamDamage1.is_colliding():
+				var collider_name = $OtherRaycasts/RayCastFrontRamDamage1.get_collider().name
 				if "car" in collider_name.to_lower():
 					print("player "+str(player_number)+" rammed "+str(collider_name))
-				else:
-					print("player "+str(player_number)+" hit "+str(collider_name))
-					damage(1.0)
-			else:
+					rammed_another_car = true
+			if $OtherRaycasts/RayCastFrontRamDamage2.is_colliding():
+				var collider_name = $OtherRaycasts/RayCastFrontRamDamage2.get_collider().name
+				if "car" in collider_name.to_lower():
+					print("player "+str(player_number)+" rammed "+str(collider_name))
+					rammed_another_car = true
+			if $OtherRaycasts/RayCastFrontRamDamage3.is_colliding():
+				var collider_name = $OtherRaycasts/RayCastFrontRamDamage3.get_collider().name
+				if "car" in collider_name.to_lower():
+					print("player "+str(player_number)+" rammed "+str(collider_name))
+					rammed_another_car = true
+			if rammed_another_car == false:
 				damage(1.0)
+			# else don't take any damage
+				
 			check_accel_damage_timer = 1.0
 	else:
 		check_accel_damage_timer -=delta
@@ -297,13 +309,16 @@ func damage(amount):
 		$ParticlesSmoke.emitting = true
 		$Flames3D.emitting = true
 	$ParticlesSmoke.amount *= 2  # increase engine smoke indicating damage
-	$Flames3D.amount *= 5
+	$Flames3D.amount *= 4
+	if $Flames3D.amount > 100:
+		$Flames3D.amount = 100
 	engine_force_value *= 0.75  # decrease engine power to indicate damage
 
 	if total_damage >= max_damage:
 		print("total_damage >= max_damage")
 		total_damage = max_damage
 		$Explosion/AnimationPlayer.play("explosion")
+		$crash_sound.playing = true
 		reset_car = true
 		$Body.visible = false
 		$Wheel1.visible = false

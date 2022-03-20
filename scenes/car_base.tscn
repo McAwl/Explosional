@@ -460,6 +460,10 @@ transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e
 enabled = true
 collide_with_areas = true
 
+[node name="RayCastFrontRamDamge" type="RayCast" parent="CarBody/OtherRaycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0, 0.2569, 1.39068 )
+enabled = true
+
 [node name="Lights" type="Spatial" parent="CarBody"]
 
 [node name="LightFrontLeft" type="SpotLight" parent="CarBody/Lights"]

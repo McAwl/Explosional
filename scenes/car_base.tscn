@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://logic/vehicle.gd" type="Script" id=1]
 [ext_resource path="res://assets/materials/vehicles/car_red_body.tres" type="Material" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://assets/materials/shield.tres" type="Material" id=13]
 [ext_resource path="res://logic/Shield.gd" type="Script" id=14]
 [ext_resource path="res://assets/materials/shield_outer.tres" type="Material" id=15]
+[ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=16]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
@@ -460,9 +461,20 @@ transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastFrontRamDamge" type="RayCast" parent="CarBody/OtherRaycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0, 0.2569, 1.39068 )
+[node name="RayCastFrontRamDamage1" type="RayCast" parent="CarBody/OtherRaycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.2569, 1.39068 )
 enabled = true
+cast_to = Vector3( 0, -2, 0 )
+
+[node name="RayCastFrontRamDamage2" type="RayCast" parent="CarBody/OtherRaycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, 0.2569, 1.39068 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+
+[node name="RayCastFrontRamDamage3" type="RayCast" parent="CarBody/OtherRaycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.59601, 1.39068 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
 
 [node name="Lights" type="Spatial" parent="CarBody"]
 
@@ -559,6 +571,9 @@ radial_segments = 24
 material = ExtResource( 15 )
 
 [node name="Explosion" parent="CarBody" instance=ExtResource( 8 )]
+
+[node name="crash_sound" type="AudioStreamPlayer" parent="CarBody"]
+stream = ExtResource( 16 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

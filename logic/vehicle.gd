@@ -33,9 +33,9 @@ var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer
 var weapon_select = 0
 var lights_disabled = false
 var acceleration_calc_for_damage = 0.0
-var vel_xform_max = 0.0
+var vel_max = 0.0
 var check_accel_damage_timer = 4.0
-var accel_damage_threshold = 200.0
+var accel_damage_threshold = 100.0
 
 
 func _ready():
@@ -109,7 +109,15 @@ func _process(delta):
 	
 	if check_accel_damage_timer <= 0.0:
 		if acceleration_calc_for_damage > accel_damage_threshold:
-			damage(1.0)
+			if $OtherRaycasts/RayCastFrontRamDamge.is_colliding():
+				var collider_name = $OtherRaycasts/RayCastFrontRamDamge.get_collider().name
+				if "car" in collider_name.to_lower():
+					print("player "+str(player_number)+" rammed "+str(collider_name))
+				else:
+					print("player "+str(player_number)+" hit "+str(collider_name))
+					damage(1.0)
+			else:
+				damage(1.0)
 			check_accel_damage_timer = 1.0
 	else:
 		check_accel_damage_timer -=delta
@@ -194,13 +202,12 @@ func cycle_weapon():
 func _physics_process(delta):
 	
 	var new_vel = get_linear_velocity()
-	var new_vel_xform = linear_velocity  # transform.basis.xform_inv(linear_velocity)
-	var new_vel_xform_max = max(abs(new_vel_xform.x), max(abs(new_vel_xform.y), abs(new_vel_xform.z)))
+	var new_vel_max = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
 	
 	# Smooth out the accel calc by using a 50/50 exponentially-weighted moving average
-	acceleration_calc_for_damage = (0.5*acceleration_calc_for_damage) + (0.5*abs(new_vel_xform_max - vel_xform_max)/delta)
+	acceleration_calc_for_damage = (0.5*acceleration_calc_for_damage) + (0.5*abs(new_vel_max - vel_max)/delta)
 	
-	vel_xform_max = new_vel_xform_max
+	vel_max = new_vel_max
 
 	if total_damage < max_damage:
 		

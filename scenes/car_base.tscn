@@ -464,58 +464,66 @@ collide_with_areas = true
 
 [node name="LightFrontLeft" type="SpotLight" parent="CarBody/Lights"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.163859, 1.39401 )
-light_energy = 10.0
+light_energy = 5.0
 shadow_enabled = true
-spot_range = 100.0
-spot_attenuation = 4.75683
-spot_angle = 16.93
-spot_angle_attenuation = 1.93187
+spot_range = 50.0
+spot_angle = 20.0
 
 [node name="LightFrontRight" type="SpotLight" parent="CarBody/Lights"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.39401 )
 light_energy = 10.0
 shadow_enabled = true
-spot_range = 100.0
-spot_attenuation = 4.75683
-spot_angle = 16.93
-spot_angle_attenuation = 1.93187
+spot_range = 50.0
+spot_angle = 20.0
 
 [node name="LightBackRight" type="OmniLight" parent="CarBody/Lights"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.29508 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
+shadow_reverse_cull_face = true
 
 [node name="LightBackLeft" type="OmniLight" parent="CarBody/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.362708, 0.190666, -1.31362 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
+shadow_reverse_cull_face = true
 
 [node name="LightUnder1" type="OmniLight" parent="CarBody/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 0 )
 light_energy = 2.0
 shadow_enabled = true
+shadow_reverse_cull_face = true
+omni_range = 1.0
 
 [node name="LightUnder2" type="OmniLight" parent="CarBody/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 1 )
 light_energy = 2.0
 shadow_enabled = true
+shadow_reverse_cull_face = true
+omni_range = 1.0
 
 [node name="LightUnder3" type="OmniLight" parent="CarBody/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, -1 )
 light_energy = 2.0
 shadow_enabled = true
+shadow_reverse_cull_face = true
+omni_range = 1.0
 
 [node name="LightUnder4" type="OmniLight" parent="CarBody/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, -0.528934, -0.1, -0.0325493 )
 light_energy = 2.0
 shadow_enabled = true
+shadow_reverse_cull_face = true
+omni_range = 1.0
 
 [node name="LightUnder5" type="OmniLight" parent="CarBody/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.496284, -0.1, 0.012954 )
 light_energy = 2.0
 shadow_enabled = true
+shadow_reverse_cull_face = true
+omni_range = 1.0
 
 [node name="Flames3D" parent="CarBody" instance=ExtResource( 10 )]
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -3.37604e-09, 0, 0 )
@@ -537,7 +545,8 @@ visible = false
 script = ExtResource( 14 )
 
 [node name="Outer_shell" type="CSGSphere" parent="CarBody/Shield"]
-radial_segments = 24
+radial_segments = 42
+rings = 15
 material = ExtResource( 13 )
 
 [node name="Inner_cut" type="CSGSphere" parent="CarBody/Shield"]

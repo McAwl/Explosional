@@ -32,6 +32,10 @@ var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer
 			   3: {"name": "nuke", "damage": 10, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["nuke"], "scene": "res://scenes/explosive.tscn", "enabled": false, "test_mode": false}}
 var weapon_select = 0
 var lights_disabled = false
+var acceleration_calc_for_damage = 0.0
+var vel_xform_max = 0.0
+var check_accel_damage_timer = 4.0
+var accel_damage_threshold = 200.0
 
 
 func _ready():
@@ -102,7 +106,14 @@ func _process(delta):
 		
 	if total_damage >= max_damage:
 		return
-		
+	
+	if check_accel_damage_timer <= 0.0:
+		if acceleration_calc_for_damage > accel_damage_threshold:
+			damage(1.0)
+			check_accel_damage_timer = 1.0
+	else:
+		check_accel_damage_timer -=delta
+
 	timer_1_sec -= delta
 	if timer_1_sec <= 0.0:
 		timer_1_sec = 1.0
@@ -113,6 +124,7 @@ func _process(delta):
 
 	timer_0_1_sec -= delta
 	if timer_0_1_sec <= 0.0:
+		# print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
 		flicker_damaged_lights()
 		timer_0_1_sec = 0.1
 		if not ("instance" in weapons[weapon_select]):
@@ -181,6 +193,15 @@ func cycle_weapon():
 
 func _physics_process(delta):
 	
+	var new_vel = get_linear_velocity()
+	var new_vel_xform = linear_velocity  # transform.basis.xform_inv(linear_velocity)
+	var new_vel_xform_max = max(abs(new_vel_xform.x), max(abs(new_vel_xform.y), abs(new_vel_xform.z)))
+	
+	# Smooth out the accel calc by using a 50/50 exponentially-weighted moving average
+	acceleration_calc_for_damage = (0.5*acceleration_calc_for_damage) + (0.5*abs(new_vel_xform_max - vel_xform_max)/delta)
+	
+	vel_xform_max = new_vel_xform_max
+
 	if total_damage < max_damage:
 		
 		var fwd_mps = transform.basis.xform_inv(linear_velocity).x
@@ -245,6 +266,7 @@ func reset_vals():
 	$ParticlesSmoke.amount = 1
 	$Flames3D.amount = 1
 	total_damage = 0.0
+	check_accel_damage_timer = 4.0
 
 
 func get_speed():
@@ -285,6 +307,7 @@ func damage(amount):
 		$Flames3D.visible = false
 		lights_disabled = true
 		lights_off()
+		$Shield.visible = false
 	get_player().set_label_player_name()
 	get_player().set_label_lives_left()
 	get_player().get_canvaslayer().get_node("health").value = max_damage-total_damage

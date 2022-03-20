@@ -7,7 +7,7 @@ onready var _track_3 = $track_3
 
 var last_track_played = 1
 var timer = 0.0
-var music = false
+var music = true
 var current_track
 
 func _ready():

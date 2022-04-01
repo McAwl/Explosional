@@ -11,6 +11,7 @@ uniform sampler2D tex_3_albedo: hint_albedo;
 uniform sampler2D tex_3_normal : hint_normal;
 uniform float blend_smoothness : hint_range(0.01, 1.0, 0.01) = 0.01;
 uniform float threshold : hint_range(0.1, 1.0, 0.01) = 0.0;
+uniform float normal_mult : hint_range(0.1, 1.0, 0.01) = 1.0;
 uniform float scale_texture1 : hint_range(0.25, 1024.0, 0.125) = 16.0;
 uniform float scale_texture2 : hint_range(0.25, 1025.0, 0.125) = 16.0;
 uniform float scale_texture3 : hint_range(0.25, 1025.0, 0.125) = 16.0;
@@ -37,7 +38,7 @@ void fragment(){
 	}
 	if(use_world_direction){
 		// textures are from 0 to 1, but we want the normals to be able to go negative.
-		vec3 unpacked_normal = normal1 * 2.0 - vec3(1.0);
+		vec3 unpacked_normal = (normal1 * 2.0 - vec3(1.0))*normal_mult;
 		unpacked_normal.z = sqrt(max(0.0, 1.0 - dot(unpacked_normal.xy, unpacked_normal.xy)));
 		// Binormal and tangent vectors are what allows us to transform the
 		// 2D normalmaps into something that can interact with 3D space
@@ -76,4 +77,5 @@ void fragment(){
 
 	NORMALMAP = mix(normal1, normal2, mix_factor1);
 	ALBEDO = clamp(mix(albedo1, albedo2, mix_factor1).rgb, vec3(0.0), vec3(1.0));
+
 }

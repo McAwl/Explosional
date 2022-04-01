@@ -17,3 +17,7 @@ export_presets.cfg
 /addons/godot-git-plugin/win64/release/libgitapi.exp
 /addons/godot-git-plugin/win64/release/libgitapi.lib
 /addons/godot-git-plugin/x11/release/libgitapi.so
+*.glb
+*.blend
+*.dae
+*.obj

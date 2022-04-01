@@ -9,11 +9,6 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "",
-"class": "GitAPI",
-"language": "NativeScript",
-"path": "res://addons/godot-git-plugin/git_api.gdns"
-}, {
 "base": "ResourceFormatLoader",
 "class": "HTerrainDataLoader",
 "language": "GDScript",
@@ -30,7 +25,6 @@ _global_script_classes=[ {
 "path": "res://addons/angelqba.image_to_scene/image_to_scene_resource.gd"
 } ]
 _global_script_class_icons={
-"GitAPI": "",
 "HTerrainDataLoader": "",
 "HTerrainDataSaver": "",
 "ImageDataReource": ""
@@ -67,7 +61,7 @@ enabled=PoolStringArray( "res://addons/waterways/plugin.cfg" )
 
 [gdnative]
 
-singletons=[ "res://addons/godot-git-plugin/git_api.gdnlib" ]
+singletons=[  ]
 
 [global]
 

@@ -6,7 +6,7 @@ var print_timer = 0.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	$CarBody/Explosion.visible = false
 
 
 func set_label(new_label):

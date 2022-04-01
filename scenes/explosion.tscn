@@ -489,7 +489,6 @@ anims/RESET = SubResource( 82 )
 anims/explosion = SubResource( 83 )
 
 [node name="smoke" type="Particles" parent="."]
-visible = false
 emitting = false
 amount = 1
 lifetime = 0.75
@@ -510,15 +509,13 @@ process_material = SubResource( 80 )
 draw_pass_1 = SubResource( 81 )
 
 [node name="light_blast" type="OmniLight" parent="."]
-visible = false
 light_color = Color( 0.992157, 1, 0, 1 )
-light_energy = 0.0
+light_energy = 10.0
 shadow_enabled = true
 omni_range = 22.871
 
 [node name="Shockwave" type="Spatial" parent="."]
-transform = Transform( 20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0 )
-visible = false
+transform = Transform( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 )
 
 [node name="shock_outer" type="CSGSphere" parent="Shockwave"]
 radial_segments = 17

@@ -487,7 +487,7 @@ spot_angle = 20.0
 
 [node name="LightFrontRight" type="SpotLight" parent="CarBody/Lights"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.39401 )
-light_energy = 10.0
+light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
@@ -571,6 +571,7 @@ radial_segments = 24
 material = ExtResource( 15 )
 
 [node name="Explosion" parent="CarBody" instance=ExtResource( 8 )]
+visible = false
 
 [node name="crash_sound" type="AudioStreamPlayer" parent="CarBody"]
 stream = ExtResource( 16 )

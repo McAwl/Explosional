@@ -13,9 +13,27 @@ _global_script_classes=[ {
 "class": "GitAPI",
 "language": "NativeScript",
 "path": "res://addons/godot-git-plugin/git_api.gdns"
+}, {
+"base": "ResourceFormatLoader",
+"class": "HTerrainDataLoader",
+"language": "GDScript",
+"path": "res://addons/zylann.hterrain/hterrain_resource_loader.gd"
+}, {
+"base": "ResourceFormatSaver",
+"class": "HTerrainDataSaver",
+"language": "GDScript",
+"path": "res://addons/zylann.hterrain/hterrain_resource_saver.gd"
+}, {
+"base": "Resource",
+"class": "ImageDataReource",
+"language": "GDScript",
+"path": "res://addons/angelqba.image_to_scene/image_to_scene_resource.gd"
 } ]
 _global_script_class_icons={
-"GitAPI": ""
+"GitAPI": "",
+"HTerrainDataLoader": "",
+"HTerrainDataSaver": "",
+"ImageDataReource": ""
 }
 
 [application]
@@ -260,4 +278,5 @@ environment/default_clear_color=Color( 0.266667, 0.65098, 0.737255, 1 )
 quality/filters/msaa=4
 quality/filters/use_fxaa=true
 quality/filters/use_debanding=true
+environment/default_environment="res://default_env.tres"
 quality/filters/anisotropic_filter_level.mobile=4

@@ -5,7 +5,6 @@
 [resource]
 resource_name = "Grass"
 albedo_texture = ExtResource( 1 )
-roughness = 0.8
 ao_enabled = true
 ao_light_affect = 0.0
 ao_on_uv2 = false

@@ -44,8 +44,14 @@ func _ready():
 	check_lights()
 	$ParticlesSmoke.emitting = false
 	$ParticlesSmoke.amount = 1
-
 	
+
+func re_parent_to_main_scene(child):
+	remove_child(child)
+	get_node("/root/TownScene").call_deferred("add_child", child)
+	print("reparented "+str(child.name))
+	
+
 func check_lights():
 	if get_node("/root/TownScene/DirectionalLight").light_energy < 0.2:
 		# print("turning lights on")
@@ -75,7 +81,11 @@ func flicker_damaged_lights():
 
 
 func get_raycast(wheel_num):
-	return get_wheel(wheel_num).get_node("RayCastWheel"+str(wheel_num))
+	var gw = get_wheel(wheel_num)
+	if gw != null:
+		return get_wheel(wheel_num).get_node("RayCastWheel"+str(wheel_num))
+	else:
+		return null
 
 
 func check_ongoing_damage():
@@ -89,11 +99,12 @@ func check_ongoing_damage():
 
 
 func check_raycast(substring_in_hit_name, raycast):
-	if raycast.is_colliding():
-		if substring_in_hit_name.to_lower() in raycast.get_collider().name.to_lower():
-			# print("Vehicle raycast "+str(raycast.name)+": collision matches substring: "+str(substring_in_hit_name))
-			$LavaLight1.visible = true
-			return true
+	if raycast != null:
+		if raycast.is_colliding():
+			if substring_in_hit_name.to_lower() in raycast.get_collider().name.to_lower():
+				# print("Vehicle raycast "+str(raycast.name)+": collision matches substring: "+str(substring_in_hit_name))
+				$LavaLight1.visible = true
+				return true
 	return false
 
 
@@ -106,7 +117,25 @@ func _process(delta):
 		
 	if total_damage >= max_damage:
 		return
-	
+		
+	"""
+	if rng.randf() < 0.0001:
+		if has_node("Wheel1"):
+			re_parent_to_main_scene($Wheel1)
+
+	if rng.randf() < 0.0001:
+		if has_node("Wheel2"):
+			re_parent_to_main_scene($Wheel2)
+
+	if rng.randf() < 0.0001:
+		if has_node("Wheel3"):
+			re_parent_to_main_scene($Wheel3)
+
+	if rng.randf() < 0.0001:
+		if has_node("Wheel4"):
+			re_parent_to_main_scene($Wheel4)
+	"""
+
 	if check_accel_damage_timer <= 0.0:
 		if acceleration_calc_for_damage > accel_damage_threshold:
 			var rammed_another_car = false
@@ -346,7 +375,10 @@ func get_player():
 	
 
 func get_wheel(num):
-	return get_node("Wheel"+str(num))
+	if has_node("Wheel"+str(num)):
+		return get_node("Wheel"+str(num))
+	else:
+		return null
 	
 
 func fire_mine_or_nuke():

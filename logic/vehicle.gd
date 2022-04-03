@@ -54,7 +54,7 @@ func re_parent_to_main_scene(child):
 	
 
 func check_lights():
-	if get_node("/root/TownScene/DirectionalLight").light_energy < 0.2:
+	if get_node("/root/TownScene/DirectionalLightSun").light_energy < 0.1:
 		# print("turning lights on")
 		lights_on()
 	else:
@@ -62,9 +62,36 @@ func check_lights():
 		lights_off()
 
 
-func flicker_damaged_lights():
-	# damaged lights
+func flicker_lights():
+	# damaged lights, and also the lights due to damage
 	# small chance of turning off when damaged. slightly bigger chance of turing back on (should flicker)
+	
+	if rng.randf() < 0.1:
+		$Lights_onfire/OnFireLight1.light_energy = 0.0
+	else:
+		$Lights_onfire/OnFireLight1.light_energy = total_damage/10.0
+		
+	if rng.randf() < 0.1:
+		$Lights_onfire/OnFireLight2.light_energy = 0.0
+	else:
+		$Lights_onfire/OnFireLight2.light_energy = total_damage/10.0
+		
+	if rng.randf() < 0.1:
+		$Lights_onfire/OnFireLight3.light_energy = 0.0
+	else:
+		$Lights_onfire/OnFireLight3.light_energy = total_damage/10.0
+		
+	if rng.randf() < 0.1:
+		$Lights_onfire/OnFireLight4.light_energy = 0.0
+	else:
+		$Lights_onfire/OnFireLight4.light_energy = total_damage/10.0
+		
+	if rng.randf() < 0.1:
+		$Lights_onfire/OnFireLight5.light_energy = 0.0
+	else:
+		$Lights_onfire/OnFireLight5.light_energy = total_damage/10.0
+	
+	
 	
 	if rng.randf() < 0.1*total_damage/max_damage:
 		# print("damaged LightFrontLeft flickering off")
@@ -118,24 +145,6 @@ func _process(delta):
 		
 	if total_damage >= max_damage:
 		return
-		
-	"""
-	if rng.randf() < 0.0001:
-		if has_node("Wheel1"):
-			re_parent_to_main_scene($Wheel1)
-
-	if rng.randf() < 0.0001:
-		if has_node("Wheel2"):
-			re_parent_to_main_scene($Wheel2)
-
-	if rng.randf() < 0.0001:
-		if has_node("Wheel3"):
-			re_parent_to_main_scene($Wheel3)
-
-	if rng.randf() < 0.0001:
-		if has_node("Wheel4"):
-			re_parent_to_main_scene($Wheel4)
-	"""
 
 	if check_accel_damage_timer <= 0.0:
 		if acceleration_calc_for_damage > accel_damage_threshold:
@@ -175,7 +184,7 @@ func _process(delta):
 	timer_0_1_sec -= delta
 	if timer_0_1_sec <= 0.0:
 		# print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
-		flicker_damaged_lights()
+		flicker_lights()
 		timer_0_1_sec = 0.1
 		if not ("instance" in weapons[weapon_select]):
 			#print(str(weapons[weapon_select]["name"])+" not in dict")
@@ -342,6 +351,10 @@ func damage(amount):
 	$Flames3D.amount *= 4
 	if $Flames3D.amount > 100:
 		$Flames3D.amount = 100
+	$Lights_onfire/OnFireLight1.light_energy = total_damage/10.0
+	$Lights_onfire/OnFireLight2.light_energy = total_damage/10.0
+	$Lights_onfire/OnFireLight4.light_energy = total_damage/10.0
+	$Lights_onfire/OnFireLight5.light_energy = total_damage/10.0
 	engine_force_value *= 0.75  # decrease engine power to indicate damage
 
 	if total_damage >= max_damage:
@@ -388,7 +401,7 @@ func get_wheel(num):
 		return get_node("Wheel"+str(num))
 	else:
 		return null
-	
+
 
 func fire_mine_or_nuke():
 	# print("Firing weapon="+str(weapon_select))

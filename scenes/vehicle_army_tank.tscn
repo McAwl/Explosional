@@ -1,8 +1,0 @@
-[gd_scene load_steps=3 format=2]
-
-[ext_resource path="res://assets/models/vehicles/m26.glb" type="PackedScene" id=1]
-[ext_resource path="res://logic/vehicle_army_tank.gd" type="Script" id=2]
-
-[node name="m26" instance=ExtResource( 1 )]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0.446572, 0 )
-script = ExtResource( 2 )

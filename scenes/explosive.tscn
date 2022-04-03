@@ -138,6 +138,7 @@ skeleton = NodePath("../..")
 material/0 = ExtResource( 4 )
 
 [node name="MineMeshes" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0483567, 0 )
 
 [node name="Main" type="MeshInstance" parent="MineMeshes"]
 transform = Transform( 0.3, 0, 0, 0, 0.2, 0, 0, 0, 0.3, 0, 0, 0 )
@@ -152,6 +153,11 @@ visible = false
 mesh = SubResource( 13 )
 skeleton = NodePath("../..")
 material/0 = ExtResource( 5 )
+
+[node name="OmniLight" type="OmniLight" parent="MineMeshes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.278049, 0 )
+visible = false
+light_color = Color( 1, 0, 0, 1 )
 
 [node name="ExplosionNuke" parent="." instance=ExtResource( 3 )]
 

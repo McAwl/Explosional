@@ -4,10 +4,26 @@ var player_number
 var player_name
 var lives_left = 3
 
-var vehicle_types = {	"tank": {"scene": "res://scenes/vehicle_army_tank.tscn", "engine_force_value": 20}, 
-						"racer": {"scene": "res://scenes/Bugatti(1).tscn", "engine_force_value": 80}, 
-						"rally": {"scene": "res://scenes/free_car_1.tscn", "engine_force_value": 60}, 
-						"truck": {"scene": "res://scenes/Fly.tscn", "engine_force_value": 30}}
+var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn", 
+									"engine_force_value": 20, 
+									"mass_kg/100": 100.0, 
+									"suspension_stiffness": 100.0, 
+									"suspension_travel": 0.1}, 
+						"racer": {"scene": "res://scenes/vehicle_racer.tscn", 
+									"engine_force_value": 80, 
+									"mass_kg/100": 50.0, 
+									"suspension_stiffness": 75.0, 
+									"suspension_travel": 1.0}, 
+						"rally": {"scene": "res://scenes/vehicle_rally.tscn", 
+									"engine_force_value": 60, 
+									"mass_kg/100": 30.0, 
+									"suspension_stiffness": 40.0, 
+									"suspension_travel": 2.0}, 
+						"truck": {"scene": "res://scenes/vehicle_truck_fly.tscn", 
+									"engine_force_value": 30, 
+									"mass_kg/100": 80.0, 
+									"suspension_stiffness": 90.0, 
+									"suspension_travel":0.2}}
 var vehicle_type = "tank"
 
 # Called when the node enters the scene tree for the first time.
@@ -47,6 +63,15 @@ func init(_player_number, _number_players, _player_name, pos=null):
 	var vehicle = load(vehicle_types[vehicle_type]["scene"]).instance()
 	vehicle.name = "vehicle_mesh"
 	get_carbody().engine_force_value = vehicle_types[vehicle_type]["engine_force_value"]
+	get_carbody().mass = vehicle_types[vehicle_type]["mass_kg/100"]
+	get_carbody().get_wheel(1).suspension_stiffness = vehicle_types[vehicle_type]["suspension_stiffness"]
+	get_carbody().get_wheel(1).suspension_travel = vehicle_types[vehicle_type]["suspension_travel"]
+	get_carbody().get_wheel(2).suspension_stiffness = vehicle_types[vehicle_type]["suspension_stiffness"]
+	get_carbody().get_wheel(2).suspension_travel = vehicle_types[vehicle_type]["suspension_travel"]
+	get_carbody().get_wheel(3).suspension_stiffness = vehicle_types[vehicle_type]["suspension_stiffness"]
+	get_carbody().get_wheel(3).suspension_travel = vehicle_types[vehicle_type]["suspension_travel"]
+	get_carbody().get_wheel(4).suspension_stiffness = vehicle_types[vehicle_type]["suspension_stiffness"]
+	get_carbody().get_wheel(4).suspension_travel = vehicle_types[vehicle_type]["suspension_travel"]
 	get_carbody().add_child(vehicle)
 
 	if pos != null:

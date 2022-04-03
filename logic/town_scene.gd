@@ -16,10 +16,14 @@ export var test_turn_off_airstrike = false
 func _ready():
 	if fake_sun_omni_light == true:
 		$Sun/OmniLight.visible = true
-		$DirectionalLight.visible = false
+		$DirectionalLightSun.visible = false
+		$Moons/OmniLight.visible = true
+		$DirectionalLightMoon.visible = false
 	else:
 		$Sun/OmniLight.visible = false
-		$DirectionalLight.visible = true
+		$DirectionalLightSun.visible = true
+		$Moons/OmniLight.visible = false
+		$DirectionalLightMoon.visible = true
 	num_players = len(players)
 	var spawn_points = get_spawn_points()
 	for player_number in range(1, num_players+1):
@@ -32,8 +36,10 @@ func _ready():
 	var anim_time = start_clock_hrs + 12.0
 	if anim_time > 24.0:
 		anim_time -= 12.0
-	$DirectionalLight/DayNightAnimation.play("daynightcycle")
-	$DirectionalLight/DayNightAnimation.seek(anim_time)
+	$DirectionalLightSun/DayNightAnimation.play("daynightcycle")
+	$DirectionalLightSun/DayNightAnimation.seek(anim_time)
+	$DirectionalLightMoon/DayNightAnimation.play("daynightcycle")
+	$DirectionalLightMoon/DayNightAnimation.seek(anim_time)
 
 
 func turn_airstrike_on():

@@ -129,6 +129,8 @@ func _process(delta):
 
 	if timer_1s < 0.0:
 		timer_1s = 1.0
+		if $MineMeshes/Main.visible == true:
+			$MineMeshes/OmniLight.visible = !$MineMeshes/OmniLight.visible
 
 
 func no_animations_or_sound_playing():
@@ -304,6 +306,7 @@ func mine_meshes(_show):
 	# print("Setting mine meshinstances to "+str(_show))
 	$MineMeshes/Main.visible = _show
 	$MineMeshes/Top.visible = _show
+	$MineMeshes/OmniLight.visible = _show
 
 
 func bomb_meshes(_show):

@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/models/vehicles/free_car_1.dae" type="PackedScene" id=1]
+[ext_resource path="res://logic/free_car_1.gd" type="Script" id=2]
+
+[node name="free_car_1" instance=ExtResource( 1 )]
+transform = Transform( 0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, -0.199413, 0.0757339 )
+script = ExtResource( 2 )
+
+[node name="car3" parent="." index="4"]
+visible = false
+
+[node name="car4" parent="." index="5"]
+visible = false
+
+[node name="car5" parent="." index="6"]
+visible = false
+
+[node name="car6" parent="." index="7"]
+visible = false
+
+[node name="car8" parent="." index="9"]
+visible = false
+
+[node name="car9" parent="." index="10"]
+visible = false
+
+[node name="car78" parent="." index="11"]
+visible = false
+
+[node name="car77" parent="." index="12"]
+visible = false
+
+[node name="car74" parent="." index="14"]
+visible = false
+
+[node name="car73" parent="." index="15"]
+visible = false
+
+[node name="car72" parent="." index="16"]
+visible = false
+
+[node name="car71" parent="." index="17"]
+visible = false
+
+[node name="car48" parent="." index="40"]
+visible = false
+
+[node name="car47" parent="." index="41"]
+visible = false
+
+[node name="car46" parent="." index="42"]
+visible = false
+
+[node name="car45" parent="." index="43"]
+visible = false

@@ -4,7 +4,7 @@ extends VehicleBody
 const STEER_SPEED = 1.5
 const STEER_LIMIT = 0.6 #0.4
 const EXPLOSION_STRENGTH = 50.0
-const ENGINE_FORCE_VALUE = 60
+const ENGINE_FORCE_VALUE = 80
 var steer_target = 0
 
 export var engine_force_value = ENGINE_FORCE_VALUE  #40
@@ -39,6 +39,7 @@ var accel_damage_threshold = 100.0
 
 
 func _ready():
+	
 	cooldown_timer = weapons[weapon_select]["cooldown_timer"]
 	lights_disabled = false
 	check_lights()
@@ -349,16 +350,20 @@ func damage(amount):
 		$Explosion/AnimationPlayer.play("explosion")
 		$crash_sound.playing = true
 		reset_car = true
-		$Body.visible = false
-		$Wheel1.visible = false
-		$Wheel2.visible = false
-		$Wheel3.visible = false
-		$Wheel4.visible = false
+		# $Body.visible = false
+		# $Wheel1.visible = false
+		# $Wheel2.visible = false
+		# $Wheel3.visible = false
+		# $Wheel4.visible = false
 		$ParticlesSmoke.visible = false
 		$Flames3D.visible = false
 		lights_disabled = true
 		lights_off()
 		$Shield.visible = false
+		get_main_scene().start_timer_slow_motion()
+		for ch in get_children():
+			if "vehicle_mesh" in ch.name:
+				ch.detach_rigid_bodies(0.0)
 	get_player().set_label_player_name()
 	get_player().set_label_lives_left()
 	get_player().get_canvaslayer().get_node("health").value = max_damage-total_damage
@@ -368,6 +373,10 @@ func damage(amount):
 		get_player().get_canvaslayer().get_node("health").tint_progress = "#7eff0000"  # red
 	else:
 		get_player().get_canvaslayer().get_node("health").tint_progress = "#7eff6c00"  # orange
+
+
+func get_main_scene():
+	return get_player().get_parent()
 
 
 func get_player():
@@ -393,7 +402,7 @@ func fire_mine_or_nuke():
 	elif weapon_select == 3:
 		# print("activating nuke")
 		weapon_instance.set_as_nuke()
-		weapon_instance.activate(get_node("/root/TownScene/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
+		weapon_instance.activate(get_node("/root/TownScene/Platforms/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
 		if weapons[3].test_mode == false:
 			weapons[3]["enabled"] = false  # so powerup is needed again
 			cycle_weapon()  # de-select nuke, as it's not available any more

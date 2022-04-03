@@ -270,6 +270,7 @@ collide_with_areas = true
 
 [node name="Body" type="MeshInstance" parent="CarBody"]
 _import_path = NodePath("BODY-vehicle")
+visible = false
 mesh = SubResource( 6 )
 material/0 = null
 material/1 = null

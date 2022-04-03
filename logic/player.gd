@@ -4,6 +4,11 @@ var player_number
 var player_name
 var lives_left = 3
 
+var vehicle_types = {	"tank": {"scene": "res://scenes/vehicle_army_tank.tscn", "engine_force_value": 20}, 
+						"racer": {"scene": "res://scenes/Bugatti(1).tscn", "engine_force_value": 80}, 
+						"rally": {"scene": "res://scenes/free_car_1.tscn", "engine_force_value": 60}, 
+						"truck": {"scene": "res://scenes/Fly.tscn", "engine_force_value": 30}}
+var vehicle_type = "tank"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -29,6 +34,21 @@ func init(_player_number, _number_players, _player_name, pos=null):
 	player_name = _player_name
 	get_viewport().add_child(carbase)
 	get_carbody().player_number = player_number
+	
+	if player_number == 1:
+		vehicle_type = "racer"
+	elif player_number == 2:
+		vehicle_type = "rally"
+	elif player_number == 3:
+		vehicle_type = "tank"
+	elif player_number == 4:
+		vehicle_type = "truck"
+	
+	var vehicle = load(vehicle_types[vehicle_type]["scene"]).instance()
+	vehicle.name = "vehicle_mesh"
+	get_carbody().engine_force_value = vehicle_types[vehicle_type]["engine_force_value"]
+	get_carbody().add_child(vehicle)
+
 	if pos != null:
 		get_carbody().set_global_transform_origin(pos)
 	set_label_player_name()

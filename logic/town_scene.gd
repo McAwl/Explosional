@@ -60,6 +60,14 @@ func turn_airstrike_off():
 
 func _process(delta):
 	
+	if $TimerSlowMotion.is_stopped():
+		Engine.time_scale = 1.0
+		all_audio_pitch(1.0)
+		
+	else:
+		Engine.time_scale = 0.2
+		all_audio_pitch(0.2)
+
 	air_strike["interval_so_far_sec"] +=delta
 	air_strike["duration_so_far_sec"] += delta
 		
@@ -115,6 +123,12 @@ func _process(delta):
 			queue_free()
 
 
+func all_audio_pitch(pitch):
+	$BackgroundMusic/track_1.pitch_scale = pitch
+	$BackgroundMusic/track_2.pitch_scale = pitch
+	$BackgroundMusic/track_3.pitch_scale = pitch
+
+
 func get_spawn_points():
 	return get_node("SpawnPoints").get_children()
 
@@ -151,3 +165,7 @@ func reset_game():
 
 func air_strike_label():
 	return $VC.get_node("CL/LabelAirStrike")
+
+
+func start_timer_slow_motion():
+	$TimerSlowMotion.start()

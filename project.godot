@@ -57,7 +57,7 @@ window/width=1280
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/waterways/plugin.cfg" )
+enabled=PoolStringArray(  )
 
 [gdnative]
 

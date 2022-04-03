@@ -38,11 +38,20 @@ func reset_car():
 	$CarBody.get_node("Wheel2").visible = true
 	$CarBody.get_node("Wheel3").visible = true
 	$CarBody.get_node("Wheel4").visible = true
-	$CarBody.get_node("Body").visible = true
+	# $CarBody.get_node("Body").visible = true
 	$CarBody.get_node("ParticlesSmoke").visible = true
 	$CarBody.get_node("Flames3D").visible = true
 	$CarBody.lifetime_so_far_sec = 0.0
-
+	
+	# delete old vehicle, instance new one
+	for ch in get_children():
+		if "vehicle_mesh" in ch.name:
+			ch.queue_free()
+	var vehicle_type = get_player().vehicle_type
+	var new_vehicle_scene = get_player().vehicle_types[vehicle_type]["scene"]
+	var new_vehicle = load(new_vehicle_scene).instance()
+	new_vehicle.name = "vehicle_mesh"
+	$CarBody.add_child(new_vehicle)
 
 func _process(delta):
 	

@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 0.433373, 0.444547, 0.411196 )
+
+[node name="car_rigid_body_part" type="RigidBody"]
+continuous_cd = true
+angular_damp = 1.0
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0 )
+shape = SubResource( 1 )

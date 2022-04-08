@@ -49,6 +49,7 @@ gravity = Vector3( 0, 1, 0 )
 initial_velocity = 1.0
 damping = 1.5
 damping_random = 0.35
+scale_random = 0.37
 color_ramp = SubResource( 34 )
 
 [sub_resource type="SpatialMaterial" id=36]
@@ -80,7 +81,7 @@ curve = SubResource( 41 )
 lifetime_randomness = 0.42
 spread = 180.0
 gravity = Vector3( 0, 0, 0 )
-initial_velocity = 3.0
+initial_velocity = 2.0
 damping = 5.0
 scale = 2.0
 scale_random = 0.67

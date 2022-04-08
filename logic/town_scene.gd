@@ -1,7 +1,7 @@
 extends Spatial
 
 var town = null
-var check_game_over_timer = 1.0
+var timer_1_sec = 1.0
 var num_players
 var players
 var rng = RandomNumberGenerator.new()
@@ -69,7 +69,6 @@ func _process(delta):
 	if $TimerSlowMotion.is_stopped():
 		Engine.time_scale = 1.0
 		all_audio_pitch(1.0)
-		
 	else:
 		Engine.time_scale = 0.2
 		all_audio_pitch(0.2)
@@ -105,28 +104,62 @@ func _process(delta):
 					#$nuke_mushroom_cloud.emitting = true
 					#$nuke_mushroom_cloud2.emitting = true
 
-	check_game_over_timer -= delta
+	timer_1_sec -= delta
 	if Input.is_action_pressed("back"):
 		reset_game()
 	
-	if check_game_over_timer < 0.0:
-		var dead_cars = 0
-		var num_cars = 0
-		check_game_over_timer = 1.0
+	if timer_1_sec < 0.0:
+		check_game_over()
+	
+	update_player_hud()
+
+
+func update_player_hud():
+	for player_src in range(1, num_players+1):
+		for player_dst in range(1, num_players+1):
+			if player_src != player_dst:
+				var player_src_carbase = get_player(player_src).get_carbase()
+				var player_src_carbody = player_src_carbase.get_carbody()
+				var player_src_camera = player_src_carbase.get_camera()
+				var player_dst_carbody = get_player(player_dst).get_carbase().get_carbody()
+				var distance = player_src_carbody.get_global_transform().origin.distance_to(player_dst_carbody.global_transform.origin)
+				var player_dst_viewport_pos = player_src_camera.unproject_position ( player_dst_carbody.get_global_transform().origin ) 
+				var label = get_player(player_src).get_canvaslayer().get_node("label_player_"+str(player_dst)+"_pos")
+				if distance < 50.0:
+					label.get("custom_fonts/font").set_size(50)
+				elif distance < 100.0:
+					label.get("custom_fonts/font").set_size(30)
+				elif distance < 200.0:
+					label.get("custom_fonts/font").set_size(20)
+				else:
+					label.get("custom_fonts/font").set_size(10)
+				
+				if player_src_camera.is_position_behind (player_dst_carbody.get_global_transform().origin ):
+					label.visible = false
+				else:
+					label.visible = true
+					label.rect_position = player_dst_viewport_pos
+				
+				
+		
+func check_game_over():
+	var dead_cars = 0
+	var num_cars = 0
+	timer_1_sec = 1.0
+	for player_number in range(1, num_players+1):
+		num_cars += 1
+		if get_player(player_number).lives_left < 0:
+			dead_cars += 1
+	if dead_cars >= (num_cars-1) and num_cars>1:
+		var next_level_resource = load("res://scenes/final_score.tscn")
+		var next_level = next_level_resource.instance()
+		var winner_name = ""
 		for player_number in range(1, num_players+1):
-			num_cars += 1
-			if get_player(player_number).lives_left < 0:
-				dead_cars += 1
-		if dead_cars >= (num_cars-1) and num_cars>1:
-			var next_level_resource = load("res://scenes/final_score.tscn")
-			var next_level = next_level_resource.instance()
-			var winner_name = ""
-			for player_number in range(1, num_players+1):
-				if get_player(player_number).lives_left >= 0:
-					winner_name = get_player(player_number).player_name
-			next_level.player_winner_name = winner_name
-			get_tree().root.call_deferred("add_child", next_level)
-			queue_free()
+			if get_player(player_number).lives_left >= 0:
+				winner_name = get_player(player_number).player_name
+		next_level.player_winner_name = winner_name
+		get_tree().root.call_deferred("add_child", next_level)
+		queue_free()
 
 
 func all_audio_pitch(pitch):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://logic/vehicle.gd" type="Script" id=1]
 [ext_resource path="res://logic/follow_camera.gd" type="Script" id=5]
@@ -62,6 +62,39 @@ albedo_texture = ExtResource( 11 )
 
 [sub_resource type="QuadMesh" id=37]
 material = SubResource( 36 )
+
+[sub_resource type="Gradient" id=39]
+offsets = PoolRealArray( 0.00621118, 0.111801, 0.571429, 1 )
+colors = PoolColorArray( 0.941176, 0.854902, 0.0627451, 0.564706, 0.941176, 0.854902, 0.0627451, 1, 0.933333, 0.858824, 0.0666667, 0, 0.923637, 0.861156, 0.0685512, 0 )
+
+[sub_resource type="GradientTexture" id=40]
+gradient = SubResource( 39 )
+
+[sub_resource type="Curve" id=41]
+_data = [ Vector2( 0, 0 ), 0.0, 0.114502, 0, 0, Vector2( 0.206522, 0.834091 ), 0.69697, 0.69697, 0, 0, Vector2( 0.983696, 0.963636 ), 0.163993, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=42]
+curve = SubResource( 41 )
+
+[sub_resource type="ParticlesMaterial" id=43]
+lifetime_randomness = 0.42
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 3.0
+damping = 5.0
+scale = 2.0
+scale_random = 0.67
+scale_curve = SubResource( 42 )
+color = Color( 0.94902, 0.886275, 0.054902, 0.505882 )
+color_ramp = SubResource( 40 )
+
+[sub_resource type="SpatialMaterial" id=46]
+flags_transparent = true
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id=45]
+material = SubResource( 46 )
 
 [node name="CarBase" type="Spatial"]
 _import_path = NodePath(".")
@@ -444,6 +477,7 @@ omni_range = 1.0
 [node name="Flames3D" parent="CarBody" instance=ExtResource( 10 )]
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -3.37604e-09, 0, 0 )
 emitting = false
+visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 
 [node name="ParticlesSmoke" type="Particles" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.303509, 0.715798 )
@@ -507,6 +541,21 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.70778, 0.780357, -0.105502 )
 light_color = Color( 1, 0.913725, 0, 1 )
 light_energy = 0.0
 omni_range = 7.0
+
+[node name="Explosion2" type="Particles" parent="CarBody"]
+emitting = false
+amount = 20
+one_shot = true
+explosiveness = 0.55
+local_coords = false
+process_material = SubResource( 43 )
+draw_pass_1 = SubResource( 45 )
+
+[node name="Explosion2Light" type="OmniLight" parent="CarBody"]
+visible = false
+light_color = Color( 0.937255, 0.819608, 0.0470588, 1 )
+light_energy = 10.0
+omni_range = 50.0
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )

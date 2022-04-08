@@ -36,9 +36,9 @@ var weapon_select = 0
 var lights_disabled = false
 var acceleration_calc_for_damage = 0.0
 var vel_max = 0.0
-var check_accel_damage_timer = 4.0
+var check_accel_damage_timer = 3.0
 var accel_damage_threshold = 100.0
-
+var explosion2_timer = 0.2
 
 func _ready():
 	
@@ -140,10 +140,15 @@ func check_raycast(substring_in_hit_name, raycast):
 
 func _process(delta):
 	
-	if reset_car == true and $Explosion/AnimationPlayer.current_animation != "explosion":
-		print("reset_car == true and $Explosion/AnimationPlayer.current_animation != 'explosion'")
-		reset_vals()
-		get_parent().reset_car()
+	if reset_car == true:
+		explosion2_timer -= delta
+		if explosion2_timer <= 0.0:
+			$Explosion2Light.visible = false
+			explosion2_timer = 0.2
+		if $Explosion/AnimationPlayer.current_animation != "explosion":
+			print("reset_car == true and $Explosion/AnimationPlayer.current_animation != 'explosion'")
+			reset_vals()
+			get_parent().reset_car()
 		
 	if total_damage >= max_damage:
 		return
@@ -366,12 +371,14 @@ func damage(amount):
 		$crash_sound.playing = true
 		reset_car = true
 		# $Body.visible = false
-		# $Wheel1.visible = false
-		# $Wheel2.visible = false
-		# $Wheel3.visible = false
-		# $Wheel4.visible = false
+		$Wheel1.visible = false
+		$Wheel2.visible = false
+		$Wheel3.visible = false
+		$Wheel4.visible = false
 		$ParticlesSmoke.visible = false
 		$Flames3D.visible = false
+		$Explosion2Light.visible = true
+		explosion2_timer = 0.25
 		lights_disabled = true
 		lights_off()
 		$Shield.visible = false
@@ -385,6 +392,7 @@ func damage(amount):
 				ch.name = "vehicle_parts_exploded"
 				# self.remove_child(ch)
 				# ch.set_as_toplevel(true)
+				$Explosion2.emitting = true
 	get_player().set_label_player_name()
 	get_player().set_label_lives_left()
 	get_player().get_canvaslayer().get_node("health").value = max_damage-total_damage

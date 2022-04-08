@@ -42,6 +42,7 @@ func _physics_process(_delta):
 		var parent_linear_velocity = get_parent().linear_velocity
 		for ch in self.get_children():
 			if ch is MeshInstance:
+				ch.visible = true
 				# print("type of mesh piece "+str(ch.type))
 				# var new_rigid_body = load("res://scenes/car_rigid_body_part.tscn").instance()
 				var new_rigid_body = RigidBody.new()

@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
+[ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=1]
 [ext_resource path="res://assets/models/vehicles/Bugatti(1).dae" type="PackedScene" id=2]
 
-[node name="Bugatti" instance=ExtResource( 2 )]
+[node name="vehicle_racer" instance=ExtResource( 2 )]
 transform = Transform( 0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 0, 0.287719, 0.324329 )
 
 [node name="Plane012" parent="." index="11"]
@@ -10,40 +11,52 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.70376, -0.421404, -9.30579 
 
 [node name="Torus001" parent="." index="12"]
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Torus002" parent="." index="13"]
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Torus003" parent="." index="14"]
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Torus005" parent="." index="15"]
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Torus006" parent="." index="16"]
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Torus007" parent="." index="17"]
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Torus" parent="." index="18"]
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Torus004" parent="." index="19"]
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Plane003" parent="." index="20"]
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Plane009" parent="." index="21"]
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Plane016" parent="." index="22"]
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Plane017" parent="." index="23"]
 transform = Transform( 0.00440725, 0.808564, 0.588392, -0.999985, 0.00545065, -2.96399e-08, 0.00320715, 0.588384, -0.808576, -4.15297, -1.82657, 6.47404 )
 visible = false
+material/0 = ExtResource( 1 )
 
 [node name="Plane004" parent="." index="40"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0223047, 2.48454, 0.412126 )
@@ -53,3 +66,4 @@ transform = Transform( 0.945074, -0.274592, -0.177295, 0, -0.542428, 0.840102, -
 
 [node name="Plane021" parent="." index="51"]
 visible = false
+material/0 = ExtResource( 1 )

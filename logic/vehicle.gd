@@ -5,6 +5,8 @@ const STEER_SPEED = 1.5
 const STEER_LIMIT = 0.6 #0.4
 const EXPLOSION_STRENGTH = 50.0
 const ENGINE_FORCE_VALUE = 80
+const script_vehicle_detach_rigid_bodies = preload("res://logic/vehicle_detach_rigid_bodies.gd")
+
 var steer_target = 0
 
 export var engine_force_value = ENGINE_FORCE_VALUE  #40
@@ -375,8 +377,14 @@ func damage(amount):
 		$Shield.visible = false
 		get_main_scene().start_timer_slow_motion()
 		for ch in get_children():
-			if "vehicle_mesh" in ch.name:
-				ch.detach_rigid_bodies(0.0)
+			if ch.name == "vehicle_mesh":
+				ch.set_script(script_vehicle_detach_rigid_bodies)
+				ch.set_process(true)
+				ch.set_physics_process(true)
+				ch.detach_rigid_bodies(0.1, self.mass)
+				ch.name = "vehicle_parts_exploded"
+				# self.remove_child(ch)
+				# ch.set_as_toplevel(true)
 	get_player().set_label_player_name()
 	get_player().set_label_lives_left()
 	get_player().get_canvaslayer().get_node("health").value = max_damage-total_damage

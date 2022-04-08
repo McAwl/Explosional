@@ -1,6 +1,7 @@
 extends Spatial
 
 var player_number
+var number_players
 var player_name
 var lives_left = 3
 
@@ -35,12 +36,17 @@ func _ready():
 	$VC/V/CanvasLayer/health.tint_progress = "#7e00ff00"  # green
 
 
+#func _process(delta):
+	
+
+
 func reset_health():
 	$VC/V/CanvasLayer/health.value = get_carbody().max_damage
 	$VC/V/CanvasLayer/health.tint_progress = "#7e00ff00"  # green
 	
 	
 func init(_player_number, _number_players, _player_name, pos=null):
+	number_players = _number_players
 	# print("init")
 	# Add a car to the player
 	var carbase = load("res://scenes/car_base.tscn").instance()
@@ -82,13 +88,13 @@ func init(_player_number, _number_players, _player_name, pos=null):
 	
 	name = "Player"+str(_player_number)
 	# print("_number_players="+str(_number_players))
-	if _number_players == 1:
+	if number_players == 1:
 		set_viewport_container_one(_player_number)
-	elif _number_players == 2:
+	elif number_players == 2:
 		set_viewport_container_two(_player_number)
-	elif _number_players == 3:
+	elif number_players == 3:
 		set_viewport_container_three(_player_number)
-	elif _number_players == 4:
+	elif number_players == 4:
 		set_viewport_container_four(_player_number)
 	else: 
 		set_viewport_container_two(_player_number)
@@ -215,7 +221,3 @@ func set_label_lives_left():
 func set_global_transform_origin(o):
 	get_carbody().global_transform.origin = o
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass

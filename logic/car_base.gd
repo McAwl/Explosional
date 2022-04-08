@@ -9,6 +9,14 @@ func _ready():
 	$CarBody/Explosion.visible = false
 
 
+func get_carbody():
+	return $CarBody
+
+
+func get_camera():
+	return $CarBody/CameraBase/Camera
+
+
 func set_label(new_label):
 	get_node( "../../CanvasLayer/Label").text = new_label
 
@@ -52,6 +60,7 @@ func reset_car():
 	var new_vehicle = load(new_vehicle_scene).instance()
 	new_vehicle.name = "vehicle_mesh"
 	$CarBody.add_child(new_vehicle)
+
 
 func _process(delta):
 	

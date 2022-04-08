@@ -71,13 +71,13 @@ func _physics_process(_delta):
 								
 				if collision != null and staticbody != null:
 					staticbody.remove_child(collision)
-					print("staticbody ch = "+str(staticbody.get_children()))
 					new_rigid_body.add_child(collision)
-					#print("new_rigid_body ch = "+str(new_rigid_body.get_children()))
 				else:
 					print("Error: collision null or staticbody null")
 					
 				staticbody.queue_free()
 				var direction = Vector3(rng.randf_range(-1, 1), rng.randf_range(-1, 1),rng.randf_range(-1, 1))
 				new_rigid_body.apply_impulse( Vector3(0,0,0),  force*direction.normalized() )
+				var new_smoke_particles = load("res://scenes/smoke_trail.tscn").instance()
+				new_rigid_body.add_child(new_smoke_particles)
 		apply_forces = false

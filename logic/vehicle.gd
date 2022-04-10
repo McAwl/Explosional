@@ -49,7 +49,11 @@ func _ready():
 	check_lights()
 	$ParticlesSmoke.emitting = false
 	$ParticlesSmoke.amount = 1
-	
+	$Lights_onfire/OnFireLight1.light_energy = 0.0
+	$Lights_onfire/OnFireLight2.light_energy = 0.0
+	$Lights_onfire/OnFireLight4.light_energy = 0.0
+	$Lights_onfire/OnFireLight5.light_energy = 0.0
+	$Explosion2Light.visible = false
 
 func set_light_positions(light_positions):
 	var fr = light_positions[0]
@@ -187,7 +191,8 @@ func _process(delta):
 					print("player "+str(player_number)+" rammed "+str(collider_name))
 					rammed_another_car = true
 			if rammed_another_car == false:
-				damage(1.0)
+				var damage = round(acceleration_calc_for_damage / accel_damage_threshold)
+				damage(damage)
 			# else don't take any damage
 				
 			check_accel_damage_timer = 1.0
@@ -324,15 +329,15 @@ func _physics_process(delta):
 		var explosion_force = 200  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
 		if hit_by_missile["direct_hit"] == true:
 			apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
-			if hit_by_missile["homing"]:
-				damage(weapons[2].damage)
-			else:
-				damage(weapons[1].damage)
+			# if hit_by_missile["homing"]:
+			# 	damage(weapons[2].damage)
+			# else:
+			#	damage(weapons[1].damage)
 		else:
 			var indirect_explosion_force = explosion_force/hit_by_missile["distance"]
 			
 			apply_impulse( Vector3(0,0,0), indirect_explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
-			damage(1)
+			# damage(1)
 		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
 			
 		hit_by_missile["active"] = false
@@ -346,7 +351,11 @@ func reset_vals():
 	$Flames3D.amount = 1
 	total_damage = 0.0
 	check_accel_damage_timer = 4.0
-
+	$Lights_onfire/OnFireLight1.light_energy = 0.0
+	$Lights_onfire/OnFireLight2.light_energy = 0.0
+	$Lights_onfire/OnFireLight4.light_energy = 0.0
+	$Lights_onfire/OnFireLight5.light_energy = 0.0
+	$Explosion2Light.visible = false
 
 func get_speed():
 	return speed
@@ -372,10 +381,10 @@ func damage(amount):
 	$Flames3D.amount *= 4
 	if $Flames3D.amount > 100:
 		$Flames3D.amount = 100
-	$Lights_onfire/OnFireLight1.light_energy = total_damage/10.0
-	$Lights_onfire/OnFireLight2.light_energy = total_damage/10.0
-	$Lights_onfire/OnFireLight4.light_energy = total_damage/10.0
-	$Lights_onfire/OnFireLight5.light_energy = total_damage/10.0
+	$Lights_onfire/OnFireLight1.light_energy = total_damage/20.0
+	$Lights_onfire/OnFireLight2.light_energy = total_damage/20.0
+	$Lights_onfire/OnFireLight4.light_energy = total_damage/20.0
+	$Lights_onfire/OnFireLight5.light_energy = total_damage/20.0
 	engine_force_value *= 0.75  # decrease engine power to indicate damage
 
 	if total_damage >= max_damage:
@@ -395,6 +404,10 @@ func damage(amount):
 		explosion2_timer = 0.25
 		lights_disabled = true
 		lights_off()
+		$Lights_onfire/OnFireLight1.light_energy = 0.0
+		$Lights_onfire/OnFireLight2.light_energy = 0.0
+		$Lights_onfire/OnFireLight4.light_energy = 0.0
+		$Lights_onfire/OnFireLight5.light_energy = 0.0
 		$Shield.visible = false
 		get_main_scene().start_timer_slow_motion()
 		for ch in get_children():

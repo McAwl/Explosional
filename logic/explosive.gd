@@ -16,7 +16,7 @@ var launched_by_player_number  # record which player number launched this explos
 var launched_by_player = null
 
 # explosion force = explosion_strength / (explosion_decrease*distance)+1.0 ^ explosion_exponent)
-var explosion_strength = {TYPES.NOT_SET: 0.0, TYPES.MINE: 5000.0, TYPES.BOMB: 5000.0, TYPES.NUKE: 5000.0}
+var explosion_strength = {TYPES.NOT_SET: 0.0, TYPES.MINE: 5000.0, TYPES.BOMB: 5000.0, TYPES.NUKE: 10000.0}
 var explosion_range = {TYPES.NOT_SET: 0.0, TYPES.MINE: 10.0, TYPES.BOMB: 10.0, TYPES.NUKE: 1000.0}
 var explosion_exponent = {TYPES.NOT_SET: 1.5, TYPES.MINE: 1.5, TYPES.BOMB: 1.5, TYPES.NUKE: 1.05}
 var explosion_decrease = {TYPES.NOT_SET: 1.0, TYPES.MINE: 1.0, TYPES.BOMB: 1.0, TYPES.NUKE: 0.05}
@@ -201,20 +201,23 @@ func _physics_process(_delta):
 				if direction[1] < 0:
 					direction[1] = 0
 				var explosion_force = explosion_strength[type]/pow((explosion_decrease[type]*distance)+1.0, explosion_exponent[type])  # inverse square of distance
-				if type == TYPES.NUKE and target.player_number == launched_by_player_number:
-					explosion_force = 0.0
+				if type == TYPES.NUKE:
+					if target.player_number == launched_by_player_number:
+						explosion_force = 0.0  # no damage from player which launched the nuke
+					else:
+						distance = 50.0  # ensure a specific force is experiences by all other players
 				target.apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 				target.angular_velocity  = Vector3(5.0*randf(),5.0*randf(),5.0*randf())
-				if target.take_damage == true:
-					if type == TYPES.NUKE:
-						if target.player_number != launched_by_player_number:
-							target.damage(10)
-							# print("target took nuke damage launched_by_player_number "+str(launched_by_player_number))
-						# else don't take damage from player that launched it
-					else:
-						target.damage(2)
-						# print("target took damage launched_by_player_number "+str(launched_by_player_number))
-						# print("direction="+str(direction))
+				#if target.take_damage == true:
+				#	if type == TYPES.NUKE:
+				#		if target.player_number != launched_by_player_number:
+				#			target.damage(10)
+				#			# print("target took nuke damage launched_by_player_number "+str(launched_by_player_number))
+				#		# else don't take damage from player that launched it
+				#	else:
+				#		target.damage(2)
+				#		# print("target took damage launched_by_player_number "+str(launched_by_player_number))
+				#		# print("direction="+str(direction))
 				
 
 		# print("setting explosive_stage = 5")

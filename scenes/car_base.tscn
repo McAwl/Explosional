@@ -351,6 +351,9 @@ material/0 = null
 [node name="BombPosition" type="Position3D" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.48442 )
 
+[node name="HUDPositionLocation" type="Position3D" parent="CarBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.32512, 0.101055 )
+
 [node name="MissilePosition" type="Position3D" parent="CarBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.05756, 1.20003 )
 

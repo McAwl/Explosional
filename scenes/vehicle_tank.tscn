@@ -1,6 +1,45 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://assets/models/vehicles/m26.glb" type="PackedScene" id=1]
+[ext_resource path="res://assets/materials/vehicles/vehicle_headlight.tres" type="Material" id=2]
+[ext_resource path="res://assets/materials/vehicles/vehicle_taillight.tres" type="Material" id=3]
 
 [node name="vehicle_tank" instance=ExtResource( 1 )]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0.446572, 0 )
+
+[node name="lights_front" parent="." index="11"]
+transform = Transform( 0.0276515, 0, 0, 0, 0, -0.0276515, 0, 0.0298924, 0, -0.531852, 0.0512111, -1.42418 )
+material/1 = ExtResource( 2 )
+
+[node name="lights_rear" parent="." index="27"]
+material/1 = ExtResource( 3 )
+
+[node name="positions" type="Spatial" parent="." index="28"]
+
+[node name="wheels" type="Spatial" parent="positions" index="0"]
+
+[node name="front_right" type="Spatial" parent="positions/wheels" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.52397, -1.01246, -0.535944 )
+
+[node name="front_left" type="Spatial" parent="positions/wheels" index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.14108, -1.2736, 6.10128 )
+
+[node name="rear_right" type="Spatial" parent="positions/wheels" index="2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6328, -1.09305, -7.35274 )
+
+[node name="rear_left" type="Spatial" parent="positions/wheels" index="3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.74939, -0.946563, -6.99712 )
+
+[node name="lights" type="Spatial" parent="positions" index="1"]
+
+[node name="headlight_left" type="Spatial" parent="positions/lights" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.54084, 0.0535934, -1.47735 )
+
+[node name="headlight_right" type="Spatial" parent="positions/lights" index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.104354, 0.127386, -1.75687 )
+
+[node name="taillight_left" type="Spatial" parent="positions/lights" index="2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.612143, -0.0423775, 1.67033 )
+
+[node name="taillight_right" type="Spatial" parent="positions/lights" index="3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.595437, -0.0634834, 1.64766 )

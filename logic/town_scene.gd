@@ -122,26 +122,32 @@ func update_player_hud():
 				var player_src_carbody = player_src_carbase.get_carbody()
 				var player_src_camera = player_src_carbase.get_camera()
 				var player_dst_carbody = get_player(player_dst).get_carbase().get_carbody()
-				var distance = player_src_carbody.get_global_transform().origin.distance_to(player_dst_carbody.global_transform.origin)
-				var player_dst_viewport_pos = player_src_camera.unproject_position ( player_dst_carbody.get_global_transform().origin ) 
+				var player_dst_hud_pos_loc = player_dst_carbody.get_node("HUDPositionLocation")
+				var distance = player_src_carbody.get_global_transform().origin.distance_to(player_dst_hud_pos_loc.global_transform.origin)
+				var player_dst_viewport_pos = player_src_camera.unproject_position ( player_dst_hud_pos_loc.get_global_transform().origin ) 
 				var label = get_player(player_src).get_canvaslayer().get_node("label_player_"+str(player_dst)+"_pos")
-				if distance < 50.0:
-					label.get("custom_fonts/font").set_size(50)
-				elif distance < 100.0:
-					label.get("custom_fonts/font").set_size(30)
-				elif distance < 200.0:
-					label.get("custom_fonts/font").set_size(20)
-				else:
-					label.get("custom_fonts/font").set_size(10)
 				
-				if player_src_camera.is_position_behind (player_dst_carbody.get_global_transform().origin ):
+				var font_size = 10
+				if distance < 25.0:
+					font_size = 60
+				elif distance < 50.0:
+					font_size = 40
+				elif distance < 100.0:
+					font_size = 30
+				elif distance < 200.0:
+					font_size = 20
+				label.get("custom_fonts/font").set_size(font_size)
+				
+				
+				if player_src_camera.is_position_behind (player_dst_hud_pos_loc.get_global_transform().origin ):
 					label.visible = false
 				else:
 					label.visible = true
 					label.rect_position = player_dst_viewport_pos
-				
-				
-		
+					label.rect_position.x -= font_size/2
+					label.rect_position.y -= 20 + (font_size/2)
+
+
 func check_game_over():
 	var dead_cars = 0
 	var num_cars = 0

@@ -67,6 +67,11 @@ func init(_player_number, _number_players, _player_name, pos=null):
 		vehicle_type = "truck"
 	
 	var vehicle = load(vehicle_types[vehicle_type]["scene"]).instance()
+	var pvl = vehicle.get_node("positions").get_node("lights")
+	var vehicle_light_positions = [pvl.get_node("headlight_right").transform.origin, 
+									pvl.get_node("headlight_left").transform.origin, 
+									pvl.get_node("taillight_right").transform.origin, 
+									pvl.get_node("taillight_left").transform.origin]
 	vehicle.name = "vehicle_mesh"
 	get_carbody().engine_force_value = vehicle_types[vehicle_type]["engine_force_value"]
 	get_carbody().mass = vehicle_types[vehicle_type]["mass_kg/100"]
@@ -79,6 +84,7 @@ func init(_player_number, _number_players, _player_name, pos=null):
 	get_carbody().get_wheel(4).suspension_stiffness = vehicle_types[vehicle_type]["suspension_stiffness"]
 	get_carbody().get_wheel(4).suspension_travel = vehicle_types[vehicle_type]["suspension_travel"]
 	get_carbody().add_child(vehicle)
+	get_carbody().set_light_positions(vehicle_light_positions)
 
 	if pos != null:
 		get_carbody().set_global_transform_origin(pos)

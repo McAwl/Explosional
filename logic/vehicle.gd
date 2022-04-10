@@ -40,6 +40,8 @@ var check_accel_damage_timer = 3.0
 var accel_damage_threshold = 100.0
 var explosion2_timer = 0.2
 
+
+
 func _ready():
 	
 	cooldown_timer = weapons[weapon_select]["cooldown_timer"]
@@ -49,6 +51,18 @@ func _ready():
 	$ParticlesSmoke.amount = 1
 	
 
+func set_light_positions(light_positions):
+	var fr = light_positions[0]
+	var fl = light_positions[1]
+	var rr = light_positions[2]
+	var rl = light_positions[3]
+	$Lights/LightFrontRight.transform.origin = fr
+	$Lights/LightFrontLeft.transform.origin = fl
+	$Lights/LightBackRight.transform.origin = rr
+	$Lights/LightBackLeft.transform.origin = rl
+	#= [pvl.get_node("front_right"), pvl.get_node("front_left"), pvl.get_node("rear_right"), pvl.get_node("rear_left")]
+
+
 func re_parent_to_main_scene(child):
 	remove_child(child)
 	get_node("/root/TownScene").call_deferred("add_child", child)
@@ -56,7 +70,7 @@ func re_parent_to_main_scene(child):
 	
 
 func check_lights():
-	if get_node("/root/TownScene/DirectionalLightSun").light_energy < 0.1:
+	if get_node("/root/TownScene/DirectionalLightSun").light_energy < 0.3:
 		# print("turning lights on")
 		lights_on()
 	else:

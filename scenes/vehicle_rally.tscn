@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://assets/models/vehicles/free_car_1.dae" type="PackedScene" id=1]
 [ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=2]
+[ext_resource path="res://assets/materials/vehicles/vehicle_headlight.tres" type="Material" id=3]
+[ext_resource path="res://assets/materials/vehicles/vehicle_taillight.tres" type="Material" id=4]
 
 [node name="vehicle_rally" instance=ExtResource( 1 )]
 transform = Transform( 0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, -0.199413, 0.0757339 )
@@ -69,3 +71,39 @@ material/0 = ExtResource( 2 )
 [node name="car45" parent="." index="43"]
 visible = false
 material/0 = ExtResource( 2 )
+
+[node name="car80" parent="." index="79"]
+material/0 = ExtResource( 3 )
+
+[node name="car81" parent="." index="80"]
+material/0 = ExtResource( 4 )
+
+[node name="positions" type="Spatial" parent="." index="82"]
+
+[node name="wheels" type="Spatial" parent="positions" index="0"]
+
+[node name="front_right" type="Spatial" parent="positions/wheels" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.978085, 0.40085, 1.42375 )
+
+[node name="front_left" type="Spatial" parent="positions/wheels" index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.662886, 0.145187, 1.43117 )
+
+[node name="rear_right" type="Spatial" parent="positions/wheels" index="2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.53753, -1.09305, -2.38345 )
+
+[node name="rear_left" type="Spatial" parent="positions/wheels" index="3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.659077, -0.185294, -1.75219 )
+
+[node name="lights" type="Spatial" parent="positions" index="1"]
+
+[node name="headlight_left" type="Spatial" parent="positions/lights" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.516069, 0.561221, 2.09467 )
+
+[node name="headlight_right" type="Spatial" parent="positions/lights" index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.523028, 0.600892, 2.03564 )
+
+[node name="taillight_left" type="Spatial" parent="positions/lights" index="2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.60195, 0.702914, -2.24639 )
+
+[node name="taillight_right" type="Spatial" parent="positions/lights" index="3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5583, 0.690659, -2.3259 )

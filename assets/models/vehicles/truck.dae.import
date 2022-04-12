@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/bugatti.glb-63afcba53d7d6699a7157dc31f2d4c3d.scn"
+path="res://.import/truck.dae-5e08711acbdff823065072a5b98fab9c.scn"
 
 [deps]
 
-source_file="res://assets/models/vehicles/bugatti.glb"
-dest_files=[ "res://.import/bugatti.glb-63afcba53d7d6699a7157dc31f2d4c3d.scn" ]
+source_file="res://assets/models/vehicles/truck.dae"
+dest_files=[ "res://.import/truck.dae-5e08711acbdff823065072a5b98fab9c.scn" ]
 
 [params]
 

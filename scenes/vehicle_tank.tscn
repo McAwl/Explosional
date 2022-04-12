@@ -1,45 +1,60 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://assets/models/vehicles/m26.glb" type="PackedScene" id=1]
-[ext_resource path="res://assets/materials/vehicles/vehicle_headlight.tres" type="Material" id=2]
-[ext_resource path="res://assets/materials/vehicles/vehicle_taillight.tres" type="Material" id=3]
+[ext_resource path="res://scenes/vehicle_tank_mesh_import.tscn" type="PackedScene" id=1]
 
-[node name="vehicle_tank" instance=ExtResource( 1 )]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0.446572, 0 )
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 0.428473, 0.253823, 1.44532 )
 
-[node name="lights_front" parent="." index="11"]
-transform = Transform( 0.0276515, 0, 0, 0, 0, -0.0276515, 0, 0.0298924, 0, -0.531852, 0.0512111, -1.42418 )
-material/1 = ExtResource( 2 )
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 0.518819, 0.238512, 0.621103 )
 
-[node name="lights_rear" parent="." index="27"]
-material/1 = ExtResource( 3 )
+[sub_resource type="BoxShape" id=3]
+extents = Vector3( 0.858059, 0.192536, 0.0581098 )
 
-[node name="positions" type="Spatial" parent="." index="28"]
+[node name="vehicle_tank" type="Spatial"]
 
-[node name="wheels" type="Spatial" parent="positions" index="0"]
+[node name="mesh_instances" parent="." instance=ExtResource( 1 )]
 
-[node name="front_right" type="Spatial" parent="positions/wheels" index="0"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.52397, -1.01246, -0.535944 )
+[node name="positions" type="Spatial" parent="."]
 
-[node name="front_left" type="Spatial" parent="positions/wheels" index="1"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.14108, -1.2736, 6.10128 )
+[node name="wheels" type="Spatial" parent="positions"]
 
-[node name="rear_right" type="Spatial" parent="positions/wheels" index="2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6328, -1.09305, -7.35274 )
+[node name="front_right" type="Spatial" parent="positions/wheels"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.617962, -0.0479017, 1.06617 )
 
-[node name="rear_left" type="Spatial" parent="positions/wheels" index="3"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.74939, -0.946563, -6.99712 )
+[node name="front_left" type="Spatial" parent="positions/wheels"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.584256, -0.0610247, 1.07984 )
 
-[node name="lights" type="Spatial" parent="positions" index="1"]
+[node name="rear_right" type="Spatial" parent="positions/wheels"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.557701, -0.0705224, -1.05158 )
 
-[node name="headlight_left" type="Spatial" parent="positions/lights" index="0"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.54084, 0.0535934, -1.47735 )
+[node name="rear_left" type="Spatial" parent="positions/wheels"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.409755, -0.0560887, -1.05341 )
 
-[node name="headlight_right" type="Spatial" parent="positions/lights" index="1"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.104354, 0.127386, -1.75687 )
+[node name="lights" type="Spatial" parent="positions"]
 
-[node name="taillight_left" type="Spatial" parent="positions/lights" index="2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.612143, -0.0423775, 1.67033 )
+[node name="headlight_left" type="Spatial" parent="positions/lights"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.912583, 0.0535934, 1.54282 )
 
-[node name="taillight_right" type="Spatial" parent="positions/lights" index="3"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.595437, -0.0634834, 1.64766 )
+[node name="headlight_right" type="Spatial" parent="positions/lights"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.104354, 0.127386, 1.51886 )
+
+[node name="taillight_left" type="Spatial" parent="positions/lights"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.612143, -0.0423775, -1.56268 )
+
+[node name="taillight_right" type="Spatial" parent="positions/lights"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.595437, -0.0634834, -1.7817 )
+
+[node name="collision_shapes" type="Spatial" parent="positions"]
+
+[node name="CollisionShape1" type="CollisionShape" parent="positions/collision_shapes"]
+transform = Transform( 0.999999, 0, 2.84217e-14, 0, 0.999999, 0, -2.13163e-14, 0, 1, 8.69259e-08, 0.271977, -0.0422565 )
+shape = SubResource( 1 )
+
+[node name="CollisionShape2" type="CollisionShape" parent="positions/collision_shapes"]
+transform = Transform( 1, 0, 2.13163e-14, 0, 1, 0, -2.13163e-14, 0, 1, 0.0120258, 0.764497, -0.0175327 )
+shape = SubResource( 2 )
+
+[node name="CollisionShape3" type="CollisionShape" parent="positions/collision_shapes"]
+transform = Transform( 1, 7.40174e-08, 7.16746e-09, -6.80097e-08, 0.871314, 0.490726, 3.00771e-08, -0.490726, 0.871314, -8.12727e-07, 0.379373, 1.41754 )
+shape = SubResource( 3 )

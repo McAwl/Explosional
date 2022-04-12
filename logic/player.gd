@@ -6,26 +6,34 @@ var player_name
 var lives_left = 3
 
 var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn", 
-									"engine_force_value": 20, 
-									"mass_kg/100": 100.0, 
+									"engine_force_value": 40, 
+									"mass_kg/100": 200.0, 
 									"suspension_stiffness": 100.0, 
-									"suspension_travel": 0.1}, 
+									"suspension_travel": 0.1,
+									"radius_wheel_m": 0.35,
+									"four_wheel_drive": true}, 
 						"racer": {"scene": "res://scenes/vehicle_racer.tscn", 
-									"engine_force_value": 80, 
-									"mass_kg/100": 50.0, 
+									"engine_force_value": 130, 
+									"mass_kg/100": 70.0, 
 									"suspension_stiffness": 75.0, 
-									"suspension_travel": 1.0}, 
+									"suspension_travel": 0.5,
+									"radius_wheel_m": 0.25,
+									"four_wheel_drive": false}, 
 						"rally": {"scene": "res://scenes/vehicle_rally.tscn", 
-									"engine_force_value": 60, 
-									"mass_kg/100": 30.0, 
+									"engine_force_value": 35, 
+									"mass_kg/100": 50.0, 
 									"suspension_stiffness": 40.0, 
-									"suspension_travel": 2.0}, 
-						"truck": {"scene": "res://scenes/vehicle_truck_fly.tscn", 
-									"engine_force_value": 30, 
-									"mass_kg/100": 80.0, 
+									"suspension_travel": 2.0,
+									"radius_wheel_m": 0.4,
+									"four_wheel_drive": true}, 
+						"truck": {"scene": "res://scenes/vehicle_truck.tscn", 
+									"engine_force_value": 60, 
+									"mass_kg/100": 300.0, 
 									"suspension_stiffness": 90.0, 
-									"suspension_travel":0.2}}
-var vehicle_type = "tank"
+									"suspension_travel":0.2,
+									"radius_wheel_m": 0.4,
+									"four_wheel_drive": false}}
+var vehicle_type = "racer"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -75,14 +83,31 @@ func init(_player_number, _number_players, _player_name, pos=null):
 	vehicle.name = "vehicle_mesh"
 	get_carbody().engine_force_value = vehicle_types[vehicle_type]["engine_force_value"]
 	get_carbody().mass = vehicle_types[vehicle_type]["mass_kg/100"]
+	
 	get_carbody().get_wheel(1).suspension_stiffness = vehicle_types[vehicle_type]["suspension_stiffness"]
 	get_carbody().get_wheel(1).suspension_travel = vehicle_types[vehicle_type]["suspension_travel"]
+	get_carbody().get_wheel(1).wheel_radius = vehicle_types[vehicle_type]["radius_wheel_m"]
+	get_carbody().get_wheel(1).get_node("Wheel1").scale = Vector3(vehicle_types[vehicle_type]["radius_wheel_m"], vehicle_types[vehicle_type]["radius_wheel_m"]/4.0, vehicle_types[vehicle_type]["radius_wheel_m"])
+	
 	get_carbody().get_wheel(2).suspension_stiffness = vehicle_types[vehicle_type]["suspension_stiffness"]
 	get_carbody().get_wheel(2).suspension_travel = vehicle_types[vehicle_type]["suspension_travel"]
+	get_carbody().get_wheel(2).wheel_radius = vehicle_types[vehicle_type]["radius_wheel_m"]
+	get_carbody().get_wheel(2).get_node("Wheel2").scale = Vector3(vehicle_types[vehicle_type]["radius_wheel_m"], vehicle_types[vehicle_type]["radius_wheel_m"]/4.0, vehicle_types[vehicle_type]["radius_wheel_m"])
+		
 	get_carbody().get_wheel(3).suspension_stiffness = vehicle_types[vehicle_type]["suspension_stiffness"]
 	get_carbody().get_wheel(3).suspension_travel = vehicle_types[vehicle_type]["suspension_travel"]
+	get_carbody().get_wheel(3).wheel_radius = vehicle_types[vehicle_type]["radius_wheel_m"]
+	get_carbody().get_wheel(3).get_node("Wheel3").scale = Vector3(vehicle_types[vehicle_type]["radius_wheel_m"], vehicle_types[vehicle_type]["radius_wheel_m"]/4.0, vehicle_types[vehicle_type]["radius_wheel_m"])
+	
 	get_carbody().get_wheel(4).suspension_stiffness = vehicle_types[vehicle_type]["suspension_stiffness"]
 	get_carbody().get_wheel(4).suspension_travel = vehicle_types[vehicle_type]["suspension_travel"]
+	get_carbody().get_wheel(4).wheel_radius = vehicle_types[vehicle_type]["radius_wheel_m"]
+	get_carbody().get_wheel(4).get_node("Wheel4").scale = Vector3(vehicle_types[vehicle_type]["radius_wheel_m"], vehicle_types[vehicle_type]["radius_wheel_m"]/4.0, vehicle_types[vehicle_type]["radius_wheel_m"])
+	
+	if vehicle_types[vehicle_type]["four_wheel_drive"] == false:
+		get_carbody().get_wheel(2).use_as_traction = false
+		get_carbody().get_wheel(4).use_as_traction = false
+		
 	get_carbody().add_child(vehicle)
 	get_carbody().set_light_positions(vehicle_light_positions)
 

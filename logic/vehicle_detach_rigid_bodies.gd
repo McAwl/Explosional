@@ -31,7 +31,7 @@ func _physics_process(_delta):
 	if apply_forces == true:
 		# var num_meshes = 0
 		var total_volume = 0
-		for ch in self.get_children():
+		for ch in self.get_node("mesh_instances").get_children():
 			if ch is MeshInstance:
 				var mesh_volume = ch.get_aabb().get_area ()
 				total_volume += mesh_volume
@@ -40,7 +40,7 @@ func _physics_process(_delta):
 		#print("total_volume="+str(total_volume))
 		#print("num_meshes="+str(num_meshes))
 		var parent_linear_velocity = get_parent().linear_velocity
-		for ch in self.get_children():
+		for ch in self.get_node("mesh_instances").get_children():
 			if ch is MeshInstance:
 				ch.visible = true
 				# print("type of mesh piece "+str(ch.type))
@@ -51,7 +51,7 @@ func _physics_process(_delta):
 				var mesh_volume = ch.get_aabb().get_area ()
 				new_rigid_body.mass = total_mass * (mesh_volume/total_volume)  # mass_per_piece
 				#print("new_rigid_body.mass="+str(new_rigid_body.mass))
-				self.remove_child(ch)
+				self.get_node("mesh_instances").remove_child(ch)
 				new_rigid_body.add_child(ch)
 				new_rigid_body.set_as_toplevel(true)
 				new_rigid_body.linear_velocity = parent_linear_velocity

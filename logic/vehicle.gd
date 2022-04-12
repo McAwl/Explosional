@@ -54,6 +54,19 @@ func _ready():
 	$Lights_onfire/OnFireLight4.light_energy = 0.0
 	$Lights_onfire/OnFireLight5.light_energy = 0.0
 	$Explosion2Light.visible = false
+	
+	var cs = $vehicle_mesh/positions/collision_shapes
+	for ch in cs.get_children():
+		if ch is CollisionShape:
+			ch.scale = $vehicle_mesh.scale
+			cs.remove_child(ch)
+			self.add_child(ch)
+	var wh = $vehicle_mesh/positions/wheels
+	$Wheel1.transform.origin = wh.get_node("front_left").transform.origin
+	$Wheel2.transform.origin = wh.get_node("rear_left").transform.origin
+	$Wheel3.transform.origin = wh.get_node("front_right").transform.origin
+	$Wheel4.transform.origin = wh.get_node("rear_right").transform.origin
+	
 
 func set_light_positions(light_positions):
 	var fr = light_positions[0]

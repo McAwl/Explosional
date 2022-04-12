@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://logic/vehicle.gd" type="Script" id=1]
 [ext_resource path="res://logic/follow_camera.gd" type="Script" id=5]
@@ -21,15 +21,6 @@ absorbent = true
 [sub_resource type="CylinderMesh" id=38]
 material = ExtResource( 12 )
 radial_segments = 25
-
-[sub_resource type="BoxShape" id=7]
-extents = Vector3( 0.477039, 0.5, 1.0831 )
-
-[sub_resource type="BoxShape" id=31]
-extents = Vector3( 0.446028, 0.227331, 0.721519 )
-
-[sub_resource type="BoxShape" id=32]
-extents = Vector3( 0.468997, 0.227406, 0.798583 )
 
 [sub_resource type="SphereMesh" id=29]
 
@@ -208,19 +199,6 @@ transform = Transform( -1.09278e-08, 0.07, 0, -0.25, -3.0598e-09, 0, 0, 0, 0.25,
 mesh = SubResource( 38 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 12 )
-
-[node name="CollisionShape" type="CollisionShape" parent="CarBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.588269, 0.0774262 )
-visible = false
-shape = SubResource( 7 )
-
-[node name="CollisionShape2" type="CollisionShape" parent="CarBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1.47069, 0.0120257, 0.315675, 0.027834 )
-shape = SubResource( 31 )
-
-[node name="CollisionShape3" type="CollisionShape" parent="CarBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.811259, -0.438815 )
-shape = SubResource( 32 )
 
 [node name="CameraBase" type="Spatial" parent="CarBody"]
 transform = Transform( 0.998172, 0, 0.0604388, 0, 1, 0, -0.0604388, 0, 0.998172, -0.0157232, 1.97449, -2.31076 )

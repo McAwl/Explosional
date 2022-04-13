@@ -1,15 +1,47 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=1]
 [ext_resource path="res://assets/models/vehicles/Bugatti(1).dae" type="PackedScene" id=2]
 [ext_resource path="res://assets/materials/vehicles/vehicle_headlight.tres" type="Material" id=3]
 [ext_resource path="res://assets/materials/vehicles/vehicle_taillight.tres" type="Material" id=4]
+[ext_resource path="res://assets/models/vehicles/glass.material" type="Material" id=5]
 
 [node name="vehicle_racer_mesh_import" instance=ExtResource( 2 )]
 transform = Transform( 0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 0, 0.287719, 0.324329 )
 
 [node name="chrome004" parent="." index="0"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11365, 2.19973, 6.67809 )
+material/0 = ExtResource( 5 )
+
+[node name="chrome014" parent="." index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11365, 2.19973, 6.67809 )
+
+[node name="Plane022" parent="." index="2"]
+transform = Transform( 1.93986, 0, 0, 0, 1.93986, 0, 0, 0, 1.93986, 0.0875876, 0.743798, -4.75248 )
+
+[node name="Mesh003" parent="." index="3"]
+transform = Transform( 1.26481, 0, 0, 0, 1.26481, 0, 0, 0, 1.26481, 0.0541425, 0.413136, 0.857477 )
+
+[node name="Mesh017" parent="." index="4"]
+transform = Transform( 1.29241, 0, 0, 0, 1.29241, 0, 0, 0, 1.29241, 0.09445, 0.208856, 0.45468 )
+
+[node name="Mesh019" parent="." index="5"]
+transform = Transform( 1.29241, 0, 0, 0, 1.29241, 0, 0, 0, 1.29241, 0.09445, 0.208856, 0.284973 )
+
+[node name="Mesh022" parent="." index="6"]
+transform = Transform( 1.25734, 0, 0, 0, 1.25734, 0, 0, 0, 1.25734, 0.0327289, 0.41965, 0.823165 )
+
+[node name="Plane010" parent="." index="7"]
+transform = Transform( 0.00591115, 0.999982, -4.4703e-08, -0.999982, 0.00591115, 4.44392e-08, 4.47027e-08, 4.44395e-08, 1, -1.33196, 2.06349, 8.22197 )
+
+[node name="Cube" parent="." index="8"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.430189, -11.4242, -3.86879 )
+
+[node name="Cylinder001" parent="." index="9"]
+transform = Transform( 0.126412, 0, 0, 0, 0.000722302, 0.12641, 0, -0.12641, 0.000722302, -0.297754, 2.601, -3.66425 )
+
+[node name="Tube" parent="." index="10"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.759314, 3.49311, -2.7077 )
 
 [node name="Plane012" parent="." index="11"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.70376, -0.421404, -9.30579 )
@@ -19,6 +51,7 @@ visible = false
 material/0 = ExtResource( 1 )
 
 [node name="Torus002" parent="." index="13"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3.63308, 0.225483, -3.97378 )
 visible = false
 material/0 = ExtResource( 1 )
 
@@ -67,11 +100,23 @@ material/0 = ExtResource( 1 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8897, -0.0662175, 8.78839 )
 material/0 = ExtResource( 3 )
 
+[node name="scoop" parent="." index="32"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11365, 2.19973, 6.67809 )
+
+[node name="chrome003" parent="." index="33"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11365, 2.19973, 6.67809 )
+
+[node name="chrome005" parent="." index="34"]
+transform = Transform( -1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3151, -0.346761, 7.96786 )
+
 [node name="Plane004" parent="." index="40"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0223047, 2.48454, 0.412126 )
 
 [node name="Plane006" parent="." index="42"]
 transform = Transform( 0.945074, -0.274592, -0.177295, 0, -0.542428, 0.840102, -0.326855, -0.793959, -0.512635, 1.77832, -1.57337, 9.01679 )
+
+[node name="chrome010" parent="." index="43"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11365, 2.19973, 6.67809 )
 
 [node name="Plane011" parent="." index="44"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.68085, -0.455427, -9.27578 )
@@ -80,3 +125,9 @@ material/0 = ExtResource( 4 )
 [node name="Plane021" parent="." index="51"]
 visible = false
 material/0 = ExtResource( 1 )
+
+[node name="Plane023" parent="." index="53"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04134, 1.19266, -7.62263 )
+
+[node name="chrome012" parent="." index="54"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11365, 2.19973, 6.67809 )

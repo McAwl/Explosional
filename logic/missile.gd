@@ -51,10 +51,10 @@ func _process(delta):
 		if $ExplosionSound.playing == false and $ParticlesExplosion.emitting == false:
 		# if $ExplosionSound.playing == false and $ParticlesExplosion2/AnimationPlayer.current_animation != "Explode":
 			# explosion noise finished
-			print("missile: queue_free()")
+			print("missile:process(): queue_free()")
 			queue_free()
 		else:
-			print("playing something?")
+			print("missile:process(): $ExplosionSound.playing OR $ParticlesExplosion.emitting")
 	
 	if lifetime_seconds < 0.0:
 		queue_free()
@@ -83,7 +83,7 @@ func _physics_process(delta):
 				for player in get_node("/root/TownScene").get_players():  # in range(1, 5): # explosion toward all players
 					#if i != parent_player_number:
 					if player.player_number != parent_player_number:
-						var target = player.get_carbody()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+						var target = player.get_vehicle_body()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 						#var target = get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 						var distance = global_transform.origin.distance_to(target.global_transform.origin)
 						if closest_target_distance == null or distance < closest_target_distance or closest_target == null or closest_target_direction == null:
@@ -112,7 +112,7 @@ func _on_Missile_body_entered(body):
 		$ParticlesThrust.visible = false
 		#  velocity = Vector3(0,0,0)  # ??????
 			
-		if "CarBody" in body.name:
+		if "vehicle_body" in body.name:
 			# print("Missile hit "+str(body.name))
 			body.hit_by_missile["active"] = true
 			body.hit_by_missile["origin"] = transform.origin
@@ -121,7 +121,7 @@ func _on_Missile_body_entered(body):
 			body.hit_by_missile["direct_hit"] = true
 		else: 
 			for player in get_node("/root/TownScene").get_players():  # in range(1, 5): # explosion toward all players
-				var target = player.get_carbody()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+				var target = player.get_vehicle_body()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 				#var target = get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 				var direction = global_transform.origin - target.global_transform.origin
 				var distance = global_transform.origin.distance_to(target.global_transform.origin)

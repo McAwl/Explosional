@@ -1,12 +1,23 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://assets/models/vehicles/free_car_1.dae" type="PackedScene" id=1]
 [ext_resource path="res://assets/materials/vehicles/vehicle_taillight.tres" type="Material" id=2]
 [ext_resource path="res://assets/materials/vehicles/vehicle_headlight.tres" type="Material" id=3]
 [ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=4]
+[ext_resource path="res://assets/models/vehicles/glass.material" type="Material" id=5]
+[ext_resource path="res://assets/materials/vehicles/shiny_metal.tres" type="Material" id=6]
 
 [node name="vehicle_rally_mesh_import" instance=ExtResource( 1 )]
 transform = Transform( 0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, -0.199413, 0.0757339 )
+
+[node name="car75" parent="." index="0"]
+material/0 = ExtResource( 6 )
+
+[node name="car1" parent="." index="1"]
+material/0 = ExtResource( 6 )
+
+[node name="car2" parent="." index="2"]
+material/0 = ExtResource( 6 )
 
 [node name="car10" parent="." index="3"]
 visible = false
@@ -59,6 +70,45 @@ material/0 = ExtResource( 4 )
 visible = false
 material/0 = ExtResource( 4 )
 
+[node name="car70" parent="." index="18"]
+material/0 = ExtResource( 6 )
+
+[node name="car69" parent="." index="19"]
+material/0 = ExtResource( 6 )
+
+[node name="car68" parent="." index="20"]
+material/0 = ExtResource( 6 )
+
+[node name="car67" parent="." index="21"]
+material/0 = ExtResource( 6 )
+
+[node name="car66" parent="." index="22"]
+material/0 = ExtResource( 6 )
+
+[node name="car65" parent="." index="23"]
+material/0 = ExtResource( 6 )
+
+[node name="car63" parent="." index="25"]
+material/0 = ExtResource( 6 )
+
+[node name="car61" parent="." index="27"]
+material/0 = ExtResource( 6 )
+
+[node name="car59" parent="." index="29"]
+material/0 = ExtResource( 6 )
+
+[node name="car58" parent="." index="30"]
+material/0 = ExtResource( 6 )
+
+[node name="car57" parent="." index="31"]
+material/0 = ExtResource( 6 )
+
+[node name="car56" parent="." index="32"]
+material/0 = ExtResource( 6 )
+
+[node name="car50" parent="." index="38"]
+material/0 = ExtResource( 6 )
+
 [node name="car48" parent="." index="40"]
 visible = false
 material/0 = ExtResource( 4 )
@@ -74,6 +124,36 @@ material/0 = ExtResource( 4 )
 [node name="car45" parent="." index="43"]
 visible = false
 material/0 = ExtResource( 4 )
+
+[node name="car38" parent="." index="50"]
+material/0 = ExtResource( 6 )
+
+[node name="car79" parent="." index="51"]
+material/0 = ExtResource( 6 )
+
+[node name="car37" parent="." index="52"]
+material/0 = ExtResource( 6 )
+
+[node name="car36" parent="." index="53"]
+material/0 = ExtResource( 6 )
+
+[node name="car33" parent="." index="56"]
+material/0 = ExtResource( 6 )
+
+[node name="car32" parent="." index="57"]
+material/0 = ExtResource( 5 )
+
+[node name="car31" parent="." index="58"]
+material/0 = ExtResource( 5 )
+
+[node name="car27" parent="." index="62"]
+material/0 = ExtResource( 5 )
+
+[node name="car22" parent="." index="67"]
+material/0 = ExtResource( 5 )
+
+[node name="car13" parent="." index="76"]
+material/0 = ExtResource( 6 )
 
 [node name="car80" parent="." index="79"]
 material/0 = ExtResource( 3 )

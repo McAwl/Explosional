@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/textures/dot.png" type="Texture" id=1]
-[ext_resource path="res://scenes/smoke_trail.gd" type="Script" id=2]
+[ext_resource path="res://logic/smoke_trail.gd" type="Script" id=2]
 
 [sub_resource type="Gradient" id=33]
 offsets = PoolRealArray( 0, 0.242236, 0.732919, 0.993789, 1 )

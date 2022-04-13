@@ -1,6 +1,6 @@
 [gd_scene load_steps=24 format=2]
 
-[ext_resource path="res://logic/vehicle.gd" type="Script" id=1]
+[ext_resource path="res://logic/vehicle_body.gd" type="Script" id=1]
 [ext_resource path="res://assets/materials/vehicles/car_yellow_body.tres" type="Material" id=2]
 [ext_resource path="res://assets/materials/vehicles/car_window.tres" type="Material" id=3]
 [ext_resource path="res://assets/materials/vehicles/car_grill.tres" type="Material" id=4]

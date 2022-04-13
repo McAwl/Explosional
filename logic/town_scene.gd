@@ -30,9 +30,9 @@ func _ready():
 		var player_instance = load("res://scenes/player.tscn").instance()
 		var pos = spawn_points[player_number-1].global_transform.origin
 		player_instance.init(player_number, num_players, players[player_number]["name"], pos)
-		player_instance.get_carbody().weapons[3].enabled = test_nuke
-		player_instance.get_carbody().weapons[3].test_mode = test_nuke
 		add_child(player_instance)
+		player_instance.get_vehicle_body().weapons[3].enabled = test_nuke
+		player_instance.get_vehicle_body().weapons[3].test_mode = test_nuke
 	var anim_time = start_clock_hrs + 12.0
 	if anim_time > 24.0:
 		anim_time -= 12.0
@@ -90,12 +90,12 @@ func _process(delta):
 		
 	if air_strike["on"] == true:
 		for player in get_players():  # range(1, num_players+1):
-			if player.get_carbody().lifetime_so_far_sec > 5.0:
+			if player.get_vehicle_body().lifetime_so_far_sec > 5.0:
 				if randf()<0.005:
 					var weapon_instance = load("res://scenes/explosive.tscn").instance()
 					add_child(weapon_instance) 
-					var speed = player.get_carbody().get_speed2()
-					var cbo = player.get_carbody().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
+					var speed = player.get_vehicle_body().get_speed2()
+					var cbo = player.get_vehicle_body().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
 					weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0), 1, 0)  # player 0 = no player
 					weapon_instance.set_as_bomb()
 					weapon_instance.set_as_toplevel(true)
@@ -118,34 +118,33 @@ func update_player_hud():
 	for player_src in range(1, num_players+1):
 		for player_dst in range(1, num_players+1):
 			if player_src != player_dst:
-				var player_src_carbase = get_player(player_src).get_carbase()
-				var player_src_carbody = player_src_carbase.get_carbody()
-				var player_src_camera = player_src_carbase.get_camera()
-				var player_dst_carbody = get_player(player_dst).get_carbase().get_carbody()
-				var player_dst_hud_pos_loc = player_dst_carbody.get_node("HUDPositionLocation")
-				var distance = player_src_carbody.get_global_transform().origin.distance_to(player_dst_hud_pos_loc.global_transform.origin)
-				var player_dst_viewport_pos = player_src_camera.unproject_position ( player_dst_hud_pos_loc.get_global_transform().origin ) 
-				var label = get_player(player_src).get_canvaslayer().get_node("label_player_"+str(player_dst)+"_pos")
-				
-				var font_size = 10
-				if distance < 25.0:
-					font_size = 60
-				elif distance < 50.0:
-					font_size = 40
-				elif distance < 100.0:
-					font_size = 30
-				elif distance < 200.0:
-					font_size = 20
-				label.get("custom_fonts/font").set_size(font_size)
-				
-				
-				if player_src_camera.is_position_behind (player_dst_hud_pos_loc.get_global_transform().origin ):
-					label.visible = false
-				else:
-					label.visible = true
-					label.rect_position = player_dst_viewport_pos
-					label.rect_position.x -= font_size/2
-					label.rect_position.y -= 20 + (font_size/2)
+				var player_src_get_vehicle_body = get_player(player_src).get_vehicle_body()
+				if player_src_get_vehicle_body != null:  # eg if player has no lives left, not in the game any more
+					var player_src_camera = player_src_get_vehicle_body.get_camera()
+					var player_dst_hud_pos_loc = get_player(player_dst).get_vehicle_body().get_node("HUDPositionLocation")
+					var distance = player_src_get_vehicle_body.get_global_transform().origin.distance_to(player_dst_hud_pos_loc.global_transform.origin)
+					var player_dst_viewport_pos = player_src_camera.unproject_position ( player_dst_hud_pos_loc.get_global_transform().origin ) 
+					var label = get_player(player_src).get_canvaslayer().get_node("label_player_"+str(player_dst)+"_pos")
+					
+					var font_size = 10
+					if distance < 25.0:
+						font_size = 60
+					elif distance < 50.0:
+						font_size = 40
+					elif distance < 100.0:
+						font_size = 30
+					elif distance < 200.0:
+						font_size = 20
+					label.get("custom_fonts/font").set_size(font_size)
+					
+					
+					if player_src_camera.is_position_behind (player_dst_hud_pos_loc.get_global_transform().origin ):
+						label.visible = false
+					else:
+						label.visible = true
+						label.rect_position = player_dst_viewport_pos
+						label.rect_position.x -= font_size/2
+						label.rect_position.y -= 20 + (font_size/2)
 
 
 func check_game_over():

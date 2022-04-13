@@ -1,15 +1,18 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/vehicle_racer_mesh_import.tscn" type="PackedScene" id=1]
 
 [sub_resource type="BoxShape" id=1]
-extents = Vector3( 0.287922, 0.145429, 1.17644 )
+extents = Vector3( 0.287922, 0.145429, 0.357514 )
 
 [sub_resource type="BoxShape" id=2]
-extents = Vector3( 0.439144, 0.0965989, 0.299491 )
+extents = Vector3( 0.439144, 0.289678, 0.509411 )
 
 [sub_resource type="BoxShape" id=3]
 extents = Vector3( 0.608962, 0.258612, 0.0557108 )
+
+[sub_resource type="BoxShape" id=4]
+extents = Vector3( 0.190676, 1.89587, 0.203124 )
 
 [node name="vehicle_racer" type="Spatial"]
 
@@ -37,16 +40,20 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295318, 0.345321, -1.23983 
 [node name="collision_shapes" type="Spatial" parent="positions"]
 
 [node name="CollisionShape1" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 0.998771, -0.0495645, 0, 0.0495645, 0.998771, 0, 0.28116, 0.198108 )
+transform = Transform( 1, 0, 0, 0, 0.998771, -0.0495645, 0, 0.0495645, 0.998771, 0, 0.110992, 1.04141 )
 shape = SubResource( 1 )
 
 [node name="CollisionShape2" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0120257, 0.423859, 0.310637 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0120257, 0.249696, 0.164227 )
 shape = SubResource( 2 )
 
 [node name="CollisionShape3" type="CollisionShape" parent="positions/collision_shapes"]
 transform = Transform( 1, 0, 0, 0, 0.847131, 0.531384, 0, -0.531384, 0.847131, 0, 0.19695, 1.45942 )
 shape = SubResource( 3 )
+
+[node name="CollisionShape4" type="CollisionShape" parent="positions/collision_shapes"]
+transform = Transform( 2.27082, 0, 0, 0, 0.10892, 0, 0, 0, 1.09943, 0, 0.211665, -0.738806 )
+shape = SubResource( 4 )
 
 [node name="wheels" type="Spatial" parent="positions"]
 
@@ -72,3 +79,52 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.664037, 1.95647 
 
 [node name="RocketPosition" type="Position3D" parent="positions/weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 1.04336, 2.07419 )
+
+[node name="raycasts" type="Spatial" parent="positions"]
+
+[node name="RayCastCentreDown" type="RayCast" parent="positions/raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.027562, 0 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastBonnetUp" type="RayCast" parent="positions/raycasts"]
+transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.503939, 0.157628 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastForward" type="RayCast" parent="positions/raycasts"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.502828, 0.425463 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="RayCastBackward" type="RayCast" parent="positions/raycasts"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.40358, -0.759133 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="RayCastLeft" type="RayCast" parent="positions/raycasts"]
+transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.285423, 0.505677, -0.222668 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastRight" type="RayCast" parent="positions/raycasts"]
+transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.260324, 0.514269, -0.0225632 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastFrontRamDamage1" type="RayCast" parent="positions/raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.2569, 1.07205 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+
+[node name="RayCastFrontRamDamage2" type="RayCast" parent="positions/raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, 0.2569, 1.15978 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+
+[node name="RayCastFrontRamDamage3" type="RayCast" parent="positions/raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.345418, 0.88265 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )

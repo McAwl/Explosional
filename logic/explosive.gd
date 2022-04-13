@@ -77,8 +77,8 @@ func _process(delta):
 		if explosive_proximity_check_timer <= 0:  # check proximity regularly, not too often
 			for player in get_node("/root/TownScene").get_players():  # i in range(1, 5):
 				# explosion toward all players
-				var carbody = player.get_carbody()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
-				var distance = global_transform.origin.distance_to(carbody.global_transform.origin)
+				var get_vehicle_body = player.get_vehicle_body()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
+				var distance = global_transform.origin.distance_to(get_vehicle_body.global_transform.origin)
 				if distance < EXPLOSIVE_PROXIMITY_DISTANCE or explosive_proximity_timer_limit <= 0:
 					explosive_stage = 3  # trigged by proximity to car
 					material_override(material_red)
@@ -185,7 +185,7 @@ func _physics_process(_delta):
 			$ParticlesExplosion.emitting = true
 		var targets = []
 		for target in get_players():  # i in range(1,5): # explosion toward all players
-			var target_body = target.get_carbody()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
+			var target_body = target.get_vehicle_body()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
 			targets.append(target_body)
 		for bomb in get_bombs():  # i in range(1,5):  # explosion toward all bombs
 			# if i != player_number:
@@ -194,7 +194,7 @@ func _physics_process(_delta):
 		for target in targets:
 			var distance = global_transform.origin.distance_to(target.global_transform.origin)
 			#print("target.name="+str(target.name))
-			if distance < explosion_range[type] and "CarBody" in target.name:
+			if distance < explosion_range[type] and "vehicle_body" in target.name:
 				var direction = target.transform.origin - transform.origin  
 				# direction[2]+=5.0  # slight upward force as well - isn't [1] up/down?
 				# remove downwards force - as vehicles can be blown through the terrain

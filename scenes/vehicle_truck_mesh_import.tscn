@@ -1,6 +1,13 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://assets/models/vehicles/truck.dae" type="PackedScene" id=1]
+[ext_resource path="res://assets/materials/vehicles/car_blue_body.tres" type="Material" id=2]
+[ext_resource path="res://assets/materials/vehicles/shiny_metal.tres" type="Material" id=3]
+[ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=4]
+[ext_resource path="res://assets/materials/vehicles/vehicle_headlight.tres" type="Material" id=5]
+[ext_resource path="res://assets/materials/vehicles/car_orange_body.tres" type="Material" id=6]
+[ext_resource path="res://assets/materials/vehicles/vehicle_taillight.tres" type="Material" id=7]
+[ext_resource path="res://assets/materials/vehicles/car_grill.tres" type="Material" id=8]
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "Mesh"
@@ -377,121 +384,125 @@ material/0 = null
 
 [node name="back2" type="MeshInstance" parent="." index="1"]
 transform = Transform( -0.01, -8.74228e-10, 8.74228e-10, -8.74228e-10, 2.50344e-09, -0.01, 8.74228e-10, -0.01, -2.50344e-09, -0.577557, 0.325317, -3.24701 )
+visible = false
 mesh = SubResource( 2 )
 skeleton = NodePath("../back")
-material/0 = null
+material/0 = ExtResource( 4 )
 
 [node name="back" type="VehicleWheel" parent="." index="2"]
 transform = Transform( -0.01, -8.74228e-10, 8.74228e-10, -8.74228e-10, 2.50344e-09, -0.01, 8.74228e-10, -0.01, -2.50344e-09, -0.577557, 0.325317, -3.24701 )
-visible = false
 
 [node name="backwheel" type="MeshInstance" parent="." index="3"]
 transform = Transform( -0.01, -8.74228e-10, 8.74228e-10, -8.74228e-10, 2.50344e-09, -0.01, 8.74228e-10, -0.01, -2.50344e-09, -0.820912, 0.325317, -3.24701 )
+visible = false
 mesh = SubResource( 3 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 4 )
 
 [node name="Cube" type="MeshInstance" parent="." index="4"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, -0.652764, 0.496757, -1.96526 )
 mesh = SubResource( 4 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 8 )
 
 [node name="Torus" type="MeshInstance" parent="." index="5"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.681574, 1.14249, 0.708538 )
 mesh = SubResource( 5 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 3 )
 
 [node name="cap" type="MeshInstance" parent="." index="6"]
 transform = Transform( 3.13916e-09, 0.00815472, 0.00578796, 1.62921e-09, 0.00578796, -0.00815472, -0.01, 3.50288e-09, 4.88365e-10, 0.930376, 0.575808, -1.71005 )
 mesh = SubResource( 6 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 8 )
 
 [node name="fuel_reservior" type="MeshInstance" parent="." index="7"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.715744, 0.42781, -1.86495 )
 mesh = SubResource( 7 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 3 )
 
 [node name="license_plate" type="MeshInstance" parent="." index="8"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.667986, 0.434451, -4.10661 )
 mesh = SubResource( 8 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 8 )
 
 [node name="back_bumper" type="MeshInstance" parent="." index="9"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 4.25747e-08, 0.565137, -4.09252 )
 mesh = SubResource( 9 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 3 )
 
 [node name="handle" type="MeshInstance" parent="." index="10"]
 transform = Transform( 7.54979e-10, 0.01, 0, 1.62921e-09, -1.23002e-16, -0.01, -0.01, 7.54979e-10, -1.62921e-09, 4.25747e-08, 0.905564, -4.25578 )
 mesh = SubResource( 10 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 8 )
 
 [node name="1" type="MeshInstance" parent="." index="11"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 4.25747e-08, 1.65893, -2.64306 )
 mesh = SubResource( 11 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 6 )
 
 [node name="wipers" type="MeshInstance" parent="." index="12"]
 transform = Transform( 0.01, 0, 0, 0, 0.00373653, -0.00927568, 0, 0.00927568, 0.00373653, -0.267364, 1.31371, 0.685538 )
 mesh = SubResource( 12 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 3 )
 
 [node name="indicator_light_" type="MeshInstance" parent="." index="13"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 4.25747e-08, 2.06953, 0.188603 )
 mesh = SubResource( 13 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 5 )
 
 [node name="logo" type="MeshInstance" parent="." index="14"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, -0.018963, 0.582631, 0.714887 )
 mesh = SubResource( 14 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 3 )
 
 [node name="grill" type="MeshInstance" parent="." index="15"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, -0.016109, 0.963714, 0.698574 )
 mesh = SubResource( 15 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 8 )
 
 [node name="1_2" type="MeshInstance" parent="." index="16"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.67973, 0.20575, -3.23638 )
 mesh = SubResource( 16 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 3 )
 
 [node name="taillights" type="MeshInstance" parent="." index="17"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.647836, 0.565137, -4.10661 )
 mesh = SubResource( 17 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 7 )
 
 [node name="back_wheel_2" type="MeshInstance" parent="." index="18"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.58106, 0.325317, -3.24701 )
+visible = false
 mesh = SubResource( 18 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 4 )
 
 [node name="backwheel_2" type="MeshInstance" parent="." index="19"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.824415, 0.325317, -3.24701 )
+visible = false
 mesh = SubResource( 19 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 4 )
 
 [node name="front2" type="MeshInstance" parent="." index="20"]
 transform = Transform( -0.01, -8.74228e-10, 8.74228e-10, -8.74228e-10, 2.50344e-09, -0.01, 8.74228e-10, -0.01, -2.50344e-09, -0.777711, 0.325317, -0.198307 )
+visible = false
 mesh = SubResource( 20 )
 skeleton = NodePath("../front")
-material/0 = null
+material/0 = ExtResource( 4 )
 
 [node name="front" type="VehicleWheel" parent="." index="21"]
 transform = Transform( -0.01, -8.74228e-10, 8.74228e-10, -8.74228e-10, 2.50344e-09, -0.01, 8.74228e-10, -0.01, -2.50344e-09, -0.777711, 0.325316, -0.198307 )
@@ -499,27 +510,28 @@ visible = false
 
 [node name="front_wheel_2" type="MeshInstance" parent="." index="22"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.739917, 0.325316, -0.198307 )
+visible = false
 mesh = SubResource( 21 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 4 )
 
 [node name="cabin" type="MeshInstance" parent="." index="23"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, -0.0185782, 2.26358, -0.285847 )
 mesh = SubResource( 22 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 2 )
 
 [node name="door_handle" type="MeshInstance" parent="." index="24"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.778566, 1.21978, -0.281632 )
 mesh = SubResource( 23 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 3 )
 
 [node name="mirrors" type="MeshInstance" parent="." index="25"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.895549, 1.66437, 0.258315 )
 mesh = SubResource( 24 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 3 )
 
 [node name="indicators" type="MeshInstance" parent="." index="26"]
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.711728, 0.597057, 0.726456 )
@@ -531,7 +543,7 @@ material/0 = null
 transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 0.512242, 0.597105, 0.725945 )
 mesh = SubResource( 26 )
 skeleton = NodePath("../truck")
-material/0 = null
+material/0 = ExtResource( 5 )
 
 [node name="truck" parent="." index="28"]
 visible = false

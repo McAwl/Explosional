@@ -26,6 +26,7 @@ func _process(delta):
 	timer_0_1_s -= delta
 	if timer_0_1_s <= 0.0:
 		timer_0_1_s = 0.1
+		
 		# periodically check for a destroyed vehicle
 		if get_viewport().has_node("vehicle_body"):
 			var vb = get_viewport().get_node("vehicle_body")
@@ -35,6 +36,18 @@ func _process(delta):
 			if lives_left > 0:
 				print("player:_process() "+str(lives_left)+" lives left, spawning...")
 				init_vehicle_body(last_spawn_point)
+		
+		# periodically update player display
+		set_label_player_name()
+		set_label_lives_left()
+		var health_display = get_canvaslayer().get_node("health")
+		health_display.value = get_vehicle_body().max_damage-get_vehicle_body().total_damage
+		if get_vehicle_body().max_damage-get_vehicle_body().total_damage >= 7.0:
+			health_display.tint_progress = "#7e00ff00"  # green
+		elif get_vehicle_body().max_damage-get_vehicle_body().total_damage <= 3.0:
+			health_display.tint_progress = "#7eff0000"  # red
+		else:
+			health_display.tint_progress = "#7eff6c00"  # orange
 
 
 func init(_player_number, _number_players, _player_name, pos=null):
@@ -140,27 +153,34 @@ func set_viewport_container(_left, _right, _bottom, _top, size_x, size_y):
 
 
 func get_viewport_container():
-	var vc = $VC
-	if vc == null:
-		print("Warning: vc="+str(vc)+", print_tree: ")
+	if has_node("VC"):
+		return $VC
+	else:
+		print("Warning: no VC, print_tree: ")
 		print_tree()
-	return vc
+		return null
 
 	
 func get_viewport():
-	var vp = get_viewport_container().get_node("V")
-	if vp == null:
-		print("Warning: vp="+str(vp)+", print_tree: ")
-		print_tree()
-	return vp
+	if get_viewport_container() != null:
+		if get_viewport_container().has_node("V"):
+			return get_viewport_container().get_node("V")
+		else:
+			print("Warning: no V, print_tree: ")
+			print_tree()
+			return null
+	else:
+		return null
 
 	
 func get_vehicle_body():
-	var vehicle_body = get_viewport().get_node("vehicle_body")
-	# if vehicle_body == null:
-	#	print("Warning: vehicle_body="+str(vehicle_body)+", print_tree: ")
-	#	print_tree()
-	return vehicle_body
+	if get_viewport().has_node("vehicle_body"):
+		var vehicle_body = get_viewport().get_node("vehicle_body")
+		# if vehicle_body == null:
+		#	print("Warning: vehicle_body="+str(vehicle_body)+", print_tree: ")
+		#	print_tree()
+		return vehicle_body
+	return null
 
 
 func get_label_player_name():

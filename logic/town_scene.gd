@@ -70,8 +70,8 @@ func _process(delta):
 		Engine.time_scale = 1.0
 		all_audio_pitch(1.0)
 	else:
-		Engine.time_scale = 0.2
-		all_audio_pitch(0.2)
+		Engine.time_scale = 0.1
+		all_audio_pitch(0.1)
 
 	air_strike["interval_so_far_sec"] +=delta
 	air_strike["duration_so_far_sec"] += delta
@@ -90,19 +90,20 @@ func _process(delta):
 		
 	if air_strike["on"] == true:
 		for player in get_players():  # range(1, num_players+1):
-			if player.get_vehicle_body().lifetime_so_far_sec > 5.0:
-				if randf()<0.005:
-					var weapon_instance = load("res://scenes/explosive.tscn").instance()
-					add_child(weapon_instance) 
-					var speed = player.get_vehicle_body().get_speed2()
-					var cbo = player.get_vehicle_body().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
-					weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0), 1, 0)  # player 0 = no player
-					weapon_instance.set_as_bomb()
-					weapon_instance.set_as_toplevel(true)
-					print("Launched bomb during airstrike at Player "+str(player.player_number))
-					print("Bomb name "+str(weapon_instance.name))
-					#$nuke_mushroom_cloud.emitting = true
-					#$nuke_mushroom_cloud2.emitting = true
+			if player.has_node("vehicle_body"):
+				if player.get_vehicle_body().lifetime_so_far_sec > 5.0:
+					if randf()<0.005:
+						var weapon_instance = load("res://scenes/explosive.tscn").instance()
+						add_child(weapon_instance) 
+						var speed = player.get_vehicle_body().get_speed2()
+						var cbo = player.get_vehicle_body().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
+						weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0), 1, 0)  # player 0 = no player
+						weapon_instance.set_as_bomb()
+						weapon_instance.set_as_toplevel(true)
+						print("Launched bomb during airstrike at Player "+str(player.player_number))
+						print("Bomb name "+str(weapon_instance.name))
+						#$nuke_mushroom_cloud.emitting = true
+						#$nuke_mushroom_cloud2.emitting = true
 
 	timer_1_sec -= delta
 	if Input.is_action_pressed("back"):
@@ -118,33 +119,38 @@ func update_player_hud():
 	for player_src in range(1, num_players+1):
 		for player_dst in range(1, num_players+1):
 			if player_src != player_dst:
-				var player_src_get_vehicle_body = get_player(player_src).get_vehicle_body()
-				if player_src_get_vehicle_body != null:  # eg if player has no lives left, not in the game any more
-					var player_src_camera = player_src_get_vehicle_body.get_camera()
-					var player_dst_hud_pos_loc = get_player(player_dst).get_vehicle_body().get_node("HUDPositionLocation")
-					var distance = player_src_get_vehicle_body.get_global_transform().origin.distance_to(player_dst_hud_pos_loc.global_transform.origin)
-					var player_dst_viewport_pos = player_src_camera.unproject_position ( player_dst_hud_pos_loc.get_global_transform().origin ) 
-					var label = get_player(player_src).get_canvaslayer().get_node("label_player_"+str(player_dst)+"_pos")
-					
-					var font_size = 10
-					if distance < 25.0:
-						font_size = 60
-					elif distance < 50.0:
-						font_size = 40
-					elif distance < 100.0:
-						font_size = 30
-					elif distance < 200.0:
-						font_size = 20
-					label.get("custom_fonts/font").set_size(font_size)
-					
-					
-					if player_src_camera.is_position_behind (player_dst_hud_pos_loc.get_global_transform().origin ):
-						label.visible = false
-					else:
-						label.visible = true
-						label.rect_position = player_dst_viewport_pos
-						label.rect_position.x -= font_size/2
-						label.rect_position.y -= 20 + (font_size/2)
+				var player_src_vehicle_body = get_player(player_src).get_vehicle_body()
+				if player_src_vehicle_body != null:  # eg if player has no lives left, not in the game any more
+					var player_src_camera = player_src_vehicle_body.get_camera()
+					var player_dst_vehicle_body = get_player(player_dst).get_vehicle_body()
+					if player_dst_vehicle_body != null:
+						var player_dst_hud_pos_loc = player_dst_vehicle_body.get_node("HUDPositionLocation")
+						var distance = player_src_vehicle_body.get_global_transform().origin.distance_to(player_dst_hud_pos_loc.global_transform.origin)
+						var player_dst_viewport_pos = player_src_camera.unproject_position ( player_dst_hud_pos_loc.get_global_transform().origin ) 
+						var label = get_player(player_src).get_canvaslayer().get_node("label_player_"+str(player_dst)+"_pos")
+						
+						var font_size = 10
+						if distance < 25.0:
+							font_size = 60
+						elif distance < 50.0:
+							font_size = 40
+						elif distance < 100.0:
+							font_size = 30
+						elif distance < 200.0:
+							font_size = 20
+						label.get("custom_fonts/font").set_size(font_size)
+						
+						
+						if player_src_camera.is_position_behind (player_dst_hud_pos_loc.get_global_transform().origin ):
+							label.visible = false
+						else:
+							label.visible = true
+							label.rect_position = player_dst_viewport_pos
+							label.rect_position.x -= font_size/2
+							label.rect_position.y -= 20 + (font_size/2)
+			else:
+				var label = get_player(player_src).get_canvaslayer().get_node("label_player_"+str(player_src)+"_pos")
+				label.visible = false  # don't show own label
 
 
 func check_game_over():

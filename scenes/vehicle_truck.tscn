@@ -6,7 +6,7 @@
 extents = Vector3( 0.587131, 0.479529, 0.427694 )
 
 [sub_resource type="BoxShape" id=2]
-extents = Vector3( 0.11591, 0.561637, 1.14637 )
+extents = Vector3( 0.11591, 0.676648, 1.14637 )
 
 [sub_resource type="BoxShape" id=4]
 extents = Vector3( 0.176298, 0.228164, 1.58223 )
@@ -18,82 +18,79 @@ extents = Vector3( 0.567086, 0.378622, 0.12034 )
 extents = Vector3( 0.708104, 0.0884775, 1.187 )
 
 [sub_resource type="BoxShape" id=6]
-extents = Vector3( 0.143327, 0.570217, 1.1556 )
+extents = Vector3( 0.143327, 0.678832, 1.1556 )
 
 [sub_resource type="BoxShape" id=7]
-extents = Vector3( 0.377516, 0.516093, 0.132347 )
+extents = Vector3( 0.377516, 0.647823, 0.132347 )
 
 [node name="vehicle_truck" type="Spatial"]
 
 [node name="mesh_instances" parent="." instance=ExtResource( 1 )]
-transform = Transform( 0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 1.36238 )
 
 [node name="positions" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.29549 )
 
 [node name="wheels" type="Spatial" parent="positions"]
 
 [node name="front_right" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.552262, 0.229166, -0.138977 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.57, 0.17, -0.200754 )
 
 [node name="front_left" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.511849, 0.246558, -0.149138 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.54, 0.17, -0.232359 )
 
 [node name="rear_right" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.598836, 0.206711, -2.26949 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.57, 0.17, -2.27156 )
 
 [node name="rear_left" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.576011, 0.23093, -2.25898 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.54, 0.17, -2.30392 )
 
 [node name="lights" type="Spatial" parent="positions"]
 
 [node name="headlight_left" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.404759, 0.411801, 0.616712 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3599, 0.411801, 0.680867 )
 
 [node name="headlight_right" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.353404, 0.423205, 0.584107 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.436708, 0.423205, 0.621681 )
 
 [node name="taillight_left" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.485795, 0.283407, -3.01697 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.485795, 0.369038, -3.0875 )
 
 [node name="taillight_right" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.411097, 0.427787, -2.97499 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.411097, 0.346806, -3.14833 )
 
 [node name="collision_shapes" type="Spatial" parent="positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.24496 )
 
 [node name="CollisionShape1" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 1, -0.0266449, 0.895352, 1.15743 )
+transform = Transform( 0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 1, -0.0266449, 0.814804, -0.161049 )
 shape = SubResource( 1 )
 
 [node name="CollisionShape2" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.600703, 1.07163, -0.533838 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.600703, 0.932452, -1.85503 )
 shape = SubResource( 2 )
 
 [node name="CollisionShape4" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0120257, 0.46969, -0.0837417 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0120257, 0.393475, -1.2445 )
 shape = SubResource( 4 )
 
 [node name="CollisionShape3" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 0.999999, 0, 0, 0, 0.99949, -0.0293179, 0, 0.0347078, 0.999491, 0, 0.566486, 1.72126 )
+transform = Transform( 0.999999, 0, 0, 0, 0.99949, -0.0293179, 0, 0.0347078, 0.999491, 0, 0.558393, 0.422125 )
 shape = SubResource( 3 )
 
 [node name="CollisionShape" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00370151, 1.76478, -0.528499 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00370151, 1.74036, -1.84358 )
 shape = SubResource( 5 )
 
 [node name="CollisionShape5" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.56354, 1.07237, -0.559337 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.56354, 0.929024, -1.847 )
 shape = SubResource( 6 )
 
 [node name="CollisionShape6" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.106, -1.54712 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.918251, -2.89725 )
 shape = SubResource( 7 )
 
 [node name="raycasts" type="Spatial" parent="positions"]
 
 [node name="RayCastCentreDown" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.362557, -1.13304 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.423134, -1.13304 )
 enabled = true
 collide_with_areas = true
 
@@ -103,29 +100,29 @@ enabled = true
 collide_with_areas = true
 
 [node name="RayCastForward" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.502828, 0.257077 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.502828, 0.280458 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
 [node name="RayCastBackward" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.524598, -2.77748 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.524598, -2.70979 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
 [node name="RayCastLeft" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.285423, 0.505677, -1.78257 )
+transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.614443, 0.505677, -1.78257 )
 enabled = true
 collide_with_areas = true
 
 [node name="RayCastRight" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.260324, 0.514269, -1.52418 )
+transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.624142, 0.514269, -1.52418 )
 enabled = true
 collide_with_areas = true
 
 [node name="RayCastFrontRamDamage1" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.2569, 0.899534 )
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.2569, 0.466697 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
@@ -135,6 +132,6 @@ enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
 [node name="RayCastFrontRamDamage3" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.345418, 0.381694 )
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.61952, 0.381694 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )

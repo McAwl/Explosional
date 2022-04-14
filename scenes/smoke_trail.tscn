@@ -30,17 +30,16 @@ albedo_color = Color( 0, 0, 0, 0.658824 )
 albedo_texture = ExtResource( 1 )
 
 [sub_resource type="QuadMesh" id=37]
+resource_local_to_scene = true
 material = SubResource( 36 )
 
-[node name="smoke_trail" type="Spatial"]
-script = ExtResource( 2 )
-
-[node name="Particles" type="Particles" parent="."]
+[node name="smoke_trail" type="Particles"]
 emitting = false
-amount = 5
+amount = 10
 lifetime = 2.0
 explosiveness = 0.12
 randomness = 0.37
 local_coords = false
 process_material = SubResource( 35 )
 draw_pass_1 = SubResource( 37 )
+script = ExtResource( 2 )

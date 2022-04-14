@@ -3,20 +3,21 @@
 [ext_resource path="res://scenes/vehicle_racer_mesh_import.tscn" type="PackedScene" id=1]
 
 [sub_resource type="BoxShape" id=1]
-extents = Vector3( 0.287922, 0.145429, 0.357514 )
+extents = Vector3( 0.287922, 0.116861, 0.357514 )
 
 [sub_resource type="BoxShape" id=2]
-extents = Vector3( 0.439144, 0.289678, 0.509411 )
+extents = Vector3( 0.439144, 0.211619, 0.509411 )
 
 [sub_resource type="BoxShape" id=3]
-extents = Vector3( 0.608962, 0.258612, 0.0557108 )
+extents = Vector3( 0.608962, 0.218293, 0.0557108 )
 
 [sub_resource type="BoxShape" id=4]
-extents = Vector3( 0.190676, 1.89587, 0.203124 )
+extents = Vector3( 0.190676, 1.62441, 0.203124 )
 
 [node name="vehicle_racer" type="Spatial"]
 
 [node name="mesh_instances" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 0, 0, 0 )
 
 [node name="positions" type="Spatial" parent="."]
 
@@ -26,105 +27,105 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.61183, 0.101055 
 [node name="lights" type="Spatial" parent="positions"]
 
 [node name="headlight_left" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.374551, 0.228098, 1.60999 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.374551, -0.0628664, 1.36272 )
 
 [node name="headlight_right" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42863, 0.24491, 1.65636 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42863, -0.15698, 1.416 )
 
 [node name="taillight_left" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.540159, 0.235356, -1.12094 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.328491, 0.0307562, -1.55653 )
 
 [node name="taillight_right" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295318, 0.345321, -1.23983 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295318, 0.110778, -1.50453 )
 
 [node name="collision_shapes" type="Spatial" parent="positions"]
 
 [node name="CollisionShape1" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 0.998771, -0.0495645, 0, 0.0495645, 0.998771, 0, 0.110992, 1.04141 )
+transform = Transform( 1, 0, 0, 0, 0.998771, -0.0495645, 0, 0.0495645, 0.998771, 0, -0.244865, 0.641009 )
 shape = SubResource( 1 )
 
 [node name="CollisionShape2" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0120257, 0.249696, 0.164227 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0120257, -0.126649, 0.164227 )
 shape = SubResource( 2 )
 
 [node name="CollisionShape3" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 0.847131, 0.531384, 0, -0.531384, 0.847131, 0, 0.19695, 1.45942 )
+transform = Transform( 1, 0, 0, 0, 0.847131, 0.531384, 0, -0.531384, 0.847131, 0, -0.144906, 1.17125 )
 shape = SubResource( 3 )
 
 [node name="CollisionShape4" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 2.27082, 0, 0, 0, 0.10892, 0, 0, 0, 1.09943, 0, 0.211665, -0.738806 )
+transform = Transform( 2.27082, 0, 0, 0, 0.10892, 0, 0, 0, 1.09943, 0, -0.133825, -0.931381 )
 shape = SubResource( 4 )
 
 [node name="wheels" type="Spatial" parent="positions"]
 
 [node name="front_right" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.549073, 0.0748416, 1.1766 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.549, -0.2, 0.83 )
 
 [node name="front_left" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.566444, 0.0802945, 1.1579 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.566, -0.2, 0.83 )
 
 [node name="rear_right" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.573497, 0.0815936, -0.646945 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.573, -0.2, -1 )
 
 [node name="rear_left" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.540967, 0.123464, -0.650963 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.541, -0.2, -1 )
 
 [node name="weapons" type="Spatial" parent="positions"]
 
 [node name="BombPosition" type="Position3D" parent="positions/weapons"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.61601 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.121163, -1.61601 )
 
 [node name="MissilePosition" type="Position3D" parent="positions/weapons"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.664037, 1.95647 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 1.1137 )
 
 [node name="RocketPosition" type="Position3D" parent="positions/weapons"]
-transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 1.04336, 2.07419 )
+transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.511921, 1.3363 )
 
 [node name="raycasts" type="Spatial" parent="positions"]
 
 [node name="RayCastCentreDown" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.027562, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.204935, 0 )
 enabled = true
 collide_with_areas = true
 
 [node name="RayCastBonnetUp" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.503939, 0.157628 )
+transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.259108, 0.157628 )
 enabled = true
 collide_with_areas = true
 
 [node name="RayCastForward" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.502828, 0.425463 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.17811, 0.425463 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
 [node name="RayCastBackward" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.40358, -0.759133 )
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.165351, -0.759133 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
 [node name="RayCastLeft" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.285423, 0.505677, -0.222668 )
+transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.338632, 0.278778, -0.222668 )
 enabled = true
 collide_with_areas = true
 
 [node name="RayCastRight" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.260324, 0.514269, -0.0225632 )
+transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.411788, 0.130265, -0.0225632 )
 enabled = true
 collide_with_areas = true
 
 [node name="RayCastFrontRamDamage1" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.2569, 1.07205 )
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.0164928, 1.07205 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
 [node name="RayCastFrontRamDamage2" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, 0.2569, 1.15978 )
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, -0.0964711, 1.15978 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
 [node name="RayCastFrontRamDamage3" type="RayCast" parent="positions/raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.345418, 0.88265 )
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.0509302, 0.88265 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )

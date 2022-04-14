@@ -94,7 +94,6 @@ func init(_pos=null, _player_number=null, _name=null):
 		
 	add_vehicle_mesh()
 	add_main_collision_shapes()
-	disable_vehicle_mesh_collision_shapes()
 	position_vehicle_lights()
 	position_wheels()
 	position_raycasts()
@@ -138,12 +137,10 @@ func dying_visual_effects():
 	
 
 func add_main_collision_shapes():
-	
 	# move the collisionshapes from the mesh import meta-data to the carbody
 	var cs = $vehicle_mesh/positions/collision_shapes
 	for ch in cs.get_children():
 		if ch is CollisionShape:
-			# ch.scale = $vehicle_mesh.scale
 			cs.remove_child(ch)
 			self.add_child(ch)
 
@@ -168,18 +165,6 @@ func add_vehicle_mesh():
 	var vehicle_mesh = load(vt["scene"]).instance()
 	vehicle_mesh.name = "vehicle_mesh"
 	add_child(vehicle_mesh)
-
-
-func disable_vehicle_mesh_collision_shapes(disable=true):
-	
-	# disable the individual meshinstance collisionshape - used for exploding the vehicle into pieces
-	for mi in $vehicle_mesh.get_node("mesh_instances").get_children():
-		if mi.has_node("CollisionShape"):
-			mi.get_node("CollisionShape").disabled = disable
-
-
-func enable_vehicle_mesh_collision_shapes():
-	disable_vehicle_mesh_collision_shapes(false)
 
 
 func position_vehicle_lights():
@@ -357,7 +342,7 @@ func _process(delta):
 		check_lights()
 		var ongoing_damage = check_ongoing_damage()
 		if ongoing_damage > 0:
-			damage(ongoing_damage)
+			add_damage(ongoing_damage)
 
 	timer_0_1_sec -= delta
 	if timer_0_1_sec <= 0.0:
@@ -436,7 +421,7 @@ func check_accel_damage(delta):
 			if rammed_another_car == false:
 				var damage = round(acceleration_calc_for_damage / accel_damage_threshold)
 				print("damage="+str(damage))
-				damage(damage)
+				add_damage(damage)
 			# else don't take any damage
 				
 			check_accel_damage_timer = 0.5
@@ -543,7 +528,7 @@ func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z):
 	return global_pos
 
 
-func damage(amount):
+func add_damage(amount):
 	total_damage += amount
 	if $ParticlesSmoke.emitting == false:
 		$ParticlesSmoke.emitting = true
@@ -561,16 +546,6 @@ func damage(amount):
 	if total_damage >= max_damage and vehicle_state != "dying":
 		print("damage: total_damage >= max_damage")
 		start_vehicle_dying()
-
-	get_player().set_label_player_name()
-	get_player().set_label_lives_left()
-	get_player().get_canvaslayer().get_node("health").value = max_damage-total_damage
-	if max_damage-total_damage >= 7.0:
-		get_player().get_canvaslayer().get_node("health").tint_progress = "#7e00ff00"  # green
-	elif max_damage-total_damage <= 3.0:
-		get_player().get_canvaslayer().get_node("health").tint_progress = "#7eff0000"  # red
-	else:
-		get_player().get_canvaslayer().get_node("health").tint_progress = "#7eff6c00"  # orange
 
 
 func get_player():
@@ -651,6 +626,7 @@ func set_all_lights(state):
 
 
 func set_global_transform_origin(pos):
+	#TODO might need to wait until this node enters the tree
 	global_transform.origin = pos
 
  
@@ -658,7 +634,7 @@ func _on_CarBody_body_entered(body):
 	# print("vehicle: _on_CarBody_body_entered name="+str(body.name))
 	if "Lava" in body.name:
 		# print("Taking max_damage damage")
-		damage(max_damage)
+		add_damage(max_damage)
 	if "Nuke" in body.name:
 		weapons[3].enabled = true
 		body.get_parent().disable()  # disable the nuke powerup on a timer
@@ -684,10 +660,7 @@ func start_vehicle_dying():
 		$crash_sound.playing = true
 		$Explosion/AnimationPlayer.play("explosion")
 		
-		$Wheel1.visible = false
-		$Wheel2.visible = false
-		$Wheel3.visible = false
-		$Wheel4.visible = false
+		remove_nodes_for_dying()
 		
 		dying_visual_effects()
 		
@@ -697,6 +670,34 @@ func start_vehicle_dying():
 		remove_main_collision_shapes()
 		explode_vehicle_meshes()
 		get_player().lives_left -= 1
+	else:
+		print("start_vehicle_dying(): error, shouldn't be here. vehicle_state="+str(vehicle_state))
+
+
+func remove_nodes_for_dying():
+	remove_wheels()
+	remove_raycasts()
+	remove_weapon_positions()
+
+
+func remove_wheels():
+	#remove the wheels: we'll then make the wheel meshes from the mesh import visible
+	for vw in get_children():
+		if vw is VehicleWheel:
+			vw.queue_free()
+
+
+func remove_raycasts():
+	#remove the raycasts
+	for rc in get_children():
+		if rc is RayCast:
+			rc.queue_free()
+
+
+func remove_weapon_positions():
+	$BombPosition.queue_free()
+	$MissilePosition.queue_free()
+	$RocketPosition.queue_free()
 
 
 func remove_main_collision_shapes():
@@ -704,22 +705,30 @@ func remove_main_collision_shapes():
 	for cs in get_children():
 		if cs is CollisionShape: 
 			cs.queue_free()  
-	# Add a small rigid body so we don't fall through the ground
+	# Add a small CollisionShape so we don't fall through the ground
 	var new_rigid_body = load("res://scenes/rigid_body.tscn").instance()
-	add_child(new_rigid_body)
+	var cs = new_rigid_body.get_node("CollisionShape")
+	new_rigid_body.remove_child(cs)
+	add_child(cs)
+	new_rigid_body.queue_free()
 
 
 func explode_vehicle_meshes():
-	for ch in get_children():
-		if ch.name == "vehicle_mesh":
-			ch.set_script(script_vehicle_detach_rigid_bodies)
-			ch.set_process(true)
-			ch.set_physics_process(true)
-			ch.detach_rigid_bodies(0.1, self.mass)
-			ch.name = "vehicle_parts_exploded"
-			# self.remove_child(ch)
-			# ch.set_as_toplevel(true)
-			$Explosion2.emitting = true
+	if self.has_node("vehicle_mesh"):
+		print("explode_vehicle_meshes(): self.has_node('vehicle_mesh')")
+		print("self.translation="+str(self.translation))
+		var vm = get_node("vehicle_mesh")
+		vm.set_script(script_vehicle_detach_rigid_bodies)
+		vm.set_process(true)
+		vm.set_physics_process(true)
+		vm.detach_rigid_bodies(0.1, self.mass, self.linear_velocity, self.global_transform.origin)
+		vm.name = "vehicle_parts_exploded"
+		# self.remove_child(ch)
+		# ch.set_as_toplevel(true)
+		$Explosion2.emitting = true
+		# move the exploded mesh to the player, as the vehicle_body will be deleted after the explosion
+		remove_child(vm)
+		get_player().add_child(vm)
 
 
 func dying_finished():

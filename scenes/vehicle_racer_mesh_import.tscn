@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=1]
 [ext_resource path="res://assets/models/vehicles/Bugatti(1).dae" type="PackedScene" id=2]
 [ext_resource path="res://assets/materials/vehicles/vehicle_headlight.tres" type="Material" id=3]
 [ext_resource path="res://assets/materials/vehicles/vehicle_taillight.tres" type="Material" id=4]
 [ext_resource path="res://assets/models/vehicles/glass.material" type="Material" id=5]
+[ext_resource path="res://assets/materials/vehicles/shiny_metal.tres" type="Material" id=6]
 
 [node name="vehicle_racer_mesh_import" instance=ExtResource( 2 )]
 transform = Transform( 0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 0, 0.287719, 0.324329 )
@@ -15,9 +16,11 @@ material/0 = ExtResource( 5 )
 
 [node name="chrome014" parent="." index="1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11365, 2.19973, 6.67809 )
+material/0 = ExtResource( 6 )
 
 [node name="Plane022" parent="." index="2"]
 transform = Transform( 1.93986, 0, 0, 0, 1.93986, 0, 0, 0, 1.93986, 0.0875876, 0.743798, -4.75248 )
+material/0 = ExtResource( 6 )
 
 [node name="Mesh003" parent="." index="3"]
 transform = Transform( 1.26481, 0, 0, 0, 1.26481, 0, 0, 0, 1.26481, 0.0541425, 0.413136, 0.857477 )

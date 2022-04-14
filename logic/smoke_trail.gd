@@ -1,4 +1,4 @@
-extends Spatial
+extends Particles
 
 
 # Declare member variables here. Examples:
@@ -8,7 +8,7 @@ extends Spatial
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	$Particles.emitting = true
+	emitting = true
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

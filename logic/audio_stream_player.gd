@@ -15,5 +15,5 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	var s = get_parent().get_speed()
-	pitch_scale = 1.0 + (s/10.0)
+	var s = get_parent().get_parent().get_parent().get_speed()
+	pitch_scale = 1.0 + fmod(s, 10.0)/10.0

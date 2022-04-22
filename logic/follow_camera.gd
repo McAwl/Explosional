@@ -44,14 +44,13 @@ func get_carbody():
 func _physics_process(delta):
 	
 	timer_0_5s -= delta
-		
-	#var target = get_parent().get_global_transform().origin  # parent is CameraBase pos behind and above the vehicle
 	
-	var target_forward = get_parent().get_node("CamTargetForward").get_global_transform()
-	var target_reverse = get_parent().get_node("CamTargetReverse").get_global_transform()
-	var cam_base_forward = get_parent().get_node("CamBaseForward").get_global_transform()
+	var cbts = get_parent().get_node("CameraBasesTargets")
+	var target_forward = cbts.get_node("CamTargetForward").get_global_transform()
+	var target_reverse = cbts.get_node("CamTargetReverse").get_global_transform()
+	var cam_base_forward = cbts.get_node("CamBaseForward").get_global_transform()
 	# var cam_base_forward2 = get_parent().get_node("CamBaseForward2").get_global_transform()
-	var cam_base_reverse = get_parent().get_node("CamBaseReverse").get_global_transform()
+	var cam_base_reverse = cbts.get_node("CamBaseReverse").get_global_transform()
 	
 	var linear_velocity = get_parent().get_parent().linear_velocity
 	var fwd_mps = get_parent().get_parent().transform.basis.xform_inv(linear_velocity).z
@@ -59,10 +58,10 @@ func _physics_process(delta):
 	
 	if abs(fwd_mps) < 0.5:
 		if abs(get_carbody().rotation_degrees[0]) > 90 or abs(get_carbody().rotation_degrees[2]) > 90:
-			target_forward = get_parent().get_node("CamTargetForward_UD").get_global_transform()
-			target_reverse = get_parent().get_node("CamTargetReverse_UD").get_global_transform()
-			cam_base_forward = get_parent().get_node("CamBaseForward_UD").get_global_transform()
-			cam_base_reverse = get_parent().get_node("CamBaseReverse_UD").get_global_transform()
+			target_forward = cbts.get_global_transform()
+			target_reverse = cbts.get_global_transform()
+			cam_base_forward = cbts.get_global_transform()
+			cam_base_reverse = cbts.get_global_transform()
 
 	# when launched by explosion, angular velocity is high and fwd_mps swaps from + to (and is also high)
 	# this stops the fast switching in this case - zooms out and stops rotating the camera so fast

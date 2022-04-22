@@ -124,7 +124,7 @@ func update_player_hud():
 					var player_src_camera = player_src_vehicle_body.get_camera()
 					var player_dst_vehicle_body = get_player(player_dst).get_vehicle_body()
 					if player_dst_vehicle_body != null:
-						var player_dst_hud_pos_loc = player_dst_vehicle_body.get_node("HUDPositionLocation")
+						var player_dst_hud_pos_loc = player_dst_vehicle_body.get_node("Positions").get_node("HUDPositionLocation")
 						var distance = player_src_vehicle_body.get_global_transform().origin.distance_to(player_dst_hud_pos_loc.global_transform.origin)
 						var player_dst_viewport_pos = player_src_camera.unproject_position ( player_dst_hud_pos_loc.get_global_transform().origin ) 
 						var label = get_player(player_src).get_canvaslayer().get_node("label_player_"+str(player_dst)+"_pos")

@@ -35,8 +35,8 @@ material = SubResource( 36 )
 
 [node name="smoke_trail" type="Particles"]
 emitting = false
-amount = 10
-lifetime = 2.0
+amount = 20
+lifetime = 4.48
 explosiveness = 0.12
 randomness = 0.37
 local_coords = false

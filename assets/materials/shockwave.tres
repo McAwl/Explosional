@@ -12,6 +12,6 @@ params_specular_mode = 4
 albedo_color = Color( 1, 1, 1, 0 )
 roughness = 0.48
 refraction_enabled = true
-refraction_scale = 0.5
+refraction_scale = 0.014463
 refraction_texture = SubResource( 2 )
 refraction_texture_channel = 0

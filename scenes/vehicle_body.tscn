@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://logic/vehicle_body.gd" type="Script" id=2]
@@ -11,15 +11,13 @@
 [ext_resource path="res://logic/follow_camera.gd" type="Script" id=9]
 [ext_resource path="res://scenes/flames.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/explosion.tscn" type="PackedScene" id=11]
-[ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=12]
+[ext_resource path="res://scenes/vehicle_racer_mesh_import.tscn" type="PackedScene" id=12]
+[ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=13]
+[ext_resource path="res://assets/materials/vehicles/tyre2.tres" type="Material" id=14]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
 absorbent = true
-
-[sub_resource type="CylinderMesh" id=38]
-material = ExtResource( 12 )
-radial_segments = 25
 
 [sub_resource type="SphereMesh" id=29]
 
@@ -29,7 +27,7 @@ radial_segments = 25
 offsets = PoolRealArray( 0, 0.242236, 0.732919, 0.993789, 1 )
 colors = PoolColorArray( 0.498039, 0.498039, 0.498039, 0, 0.513726, 0.513726, 0.513726, 0.533333, 0.509804, 0.509804, 0.509804, 0.54902, 0.505882, 0.505882, 0.505882, 0, 0.529412, 0.529412, 0.529412, 0 )
 
-[sub_resource type="GradientTexture" id=34]
+[sub_resource type="GradientTexture" id=46]
 gradient = SubResource( 33 )
 
 [sub_resource type="ParticlesMaterial" id=35]
@@ -40,9 +38,9 @@ initial_velocity = 1.0
 damping = 1.5
 damping_random = 0.35
 scale_random = 0.37
-color_ramp = SubResource( 34 )
+color_ramp = SubResource( 46 )
 
-[sub_resource type="SpatialMaterial" id=36]
+[sub_resource type="SpatialMaterial" id=47]
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
@@ -52,19 +50,19 @@ albedo_color = Color( 0, 0, 0, 0.658824 )
 albedo_texture = ExtResource( 4 )
 
 [sub_resource type="QuadMesh" id=37]
-material = SubResource( 36 )
+material = SubResource( 47 )
 
 [sub_resource type="Gradient" id=39]
 offsets = PoolRealArray( 0.00621118, 0.111801, 0.571429, 1 )
 colors = PoolColorArray( 0.941176, 0.854902, 0.0627451, 0.564706, 0.941176, 0.854902, 0.0627451, 1, 0.933333, 0.858824, 0.0666667, 0, 0.923637, 0.861156, 0.0685512, 0 )
 
-[sub_resource type="GradientTexture" id=40]
+[sub_resource type="GradientTexture" id=48]
 gradient = SubResource( 39 )
 
 [sub_resource type="Curve" id=41]
 _data = [ Vector2( 0, 0 ), 0.0, 0.114502, 0, 0, Vector2( 0.206522, 0.834091 ), 0.69697, 0.69697, 0, 0, Vector2( 0.983696, 0.963636 ), 0.163993, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=42]
+[sub_resource type="CurveTexture" id=49]
 curve = SubResource( 41 )
 
 [sub_resource type="ParticlesMaterial" id=43]
@@ -75,121 +73,33 @@ initial_velocity = 2.0
 damping = 5.0
 scale = 2.0
 scale_random = 0.67
-scale_curve = SubResource( 42 )
+scale_curve = SubResource( 49 )
 color = Color( 0.94902, 0.886275, 0.054902, 0.505882 )
-color_ramp = SubResource( 40 )
+color_ramp = SubResource( 48 )
 
-[sub_resource type="SpatialMaterial" id=46]
+[sub_resource type="SpatialMaterial" id=50]
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
 
 [sub_resource type="SphereMesh" id=45]
-material = SubResource( 46 )
+material = SubResource( 50 )
+
+[sub_resource type="CapsuleShape" id=51]
+radius = 0.308364
+height = 1.4103
+
+[sub_resource type="CylinderMesh" id=52]
 
 [node name="vehicle_body" type="VehicleBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
+mass = 500.0
 physics_material_override = SubResource( 1 )
 continuous_cd = true
 contacts_reported = 8
 contact_monitor = true
+can_sleep = false
 script = ExtResource( 2 )
-
-[node name="Wheel1" type="VehicleWheel" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.668, 0.115, 1.081 )
-use_as_traction = true
-use_as_steering = true
-wheel_roll_influence = 0.4
-wheel_radius = 0.25
-wheel_friction_slip = 1.0
-suspension_travel = 2.0
-suspension_stiffness = 40.0
-damping_compression = 0.88
-
-[node name="Wheel1" type="MeshInstance" parent="Wheel1"]
-_import_path = NodePath("BODY-vehicle/wheel1-wheel")
-transform = Transform( -1.09278e-08, 0.07, 0, -0.25, -3.0598e-09, 0, 0, 0, 0.25, -0.0717232, -0.01588, -0.00654483 )
-mesh = SubResource( 38 )
-material/0 = ExtResource( 12 )
-
-[node name="RayCastWheel1" type="RayCast" parent="Wheel1"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.262533, -0.0640855, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collide_with_areas = true
-
-[node name="Wheel2" type="VehicleWheel" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.574, 0.115, -0.783 )
-use_as_traction = true
-wheel_roll_influence = 0.4
-wheel_radius = 0.25
-wheel_friction_slip = 1.0
-suspension_travel = 2.0
-suspension_stiffness = 40.0
-damping_compression = 0.88
-
-[node name="RayCastWheel2" type="RayCast" parent="Wheel2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145094, -0.0793754, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
-
-[node name="Wheel2" type="MeshInstance" parent="Wheel2"]
-_import_path = NodePath("BODY-vehicle/wheel1-wheel")
-transform = Transform( -1.09278e-08, 0.07, 0, -0.25, -3.0598e-09, -1.44747e-26, -1.44747e-26, -1.77159e-34, 0.25, -0.0674814, 0, -0.00573966 )
-mesh = SubResource( 38 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 12 )
-
-[node name="Wheel3" type="VehicleWheel" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.573678, 0.115169, 1.10416 )
-use_as_traction = true
-use_as_steering = true
-wheel_roll_influence = 0.4
-wheel_radius = 0.25
-wheel_friction_slip = 1.0
-suspension_travel = 2.0
-suspension_stiffness = 40.0
-damping_compression = 0.88
-
-[node name="Wheel3" type="MeshInstance" parent="Wheel3"]
-_import_path = NodePath("BODY-vehicle/wheel1-wheel")
-transform = Transform( -1.06219e-08, 0.07, 1.92872e-18, -0.243, -3.0598e-09, 0.000173383, 0.000167857, 2.11362e-12, 0.251, 0.0664359, -0.000171244, -0.00344861 )
-mesh = SubResource( 38 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 12 )
-
-[node name="RayCastWheel3" type="RayCast" parent="Wheel3"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.220176, -0.0553332, 3.82662e-05 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
-
-[node name="Wheel4" type="VehicleWheel" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.573678, 0.115169, -0.783403 )
-use_as_traction = true
-wheel_roll_influence = 0.4
-wheel_radius = 0.25
-wheel_friction_slip = 1.0
-suspension_travel = 2.0
-suspension_stiffness = 40.0
-damping_compression = 0.88
-
-[node name="RayCastWheel4" type="RayCast" parent="Wheel4"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
-
-[node name="Wheel4" type="MeshInstance" parent="Wheel4"]
-_import_path = NodePath("BODY-vehicle/wheel1-wheel")
-transform = Transform( -1.09278e-08, 0.07, 0, -0.25, -3.0598e-09, 0, 0, 0, 0.25, 0.0689202, -0.000168979, -0.000782341 )
-mesh = SubResource( 38 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 12 )
 
 [node name="CameraBase" type="Spatial" parent="."]
 transform = Transform( 0.998172, 0, 0.0604388, 0, 1, 0, -0.0604388, 0, 0.998172, -0.0157232, 1.97449, -2.31076 )
@@ -294,13 +204,6 @@ mesh = SubResource( 29 )
 skeleton = NodePath("../../Camera")
 material/0 = null
 
-[node name="MeshInstance5" type="MeshInstance" parent="CameraBase"]
-transform = Transform( -0.0998921, -0.00112154, 0.00450581, -2.05513e-09, 0.0970391, 0.024154, -0.00464329, 0.0241279, -0.0969345, 0, 0, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../Camera")
-material/0 = null
-
 [node name="Camera" type="Camera" parent="CameraBase"]
 transform = Transform( -0.998921, -0.0112154, 0.0450581, -2.11161e-08, 0.970391, 0.24154, -0.0464329, 0.241279, -0.969344, -0.138464, 0.281651, -1.96593 )
 current = true
@@ -316,18 +219,6 @@ transform = Transform( 0.1, 0, -2.32831e-10, 5.82077e-11, 0.1, 0, 0, 0, 0.1, -1.
 visible = false
 mesh = SubResource( 30 )
 material/0 = null
-
-[node name="BombPosition" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.311431, -1.48442 )
-
-[node name="HUDPositionLocation" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.32512, 0.101055 )
-
-[node name="MissilePosition" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.05756, 1.20003 )
-
-[node name="RocketPosition" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.499051, 1.69379 )
 
 [node name="LavaLight1" type="OmniLight" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.97684, -0.387057 )
@@ -487,3 +378,207 @@ stream = ExtResource( 3 )
 volume_db = -9.087
 pitch_scale = 0.56
 script = ExtResource( 7 )
+
+[node name="mesh_instances" parent="." instance=ExtResource( 12 )]
+transform = Transform( 0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 0, 0.261803, 0.200855 )
+
+[node name="CollisionShape5" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.464657, 0.0674643 )
+shape = SubResource( 51 )
+
+[node name="positions" type="Spatial" parent="."]
+
+[node name="HUDPositionLocation" type="Position3D" parent="positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.32512, 0.101055 )
+
+[node name="weapons" type="Spatial" parent="positions"]
+
+[node name="BombPosition" type="Position3D" parent="positions/weapons"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.11065 )
+
+[node name="MissilePosition" type="Position3D" parent="positions/weapons"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 1.1137 )
+
+[node name="RocketPosition" type="Position3D" parent="positions/weapons"]
+transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.511921, 1.3363 )
+
+[node name="raycasts" type="Spatial" parent="."]
+
+[node name="RayCastCentreDown" type="RayCast" parent="raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.204935, 0 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastBonnetUp" type="RayCast" parent="raycasts"]
+transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.259108, 0.157628 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastForward" type="RayCast" parent="raycasts"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.17811, 0.425463 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="RayCastBackward" type="RayCast" parent="raycasts"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.165351, -0.759133 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="RayCastLeft" type="RayCast" parent="raycasts"]
+transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.338632, 0.278778, -0.222668 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastRight" type="RayCast" parent="raycasts"]
+transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.411788, 0.130265, -0.0225632 )
+enabled = true
+collide_with_areas = true
+
+[node name="RayCastFrontRamDamage1" type="RayCast" parent="raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.0164928, 1.07205 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+
+[node name="RayCastFrontRamDamage2" type="RayCast" parent="raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, -0.0964711, 1.15978 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+
+[node name="RayCastFrontRamDamage3" type="RayCast" parent="raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.0509302, 0.88265 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+
+[node name="Wheel1" type="VehicleWheel" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.668, 0.0423193, 1.03496 )
+engine_force = 40.0
+use_as_traction = true
+use_as_steering = true
+wheel_roll_influence = 0.0
+wheel_radius = 0.23
+wheel_friction_slip = 0.7
+suspension_travel = 2.0
+suspension_stiffness = 40.0
+damping_compression = 0.88
+
+[node name="RayCastWheel1" type="RayCast" parent="Wheel1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.262533, -0.0640855, 0 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collide_with_areas = true
+
+[node name="Wheel1b" type="MeshInstance" parent="Wheel1"]
+transform = Transform( -0.00331974, 0.0999896, 0, -0.229976, -0.00144336, 0, 0, 0, 0.23, -0.124151, -0.0105667, 0.00509012 )
+mesh = SubResource( 52 )
+material/0 = ExtResource( 13 )
+
+[node name="Wheel1" type="CSGTorus" parent="Wheel1"]
+transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, -0.0924779, 0, 0 )
+visible = false
+inner_radius = 0.1
+outer_radius = 0.23
+sides = 16
+ring_sides = 12
+material = ExtResource( 14 )
+
+[node name="Wheel2" type="VehicleWheel" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.574, 0.0544683, -0.775592 )
+engine_force = 40.0
+use_as_traction = true
+wheel_roll_influence = 0.0
+wheel_radius = 0.23
+wheel_friction_slip = 0.7
+suspension_travel = 2.0
+suspension_stiffness = 40.0
+damping_compression = 0.88
+
+[node name="RayCastWheel2" type="RayCast" parent="Wheel2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145094, -0.0793754, 0 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="Wheel2b" type="MeshInstance" parent="Wheel2"]
+transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0, 0, 0, 0.23, -0.0301507, 0.0100485, 0.0114711 )
+mesh = SubResource( 52 )
+skeleton = NodePath("../../Wheel1")
+material/0 = ExtResource( 13 )
+
+[node name="Wheel2" type="CSGTorus" parent="Wheel2"]
+transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00348157, 0.00229442, -0.00175607 )
+visible = false
+inner_radius = 0.1
+outer_radius = 0.23
+sides = 16
+ring_sides = 12
+material = ExtResource( 14 )
+
+[node name="Wheel3" type="VehicleWheel" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.573678, 0.0546373, 1.02918 )
+engine_force = 40.0
+use_as_traction = true
+use_as_steering = true
+wheel_roll_influence = 0.0
+wheel_radius = 0.23
+wheel_friction_slip = 0.7
+suspension_travel = 2.0
+suspension_stiffness = 40.0
+damping_compression = 0.88
+
+[node name="RayCastWheel3" type="RayCast" parent="Wheel3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.220176, -0.0553332, 3.82662e-05 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="Wheel3b" type="MeshInstance" parent="Wheel3"]
+transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0.000158877, 0.000158875, 3.44299e-07, 0.23, 0.0204801, 0.000714689, 0.0108781 )
+mesh = SubResource( 52 )
+skeleton = NodePath("../../Wheel1")
+material/0 = ExtResource( 13 )
+
+[node name="Wheel3" type="CSGTorus" parent="Wheel3"]
+transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0.000690771, -0.000690771, 6.03891e-11, 1, 0.0165168, -0.012314, 0.00578821 )
+visible = false
+inner_radius = 0.1
+outer_radius = 0.23
+sides = 16
+ring_sides = 12
+material = ExtResource( 14 )
+
+[node name="Wheel4" type="VehicleWheel" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.573678, 0.0546373, -0.783403 )
+engine_force = 40.0
+use_as_traction = true
+wheel_roll_influence = 0.0
+wheel_radius = 0.23
+wheel_friction_slip = 0.7
+suspension_travel = 2.0
+suspension_stiffness = 40.0
+damping_compression = 0.88
+
+[node name="RayCastWheel4" type="RayCast" parent="Wheel4"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="Wheel4b" type="MeshInstance" parent="Wheel4"]
+transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0, 0, 0, 0.23, 0.0479246, -0.00331897, 0.00355035 )
+mesh = SubResource( 52 )
+skeleton = NodePath("../../Wheel1")
+material/0 = ExtResource( 13 )
+
+[node name="Wheel4" type="CSGTorus" parent="Wheel4"]
+transform = Transform( -4.21324e-08, -1.92775, 0, 0.963876, -8.42647e-08, 0, 0, 0, 0.963876, 0.00150269, -0.00304165, 0.00200105 )
+visible = false
+inner_radius = 0.1
+outer_radius = 0.23
+sides = 16
+ring_sides = 12
+material = ExtResource( 14 )

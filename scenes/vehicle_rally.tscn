@@ -34,16 +34,16 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.538225, 0.0779589, -0.804992
 [node name="lights" type="Spatial" parent="positions"]
 
 [node name="headlight_left" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.427979, 0.189389, 1.52689 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.427979, 0.189389, 1.56649 )
 
 [node name="headlight_right" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.414962, 0.181236, 1.5214 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.414962, 0.181236, 1.67866 )
 
 [node name="taillight_left" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.469822, 0.315639, -1.50607 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.469822, 0.315639, -1.62882 )
 
 [node name="taillight_right" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.376909, 0.307621, -1.51029 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.376909, 0.307621, -1.57092 )
 
 [node name="collision_shapes" type="Spatial" parent="positions"]
 

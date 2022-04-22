@@ -13,6 +13,7 @@ var print_timer = 0.0
 
 export var engine_force_value = ENGINE_FORCE_VALUE_DEFAULT  #40
 var player_number
+var num_players
 var camera
 export var speed = 0.0
 var speed_low_limit = 5
@@ -46,36 +47,43 @@ var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"suspension_stiffness": 100.0, 
 									"suspension_travel": 0.1,
 									"radius_wheel_m": 0.35,
-									"four_wheel_drive": true}, 
+									"four_wheel_drive": true,
+									"wheel_friction_slip": 1000.0}, 
 						"racer": {"scene": "res://scenes/vehicle_racer.tscn", 
-									"engine_force_value": 130, 
+									"engine_force_value": 200, 
 									"mass_kg/100": 70.0, 
 									"suspension_stiffness": 75.0, 
 									"suspension_travel": 0.5,
 									"radius_wheel_m": 0.25,
-									"four_wheel_drive": false}, 
+									"four_wheel_drive": false,
+									"wheel_friction_slip": 500.0}, 
 						"rally": {"scene": "res://scenes/vehicle_rally.tscn", 
 									"engine_force_value": 35, 
-									"mass_kg/100": 50.0, 
+									"mass_kg/100": 500.0, 
 									"suspension_stiffness": 40.0, 
 									"suspension_travel": 2.0,
 									"radius_wheel_m": 0.4,
-									"four_wheel_drive": true}, 
+									"four_wheel_drive": true,
+									"wheel_friction_slip": 500.0}, 
 						"truck": {"scene": "res://scenes/vehicle_truck.tscn", 
 									"engine_force_value": 60, 
 									"mass_kg/100": 300.0, 
 									"suspension_stiffness": 90.0, 
 									"suspension_travel":0.2,
 									"radius_wheel_m": 0.4,
-									"four_wheel_drive": false}}
+									"four_wheel_drive": false,
+									"wheel_friction_slip": 10.0}}
 var vehicle_type = "racer"
 var vehicle_state = 'alive'  # 'alive', 'dying', 'dead'
+var set_pos = false
+var pos
+
 
 func _ready():
 	pass
 
 
-func init(_pos=null, _player_number=null, _name=null):
+func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	
 	print("vehicle_body:init()")
 	
@@ -89,19 +97,25 @@ func init(_pos=null, _player_number=null, _name=null):
 	if _name != null:
 		name = _name
 	
-	if _pos != null:
-		set_global_transform_origin(_pos)
+	pos = _pos
+	num_players = _num_players
+	print("vehicle_body() init: num_players="+str(num_players))
 		
-	add_vehicle_mesh()
-	add_main_collision_shapes()
-	position_vehicle_lights()
-	position_wheels()
-	position_raycasts()
+	# add_vehicle_mesh()
+	# add_main_collision_shapes()
+	# position_vehicle_lights()
+	# add_wheel_meshes()
+	# position_raycasts()
 	configure_vehicle_properties()
 	init_visual_effects()
 	
 	total_damage = 0.0
 	check_accel_damage_timer = 4.0
+	init_camera(num_players)
+
+
+func init_camera(_num_players):
+	$CameraBase/Camera.number_of_players = num_players
 
 
 func init_visual_effects():
@@ -155,11 +169,11 @@ func add_vehicle_mesh():
 	if player_number == 1:
 		vehicle_type = "racer"
 	elif player_number == 2:
-		vehicle_type = "rally"
+		vehicle_type = "racer"  # "rally"
 	elif player_number == 3:
-		vehicle_type = "tank"
+		vehicle_type = "racer"  # "tank"
 	elif player_number == 4:
-		vehicle_type = "truck"
+		vehicle_type = "racer"  # "truck"
 		
 	var vt = vehicle_types[vehicle_type]
 	var vehicle_mesh = load(vt["scene"]).instance()
@@ -176,20 +190,9 @@ func position_vehicle_lights():
 	$Lights/LightBackLeft.transform.origin = pvl.get_node("taillight_left").transform.origin
 
 
-func position_wheels():
-	
-	var wh = $vehicle_mesh/positions/wheels
-	
-	# reposition the wheels 
-	$Wheel1.transform.origin = wh.get_node("front_left").transform.origin
-	$Wheel2.transform.origin = wh.get_node("rear_left").transform.origin
-	$Wheel3.transform.origin = wh.get_node("front_right").transform.origin
-	$Wheel4.transform.origin = wh.get_node("rear_right").transform.origin
-
-
 func position_raycasts():
 	# move the raycasts
-	var rs = $vehicle_mesh/positions/raycasts
+	var rs = $vehicle_mesh/raycasts
 	for rc in rs.get_children():
 		if rc is RayCast:
 			rs.remove_child(rc)
@@ -201,7 +204,7 @@ func configure_vehicle_properties():
 	engine_force_value = vehicle_types[vehicle_type]["engine_force_value"]
 	mass = vehicle_types[vehicle_type]["mass_kg/100"]
 	var vt = vehicle_types[vehicle_type]
-	set_wheel_parameters(vt["suspension_stiffness"], vt["suspension_travel"], vt["radius_wheel_m"])
+	set_wheel_parameters(vt["suspension_stiffness"], vt["suspension_travel"], vt["radius_wheel_m"],  vt["wheel_friction_slip"])
 	if vehicle_types[vehicle_type]["four_wheel_drive"] == true:
 		get_wheel(1).use_as_traction = true  # front
 		get_wheel(3).use_as_traction = true  # front
@@ -214,12 +217,13 @@ func configure_vehicle_properties():
 		get_wheel(4).use_as_traction = false
 
 
-func set_wheel_parameters(ss, st, rw):
+func set_wheel_parameters(ss, st, rw, wfs):
 	for wheel_num in [1,2,3,4]:
 		get_wheel(wheel_num).suspension_stiffness = ss
 		get_wheel(wheel_num).suspension_travel = st
 		get_wheel(wheel_num).wheel_radius = rw
 		get_wheel(wheel_num).get_node("Wheel"+str(wheel_num)).scale = Vector3(rw, rw/4.0, rw)
+		# get_wheel(wheel_num).wheel_friction_slip =wfs
 	 
 
 func re_parent_to_main_scene(child):
@@ -297,7 +301,7 @@ func get_raycast(wheel_num):
 
 func check_ongoing_damage():
 	if total_damage < max_damage:
-		for raycast in [get_raycast(1), get_raycast(2), get_raycast(3), get_raycast(4), $RayCastCentreDown, $RayCastBonnetUp, $RayCastForward, $RayCastBackward, $RayCastLeft, $RayCastRight]:
+		for raycast in [get_raycast(1), get_raycast(2), get_raycast(3), get_raycast(4), $raycasts/RayCastCentreDown, $raycasts/RayCastBonnetUp, $raycasts/RayCastForward, $raycasts/RayCastBackward, $raycasts/RayCastLeft, $raycasts/RayCastRight]:
 			if check_raycast("lava", raycast) == true:
 				# print("Player taking damage 1")
 				return 1
@@ -318,6 +322,9 @@ func check_raycast(substring_in_hit_name, raycast):
 
 func _process(delta):
 	
+	if set_pos == false:
+		set_global_transform_origin()
+
 	print_timer += delta
 		
 	if global_transform.origin.y < -50.0:
@@ -403,18 +410,18 @@ func check_accel_damage(delta):
 		if acceleration_calc_for_damage > accel_damage_threshold:
 			var rammed_another_car = false
 			$crash_sound.playing = true
-			if $RayCastFrontRamDamage1.is_colliding():
-				var collider_name = $RayCastFrontRamDamage1.get_collider().name
+			if $raycasts/RayCastFrontRamDamage1.is_colliding():
+				var collider_name = $raycasts/RayCastFrontRamDamage1.get_collider().name
 				if "car" in collider_name.to_lower():
 					print("player "+str(player_number)+" rammed "+str(collider_name))
 					rammed_another_car = true
-			if $RayCastFrontRamDamage2.is_colliding():
-				var collider_name = $RayCastFrontRamDamage2.get_collider().name
+			if $raycasts/RayCastFrontRamDamage2.is_colliding():
+				var collider_name = $raycasts/RayCastFrontRamDamage2.get_collider().name
 				if "car" in collider_name.to_lower():
 					print("player "+str(player_number)+" rammed "+str(collider_name))
 					rammed_another_car = true
-			if $RayCastFrontRamDamage3.is_colliding():
-				var collider_name = $RayCastFrontRamDamage3.get_collider().name
+			if $raycasts/RayCastFrontRamDamage3.is_colliding():
+				var collider_name = $raycasts/RayCastFrontRamDamage3.get_collider().name
 				if "car" in collider_name.to_lower():
 					print("player "+str(player_number)+" rammed "+str(collider_name))
 					rammed_another_car = true
@@ -534,6 +541,7 @@ func add_damage(amount):
 		$ParticlesSmoke.emitting = true
 		$Flames3D.emitting = true
 	$ParticlesSmoke.amount *= 2  # increase engine smoke indicating damage
+	$Flames3D.visible = true
 	$Flames3D.amount *= 4
 	if $Flames3D.amount > 100:
 		$Flames3D.amount = 100
@@ -567,7 +575,7 @@ func fire_mine_or_nuke():
 	weapons[weapon_select]["active"] = true
 	if weapon_select == 0:
 		weapon_instance.set_as_mine()
-		weapon_instance.activate($BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
+		weapon_instance.activate($positions/weapons/BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
 	elif weapon_select == 3:
 		# print("activating nuke")
 		weapon_instance.set_as_nuke()
@@ -593,9 +601,9 @@ func fire_missile_or_rocket():
 	weapon_instance.angular_velocity = angular_velocity
 	if weapon_select == 2:
 		weapon_instance.velocity[1] += 1.0   # angle it up a bit
-		weapon_instance.global_transform.origin = $MissilePosition.global_transform.origin
+		weapon_instance.global_transform.origin = $positions/weapons/MissilePosition.global_transform.origin
 	else:
-		weapon_instance.global_transform.origin = $RocketPosition.global_transform.origin
+		weapon_instance.global_transform.origin = $positions/weapons/RocketPosition.global_transform.origin
 		weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
 	if weapon_select == 1:
 		weapon_instance.activate(player_number, false)  # homing = false
@@ -625,11 +633,14 @@ func set_all_lights(state):
 	$Lights/LightUnder5.visible = state
 
 
-func set_global_transform_origin(pos):
-	#TODO might need to wait until this node enters the tree
-	global_transform.origin = pos
+func set_global_transform_origin():
+	if is_inside_tree() and set_pos == false:
+		global_transform.origin = pos
+		set_pos = true
+	else:
+		print("_process(): warning: vehicle not is_inside_tree()")
 
- 
+
 func _on_CarBody_body_entered(body):
 	# print("vehicle: _on_CarBody_body_entered name="+str(body.name))
 	if "Lava" in body.name:
@@ -677,7 +688,7 @@ func start_vehicle_dying():
 func remove_nodes_for_dying():
 	remove_wheels()
 	remove_raycasts()
-	remove_weapon_positions()
+	# remove_weapon_positions()
 
 
 func remove_wheels():
@@ -692,12 +703,6 @@ func remove_raycasts():
 	for rc in get_children():
 		if rc is RayCast:
 			rc.queue_free()
-
-
-func remove_weapon_positions():
-	$BombPosition.queue_free()
-	$MissilePosition.queue_free()
-	$RocketPosition.queue_free()
 
 
 func remove_main_collision_shapes():

@@ -28,9 +28,9 @@ func _ready():
 	var spawn_points = get_spawn_points()
 	for player_number in range(1, num_players+1):
 		var player_instance = load("res://scenes/player.tscn").instance()
+		add_child(player_instance)
 		var pos = spawn_points[player_number-1].global_transform.origin
 		player_instance.init(player_number, num_players, players[player_number]["name"], pos)
-		add_child(player_instance)
 		player_instance.get_vehicle_body().weapons[3].enabled = test_nuke
 		player_instance.get_vehicle_body().weapons[3].test_mode = test_nuke
 	var anim_time = start_clock_hrs + 12.0

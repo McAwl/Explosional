@@ -374,7 +374,7 @@ surfaces/0 = {
 }
 
 [node name="vehicle_truck_mesh_import" instance=ExtResource( 1 )]
-transform = Transform( 0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0 )
+transform = Transform( 0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, -0.344882, 1.41686 )
 
 [node name="Cylinder_2" type="MeshInstance" parent="." index="0"]
 transform = Transform( -2.56208e-10, 0.01, 8.29584e-11, -0.00586135, -8.29584e-11, -0.00810213, -0.00810213, -2.56208e-10, 0.00586135, 0.245133, 1.3834, 0.209331 )

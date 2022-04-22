@@ -41,13 +41,14 @@ func _process(delta):
 		set_label_player_name()
 		set_label_lives_left()
 		var health_display = get_canvaslayer().get_node("health")
-		health_display.value = get_vehicle_body().max_damage-get_vehicle_body().total_damage
-		if get_vehicle_body().max_damage-get_vehicle_body().total_damage >= 7.0:
-			health_display.tint_progress = "#7e00ff00"  # green
-		elif get_vehicle_body().max_damage-get_vehicle_body().total_damage <= 3.0:
-			health_display.tint_progress = "#7eff0000"  # red
-		else:
-			health_display.tint_progress = "#7eff6c00"  # orange
+		if get_vehicle_body() != null:
+			health_display.value = get_vehicle_body().max_damage-get_vehicle_body().total_damage
+			if get_vehicle_body().max_damage-get_vehicle_body().total_damage >= 7.0:
+				health_display.tint_progress = "#7e00ff00"  # green
+			elif get_vehicle_body().max_damage-get_vehicle_body().total_damage <= 3.0:
+				health_display.tint_progress = "#7eff0000"  # red
+			else:
+				health_display.tint_progress = "#7eff6c00"  # orange
 
 
 func init(_player_number, _number_players, _player_name, pos=null):
@@ -57,6 +58,8 @@ func init(_player_number, _number_players, _player_name, pos=null):
 	
 	player_number = _player_number
 	player_name = _player_name
+	name = "Player"+str(_player_number)
+	print("player init(): number_players="+str(number_players))
 	
 	# Add a vehicle to the player
 	init_vehicle_body(pos)
@@ -64,8 +67,7 @@ func init(_player_number, _number_players, _player_name, pos=null):
 	set_label_player_name()
 	set_label_lives_left()
 
-	name = "Player"+str(_player_number)
-	# print("_number_players="+str(_number_players))
+	
 	if number_players == 1:
 		set_viewport_container_one(_player_number)
 	elif number_players == 2:
@@ -80,9 +82,9 @@ func init(_player_number, _number_players, _player_name, pos=null):
 
 func init_vehicle_body(pos):
 	var vehicle_body = load("res://scenes/vehicle_body.tscn").instance()
-	# vehicle_body = load("res://scenes/trailer_truck.tscn").instance()
-	vehicle_body.init(pos, player_number, "vehicle_body")
 	get_viewport().add_child(vehicle_body)
+	# vehicle_body = load("res://scenes/trailer_truck.tscn").instance()
+	vehicle_body.init(pos, player_number, "vehicle_body", number_players)
 	
 
 func set_viewport_container_one(_player_number):

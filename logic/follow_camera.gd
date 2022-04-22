@@ -11,6 +11,7 @@ var FOLLOW_SPEED = 2.0  # set 0-1: 0.1=slow follow 0.9=fast follow
 var lerp_val = 0.5
 var target
 var timer_0_5s = 0.5
+var number_of_players
 
 func _ready():
 	# environment = get_node("/root/TownScene/Viewport/WorldEnvironment")
@@ -32,7 +33,10 @@ func _ready():
 	# This detaches the camera transform from the parent spatial node.
 	set_as_toplevel(true)
 
-
+func init(_number_of_players):
+	number_of_players= _number_of_players
+	
+	
 func get_carbody():
 	return get_parent().get_parent()
 
@@ -64,13 +68,14 @@ func _physics_process(delta):
 	# this stops the fast switching in this case - zooms out and stops rotating the camera so fast
 	# fix is to follow the target faster, but follow the base more slowly
 	var follow_speed_multiplier = 1.0 + 0.01*angular_velocity.length()*abs(fwd_mps)
+	var modify_by_num_players = 1.0 + ((float(number_of_players)-1.0)/2.0)  # keep closer to the vehicle the smaller the viewport is (number of players)
 	
 	if fwd_mps >= -2.0:
-		global_transform = global_transform.interpolate_with(cam_base_forward, delta * FOLLOW_SPEED / follow_speed_multiplier)
-		target = target.interpolate_with(target_forward, delta * FOLLOW_SPEED * follow_speed_multiplier)
+		global_transform = global_transform.interpolate_with(cam_base_forward, modify_by_num_players * delta * FOLLOW_SPEED / follow_speed_multiplier)
+		target = target.interpolate_with(target_forward, modify_by_num_players * delta * FOLLOW_SPEED * follow_speed_multiplier)
 	else:
-		global_transform = global_transform.interpolate_with(cam_base_reverse, delta * FOLLOW_SPEED / follow_speed_multiplier)
-		target = target.interpolate_with(target_reverse, delta * FOLLOW_SPEED * follow_speed_multiplier)
+		global_transform = global_transform.interpolate_with(cam_base_reverse, modify_by_num_players * delta * FOLLOW_SPEED / follow_speed_multiplier)
+		target = target.interpolate_with(target_reverse, modify_by_num_players * delta * FOLLOW_SPEED * follow_speed_multiplier)
 	
 	if timer_0_5s < 0:
 		timer_0_5s = 0.5

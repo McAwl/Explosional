@@ -1,23 +1,19 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/vehicle_racer_mesh_import.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=2]
 
-[sub_resource type="BoxShape" id=1]
-extents = Vector3( 0.287922, 0.116861, 0.357514 )
+[sub_resource type="CapsuleShape" id=5]
+radius = 0.308364
+height = 1.4103
 
-[sub_resource type="BoxShape" id=2]
-extents = Vector3( 0.439144, 0.211619, 0.509411 )
-
-[sub_resource type="BoxShape" id=3]
-extents = Vector3( 0.608962, 0.218293, 0.0557108 )
-
-[sub_resource type="BoxShape" id=4]
-extents = Vector3( 0.190676, 1.62441, 0.203124 )
+[sub_resource type="CylinderMesh" id=6]
 
 [node name="vehicle_racer" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.120034, -0.102302 )
 
 [node name="mesh_instances" parent="." instance=ExtResource( 1 )]
-transform = Transform( 0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 0, 0, 0 )
+transform = Transform( 0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 0, 0.261803, 0.200855 )
 
 [node name="positions" type="Spatial" parent="."]
 
@@ -27,53 +23,27 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.61183, 0.101055 
 [node name="lights" type="Spatial" parent="positions"]
 
 [node name="headlight_left" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.374551, -0.0628664, 1.36272 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.374551, -0.0628664, 1.55922 )
 
 [node name="headlight_right" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42863, -0.15698, 1.416 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42863, -0.15698, 1.55276 )
 
 [node name="taillight_left" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.328491, 0.0307562, -1.55653 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.328491, 0.0729683, -1.57952 )
 
 [node name="taillight_right" type="Spatial" parent="positions/lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295318, 0.110778, -1.50453 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295318, 0.110778, -1.58029 )
 
 [node name="collision_shapes" type="Spatial" parent="positions"]
 
-[node name="CollisionShape1" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 0.998771, -0.0495645, 0, 0.0495645, 0.998771, 0, -0.244865, 0.641009 )
-shape = SubResource( 1 )
-
-[node name="CollisionShape2" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0120257, -0.126649, 0.164227 )
-shape = SubResource( 2 )
-
-[node name="CollisionShape3" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 1, 0, 0, 0, 0.847131, 0.531384, 0, -0.531384, 0.847131, 0, -0.144906, 1.17125 )
-shape = SubResource( 3 )
-
-[node name="CollisionShape4" type="CollisionShape" parent="positions/collision_shapes"]
-transform = Transform( 2.27082, 0, 0, 0, 0.10892, 0, 0, 0, 1.09943, 0, -0.133825, -0.931381 )
-shape = SubResource( 4 )
-
-[node name="wheels" type="Spatial" parent="positions"]
-
-[node name="front_right" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.549, -0.2, 0.83 )
-
-[node name="front_left" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.566, -0.2, 0.83 )
-
-[node name="rear_right" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.573, -0.2, -1 )
-
-[node name="rear_left" type="Spatial" parent="positions/wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.541, -0.2, -1 )
+[node name="CollisionShape5" type="CollisionShape" parent="positions/collision_shapes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.464657, 0.0674643 )
+shape = SubResource( 5 )
 
 [node name="weapons" type="Spatial" parent="positions"]
 
 [node name="BombPosition" type="Position3D" parent="positions/weapons"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.121163, -1.61601 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.11065 )
 
 [node name="MissilePosition" type="Position3D" parent="positions/weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 1.1137 )
@@ -81,51 +51,154 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 1.1137 )
 [node name="RocketPosition" type="Position3D" parent="positions/weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.511921, 1.3363 )
 
-[node name="raycasts" type="Spatial" parent="positions"]
+[node name="raycasts" type="Spatial" parent="."]
 
-[node name="RayCastCentreDown" type="RayCast" parent="positions/raycasts"]
+[node name="RayCastCentreDown" type="RayCast" parent="raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.204935, 0 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastBonnetUp" type="RayCast" parent="positions/raycasts"]
+[node name="RayCastBonnetUp" type="RayCast" parent="raycasts"]
 transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.259108, 0.157628 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastForward" type="RayCast" parent="positions/raycasts"]
+[node name="RayCastForward" type="RayCast" parent="raycasts"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.17811, 0.425463 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="RayCastBackward" type="RayCast" parent="positions/raycasts"]
+[node name="RayCastBackward" type="RayCast" parent="raycasts"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.165351, -0.759133 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="RayCastLeft" type="RayCast" parent="positions/raycasts"]
+[node name="RayCastLeft" type="RayCast" parent="raycasts"]
 transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.338632, 0.278778, -0.222668 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastRight" type="RayCast" parent="positions/raycasts"]
+[node name="RayCastRight" type="RayCast" parent="raycasts"]
 transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.411788, 0.130265, -0.0225632 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastFrontRamDamage1" type="RayCast" parent="positions/raycasts"]
+[node name="RayCastFrontRamDamage1" type="RayCast" parent="raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.0164928, 1.07205 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastFrontRamDamage2" type="RayCast" parent="positions/raycasts"]
+[node name="RayCastFrontRamDamage2" type="RayCast" parent="raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, -0.0964711, 1.15978 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastFrontRamDamage3" type="RayCast" parent="positions/raycasts"]
+[node name="RayCastFrontRamDamage3" type="RayCast" parent="raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.0509302, 0.88265 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
+
+[node name="Wheels" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0949407, 0 )
+
+[node name="Wheel1" type="VehicleWheel" parent="Wheels"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.668, 0.13726, 1.03496 )
+engine_force = 40.0
+use_as_traction = true
+use_as_steering = true
+wheel_roll_influence = 0.0
+wheel_radius = 0.23
+wheel_friction_slip = 10.0
+suspension_travel = 2.0
+suspension_stiffness = 40.0
+damping_compression = 0.88
+
+[node name="RayCastWheel1" type="RayCast" parent="Wheels/Wheel1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.262533, -0.0640855, 0 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collide_with_areas = true
+
+[node name="Wheel1" type="MeshInstance" parent="Wheels/Wheel1"]
+transform = Transform( -0.00331974, 0.0999896, 0, -0.229976, -0.00144336, 0, 0, 0, 0.23, -0.124151, -0.0105667, 0.00509012 )
+visible = false
+mesh = SubResource( 6 )
+material/0 = ExtResource( 2 )
+
+[node name="Wheel2" type="VehicleWheel" parent="Wheels"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.574, 0.149409, -0.772321 )
+engine_force = 40.0
+use_as_traction = true
+wheel_roll_influence = 0.0
+wheel_radius = 0.23
+wheel_friction_slip = 10.0
+suspension_travel = 2.0
+suspension_stiffness = 40.0
+damping_compression = 0.88
+
+[node name="RayCastWheel2" type="RayCast" parent="Wheels/Wheel2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145094, -0.0793754, 0 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="Wheel2" type="MeshInstance" parent="Wheels/Wheel2"]
+transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0, 0, 0, 0.23, -0.0301507, 0.0100485, 0.0114711 )
+visible = false
+mesh = SubResource( 6 )
+skeleton = NodePath("../../Wheel1")
+material/0 = ExtResource( 2 )
+
+[node name="Wheel3" type="VehicleWheel" parent="Wheels"]
+transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.573678, 0.149578, 1.02918 )
+engine_force = 40.0
+use_as_traction = true
+use_as_steering = true
+wheel_roll_influence = 0.0
+wheel_radius = 0.23
+wheel_friction_slip = 10.0
+suspension_travel = 2.0
+suspension_stiffness = 40.0
+damping_compression = 0.88
+
+[node name="RayCastWheel3" type="RayCast" parent="Wheels/Wheel3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.220176, -0.0553332, 3.82662e-05 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="Wheel3" type="MeshInstance" parent="Wheels/Wheel3"]
+transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0.000158877, 0.000158875, 3.44299e-07, 0.23, 0.0204801, 0.000714682, 0.0108781 )
+visible = false
+mesh = SubResource( 6 )
+skeleton = NodePath("../../Wheel1")
+material/0 = ExtResource( 2 )
+
+[node name="Wheel4" type="VehicleWheel" parent="Wheels"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.573678, 0.149578, -0.783403 )
+engine_force = 40.0
+use_as_traction = true
+wheel_roll_influence = 0.0
+wheel_radius = 0.23
+wheel_friction_slip = 10.0
+suspension_travel = 2.0
+suspension_stiffness = 40.0
+damping_compression = 0.88
+
+[node name="RayCastWheel4" type="RayCast" parent="Wheels/Wheel4"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="Wheel4" type="MeshInstance" parent="Wheels/Wheel4"]
+transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0, 0, 0, 0.23, 0.0479246, -0.00331897, 0.00355035 )
+visible = false
+mesh = SubResource( 6 )
+skeleton = NodePath("../../Wheel1")
+material/0 = ExtResource( 2 )

@@ -70,7 +70,7 @@ func _physics_process(_delta):
 		#print("num_meshes="+str(num_meshes))
 		for ch in self.get_node("mesh_instances").get_children():
 			if ch is MeshInstance:
-				ch.visible = true  # some meshes start off invisible, light tyres
+				ch.visible = true  # some meshes start off invisible
 				ch.translation = Vector3(0.0, 0.0, 0.0)  # start them all at 0,0,0?
 				var ms = ch.scale
 				ch.scale = mis*ms  # mesh_instances is scaled, as are some meshes within - so need to apply both

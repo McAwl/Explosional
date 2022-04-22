@@ -100,12 +100,39 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	pos = _pos
 	num_players = _num_players
 	print("vehicle_body() init: num_players="+str(num_players))
-		
-	# add_vehicle_mesh()
-	# add_main_collision_shapes()
-	# position_vehicle_lights()
-	# add_wheel_meshes()
-	# position_raycasts()
+	
+	# Depending on vehicle type, we look for its nodes
+	
+	var vehicle_type_node = get_node(str(vehicle_type))
+	
+	for ch in vehicle_type_node.get_children():
+		if ch.name in ["Raycasts", "Positions", "MeshInstances", "Lights"]:
+			var ctm = vehicle_type_node.get_node(ch.name)
+			vehicle_type_node.remove_child(ctm)
+			add_child(ctm)
+		elif ch.name in ["Wheels", "CollisionShapes"]:  # mvoe from 2 levels down
+			var ctm = vehicle_type_node.get_node(ch.name)
+			for ctmch in ctm.get_children():
+				ctm.remove_child(ctmch)
+				add_child(ctmch)
+		elif ch.name == "CameraBasesTargets":
+			var ctm = vehicle_type_node.get_node(ch.name)
+			vehicle_type_node.remove_child(ctm)
+			$CameraBase.add_child(ctm)
+		elif ch.name == "Effects":
+			var ctm = vehicle_type_node.get_node(ch.name)
+			for ctmch in ctm.get_children():
+				if ctmch.name in ["Damage", "Audio", "Shield"]:
+					for ctmchch in ctmch.get_children():
+						ctmch.remove_child(ctmchch)
+						$Effects.get_node(ctmch.name).add_child(ctmchch)
+
+	# Delete all the vehicle type nodes
+	for ch in get_children():
+		if ch is Spatial:
+			if ch.name in vehicle_types.keys():
+				ch.queue_free()
+	
 	configure_vehicle_properties()
 	init_visual_effects()
 	
@@ -122,81 +149,32 @@ func init_visual_effects():
 	
 	lights_disabled = false
 	
-	$ParticlesSmoke.emitting = false
-	$ParticlesSmoke.amount = 1
-	$ParticlesSmoke.visible = false
+	$Effects/Damage/ParticlesSmoke.emitting = false
+	$Effects/Damage/ParticlesSmoke.amount = 1
+	$Effects/Damage/ParticlesSmoke.visible = false
 	
-	$Lights_onfire/OnFireLight1.light_energy = 0.0
-	$Lights_onfire/OnFireLight2.light_energy = 0.0
-	$Lights_onfire/OnFireLight4.light_energy = 0.0
-	$Lights_onfire/OnFireLight5.light_energy = 0.0
+	$Effects/Damage/Lights_onfire/OnFireLight1.light_energy = 0.0
+	$Effects/Damage/Lights_onfire/OnFireLight2.light_energy = 0.0
+	$Effects/Damage/Lights_onfire/OnFireLight4.light_energy = 0.0
+	$Effects/Damage/Lights_onfire/OnFireLight5.light_energy = 0.0
 	
-	$Explosion2Light.visible = false
-	$Explosion2Light.visible = false
+	$Effects/Damage/Explosion2Light.visible = false
+	$Effects/Damage/Explosion2Light.visible = false
 	
-	$Explosion.visible = false
+	$Effects/Damage/Explosion.visible = false
 	
-	$Flames3D.emitting = false
-	$Flames3D.amount = 1
-	$Flames3D.visible = false
+	$Effects/Damage/Flames3D.emitting = false
+	$Effects/Damage/Flames3D.amount = 1
+	$Effects/Damage/Flames3D.visible = false
 
 	lights_off()
 	
-	$Shield.visible = false
+	$Effects/Shield.visible = false
 
 
 func dying_visual_effects():
 	init_visual_effects()
 	$Explosion2Light.visible = true # exept this one
-	
-
-func add_main_collision_shapes():
-	# move the collisionshapes from the mesh import meta-data to the carbody
-	var cs = $vehicle_mesh/positions/collision_shapes
-	for ch in cs.get_children():
-		if ch is CollisionShape:
-			cs.remove_child(ch)
-			self.add_child(ch)
-
-
-func add_vehicle_mesh():
-	
-	# delete any old vehicle mesh from previous life it at all
-	for ch in get_children():
-		if "vehicle_mesh" in ch.name:
-			ch.queue_free()
-
-	if player_number == 1:
-		vehicle_type = "racer"
-	elif player_number == 2:
-		vehicle_type = "racer"  # "rally"
-	elif player_number == 3:
-		vehicle_type = "racer"  # "tank"
-	elif player_number == 4:
-		vehicle_type = "racer"  # "truck"
-		
-	var vt = vehicle_types[vehicle_type]
-	var vehicle_mesh = load(vt["scene"]).instance()
-	vehicle_mesh.name = "vehicle_mesh"
-	add_child(vehicle_mesh)
-
-
-func position_vehicle_lights():
-	
-	var pvl = $vehicle_mesh.get_node("positions").get_node("lights")
-	$Lights/LightFrontRight.transform.origin = pvl.get_node("headlight_right").transform.origin
-	$Lights/LightFrontLeft.transform.origin = pvl.get_node("headlight_left").transform.origin
-	$Lights/LightBackRight.transform.origin = pvl.get_node("taillight_right").transform.origin
-	$Lights/LightBackLeft.transform.origin = pvl.get_node("taillight_left").transform.origin
-
-
-func position_raycasts():
-	# move the raycasts
-	var rs = $vehicle_mesh/raycasts
-	for rc in rs.get_children():
-		if rc is RayCast:
-			rs.remove_child(rc)
-			self.add_child(rc)
 
 
 func configure_vehicle_properties():
@@ -249,33 +227,12 @@ func flicker_lights():
 	# damaged lights, and also the lights due to damage
 	# small chance of turning off when damaged. slightly bigger chance of turing back on (should flicker)
 	
-	if rng.randf() < 0.1:
-		$Lights_onfire/OnFireLight1.light_energy = 0.0
-	else:
-		$Lights_onfire/OnFireLight1.light_energy = total_damage/10.0
-		
-	if rng.randf() < 0.1:
-		$Lights_onfire/OnFireLight2.light_energy = 0.0
-	else:
-		$Lights_onfire/OnFireLight2.light_energy = total_damage/10.0
-		
-	if rng.randf() < 0.1:
-		$Lights_onfire/OnFireLight3.light_energy = 0.0
-	else:
-		$Lights_onfire/OnFireLight3.light_energy = total_damage/10.0
-		
-	if rng.randf() < 0.1:
-		$Lights_onfire/OnFireLight4.light_energy = 0.0
-	else:
-		$Lights_onfire/OnFireLight4.light_energy = total_damage/10.0
-		
-	if rng.randf() < 0.1:
-		$Lights_onfire/OnFireLight5.light_energy = 0.0
-	else:
-		$Lights_onfire/OnFireLight5.light_energy = total_damage/10.0
-	
-	
-	
+	for l in [1, 2, 3, 4, 5]:
+		if rng.randf() < 0.1:
+			$Effects/Damage/Lights_onfire.get_node("OnFireLight"+str(l)).light_energy = 0.0
+		else:
+			$Effects/Damage/Lights_onfire.get_node("OnFireLight"+str(l)).light_energy = total_damage/10.0
+
 	if rng.randf() < 0.1*total_damage/max_damage:
 		# print("damaged LightFrontLeft flickering off")
 		$Lights/LightFrontLeft.spot_range = 10  #100.0*(max_damage-total_damage)
@@ -301,11 +258,11 @@ func get_raycast(wheel_num):
 
 func check_ongoing_damage():
 	if total_damage < max_damage:
-		for raycast in [get_raycast(1), get_raycast(2), get_raycast(3), get_raycast(4), $raycasts/RayCastCentreDown, $raycasts/RayCastBonnetUp, $raycasts/RayCastForward, $raycasts/RayCastBackward, $raycasts/RayCastLeft, $raycasts/RayCastRight]:
+		for raycast in [get_raycast(1), get_raycast(2), get_raycast(3), get_raycast(4), $Raycasts/RayCastCentreDown, $Raycasts/RayCastBonnetUp, $Raycasts/RayCastForward, $Raycasts/RayCastBackward, $Raycasts/RayCastLeft, $Raycasts/RayCastRight]:
 			if check_raycast("lava", raycast) == true:
 				# print("Player taking damage 1")
 				return 1
-		$LavaLight1.visible = false
+		$Effects/Damage/LavaLight1.visible = false
 		return 0
 	return 0
 
@@ -315,7 +272,7 @@ func check_raycast(substring_in_hit_name, raycast):
 		if raycast.is_colliding():
 			if substring_in_hit_name.to_lower() in raycast.get_collider().name.to_lower():
 				# print("Vehicle raycast "+str(raycast.name)+": collision matches substring: "+str(substring_in_hit_name))
-				$LavaLight1.visible = true
+				$Effects/Damage/LavaLight1.visible = true
 				return true
 	return false
 
@@ -409,19 +366,19 @@ func check_accel_damage(delta):
 		# print("accel_damage_threshold="+str(accel_damage_threshold))
 		if acceleration_calc_for_damage > accel_damage_threshold:
 			var rammed_another_car = false
-			$crash_sound.playing = true
-			if $raycasts/RayCastFrontRamDamage1.is_colliding():
-				var collider_name = $raycasts/RayCastFrontRamDamage1.get_collider().name
+			$Effects/Audio/crash_sound.playing = true
+			if $Raycasts/RayCastFrontRamDamage1.is_colliding():
+				var collider_name = $Raycasts/RayCastFrontRamDamage1.get_collider().name
 				if "car" in collider_name.to_lower():
 					print("player "+str(player_number)+" rammed "+str(collider_name))
 					rammed_another_car = true
-			if $raycasts/RayCastFrontRamDamage2.is_colliding():
-				var collider_name = $raycasts/RayCastFrontRamDamage2.get_collider().name
+			if $Raycasts/RayCastFrontRamDamage2.is_colliding():
+				var collider_name = $Raycasts/RayCastFrontRamDamage2.get_collider().name
 				if "car" in collider_name.to_lower():
 					print("player "+str(player_number)+" rammed "+str(collider_name))
 					rammed_another_car = true
-			if $raycasts/RayCastFrontRamDamage3.is_colliding():
-				var collider_name = $raycasts/RayCastFrontRamDamage3.get_collider().name
+			if $Raycasts/RayCastFrontRamDamage3.is_colliding():
+				var collider_name = $Raycasts/RayCastFrontRamDamage3.get_collider().name
 				if "car" in collider_name.to_lower():
 					print("player "+str(player_number)+" rammed "+str(collider_name))
 					rammed_another_car = true
@@ -575,7 +532,7 @@ func fire_mine_or_nuke():
 	weapons[weapon_select]["active"] = true
 	if weapon_select == 0:
 		weapon_instance.set_as_mine()
-		weapon_instance.activate($positions/weapons/BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
+		weapon_instance.activate($Positions/weapons/BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
 	elif weapon_select == 3:
 		# print("activating nuke")
 		weapon_instance.set_as_nuke()
@@ -601,9 +558,9 @@ func fire_missile_or_rocket():
 	weapon_instance.angular_velocity = angular_velocity
 	if weapon_select == 2:
 		weapon_instance.velocity[1] += 1.0   # angle it up a bit
-		weapon_instance.global_transform.origin = $positions/weapons/MissilePosition.global_transform.origin
+		weapon_instance.global_transform.origin = $Positions/weapons/MissilePosition.global_transform.origin
 	else:
-		weapon_instance.global_transform.origin = $positions/weapons/RocketPosition.global_transform.origin
+		weapon_instance.global_transform.origin = $Positions/weapons/RocketPosition.global_transform.origin
 		weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
 	if weapon_select == 1:
 		weapon_instance.activate(player_number, false)  # homing = false

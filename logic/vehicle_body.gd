@@ -39,40 +39,40 @@ var lights_disabled = false
 var acceleration_calc_for_damage = 0.0
 var vel_max = 0.0
 var check_accel_damage_timer = 3.0
-var accel_damage_threshold = 100.0
+var accel_damage_threshold = 50.0
 var explosion2_timer = 0.2
 var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn", 
 									"engine_force_value": 40, 
 									"mass_kg/100": 200.0, 
 									"suspension_stiffness": 100.0, 
 									"suspension_travel": 0.1,
-									"radius_wheel_m": 0.35,
 									"four_wheel_drive": true,
-									"wheel_friction_slip": 1000.0}, 
+									"wheel_friction_slip": 2.0,
+									"wheel_roll_influence": 0.9}, 
 						"racer": {"scene": "res://scenes/vehicle_racer.tscn", 
 									"engine_force_value": 200, 
 									"mass_kg/100": 70.0, 
 									"suspension_stiffness": 75.0, 
 									"suspension_travel": 0.5,
-									"radius_wheel_m": 0.25,
 									"four_wheel_drive": false,
-									"wheel_friction_slip": 500.0}, 
+									"wheel_friction_slip": 1.0,
+									"wheel_roll_influence": 0.9}, 
 						"rally": {"scene": "res://scenes/vehicle_rally.tscn", 
-									"engine_force_value": 35, 
-									"mass_kg/100": 500.0, 
+									"engine_force_value": 150, 
+									"mass_kg/100": 50.0, 
 									"suspension_stiffness": 40.0, 
 									"suspension_travel": 2.0,
-									"radius_wheel_m": 0.4,
 									"four_wheel_drive": true,
-									"wheel_friction_slip": 500.0}, 
+									"wheel_friction_slip": 1.5,
+									"wheel_roll_influence": 0.9}, 
 						"truck": {"scene": "res://scenes/vehicle_truck.tscn", 
 									"engine_force_value": 60, 
 									"mass_kg/100": 300.0, 
 									"suspension_stiffness": 90.0, 
 									"suspension_travel":0.2,
-									"radius_wheel_m": 0.4,
 									"four_wheel_drive": false,
-									"wheel_friction_slip": 10.0}}
+									"wheel_friction_slip":1.0,
+									"wheel_roll_influence": 0.9}}
 var vehicle_type = "racer"
 var vehicle_state = 'alive'  # 'alive', 'dying', 'dead'
 var set_pos = false
@@ -101,37 +101,44 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	num_players = _num_players
 	print("vehicle_body() init: num_players="+str(num_players))
 	
+	if player_number == 1:
+		vehicle_type = "racer"
+	elif player_number == 2:
+		vehicle_type = "rally"
+	elif player_number == 3:
+		vehicle_type = "racer"  # TODO add tank
+	elif player_number == 4:
+		vehicle_type = "racer"  # TODO add truck
+	else:
+		vehicle_type = "racer"
+	
+	print("vehicle_type="+str(vehicle_type))
 	# Depending on vehicle type, we look for its nodes
-	
-	var vehicle_type_node = get_node(str(vehicle_type))
-	
+	var vehicle_type_node = $VehicleTypes.get_node(str(vehicle_type))
+	# move all the vehicle type nodes to the correct location
 	for ch in vehicle_type_node.get_children():
-		if ch.name in ["Raycasts", "Positions", "MeshInstances", "Lights"]:
-			var ctm = vehicle_type_node.get_node(ch.name)
-			vehicle_type_node.remove_child(ctm)
-			add_child(ctm)
-		elif ch.name in ["Wheels", "CollisionShapes"]:  # mvoe from 2 levels down
-			var ctm = vehicle_type_node.get_node(ch.name)
-			for ctmch in ctm.get_children():
-				ctm.remove_child(ctmch)
-				add_child(ctmch)
-		elif ch.name == "CameraBasesTargets":
-			var ctm = vehicle_type_node.get_node(ch.name)
-			vehicle_type_node.remove_child(ctm)
-			$CameraBase.add_child(ctm)
-		elif ch.name == "Effects":
-			var ctm = vehicle_type_node.get_node(ch.name)
-			for ctmch in ctm.get_children():
-				if ctmch.name in ["Damage", "Audio", "Shield"]:
+		# var ctm = ch.get_node(ch.name)
+		if ch.name in ["Raycasts", "Positions", "MeshInstances", "Lights", "CameraBasesTargets"]:  # move from 1 level down
+			vehicle_type_node.remove_child(ch)
+			if ch.name == "CameraBasesTargets":
+				# print("ctm="+str(ctm))
+				print("ch="+str(ch))
+				$CameraBase.add_child(ch)
+			else:
+				add_child(ch)
+		elif ch.name in ["Wheels", "CollisionShapes", "Effects"]:  # move from 2 levels down
+			for ctmch in ch.get_children():
+				if ch.name in ["Wheels", "CollisionShapes"]:
+					ch.remove_child(ctmch)
+					add_child(ctmch)
+				elif ch.name in ["Effects"]:
 					for ctmchch in ctmch.get_children():
 						ctmch.remove_child(ctmchch)
 						$Effects.get_node(ctmch.name).add_child(ctmchch)
 
 	# Delete all the vehicle type nodes
-	for ch in get_children():
-		if ch is Spatial:
-			if ch.name in vehicle_types.keys():
-				ch.queue_free()
+	if has_node("VehicleTypes"):
+		get_node("VehicleTypes").queue_free()
 	
 	configure_vehicle_properties()
 	init_visual_effects()
@@ -153,12 +160,12 @@ func init_visual_effects():
 	$Effects/Damage/ParticlesSmoke.amount = 1
 	$Effects/Damage/ParticlesSmoke.visible = false
 	
+	$Effects/Damage/Lights_onfire/OnFireLight1.visible = true
 	$Effects/Damage/Lights_onfire/OnFireLight1.light_energy = 0.0
 	$Effects/Damage/Lights_onfire/OnFireLight2.light_energy = 0.0
 	$Effects/Damage/Lights_onfire/OnFireLight4.light_energy = 0.0
 	$Effects/Damage/Lights_onfire/OnFireLight5.light_energy = 0.0
 	
-	$Effects/Damage/Explosion2Light.visible = false
 	$Effects/Damage/Explosion2Light.visible = false
 	
 	$Effects/Damage/Explosion.visible = false
@@ -174,7 +181,7 @@ func init_visual_effects():
 
 func dying_visual_effects():
 	init_visual_effects()
-	$Explosion2Light.visible = true # exept this one
+	$Effects/Damage/Explosion2Light.visible = true # exept this one
 
 
 func configure_vehicle_properties():
@@ -182,7 +189,7 @@ func configure_vehicle_properties():
 	engine_force_value = vehicle_types[vehicle_type]["engine_force_value"]
 	mass = vehicle_types[vehicle_type]["mass_kg/100"]
 	var vt = vehicle_types[vehicle_type]
-	set_wheel_parameters(vt["suspension_stiffness"], vt["suspension_travel"], vt["radius_wheel_m"],  vt["wheel_friction_slip"])
+	set_wheel_parameters(vt["suspension_stiffness"], vt["suspension_travel"], vt["wheel_friction_slip"])
 	if vehicle_types[vehicle_type]["four_wheel_drive"] == true:
 		get_wheel(1).use_as_traction = true  # front
 		get_wheel(3).use_as_traction = true  # front
@@ -195,13 +202,17 @@ func configure_vehicle_properties():
 		get_wheel(4).use_as_traction = false
 
 
-func set_wheel_parameters(ss, st, rw, wfs):
+func set_wheel_parameters(ss, st, _wfs):
 	for wheel_num in [1,2,3,4]:
+		for ch in get_children():
+			if ch is MeshInstance:
+				ch.visible = false
+			if ch is CSGTorus:
+				ch.visible = true
+		get_wheel(wheel_num).visible = true
 		get_wheel(wheel_num).suspension_stiffness = ss
 		get_wheel(wheel_num).suspension_travel = st
-		get_wheel(wheel_num).wheel_radius = rw
-		get_wheel(wheel_num).get_node("Wheel"+str(wheel_num)).scale = Vector3(rw, rw/4.0, rw)
-		# get_wheel(wheel_num).wheel_friction_slip =wfs
+		get_wheel(wheel_num).wheel_friction_slip = _wfs
 	 
 
 func re_parent_to_main_scene(child):
@@ -290,7 +301,7 @@ func _process(delta):
 	if vehicle_state == "dying":
 		explosion2_timer -= delta
 		if explosion2_timer <= 0.0:
-			$Explosion2Light.visible = false
+			$Effects/Damage/Explosion2Light.visible = false
 			explosion2_timer = 0.2
 		if dying_finished():
 			vehicle_state = "dead"
@@ -494,18 +505,18 @@ func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z):
 
 func add_damage(amount):
 	total_damage += amount
-	if $ParticlesSmoke.emitting == false:
-		$ParticlesSmoke.emitting = true
-		$Flames3D.emitting = true
-	$ParticlesSmoke.amount *= 2  # increase engine smoke indicating damage
-	$Flames3D.visible = true
-	$Flames3D.amount *= 4
-	if $Flames3D.amount > 100:
-		$Flames3D.amount = 100
-	$Lights_onfire/OnFireLight1.light_energy = total_damage/20.0
-	$Lights_onfire/OnFireLight2.light_energy = total_damage/20.0
-	$Lights_onfire/OnFireLight4.light_energy = total_damage/20.0
-	$Lights_onfire/OnFireLight5.light_energy = total_damage/20.0
+	if $Effects/Damage/ParticlesSmoke.emitting == false:
+		$Effects/Damage/ParticlesSmoke.emitting = true
+		$Effects/Damage/Flames3D.emitting = true
+	$Effects/Damage/ParticlesSmoke.amount *= 2  # increase engine smoke indicating damage
+	$Effects/Damage/Flames3D.visible = true
+	$Effects/Damage/Flames3D.amount *= 4
+	if $Effects/Damage/Flames3D.amount > 100:
+		$Effects/Damage/Flames3D.amount = 100
+	$Effects/Damage/Lights_onfire/OnFireLight1.light_energy = total_damage/20.0
+	$Effects/Damage/Lights_onfire/OnFireLight2.light_energy = total_damage/20.0
+	$Effects/Damage/Lights_onfire/OnFireLight4.light_energy = total_damage/20.0
+	$Effects/Damage/Lights_onfire/OnFireLight5.light_energy = total_damage/20.0
 	engine_force_value *= 0.75  # decrease engine power to indicate damage
 
 	if total_damage >= max_damage and vehicle_state != "dying":
@@ -625,8 +636,8 @@ func start_vehicle_dying():
 		print("start_vehicle_dying(): total_damage >= max_damage")
 		total_damage = max_damage
 		
-		$crash_sound.playing = true
-		$Explosion/AnimationPlayer.play("explosion")
+		$Effects/Audio/crash_sound.playing = true
+		$Effects/Damage/Explosion/AnimationPlayer.play("explosion")
 		
 		remove_nodes_for_dying()
 		
@@ -695,7 +706,7 @@ func explode_vehicle_meshes():
 
 func dying_finished():
 	if vehicle_state == "dying":
-		if $Explosion/AnimationPlayer.current_animation != "explosion":
-			print("vehicle_state == 'dying' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Explosion/AnimationPlayer.current_animation))
+		if $Effects/Damage/Explosion/AnimationPlayer.current_animation != "explosion":
+			print("vehicle_state == 'dying' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Effects/Damage/Explosion/AnimationPlayer.current_animation))
 			return true
 	return false

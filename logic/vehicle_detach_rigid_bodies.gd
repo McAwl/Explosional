@@ -36,8 +36,8 @@ func _process(delta):
 						print("av_lifetime_sec: vehicle mesh rigid body "+str(rb.name)+"queue_free")
 						rb.queue_free()
 
-func av_lifetime(av_lifetime_sec):
-	av_lifetime_sec
+func av_lifetime(_av_lifetime_sec):
+	pass  # av_lifetime_sec
 
 
 func detach_rigid_bodies(force_, total_mass_, _linear_velocity, _origin):
@@ -75,7 +75,7 @@ func _physics_process(_delta):
 				var ms = ch.scale
 				ch.scale = mis*ms  # mesh_instances is scaled, as are some meshes within - so need to apply both
 				var mesh_volume = ch.get_aabb().get_area ()
-				var aabb_size = ch.get_aabb().size
+				# var aabb_size = ch.get_aabb().size
 				var aabb_position = ch.get_aabb().position
 				var aabb_end = ch.get_aabb().end
 				# print("type of mesh piece "+str(ch.type))

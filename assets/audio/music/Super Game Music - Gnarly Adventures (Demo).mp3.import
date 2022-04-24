@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Super Game Music - Gnarly Adventures (Demo).mp3-c178b7c4191a38af195ae106e2c0356f.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/music/Super Game Music - Gnarly Adventures (Demo).mp3"
+dest_files=[ "res://.import/Super Game Music - Gnarly Adventures (Demo).mp3-c178b7c4191a38af195ae106e2c0356f.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

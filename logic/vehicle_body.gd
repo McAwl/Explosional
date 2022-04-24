@@ -42,35 +42,35 @@ var check_accel_damage_timer = 3.0
 var accel_damage_threshold = 50.0
 var explosion2_timer = 0.2
 var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn", 
-									"engine_force_value": 40, 
+									"engine_force_value": 200,  # keep this at 1x mass
 									"mass_kg/100": 200.0, 
 									"suspension_stiffness": 100.0, 
 									"suspension_travel": 0.1,
-									"four_wheel_drive": true,
+									"all_wheel_drive": true,
 									"wheel_friction_slip": 2.0,
 									"wheel_roll_influence": 0.9}, 
 						"racer": {"scene": "res://scenes/vehicle_racer.tscn", 
-									"engine_force_value": 200, 
+									"engine_force_value": 210,  # keep this at 3x mass
 									"mass_kg/100": 70.0, 
 									"suspension_stiffness": 75.0, 
 									"suspension_travel": 0.5,
-									"four_wheel_drive": false,
+									"all_wheel_drive": false,
 									"wheel_friction_slip": 1.0,
 									"wheel_roll_influence": 0.9}, 
 						"rally": {"scene": "res://scenes/vehicle_rally.tscn", 
-									"engine_force_value": 150, 
+									"engine_force_value": 150,  # keep this at 3x mass
 									"mass_kg/100": 50.0, 
 									"suspension_stiffness": 40.0, 
 									"suspension_travel": 2.0,
-									"four_wheel_drive": true,
-									"wheel_friction_slip": 1.5,
+									"all_wheel_drive": true,
+									"wheel_friction_slip": 1.4,
 									"wheel_roll_influence": 0.9}, 
 						"truck": {"scene": "res://scenes/vehicle_truck.tscn", 
-									"engine_force_value": 60, 
-									"mass_kg/100": 300.0, 
+									"engine_force_value": 200,  # keep this at 1x mass
+									"mass_kg/100": 200.0, 
 									"suspension_stiffness": 90.0, 
 									"suspension_travel":0.2,
-									"four_wheel_drive": false,
+									"all_wheel_drive": false,
 									"wheel_friction_slip":1.0,
 									"wheel_roll_influence": 0.9}}
 var vehicle_type = "racer"
@@ -106,9 +106,9 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	elif player_number == 2:
 		vehicle_type = "rally"
 	elif player_number == 3:
-		vehicle_type = "racer"  # TODO add tank
+		vehicle_type = "tank"  # TODO add tank
 	elif player_number == 4:
-		vehicle_type = "racer"  # TODO add truck
+		vehicle_type = "truck"  # TODO add truck
 	else:
 		vehicle_type = "racer"
 	
@@ -188,31 +188,39 @@ func configure_vehicle_properties():
 	
 	engine_force_value = vehicle_types[vehicle_type]["engine_force_value"]
 	mass = vehicle_types[vehicle_type]["mass_kg/100"]
-	var vt = vehicle_types[vehicle_type]
-	set_wheel_parameters(vt["suspension_stiffness"], vt["suspension_travel"], vt["wheel_friction_slip"])
-	if vehicle_types[vehicle_type]["four_wheel_drive"] == true:
-		get_wheel(1).use_as_traction = true  # front
-		get_wheel(3).use_as_traction = true  # front
-		get_wheel(2).use_as_traction = true
-		get_wheel(4).use_as_traction = true
+	var vts = vehicle_types[vehicle_type]
+	set_wheel_parameters(vts, vehicle_type)
+
+
+func set_wheel_parameters(_vts, _vehicle_type):
+	
+	for wh in get_children():
+		if wh is VehicleWheel:
+			wh.visible = true
+			wh.suspension_stiffness = _vts["suspension_stiffness"]
+			wh.suspension_travel = _vts["suspension_travel"]
+			wh.wheel_friction_slip = _vts["wheel_friction_slip"]
+			wh.wheel_roll_influence = _vts["wheel_roll_influence"]
+			for ch2 in wh.get_children():
+				if ch2 is MeshInstance:
+					ch2.visible = false
+				if ch2 is CSGTorus and _vehicle_type != "tank":
+					ch2.visible = true
+	
+	if vehicle_type == "tank":
+		get_wheel(5).use_as_traction = true  # middle
+		get_wheel(6).use_as_traction = true  # middle
 	else:
-		get_wheel(1).use_as_traction = true  # front
-		get_wheel(3).use_as_traction = true  # front
-		get_wheel(2).use_as_traction = false
-		get_wheel(4).use_as_traction = false
-
-
-func set_wheel_parameters(ss, st, _wfs):
-	for wheel_num in [1,2,3,4]:
-		for ch in get_children():
-			if ch is MeshInstance:
-				ch.visible = false
-			if ch is CSGTorus:
-				ch.visible = true
-		get_wheel(wheel_num).visible = true
-		get_wheel(wheel_num).suspension_stiffness = ss
-		get_wheel(wheel_num).suspension_travel = st
-		get_wheel(wheel_num).wheel_friction_slip = _wfs
+		if _vts["all_wheel_drive"] == true:
+			get_wheel(1).use_as_traction = true  # front
+			get_wheel(3).use_as_traction = true  # front
+			get_wheel(2).use_as_traction = true  # rear
+			get_wheel(4).use_as_traction = true  # rear
+		else:
+			get_wheel(1).use_as_traction = true  # front
+			get_wheel(3).use_as_traction = true  # front
+			get_wheel(2).use_as_traction = false  # rear
+			get_wheel(4).use_as_traction = false  # rear
 	 
 
 func re_parent_to_main_scene(child):

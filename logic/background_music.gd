@@ -1,62 +1,56 @@
 extends Node
 
-
-onready var _track_1 = $track_1
-onready var _track_2 = $track_2
-onready var _track_3 = $track_3
-
-var last_track_played = 1
-var timer = 0.0
-var music = false  # true
+var play_music = true  # true
+var tracks = []
+var timer_1s = 1.0
 var current_track
+var current_track_num
 
 func _ready():
-	_track_1.volume_db = 0.0
-	if music:
-		_track_1.playing = true
-		current_track = _track_1
+	randomize()
+	for ts in get_children():
+		tracks.append(ts)
+		ts.volume_db = 0.0
+	if len(tracks) > 0:
+		current_track_num = randi() % len(tracks)
+		current_track = tracks[current_track_num]
+		current_track.playing = true
+		current_track.stream_paused = false
+	else:
+		print("Error: no music tracks")
 	
 
 func _process(delta):
-
+	
+	timer_1s -= delta
+	
+	# always react to the toggle button quickly
 	if Input.is_action_pressed("music_toggle"):
-		if music == true:
-			current_track.playing = false
-			current_track.stream_paused = true
-		else:
+		if play_music == false:
+			play_music = true
 			current_track.playing = true
 			current_track.stream_paused = false
-		
-	if music:
-		
-		var a=0
+		else:
+			play_music = false
+			for ts in get_children():
+				ts.playing = false
+				ts.stream_paused = true
 
-		if _track_1.playing==true:
-			a+=1
+	# once in a whie, check all music is disabled or move to the next track
+	if timer_1s < 0.0:
+		timer_1s = 1.0
 
-		if _track_2.playing==true:
-			a+=1
-
-		if _track_3.playing==true:
-			a+=1
-		elif a == 0 and timer>5.0:
-			#print("a="+str(a)+" last_track_played="+str(last_track_played))
-			if last_track_played == 1:
-				_track_2.playing = true
-				_track_2.volume_db = 0.0
-				last_track_played = 2
-				current_track = _track_2
-			elif last_track_played == 2:
-				_track_3.playing = true
-				_track_3.volume_db = 0.0
-				last_track_played = 3
-				current_track = _track_3
-			else:
-				_track_1.playing = true
-				_track_3.volume_db = 0.0
-				last_track_played = 1
-				current_track = _track_1
-			timer = 0.0
-		elif a == 0 and timer<5.0:
-			timer += delta
-
+		if play_music == false:
+			for ts in get_children():
+				ts.playing = false
+				ts.stream_paused = true
+		else: # a song has finished, play the next one
+			if current_track.playing == false:
+				var old_track_num = current_track_num
+				if len(tracks) > 1:
+					for i in [1,2,3,4,5]:  # 5 attempts to change to a different track
+						if current_track_num == old_track_num:
+							current_track_num = randi() % len(tracks)  # random tracks
+				current_track = tracks[current_track_num]
+				current_track.playing = true
+				current_track.stream_paused = false

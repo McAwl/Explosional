@@ -174,9 +174,8 @@ func check_game_over():
 
 
 func all_audio_pitch(pitch):
-	$BackgroundMusic/track_1.pitch_scale = pitch
-	$BackgroundMusic/track_2.pitch_scale = pitch
-	$BackgroundMusic/track_3.pitch_scale = pitch
+	for t in $BackgroundMusic.get_children():
+		t.pitch_scale = pitch
 
 
 func get_spawn_points():

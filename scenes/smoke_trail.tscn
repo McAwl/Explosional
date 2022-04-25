@@ -13,9 +13,9 @@ gradient = SubResource( 33 )
 [sub_resource type="ParticlesMaterial" id=35]
 lifetime_randomness = 0.22
 direction = Vector3( 0, 1, 0 )
-gravity = Vector3( 0, 1, 0 )
+gravity = Vector3( 0, 1.5, 0 )
 initial_velocity = 1.0
-damping = 1.5
+damping = 1.6
 damping_random = 0.35
 scale_random = 0.37
 color_ramp = SubResource( 34 )

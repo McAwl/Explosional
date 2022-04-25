@@ -93,7 +93,7 @@ anim_offset_random = 1.0
 [node name="Flames3D" type="Particles"]
 transform = Transform( 1, 0, 0, 0, 0.761104, 0, 0, 0, 3.98912, 0, 0, 0 )
 material_override = SubResource( 2 )
-amount = 1
+amount = 11
 lifetime = 1.5
 visibility_aabb = AABB( -4, -4, -0.43513, 8, 8, 0.870259 )
 draw_order = 2

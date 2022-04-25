@@ -66,13 +66,6 @@ func turn_airstrike_off():
 
 func _process(delta):
 	
-	if $TimerSlowMotion.is_stopped():
-		Engine.time_scale = 1.0
-		all_audio_pitch(1.0)
-	else:
-		Engine.time_scale = 0.1
-		all_audio_pitch(0.1)
-
 	air_strike["interval_so_far_sec"] +=delta
 	air_strike["duration_so_far_sec"] += delta
 		
@@ -111,8 +104,20 @@ func _process(delta):
 	
 	if timer_1_sec < 0.0:
 		check_game_over()
+		check_slow_motion()
+		timer_1_sec = 1.0
 	
 	update_player_hud()
+
+
+func check_slow_motion():
+	if $TimerSlowMotion.is_stopped():
+		Engine.time_scale = 1.0
+		all_audio_pitch(1.0)
+	else:
+		Engine.time_scale = 0.1
+		all_audio_pitch(0.1)
+
 
 
 func update_player_hud():
@@ -156,7 +161,6 @@ func update_player_hud():
 func check_game_over():
 	var dead_cars = 0
 	var num_cars = 0
-	timer_1_sec = 1.0
 	for player_number in range(1, num_players+1):
 		num_cars += 1
 		if get_player(player_number).lives_left < 0:
@@ -176,6 +180,7 @@ func check_game_over():
 func all_audio_pitch(pitch):
 	for t in $BackgroundMusic.get_children():
 		t.pitch_scale = pitch
+	$siren.pitch_scale = pitch
 
 
 func get_spawn_points():
@@ -217,4 +222,5 @@ func air_strike_label():
 
 
 func start_timer_slow_motion():
+	
 	$TimerSlowMotion.start()

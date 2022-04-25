@@ -132,7 +132,7 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 					ch.remove_child(ctmch)
 					add_child(ctmch)
 				elif ch.name in ["Effects"]:
-					for ctmchch in ctmch.get_children():
+					for ctmchch in ctmch.get_children():  # Damage
 						ctmch.remove_child(ctmchch)
 						$Effects.get_node(ctmch.name).add_child(ctmchch)
 
@@ -270,7 +270,7 @@ func flicker_lights():
 func get_raycast(wheel_num):
 	var gw = get_wheel(wheel_num)
 	if gw != null:
-		return get_wheel(wheel_num).get_node("RayCastWheel"+str(wheel_num))
+		return $Raycasts.get_node("RayCastWheel"+str(wheel_num))
 	else:
 		return null
 
@@ -386,6 +386,7 @@ func check_accel_damage(delta):
 		if acceleration_calc_for_damage > accel_damage_threshold:
 			var rammed_another_car = false
 			$Effects/Audio/crash_sound.playing = true
+			$Effects/Audio/crash_sound.volume_db = 0.0
 			if $Raycasts/RayCastFrontRamDamage1.is_colliding():
 				var collider_name = $Raycasts/RayCastFrontRamDamage1.get_collider().name
 				if "car" in collider_name.to_lower():
@@ -408,6 +409,10 @@ func check_accel_damage(delta):
 			# else don't take any damage
 				
 			check_accel_damage_timer = 0.5
+		elif acceleration_calc_for_damage > accel_damage_threshold/2.0:
+			$Effects/Audio/crash_sound.playing = true
+			$Effects/Audio/crash_sound.volume_db = -18.0
+			
 	else:
 		check_accel_damage_timer -=delta
 
@@ -448,7 +453,7 @@ func _physics_process(delta):
 
 		if Input.is_action_pressed("accelerate_player"+str(player_number)):
 			# Increase engine force at low speeds to make the initial acceleration faster.
-			speed = linear_velocity.length()
+			update_speed()
 			if speed < speed_low_limit and speed != 0:
 				engine_force = clamp(engine_force_value * speed_low_limit / speed, 0, 100)
 			else:
@@ -459,13 +464,14 @@ func _physics_process(delta):
 		if Input.is_action_pressed("reverse_player"+str(player_number)):
 			# Increase engine force at low speeds to make the initial acceleration faster.
 			if fwd_mps >= -1:
-				speed = linear_velocity.length()
+				brake = vehicle_types[vehicle_type]["mass_kg/100"] / 5.0  # 1 
+				update_speed()
 				if speed < speed_low_limit and speed != 0:
 					engine_force = -clamp(engine_force_value * speed_low_limit / speed, 0, 100)
 				else:
 					engine_force = -engine_force_value
 			else:
-				brake = 1
+				brake = vehicle_types[vehicle_type]["mass_kg/100"] / 5.0  # 1 
 		else:
 			brake = 0.0
 
@@ -496,7 +502,12 @@ func _physics_process(delta):
 		hit_by_missile["active"] = false
 
 
+func update_speed():
+	speed = linear_velocity.length()
+
+
 func get_speed():
+	update_speed()
 	return speed
 
 
@@ -644,6 +655,9 @@ func start_vehicle_dying():
 		print("start_vehicle_dying(): total_damage >= max_damage")
 		total_damage = max_damage
 		
+		for ch in $Effects/Audio.get_children():  # turn off engine sounds
+			ch.playing = false
+		
 		$Effects/Audio/crash_sound.playing = true
 		$Effects/Damage/Explosion/AnimationPlayer.play("explosion")
 		
@@ -682,12 +696,12 @@ func remove_raycasts():
 
 
 func remove_main_collision_shapes():
-	# remove the existing CollisionShapes based on the car structure (usually 3 or 4)
+	# remove the existing CollisionShape(s) based on the car structure
 	for cs in get_children():
 		if cs is CollisionShape: 
 			cs.queue_free()  
 	# Add a small CollisionShape so we don't fall through the ground
-	var new_rigid_body = load("res://scenes/rigid_body.tscn").instance()
+	var new_rigid_body = load("res://scenes/exploded_vehicle_part.tscn").instance()
 	var cs = new_rigid_body.get_node("CollisionShape")
 	new_rigid_body.remove_child(cs)
 	add_child(cs)
@@ -704,7 +718,7 @@ func explode_vehicle_meshes():
 		vm.set_script(script_vehicle_detach_rigid_bodies)
 		vm.set_process(true)
 		vm.set_physics_process(true)
-		vm.detach_rigid_bodies(0.00001, self.mass, self.linear_velocity, self.global_transform.origin)
+		vm.detach_rigid_bodies(0.001, self.mass, self.linear_velocity, self.global_transform.origin)
 		# self.remove_child(ch)
 		# ch.set_as_toplevel(true)
 		$Effects/Damage/Explosion2.emitting = true
@@ -712,6 +726,11 @@ func explode_vehicle_meshes():
 		remove_child(vm)
 		get_player().add_child(vm)
 		vm.name = "vehicle_parts_exploded"
+		# Move the target cameras to the centre of the body
+		$CameraBase/CameraBasesTargets/CamTargetForward.translation = Vector3(0.0, 0.0, 0.0)
+		$CameraBase/CameraBasesTargets/CamTargetForward_UD.translation = Vector3(0.0, 0.0, 0.0)
+		$CameraBase/CameraBasesTargets/CamTargetReverse.translation = Vector3(0.0, 0.0, 0.0)
+		$CameraBase/CameraBasesTargets/CamTargetReverse_UD.translation = Vector3(0.0, 0.0, 0.0)
 
 
 func dying_finished():

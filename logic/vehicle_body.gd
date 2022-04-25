@@ -695,21 +695,23 @@ func remove_main_collision_shapes():
 
 
 func explode_vehicle_meshes():
-	if self.has_node("vehicle_mesh"):
-		print("explode_vehicle_meshes(): self.has_node('vehicle_mesh')")
+	# 
+	if self.has_node("MeshInstances"):
+		var vm = get_node("MeshInstances")
+		print("Found node MeshInstances: destroying...")
+		print("explode_vehicle_meshes(): self.has_node('MeshInstances')")
 		print("self.translation="+str(self.translation))
-		var vm = get_node("vehicle_mesh")
 		vm.set_script(script_vehicle_detach_rigid_bodies)
 		vm.set_process(true)
 		vm.set_physics_process(true)
-		vm.detach_rigid_bodies(0.1, self.mass, self.linear_velocity, self.global_transform.origin)
-		vm.name = "vehicle_parts_exploded"
+		vm.detach_rigid_bodies(0.00001, self.mass, self.linear_velocity, self.global_transform.origin)
 		# self.remove_child(ch)
 		# ch.set_as_toplevel(true)
-		$Explosion2.emitting = true
+		$Effects/Damage/Explosion2.emitting = true
 		# move the exploded mesh to the player, as the vehicle_body will be deleted after the explosion
 		remove_child(vm)
 		get_player().add_child(vm)
+		vm.name = "vehicle_parts_exploded"
 
 
 func dying_finished():

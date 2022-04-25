@@ -223,7 +223,7 @@ surfaces/0 = {
 transform = Transform( 0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, 0, 0.287719, 0.324329 )
 
 [node name="Plane024" type="MeshInstance" parent="." index="0"]
-transform = Transform( -1, 0, 0, 0, 1, 0, 0, 0, 1, -5.74003, -0.21313, -6.96401 )
+transform = Transform( -1, 0, 0, 0, 1, -8.74228e-08, 0, 8.74228e-08, 1, -5.74003, -0.21313, -18.4621 )
 visible = false
 mesh = SubResource( 48 )
 material/0 = null
@@ -241,7 +241,7 @@ mesh = SubResource( 22 )
 material/0 = ExtResource( 1 )
 
 [node name="Plane027" type="MeshInstance" parent="." index="3"]
-transform = Transform( 0.00544538, 0.999986, 0, -0.999985, 0.00544538, 0, 0, 0, -1, -3.52041, -1.82657, 6.38968 )
+transform = Transform( -0.00544538, -0.999985, 0, 0.999985, -0.00544538, 0, 0, 0, 1, -3.52041, -1.26798, 5.66265 )
 visible = false
 mesh = SubResource( 24 )
 material/0 = ExtResource( 1 )
@@ -378,6 +378,9 @@ visible = false
 [node name="Plane007" parent="." index="38"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8897, -0.0662175, 8.78839 )
 material/0 = ExtResource( 3 )
+
+[node name="chrome" parent="." index="44"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11365, 2.19973, 6.67809 )
 
 [node name="scoop" parent="." index="45"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11365, 2.19973, 6.67809 )

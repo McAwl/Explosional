@@ -4,6 +4,7 @@
 extents = Vector3( 0.211825, 0.199617, 0.202137 )
 
 [node name="rigid_body" type="RigidBody"]
+linear_damp = 0.0
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 shape = SubResource( 1 )

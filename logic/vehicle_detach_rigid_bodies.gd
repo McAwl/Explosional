@@ -1,5 +1,6 @@
 extends Spatial
 
+# This script gets attached to an instance of a vehicle mesh instance scene
 
 var apply_forces = false
 var force = 0.1
@@ -36,6 +37,7 @@ func _process(delta):
 						print("av_lifetime_sec: vehicle mesh rigid body "+str(rb.name)+"queue_free")
 						rb.queue_free()
 
+
 func av_lifetime(_av_lifetime_sec):
 	pass  # av_lifetime_sec
 
@@ -50,32 +52,26 @@ func detach_rigid_bodies(force_, total_mass_, _linear_velocity, _origin):
 
 
 func _physics_process(_delta):
-	# AABB exam[ples
-	# position (-3, 2, 0), size (1, 1, 1)
-	# var box = AABB(Vector3(-3, 2, 0), Vector3(1, 1, 1))
-	## position (-3, -1, 0), size (3, 4, 2), so we fit both the original AABB and Vector3(0, -1, 2)
-	# var box2 = box.expand(Vector3(0, -1, 2))
-	
+
 	if apply_forces == true:
 		print("_physics_process: apply_forces = true")
+		print("force = "+str(force))
 		# var num_meshes = 0
 		var total_volume = 0
-		var mis = self.get_node("mesh_instances").scale
-		for ch in self.get_node("mesh_instances").get_children():
+		for ch in get_children():
 			if ch is MeshInstance:
 				var mesh_volume = ch.get_aabb().get_area ()
 				total_volume += mesh_volume
 				# print("ch.get_aabb()= "+str(ch.get_aabb())+" mesh_volume = "+str(ch.name)+"="+str(mesh_volume))
 		#print("total_volume="+str(total_volume))
 		#print("num_meshes="+str(num_meshes))
-		for ch in self.get_node("mesh_instances").get_children():
+		for ch in get_children():
 			if ch is MeshInstance:
 				ch.visible = true  # some meshes start off invisible
 				ch.translation = Vector3(0.0, 0.0, 0.0)  # start them all at 0,0,0?
-				var ms = ch.scale
-				ch.scale = mis*ms  # mesh_instances is scaled, as are some meshes within - so need to apply both
+				# ch.scale = scale*ch.scale  # mesh_instances is scaled, as are some meshes within - so need to apply both
 				var mesh_volume = ch.get_aabb().get_area ()
-				# var aabb_size = ch.get_aabb().size
+				var aabb_size = ch.get_aabb().size
 				var aabb_position = ch.get_aabb().position
 				var aabb_end = ch.get_aabb().end
 				# print("type of mesh piece "+str(ch.type))
@@ -90,16 +86,18 @@ func _physics_process(_delta):
 				new_rigid_body.name = "RigidBody_"+ch.name
 				# var mesh_centre = (aabb_position + aabb_size) / 2.0
 				var mesh_centre = (aabb_position + aabb_end) / 2.0
-				new_rigid_body.get_node("CollisionShape").translation = mesh_centre  # add a rigid body at the centre of the mesh
 				
 				# new_rigid_body.get_node("CollisionShape").translation = aabb_end
-				# new_rigid_body.get_node("CollisionShape").scale = ch.scale  # aabb_size  # 
+				new_rigid_body.get_node("CollisionShape").scale = ch.scale * aabb_size  # 
+				# do in this order? some meshinstance are -1,-1,-1 scale for some reason. Think it's a Blender invert normals thing
+				new_rigid_body.get_node("CollisionShape").translation = mesh_centre  # add a rigid body at the centre of the mesh
+				  
 				if mesh_volume <= 0.0 or total_mass <= 0.0:
 					new_rigid_body.mass = 1.0
 				else:
 					new_rigid_body.mass = total_mass * (mesh_volume/total_volume)  # mass_per_piece
 				#print("new_rigid_body.mass="+str(new_rigid_body.mass))
-				self.get_node("mesh_instances").remove_child(ch)
+				remove_child(ch)
 				new_rigid_body.add_child(ch)
 				new_rigid_body.set_as_toplevel(true)
 				new_rigid_body.global_transform.origin = origin
@@ -134,14 +132,15 @@ func _physics_process(_delta):
 				#	print("Error: collision null or staticbody null")
 					
 				#staticbody.queue_free() # use this if using .create_convex_collision ( )
-				var direction = Vector3(rng.randf_range(-0.1, 0.1), rng.randf_range(-1, -2),rng.randf_range(-0.1, 0.1))
-				new_rigid_body.apply_impulse( Vector3(0,0,0),  force*(direction.normalized()) )
+				#var direction = Vector3(rng.randf_range(-0.1, 0.1), rng.randf_range(-1, -2), rng.randf_range(-0.1, 0.1))
+				var direction = Vector3(rng.randf_range(-0.1, 0.1), rng.randf_range(0.0, 0.2), rng.randf_range(-0.1, 0.1))  # Vector3(0.0, 1.0, 0.0)=up
+				var force_origin = Vector3(0, -20.0, 0)
+				# new_rigid_body.apply_impulse( force_origin, force*(direction.normalized()) )
 				var smoke_particles = load("res://scenes/smoke_trail.tscn").instance()
 				# get_parent().add_child(new_smoke_particles)
 				#new_smoke_particles.global_transform.origin = origin
 				new_rigid_body.add_child(smoke_particles)
 			else:
-				ch.queue_free()  # delete everything but meshes
+				ch.queue_free()  # if not a MeshInstance, delete everything but meshes
 		apply_forces = false
-		get_node("positions").queue_free()
-		get_node("mesh_instances").queue_free()
+

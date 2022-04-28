@@ -12,6 +12,7 @@ var steer_target = 0
 var print_timer = 0.0
 
 export var engine_force_value = ENGINE_FORCE_VALUE_DEFAULT  #40
+var engine_force_ewma
 var player_number
 var num_players
 var camera
@@ -37,9 +38,15 @@ var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer
 var weapon_select = 0
 var lights_disabled = false
 var acceleration_calc_for_damage = 0.0
+var acceleration_fwd_0_1_ewma = 0.0
+var acceleration_fwd_0_1 = 0.0
 var vel_max = 0.0
 var check_accel_damage_timer = 3.0
 var accel_damage_threshold = 50.0
+var fwd_mps = 0.0
+var old_fwd_mps_0_1 = 0.0
+var fwd_mps_0_1_ewma = 0.0
+var fwd_mps_0_1 = 0.0
 var explosion2_timer = 0.2
 var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn", 
 									"engine_force_value": 200,  # keep this at 1x mass
@@ -47,7 +54,7 @@ var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"suspension_stiffness": 100.0, 
 									"suspension_travel": 0.1,
 									"all_wheel_drive": true,
-									"wheel_friction_slip": 2.0,
+									"wheel_friction_slip": 5.0,
 									"wheel_roll_influence": 0.9}, 
 						"racer": {"scene": "res://scenes/vehicle_racer.tscn", 
 									"engine_force_value": 210,  # keep this at 3x mass
@@ -106,9 +113,9 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	elif player_number == 2:
 		vehicle_type = "rally"
 	elif player_number == 3:
-		vehicle_type = "tank"  # TODO add tank
+		vehicle_type = "tank"
 	elif player_number == 4:
-		vehicle_type = "truck"  # TODO add truck
+		vehicle_type = "truck" 
 	else:
 		vehicle_type = "racer"
 	
@@ -142,10 +149,38 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	
 	configure_vehicle_properties()
 	init_visual_effects()
+	init_audio_effects()
 	
 	total_damage = 0.0
 	check_accel_damage_timer = 4.0
 	init_camera(num_players)
+
+
+func init_audio_effects():
+	engine_sound_on()
+
+
+func engine_sound_on():
+	if vehicle_type == "racer":
+		$Effects/Audio/engine_sound.playing = false
+		$Effects/Audio/engine_sound_rally.playing = true
+	elif vehicle_type == "rally":
+		$Effects/Audio/engine_sound.playing = false
+		$Effects/Audio/engine_sound_rally.playing = true
+	elif vehicle_type == "tank":
+		$Effects/Audio/engine_sound.playing = true
+		$Effects/Audio/engine_sound_rally.playing = false
+	elif vehicle_type == "truck":
+		$Effects/Audio/engine_sound.playing = true
+		$Effects/Audio/engine_sound_rally.playing = false
+	else:
+		$Effects/Audio/engine_sound.playing = false
+		$Effects/Audio/engine_sound_rally.playing = true
+
+
+func engine_sound_off():
+	$Effects/Audio/engine_sound.playing = false
+	$Effects/Audio/engine_sound_rally.playing = false
 
 
 func init_camera(_num_players):
@@ -350,6 +385,16 @@ func _process(delta):
 		get_player().set_label_lives_left()
 		get_player().get_canvaslayer().get_node("cooldown").max_value = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select]["name"]]
 		get_player().get_canvaslayer().get_node("cooldown").value = cooldown_timer
+		
+		# Update all the 0.1 sec physical calculations
+		# speed
+		old_fwd_mps_0_1 = fwd_mps_0_1
+		fwd_mps_0_1 = transform.basis.xform_inv(linear_velocity).z  # global linear velocity rotated to our forward direction (z)
+		fwd_mps_0_1_ewma = (0.5*fwd_mps_0_1) + (0.5*fwd_mps_0_1)  # smooth it out over 1 sec
+		# accel
+		acceleration_fwd_0_1 = 0.1 * (fwd_mps_0_1-old_fwd_mps_0_1)  # calc fwd accel every 0.1s
+		acceleration_fwd_0_1_ewma = (0.9*acceleration_fwd_0_1_ewma) + (0.1*acceleration_fwd_0_1)  # smooth it out over 1 sec
+
 
 	lifetime_so_far_sec += delta
 		
@@ -438,19 +483,18 @@ func _physics_process(delta):
 	
 	var new_vel = get_linear_velocity()
 	var new_vel_max = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
-	
+	fwd_mps = transform.basis.xform_inv(linear_velocity).x
 	# Smooth out the accel calc by using a 50/50 exponentially-weighted moving average
 	acceleration_calc_for_damage = (0.5*acceleration_calc_for_damage) + (0.5*abs(new_vel_max - vel_max)/delta)
-	
 	vel_max = new_vel_max
 
 	if total_damage < max_damage:
 		
-		var fwd_mps = transform.basis.xform_inv(linear_velocity).x
-
 		steer_target = Input.get_action_strength("turn_left_player"+str(player_number)) - Input.get_action_strength("turn_right_player"+str(player_number))
 		steer_target *= STEER_LIMIT
 
+		var old_engine_force = engine_force
+	
 		if Input.is_action_pressed("accelerate_player"+str(player_number)):
 			# Increase engine force at low speeds to make the initial acceleration faster.
 			update_speed()
@@ -474,6 +518,10 @@ func _physics_process(delta):
 				brake = vehicle_types[vehicle_type]["mass_kg/100"] / 5.0  # 1 
 		else:
 			brake = 0.0
+			
+		if delta < 1.0:
+			engine_force_ewma = (delta*engine_force) + ((1.0-delta)*old_engine_force)
+	
 
 		steering = move_toward(steering, steer_target, STEER_SPEED * delta)
 	

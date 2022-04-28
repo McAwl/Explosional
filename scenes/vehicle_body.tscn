@@ -163,7 +163,7 @@ omni_range = 50.0
 
 [node name="engine_sound" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 3 )
-volume_db = -9.087
+volume_db = -9.0
 pitch_scale = 0.56
 script = ExtResource( 7 )
 
@@ -923,6 +923,33 @@ transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437,
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
+[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.302467, -0.134085, 1.046 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collide_with_areas = true
+
+[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.716094, -0.149375, -0.814 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.356824, -0.125333, 1.038 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.726947, -0.219668, -0.774 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
 [node name="Wheels" type="Spatial" parent="VehicleTypes/rally"]
 
 [node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/rally/Wheels"]
@@ -936,12 +963,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/rally/Wheels/Wheel1"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.262533, -0.0640855, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collide_with_areas = true
 
 [node name="Wheel1" type="MeshInstance" parent="VehicleTypes/rally/Wheels/Wheel1"]
 transform = Transform( -0.00433009, 0.0999896, 0, -0.299969, -0.00144336, 0, 0, 0, 0.3, -0.124151, -0.0105667, 0.00509012 )
@@ -967,13 +988,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/rally/Wheels/Wheel2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145094, -0.0793754, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
 
 [node name="Wheel2" type="MeshInstance" parent="VehicleTypes/rally/Wheels/Wheel2"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, -0.0301507, 0.0100485, 0.0114711 )
@@ -1002,13 +1016,6 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/rally/Wheels/Wheel3"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.220176, -0.0553332, 3.82662e-05 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
-
 [node name="Wheel3" type="MeshInstance" parent="VehicleTypes/rally/Wheels/Wheel3"]
 transform = Transform( -0.00149528, 0.0999988, 2.71065e-13, -0.299996, -0.000498428, 0.000207231, 0.000207228, 3.44299e-07, 0.3, 0.0204801, 0.000714689, 0.0108781 )
 visible = false
@@ -1034,13 +1041,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/rally/Wheels/Wheel4"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
 
 [node name="Wheel4" type="MeshInstance" parent="VehicleTypes/rally/Wheels/Wheel4"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )
@@ -1166,7 +1166,7 @@ material/0 = null
 [node name="CollisionShapes" type="Spatial" parent="VehicleTypes/tank"]
 
 [node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/tank/CollisionShapes"]
-transform = Transform( 1, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.265176, 0.0492305 )
+transform = Transform( 1.63905, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.265176, 0.0492305 )
 shape = SubResource( 51 )
 
 [node name="Effects" type="Spatial" parent="VehicleTypes/tank"]
@@ -1348,10 +1348,51 @@ transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437,
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
+[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.428401, -0.0263021, 1.07156 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collide_with_areas = true
+
+[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.837815, -0.0388595, -1.05442 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.46191, -0.0411682, 1.038 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.830585, -0.135503, -1.06772 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="RayCastWheel5" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.830585, -0.135503, -0.0672405 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="RayCastWheel6" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.542412, -0.135503, -0.0256135 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
 [node name="Wheels" type="Spatial" parent="VehicleTypes/tank"]
 
 [node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.690934, -0.0463816, 1.07156 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.690934, 0.0377834, 1.07156 )
 engine_force = 40.0
 use_as_traction = true
 use_as_steering = true
@@ -1361,12 +1402,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/tank/Wheels/Wheel1"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.262533, -0.0640855, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collide_with_areas = true
 
 [node name="Wheel1" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel1"]
 transform = Transform( -0.00433009, 0.0999896, 0, -0.299969, -0.00144336, 0, 0, 0, 0.3, -0.124151, -0.0105667, 0.00509012 )
@@ -1384,7 +1419,7 @@ ring_sides = 12
 material = ExtResource( 14 )
 
 [node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.692721, -0.0436491, -1.05442 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.692721, 0.0405158, -1.05442 )
 engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -1393,13 +1428,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/tank/Wheels/Wheel2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145094, -0.0793754, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
 
 [node name="Wheel2" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel2"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, -0.0301507, 0.0100485, 0.0114711 )
@@ -1418,7 +1446,7 @@ ring_sides = 12
 material = ExtResource( 14 )
 
 [node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.682086, -0.07, 1.038 )
+transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.682086, 0.014165, 1.038 )
 engine_force = 40.0
 use_as_traction = true
 use_as_steering = true
@@ -1428,13 +1456,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/tank/Wheels/Wheel3"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.220176, -0.0553332, 3.82662e-05 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
 
 [node name="Wheel3" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel3"]
 transform = Transform( -0.00149528, 0.0999988, 2.71065e-13, -0.299996, -0.000498428, 0.000207231, 0.000207228, 3.44299e-07, 0.3, 0.0204801, 0.000714689, 0.0108781 )
@@ -1453,7 +1474,7 @@ ring_sides = 12
 material = ExtResource( 14 )
 
 [node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.680638, -0.07, -1.06772 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.680638, 0.014165, -1.06772 )
 engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -1462,13 +1483,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/tank/Wheels/Wheel4"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
 
 [node name="Wheel4" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel4"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )
@@ -1487,7 +1501,7 @@ ring_sides = 12
 material = ExtResource( 14 )
 
 [node name="Wheel5" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.680638, -0.07, -0.0672405 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.680638, 0.014165, -0.0672405 )
 engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -1496,13 +1510,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/tank/Wheels/Wheel5"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
 
 [node name="Wheel4" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel5"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )
@@ -1521,7 +1528,7 @@ ring_sides = 12
 material = ExtResource( 14 )
 
 [node name="Wheel6" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.692359, -0.07, -0.0256135 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.692359, 0.014165, -0.0256135 )
 engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -1530,13 +1537,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/tank/Wheels/Wheel6"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
 
 [node name="Wheel4" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel6"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )
@@ -1846,6 +1846,33 @@ transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437,
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
+[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.175467, -0.264085, -1.09202 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collide_with_areas = true
+
+[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.680094, -0.279375, -3.13202 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.267824, -0.255333, -1.09702 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.688509, -0.349989, -3.20793 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collision_mask = 2
+collide_with_areas = true
+
 [node name="Wheels" type="Spatial" parent="VehicleTypes/truck"]
 
 [node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/truck/Wheels"]
@@ -1859,12 +1886,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/truck/Wheels/Wheel1"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.262533, -0.0640855, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collide_with_areas = true
 
 [node name="Wheel1" type="MeshInstance" parent="VehicleTypes/truck/Wheels/Wheel1"]
 transform = Transform( -0.00433009, 0.0999896, 0, -0.299969, -0.00144336, 0, 0, 0, 0.3, -0.124151, -0.0105667, 0.00509012 )
@@ -1890,13 +1911,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/truck/Wheels/Wheel2"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145094, -0.0793754, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
 
 [node name="Wheel2" type="MeshInstance" parent="VehicleTypes/truck/Wheels/Wheel2"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, -0.0301507, 0.0100485, 0.0114711 )
@@ -1925,13 +1939,6 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/truck/Wheels/Wheel3"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.220176, -0.0553332, 3.82662e-05 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
-
 [node name="Wheel3" type="MeshInstance" parent="VehicleTypes/truck/Wheels/Wheel3"]
 transform = Transform( -0.00149528, 0.0999988, 2.71065e-13, -0.299996, -0.000498428, 0.000207231, 0.000207228, 3.44299e-07, 0.3, 0.0204801, 0.000714689, 0.0108781 )
 visible = false
@@ -1957,13 +1964,6 @@ wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
-
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/truck/Wheels/Wheel4"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.149947, -0.149668, 0 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collision_mask = 2
-collide_with_areas = true
 
 [node name="Wheel4" type="MeshInstance" parent="VehicleTypes/truck/Wheels/Wheel4"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )

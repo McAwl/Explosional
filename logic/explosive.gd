@@ -78,11 +78,12 @@ func _process(delta):
 			for player in get_node("/root/TownScene").get_players():  # i in range(1, 5):
 				# explosion toward all players
 				var get_vehicle_body = player.get_vehicle_body()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
-				var distance = global_transform.origin.distance_to(get_vehicle_body.global_transform.origin)
-				if distance < EXPLOSIVE_PROXIMITY_DISTANCE or explosive_proximity_timer_limit <= 0:
-					explosive_stage = 3  # trigged by proximity to car
-					material_override(material_red)
-					timer = EXPLOSIVE_ACTIVE_WAIT
+				if get_vehicle_body != null:
+					var distance = global_transform.origin.distance_to(get_vehicle_body.global_transform.origin)
+					if distance < EXPLOSIVE_PROXIMITY_DISTANCE or explosive_proximity_timer_limit <= 0:
+						explosive_stage = 3  # trigged by proximity to car
+						material_override(material_red)
+						timer = EXPLOSIVE_ACTIVE_WAIT
 			explosive_proximity_check_timer = EXPLOSIVE_ACTIVE_WAIT/4.0
 
 	if explosive_stage == 3:  # triggered by car proximity

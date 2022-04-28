@@ -11,16 +11,19 @@ var audio_min_speed_timer = 10.0  # time in track where min speed occurs, start 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	playing = false
-	volume_db = -9.0
-	
+	pass
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	timer_0_1s -= delta
-	if timer_0_1s <= 0.0:
-		timer_0_1s = 0.1
-		var speed = get_parent().get_parent().get_parent().get_speed()
-		# var speed_mod_10 = fmod(s, 10.0)
-		pitch_scale = 1.0 + speed/20.0
+	if playing == true:
+		timer_0_1s -= delta
+		if timer_0_1s <= 0.0:
+			timer_0_1s = 0.1
+			# var speed = get_parent().get_parent().get_parent().get_speed()
+			var engine_force_value_ewma = get_parent().get_parent().get_parent().engine_force_ewma
+			var speed = get_parent().get_parent().get_parent().get_speed()
+			pitch_scale = 1.0 + (speed/30.0)
+			#if engine_force_value_ewma != null:
+			#	pitch_scale = 1.0 + engine_force_value_ewma/20.0
 

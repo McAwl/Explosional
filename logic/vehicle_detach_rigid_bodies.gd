@@ -89,7 +89,7 @@ func _physics_process(_delta):
 				new_exploded_vehicle_part.set_as_toplevel(true)
 				new_exploded_vehicle_part.global_transform.origin = global_transform_origin_parent  # ch.global_transform.origin
 				# new_exploded_vehicle_part.global_transform.origin.y += 1.0
-				new_exploded_vehicle_part.linear_velocity = linear_velocity
+				new_exploded_vehicle_part.linear_velocity = linear_velocity/2.0  # slow down the exploded meshes
 				if ch.name == "chrome003":
 					print("before new_exploded_vehicle_part.linear_velocity="+str(new_exploded_vehicle_part.linear_velocity))
 				# any rigid body moving downwards, replace with upwards movement

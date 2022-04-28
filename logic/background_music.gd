@@ -25,7 +25,7 @@ func _process(delta):
 	timer_1s -= delta
 	
 	# always react to the toggle button quickly
-	if Input.is_action_pressed("music_toggle"):
+	if Input.is_action_just_released("music_toggle"):
 		if play_music == false:
 			play_music = true
 			current_track.playing = true

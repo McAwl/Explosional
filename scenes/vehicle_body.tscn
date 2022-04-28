@@ -196,7 +196,6 @@ material = ExtResource( 6 )
 
 [node name="racer" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/racer"]
 
@@ -303,7 +302,7 @@ material/0 = null
 [node name="CollisionShapes" type="Spatial" parent="VehicleTypes/racer"]
 
 [node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/racer/CollisionShapes"]
-transform = Transform( 1, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.715644, -0.123573 )
+transform = Transform( 0.902692, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.715644, -0.123573 )
 shape = SubResource( 51 )
 
 [node name="Effects" type="Spatial" parent="VehicleTypes/racer"]
@@ -352,8 +351,8 @@ omni_range = 7.0
 
 [node name="Flames3D" parent="VehicleTypes/racer/Effects/Damage" instance=ExtResource( 10 )]
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.00169557, 0.638577, -0.0955184 )
-visible = false
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
+local_coords = false
 
 [node name="Lights" type="Spatial" parent="VehicleTypes/racer"]
 
@@ -1205,35 +1204,34 @@ light_energy = 0.0
 omni_range = 7.0
 
 [node name="Flames3D" parent="VehicleTypes/tank/Effects/Damage" instance=ExtResource( 10 )]
-transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.00169557, 0.222867, -0.0955184 )
-emitting = false
+transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.00169557, 0.747907, -0.0955184 )
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 
 [node name="Lights" type="Spatial" parent="VehicleTypes/tank"]
 
 [node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/tank/Lights"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.416103, 1.70429 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.539139, 0.466657, 1.70429 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
 [node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/tank/Lights"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.80375 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.532327, 0.487505, 1.59364 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
 [node name="LightBackRight" type="OmniLight" parent="VehicleTypes/tank/Lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.79346 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.565196, 0.379824, -1.79346 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
 shadow_reverse_cull_face = true
 
 [node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/tank/Lights"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.350228, 0.190666, -1.7519 )
+transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.595673, 0.38998, -1.75889 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
@@ -1543,6 +1541,7 @@ material = ExtResource( 14 )
 
 [node name="truck" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.476245, 0 )
+visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/truck"]
 
@@ -1649,7 +1648,7 @@ material/0 = null
 [node name="CollisionShapes" type="Spatial" parent="VehicleTypes/truck"]
 
 [node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/truck/CollisionShapes"]
-transform = Transform( 1.04562, 0, 0, 0, 2.35664, 0, 0, 0, 1.71061, -0.00339114, 0.632829, 0.0630144 )
+transform = Transform( 1.04562, 0, 0, 0, 2.35664, 0, 0, 0, 1.71061, -0.00339114, 0.963366, 0.0630144 )
 shape = SubResource( 51 )
 
 [node name="Effects" type="Spatial" parent="VehicleTypes/truck"]
@@ -1695,35 +1694,35 @@ light_energy = 0.0
 omni_range = 7.0
 
 [node name="Flames3D" parent="VehicleTypes/truck/Effects/Damage" instance=ExtResource( 10 )]
-transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.00169557, 0.222867, -0.0955184 )
+transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.0220416, 1.46262, -0.333249 )
 emitting = false
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 
 [node name="Lights" type="Spatial" parent="VehicleTypes/truck"]
 
 [node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/truck/Lights"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.163859, 1.39401 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.3525, 0.0908399, 2.06702 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
 [node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/truck/Lights"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.39401 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.341901, -0.0107324, 2.09319 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
 [node name="LightBackRight" type="OmniLight" parent="VehicleTypes/truck/Lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.29508 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45969, 0.0288355, -1.59224 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
 shadow_reverse_cull_face = true
 
 [node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/truck/Lights"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.362708, 0.190666, -1.31362 )
+transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.444881, 0.0333847, -1.55395 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true

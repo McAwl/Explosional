@@ -49,12 +49,12 @@ var fwd_mps_0_1_ewma = 0.0
 var fwd_mps_0_1 = 0.0
 var explosion2_timer = 0.2
 var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn", 
-									"engine_force_value": 200,  # keep this at 1x mass
+									"engine_force_value": 150,  # keep this at 1x mass
 									"mass_kg/100": 200.0, 
 									"suspension_stiffness": 100.0, 
 									"suspension_travel": 0.1,
 									"all_wheel_drive": true,
-									"wheel_friction_slip": 5.0,
+									"wheel_friction_slip": 15.0,
 									"wheel_roll_influence": 0.9}, 
 						"racer": {"scene": "res://scenes/vehicle_racer.tscn", 
 									"engine_force_value": 220,  # keep this at 3x mass

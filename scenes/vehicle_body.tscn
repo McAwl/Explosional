@@ -630,6 +630,7 @@ material = ExtResource( 14 )
 
 [node name="rally" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.585815, -0.0955184 )
+visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/rally"]
 
@@ -1542,7 +1543,6 @@ material = ExtResource( 14 )
 
 [node name="truck" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.476245, 0 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/truck"]
 
@@ -1649,7 +1649,7 @@ material/0 = null
 [node name="CollisionShapes" type="Spatial" parent="VehicleTypes/truck"]
 
 [node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/truck/CollisionShapes"]
-transform = Transform( 1, 0, 0, 0, 1.72442, 0, 0, 0, 1.22413, -0.00339114, 0.204486, 0.0492305 )
+transform = Transform( 1.04562, 0, 0, 0, 2.35664, 0, 0, 0, 1.71061, -0.00339114, 0.632829, 0.0630144 )
 shape = SubResource( 51 )
 
 [node name="Effects" type="Spatial" parent="VehicleTypes/truck"]

@@ -196,6 +196,7 @@ material = ExtResource( 6 )
 
 [node name="racer" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
+visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/racer"]
 
@@ -357,7 +358,7 @@ visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 [node name="Lights" type="Spatial" parent="VehicleTypes/racer"]
 
 [node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/racer/Lights"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.163859, 1.39401 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.385479, 0.422091, 1.51829 )
 visible = false
 light_energy = 5.0
 shadow_enabled = true
@@ -365,7 +366,7 @@ spot_range = 50.0
 spot_angle = 20.0
 
 [node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/racer/Lights"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.39401 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.417757, 1.48845 )
 visible = false
 light_energy = 5.0
 shadow_enabled = true
@@ -373,7 +374,7 @@ spot_range = 50.0
 spot_angle = 20.0
 
 [node name="LightBackRight" type="OmniLight" parent="VehicleTypes/racer/Lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.29508 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.564825, 0.566112, -1.39086 )
 visible = false
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
@@ -381,7 +382,7 @@ shadow_enabled = true
 shadow_reverse_cull_face = true
 
 [node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/racer/Lights"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.362708, 0.190666, -1.31362 )
+transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.606162, 0.553532, -1.42855 )
 visible = false
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
@@ -529,7 +530,6 @@ collide_with_areas = true
 
 [node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/racer/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.565, 0.275, 0.953 )
-engine_force = 40.0
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.9
@@ -555,7 +555,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/racer/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.571, 0.275, -0.881 )
-engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.23
@@ -580,7 +579,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/racer/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.577, 0.275, 0.922 )
-engine_force = 40.0
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.9
@@ -607,7 +605,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/racer/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.577, 0.275, -0.88 )
-engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.23
@@ -633,7 +630,6 @@ material = ExtResource( 14 )
 
 [node name="rally" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.585815, -0.0955184 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/rally"]
 
@@ -740,7 +736,7 @@ material/0 = null
 [node name="CollisionShapes" type="Spatial" parent="VehicleTypes/rally"]
 
 [node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/rally/CollisionShapes"]
-transform = Transform( 1, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.338192, 0.0492305 )
+transform = Transform( 1.2108, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.29465, 0.0492305 )
 shape = SubResource( 51 )
 
 [node name="Effects" type="Spatial" parent="VehicleTypes/rally"]
@@ -794,28 +790,28 @@ visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 [node name="Lights" type="Spatial" parent="VehicleTypes/rally"]
 
 [node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/rally/Lights"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.163859, 1.39401 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.163859, 1.68761 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
 [node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/rally/Lights"]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.39401 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.63538 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
 [node name="LightBackRight" type="OmniLight" parent="VehicleTypes/rally/Lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.29508 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.63485 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
 shadow_reverse_cull_face = true
 
 [node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/rally/Lights"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.362708, 0.190666, -1.31362 )
+transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.354234, 0.190666, -1.61123 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
@@ -954,7 +950,6 @@ collide_with_areas = true
 
 [node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/rally/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.565, -0.07, 1.046 )
-engine_force = 40.0
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.9
@@ -980,7 +975,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/rally/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.571, -0.07, -0.814 )
-engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3
@@ -1006,7 +1000,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/rally/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.577, -0.07, 1.038 )
-engine_force = 40.0
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.9
@@ -1033,7 +1026,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/rally/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.577, -0.07, -0.774 )
-engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3
@@ -1393,7 +1385,6 @@ collide_with_areas = true
 
 [node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.690934, 0.0377834, 1.07156 )
-engine_force = 40.0
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.9
@@ -1420,7 +1411,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.692721, 0.0405158, -1.05442 )
-engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3
@@ -1447,7 +1437,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.682086, 0.014165, 1.038 )
-engine_force = 40.0
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.9
@@ -1475,7 +1464,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.680638, 0.014165, -1.06772 )
-engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3
@@ -1502,7 +1490,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel5" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.680638, 0.014165, -0.0672405 )
-engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3
@@ -1529,7 +1516,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel6" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.692359, 0.014165, -0.0256135 )
-engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3
@@ -1877,7 +1863,6 @@ collide_with_areas = true
 
 [node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/truck/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.438, -0.2, 1.247 )
-engine_force = 40.0
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.9
@@ -1903,7 +1888,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/truck/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.535, -0.2, -0.793 )
-engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3
@@ -1929,7 +1913,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/truck/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.488, -0.2, 1.242 )
-engine_force = 40.0
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.9
@@ -1956,7 +1939,6 @@ material = ExtResource( 14 )
 
 [node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/truck/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.538562, -0.200321, -0.868905 )
-engine_force = 40.0
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3

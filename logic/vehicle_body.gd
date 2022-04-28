@@ -57,20 +57,20 @@ var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"wheel_friction_slip": 5.0,
 									"wheel_roll_influence": 0.9}, 
 						"racer": {"scene": "res://scenes/vehicle_racer.tscn", 
-									"engine_force_value": 210,  # keep this at 3x mass
+									"engine_force_value": 220,  # keep this at 3x mass
 									"mass_kg/100": 70.0, 
 									"suspension_stiffness": 75.0, 
 									"suspension_travel": 0.5,
 									"all_wheel_drive": false,
-									"wheel_friction_slip": 1.0,
+									"wheel_friction_slip": 1.1,
 									"wheel_roll_influence": 0.9}, 
 						"rally": {"scene": "res://scenes/vehicle_rally.tscn", 
-									"engine_force_value": 150,  # keep this at 3x mass
+									"engine_force_value": 70,  # keep this at 3x mass
 									"mass_kg/100": 50.0, 
 									"suspension_stiffness": 40.0, 
 									"suspension_travel": 2.0,
 									"all_wheel_drive": true,
-									"wheel_friction_slip": 1.4,
+									"wheel_friction_slip": 1.3,
 									"wheel_roll_influence": 0.9}, 
 						"truck": {"scene": "res://scenes/vehicle_truck.tscn", 
 									"engine_force_value": 200,  # keep this at 1x mass

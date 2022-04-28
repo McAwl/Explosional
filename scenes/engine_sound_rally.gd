@@ -49,7 +49,10 @@ func _process(delta):
 					if accel != null:
 						if accel >= 0.01:  # speeding up
 							if current_position_sec < increase_speed_2[0] or current_position_sec > increase_speed_2[1]:
-								self.play(increase_speed_2[0])
+								if current_position_sec > increase_speed_2[1] and state == 2:
+									self.play(gear_change_1[0])  # change back down to the gear change and repeat
+								else:
+									self.play(increase_speed_2[0])
 								if state != 2:
 									slowly_increase_volume(0.5)
 								state = 2

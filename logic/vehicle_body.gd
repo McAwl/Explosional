@@ -55,7 +55,8 @@ var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"suspension_travel": 0.1,
 									"all_wheel_drive": true,
 									"wheel_friction_slip": 15.0,
-									"wheel_roll_influence": 0.9}, 
+									"wheel_roll_influence": 0.9,
+									"brake": 40.0}, 
 						"racer": {"scene": "res://scenes/vehicle_racer.tscn", 
 									"engine_force_value": 220,  # keep this at 3x mass
 									"mass_kg/100": 70.0, 
@@ -63,7 +64,8 @@ var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"suspension_travel": 0.5,
 									"all_wheel_drive": false,
 									"wheel_friction_slip": 1.1,
-									"wheel_roll_influence": 0.9}, 
+									"wheel_roll_influence": 0.9,
+									"brake": 10.0}, 
 						"rally": {"scene": "res://scenes/vehicle_rally.tscn", 
 									"engine_force_value": 70,  # keep this at 3x mass
 									"mass_kg/100": 50.0, 
@@ -71,7 +73,8 @@ var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"suspension_travel": 2.0,
 									"all_wheel_drive": true,
 									"wheel_friction_slip": 1.3,
-									"wheel_roll_influence": 0.9}, 
+									"wheel_roll_influence": 0.9,
+									"brake": 5.0}, 
 						"truck": {"scene": "res://scenes/vehicle_truck.tscn", 
 									"engine_force_value": 200,  # keep this at 1x mass
 									"mass_kg/100": 200.0, 
@@ -79,7 +82,8 @@ var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"suspension_travel":0.2,
 									"all_wheel_drive": false,
 									"wheel_friction_slip":1.0,
-									"wheel_roll_influence": 0.9}}
+									"wheel_roll_influence": 0.9,
+									"brake": 40.0}}
 var vehicle_type = "racer"
 var vehicle_state = 'alive'  # 'alive', 'dying', 'dead'
 var set_pos = false
@@ -483,7 +487,7 @@ func _physics_process(delta):
 	
 	var new_vel = get_linear_velocity()
 	var new_vel_max = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
-	fwd_mps = transform.basis.xform_inv(linear_velocity).x
+	fwd_mps = transform.basis.xform_inv(linear_velocity).z  # global velocity rotated to our forward (z) direction
 	# Smooth out the accel calc by using a 50/50 exponentially-weighted moving average
 	acceleration_calc_for_damage = (0.5*acceleration_calc_for_damage) + (0.5*abs(new_vel_max - vel_max)/delta)
 	vel_max = new_vel_max
@@ -497,25 +501,19 @@ func _physics_process(delta):
 	
 		if Input.is_action_pressed("accelerate_player"+str(player_number)):
 			# Increase engine force at low speeds to make the initial acceleration faster.
-			update_speed()
-			if speed < speed_low_limit and speed != 0:
-				engine_force = clamp(engine_force_value * speed_low_limit / speed, 0, 100)
+			if fwd_mps < speed_low_limit and speed != 0:
+				engine_force = clamp(engine_force_value * speed_low_limit / fwd_mps, 0, 100)
 			else:
 				engine_force = engine_force_value
 		else:
 			engine_force = 0
 			
 		if Input.is_action_pressed("reverse_player"+str(player_number)):
-			# Increase engine force at low speeds to make the initial acceleration faster.
-			if fwd_mps >= -1:
-				brake = vehicle_types[vehicle_type]["mass_kg/100"] / 5.0  # 1 
-				update_speed()
-				if speed < speed_low_limit and speed != 0:
-					engine_force = -clamp(engine_force_value * speed_low_limit / speed, 0, 100)
-				else:
-					engine_force = -engine_force_value
+			if fwd_mps < 0.0:
+				engine_force = -engine_force_value/2.0  # slower in reverse
 			else:
-				brake = vehicle_types[vehicle_type]["mass_kg/100"] / 5.0  # 1 
+				engine_force = 0
+				brake = vehicle_types[vehicle_type]["brake"]
 		else:
 			brake = 0.0
 			

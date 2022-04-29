@@ -38,6 +38,8 @@ func _process(delta):
 			stream_paused = true
 		else:
 			stream_paused = false
+	elif Input.is_action_just_released("music_next_track"):
+		load_new_track()
 
 	# once in a whie, check all music is disabled or move to the next track
 	if timer_0_5s < 0.0:

@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Ian Fever - Insane (Original Mix).mp3-02a6c02f78f38d0af926d0d21627ba69.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/music/background/Ian Fever - Insane (Original Mix).mp3"
+dest_files=[ "res://.import/Ian Fever - Insane (Original Mix).mp3-02a6c02f78f38d0af926d0d21627ba69.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

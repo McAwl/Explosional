@@ -178,8 +178,7 @@ func check_game_over():
 
 
 func all_audio_pitch(pitch):
-	for t in $BackgroundMusic.get_children():
-		t.pitch_scale = pitch
+	$background_music.pitch_scale = pitch
 	$siren.pitch_scale = pitch
 
 

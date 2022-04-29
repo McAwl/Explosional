@@ -18,7 +18,7 @@
 [ext_resource path="res://scenes/vehicle_truck_mesh_import.tscn" type="PackedScene" id=16]
 [ext_resource path="res://scenes/vehicle_tank_mesh_import.tscn" type="PackedScene" id=17]
 [ext_resource path="res://assets/audio/sounds/181161__martian__motorbike-hornet-600-onboard-clip-0005-n3-f.wav" type="AudioStream" id=18]
-[ext_resource path="res://scenes/engine_sound_rally.gd" type="Script" id=19]
+[ext_resource path="res://logic/engine_sound_rally.gd" type="Script" id=19]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
@@ -351,6 +351,7 @@ omni_range = 7.0
 
 [node name="Flames3D" parent="VehicleTypes/racer/Effects/Damage" instance=ExtResource( 10 )]
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.00169557, 0.638577, -0.0955184 )
+amount = 1
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 local_coords = false
 
@@ -1205,6 +1206,7 @@ omni_range = 7.0
 
 [node name="Flames3D" parent="VehicleTypes/tank/Effects/Damage" instance=ExtResource( 10 )]
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.00169557, 0.747907, -0.0955184 )
+amount = 1
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 
 [node name="Lights" type="Spatial" parent="VehicleTypes/tank"]

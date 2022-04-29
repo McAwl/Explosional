@@ -24,6 +24,7 @@ const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "missile": 60.0, "n
 var cooldown_timer = COOLDOWN_TIMER_DEFAULTS["mine"]
 var timer_0_1_sec = 0.1
 var timer_1_sec = 1.0  # timer to eg: check if car needs to turn light on 
+var timer_1_sec_physics = 1.0  # to check and correct clipping, etc
 var lifetime_so_far_sec = 0.0  # to eg disable air strikes for a bit after re-spawn
 var hit_by_missile = {"active": false, "homing": null, "origin": null, "velocity": null, "direct_hit": null, "distance": null}
 var max_damage = 10.0
@@ -547,6 +548,27 @@ func _physics_process(delta):
 			
 		hit_by_missile["active"] = false
 
+	timer_1_sec_physics -= delta
+	if timer_1_sec_physics < 0.0:
+		timer_1_sec_physics = 1.0
+		check_for_clipping()
+
+func check_for_clipping():
+	if abs(fwd_mps_0_1) < 0.1:  # stationary
+		print("Checking for clipping")
+		var num_wheels_clipped = 0
+		for raycast in $Raycasts.get_children():
+			if "Wheel" in raycast.name:
+				if not raycast.is_colliding():
+					num_wheels_clipped += 1
+					print("raycast "+raycast.name+" not colliding")
+				else:
+					print("raycast "+raycast.name+" is colliding with "+str(raycast.get_collider().name))
+		if num_wheels_clipped > 0:
+			print("applying impulse - wheel(s) are clipped")
+			apply_impulse( Vector3(0, -10.0, 0), Vector3(0.0, 5*vehicle_types[vehicle_type]["mass_kg/100"], 0.0) )   # from underneath, upwards force
+			check_accel_damage_timer = 2.0  # disable damage for temporarily
+	
 
 func update_speed():
 	speed = linear_velocity.length()

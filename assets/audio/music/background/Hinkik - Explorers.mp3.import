@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Hinkik - Explorers.mp3-3cb703f1aa1a04350295244fcf1e8924.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/music/background/Hinkik - Explorers.mp3"
+dest_files=[ "res://.import/Hinkik - Explorers.mp3-3cb703f1aa1a04350295244fcf1e8924.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

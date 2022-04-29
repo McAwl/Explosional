@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/562287__digimistic__happy-dance-groove-short-song.mp3-9d91f1a75130477be94ed7f6813885ed.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/music/background/562287__digimistic__happy-dance-groove-short-song.mp3"
+dest_files=[ "res://.import/562287__digimistic__happy-dance-groove-short-song.mp3-9d91f1a75130477be94ed7f6813885ed.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

@@ -62,7 +62,7 @@ var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"engine_force_value": 220,  # keep this at 3x mass
 									"mass_kg/100": 70.0, 
 									"suspension_stiffness": 75.0, 
-									"suspension_travel": 0.5,
+									"suspension_travel": 0.25,
 									"all_wheel_drive": false,
 									"wheel_friction_slip": 1.1,
 									"wheel_roll_influence": 0.9,

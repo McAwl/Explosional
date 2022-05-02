@@ -130,8 +130,8 @@ func _physics_process(_delta):
 					
 				#staticbody.queue_free() # use this if using .create_convex_collision ( )
 				#var direction = Vector3(rng.randf_range(-0.1, 0.1), rng.randf_range(-1, -2), rng.randf_range(-0.1, 0.1))
-				var direction = Vector3(rng.randf_range(-0.1, 0.1), rng.randf_range(0.0, 0.2), rng.randf_range(-0.1, 0.1))  # Vector3(0.0, 1.0, 0.0)=up
-				var force_origin = Vector3(0, -20.0, 0)
+				# var direction = Vector3(rng.randf_range(-0.1, 0.1), rng.randf_range(0.0, 0.2), rng.randf_range(-0.1, 0.1))  # Vector3(0.0, 1.0, 0.0)=up
+				# var force_origin = Vector3(0, -20.0, 0)
 				# new_exploded_vehicle_part.apply_impulse( force_origin, force*(direction.normalized()) )
 			else:
 				ch.queue_free()  # if not a MeshInstance, delete everything but meshes

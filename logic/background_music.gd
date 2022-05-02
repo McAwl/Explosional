@@ -59,5 +59,5 @@ func load_new_track():
 		playing = true
 	else:
 		print("Error: no music tracks")
-		stream_paused
+
 

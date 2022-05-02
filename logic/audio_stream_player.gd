@@ -21,7 +21,7 @@ func _process(delta):
 		if timer_0_1s <= 0.0:
 			timer_0_1s = 0.1
 			# var speed = get_parent().get_parent().get_parent().get_speed()
-			var engine_force_value_ewma = get_parent().get_parent().get_parent().engine_force_ewma
+			# var engine_force_value_ewma = get_parent().get_parent().get_parent().engine_force_ewma
 			var speed = get_parent().get_parent().get_parent().get_speed()
 			pitch_scale = 1.0 + (speed/30.0)
 			#if engine_force_value_ewma != null:

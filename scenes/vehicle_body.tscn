@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://logic/vehicle_body.gd" type="Script" id=2]
@@ -94,6 +94,8 @@ material = SubResource( 50 )
 radius = 0.308364
 height = 1.43153
 
+[sub_resource type="SphereMesh" id=53]
+
 [sub_resource type="CylinderMesh" id=52]
 
 [node name="vehicle_body" type="VehicleBody"]
@@ -120,6 +122,34 @@ min_distance = 3.0
 height = 1.25
 
 [node name="MeshInstance" type="MeshInstance" parent="CameraBase/Camera"]
+transform = Transform( 0.1, 0, -2.32831e-10, 5.82077e-11, 0.1, 0, 0, 0, 0.1, -1.49012e-08, 0.233574, 0.0581388 )
+visible = false
+mesh = SubResource( 30 )
+material/0 = null
+
+[node name="CameraFPFront" type="Camera" parent="CameraBase"]
+transform = Transform( -0.998921, 0.0022015, 0.0463806, -2.11161e-08, 0.998875, -0.0474129, -0.0464328, -0.0473618, -0.997798, -0.206391, -1.09972, 2.8348 )
+visible = false
+current = true
+fov = 74.0
+near = 0.1
+far = 1000.0
+
+[node name="MeshInstance" type="MeshInstance" parent="CameraBase/CameraFPFront"]
+transform = Transform( 0.1, 0, -2.32831e-10, 5.82077e-11, 0.1, 0, 0, 0, 0.1, -1.49012e-08, 0.233574, 0.0581388 )
+visible = false
+mesh = SubResource( 30 )
+material/0 = null
+
+[node name="CameraFPBack" type="Camera" parent="CameraBase"]
+transform = Transform( 0.999135, 0.0022015, -0.0415334, -0.000230025, 0.998875, 0.0474124, 0.0415911, -0.0473618, 0.998012, -0.0271316, -1.06924, 1.60346 )
+visible = false
+current = true
+fov = 74.0
+near = 0.1
+far = 1000.0
+
+[node name="MeshInstance" type="MeshInstance" parent="CameraBase/CameraFPBack"]
 transform = Transform( 0.1, 0, -2.32831e-10, 5.82077e-11, 0.1, 0, 0, 0, 0.1, -1.49012e-08, 0.233574, 0.0581388 )
 visible = false
 mesh = SubResource( 30 )
@@ -196,6 +226,7 @@ material = ExtResource( 6 )
 
 [node name="racer" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
+visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/racer"]
 
@@ -449,6 +480,15 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 1.1137 )
 [node name="RocketPosition" type="Position3D" parent="VehicleTypes/racer/Positions/weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.511921, 1.3363 )
 
+[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/racer/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.471426, 0.706395 )
+
+[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/racer/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.790727, -0.831568 )
+
+[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/racer/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.675392, 1.04335 )
+
 [node name="Raycasts" type="Spatial" parent="VehicleTypes/racer"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
 
@@ -522,6 +562,30 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.753279, 0.089927, -0.784482 
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
+
+[node name="RayCastCamToVehicle" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.569466, 0.822015, 0, -0.822015, 0.569466, 0, 1.83384, -3.28202 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/Raycasts/RayCastCamToVehicle"]
+transform = Transform( 0, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+visible = false
+mesh = SubResource( 53 )
+material/0 = null
+
+[node name="RayCastVehicleToCam" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+transform = Transform( 1, 0, 0, 0, -0.536843, -0.843682, 0, 0.843682, -0.536843, 0.02299, 0.638988, -1.21612 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/Raycasts/RayCastVehicleToCam"]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+visible = false
+mesh = SubResource( 53 )
+material/0 = null
 
 [node name="Wheels" type="Spatial" parent="VehicleTypes/racer"]
 
@@ -868,6 +932,33 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 1.1137 )
 [node name="RocketPosition" type="Position3D" parent="VehicleTypes/rally/Positions/weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.511921, 1.3363 )
 
+[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/rally/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.768255, -1.42907 )
+
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/Positions/CamRaycastTargetRear"]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+visible = false
+mesh = SubResource( 53 )
+material/0 = null
+
+[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/rally/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.458232, 1.04335 )
+
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/Positions/CamRaycastTargetFront"]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+visible = false
+mesh = SubResource( 53 )
+material/0 = null
+
+[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/rally/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.471426, 0.706395 )
+
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/Positions/FirstPersonViewFront"]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+visible = false
+mesh = SubResource( 53 )
+material/0 = null
+
 [node name="Raycasts" type="Spatial" parent="VehicleTypes/rally"]
 
 [node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
@@ -940,6 +1031,30 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.834748, -0.0861212, -0.774 
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
+
+[node name="RayCastCamToVehicle" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.569466, 0.822015, 0, -0.822015, 0.569466, 0, 1.83384, -3.28202 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/Raycasts/RayCastCamToVehicle"]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+visible = false
+mesh = SubResource( 53 )
+material/0 = null
+
+[node name="RayCastVehicleToCam" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+transform = Transform( 1, 0, 0, 0, -0.536843, -0.843682, 0, 0.843682, -0.536843, -0.0364914, 0.746724, -1.57367 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/Raycasts/RayCastVehicleToCam"]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+visible = false
+mesh = SubResource( 53 )
+material/0 = null
 
 [node name="Wheels" type="Spatial" parent="VehicleTypes/rally"]
 
@@ -1286,6 +1401,15 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.860642, 2.71406 
 [node name="RocketPosition" type="Position3D" parent="VehicleTypes/tank/Positions/weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.876156, 2.57317 )
 
+[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/tank/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.471426, 0.706395 )
+
+[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/tank/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.790727, -0.831568 )
+
+[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/tank/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.675392, 1.04335 )
+
 [node name="Raycasts" type="Spatial" parent="VehicleTypes/tank"]
 
 [node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
@@ -1370,6 +1494,30 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.959374, -0.0285062, -0.02561
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
+
+[node name="RayCastCamToVehicle" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.569466, 0.822015, 0, -0.822015, 0.569466, 0, 1.83384, -3.28202 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/Raycasts/RayCastCamToVehicle"]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+visible = false
+mesh = SubResource( 53 )
+material/0 = null
+
+[node name="RayCastVehicleToCam" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+transform = Transform( 1, 0, 0, 0, -0.536843, -0.843682, 0, 0.843682, -0.536843, -0.0364914, 0.746724, -1.57367 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/Raycasts/RayCastVehicleToCam"]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+visible = false
+mesh = SubResource( 53 )
+material/0 = null
 
 [node name="Wheels" type="Spatial" parent="VehicleTypes/tank"]
 
@@ -1772,6 +1920,15 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 2.29528 
 [node name="RocketPosition" type="Position3D" parent="VehicleTypes/truck/Positions/weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 1.09402, 2.36637 )
 
+[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/truck/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.18967, 1.55989 )
+
+[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/truck/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.790728, -1.90322 )
+
+[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/truck/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.02189, 1.895 )
+
 [node name="Raycasts" type="Spatial" parent="VehicleTypes/truck"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.33902 )
 
@@ -1845,6 +2002,30 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.911611, -0.218205, -3.20793
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
+
+[node name="RayCastCamToVehicle" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.569466, 0.822015, 0, -0.822015, 0.569466, 0, 2.51376, -5.96895 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/Raycasts/RayCastCamToVehicle"]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+visible = false
+mesh = SubResource( 53 )
+material/0 = null
+
+[node name="RayCastVehicleToCam" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+transform = Transform( 1, 0, 0, 0, -0.536843, -0.843682, 0, 0.843682, -0.536843, -0.0364914, 1.32061, -4.31257 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )
+collide_with_areas = true
+
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/Raycasts/RayCastVehicleToCam"]
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+visible = false
+mesh = SubResource( 53 )
+material/0 = null
 
 [node name="Wheels" type="Spatial" parent="VehicleTypes/truck"]
 

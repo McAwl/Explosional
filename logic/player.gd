@@ -84,7 +84,9 @@ func init_vehicle_body(pos):
 	var vehicle_body = load("res://scenes/vehicle_body.tscn").instance()
 	get_viewport().add_child(vehicle_body)
 	# vehicle_body = load("res://scenes/trailer_truck.tscn").instance()
-	vehicle_body.init(pos, player_number, "vehicle_body", number_players)
+	var retval = vehicle_body.init(pos, player_number, "vehicle_body", number_players)
+	if retval == false:
+		print("Error: couldn't initialise vehicle body")
 	
 
 func set_viewport_container_one(_player_number):

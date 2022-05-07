@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=1]
 [ext_resource path="res://assets/models/vehicles/Bugatti(1).dae" type="PackedScene" id=2]
@@ -10,6 +10,8 @@
 [ext_resource path="res://assets/models/vehicles/Material.material" type="Material" id=8]
 [ext_resource path="res://assets/models/vehicles/calipers.material" type="Material" id=9]
 [ext_resource path="res://assets/models/vehicles/chrome.material" type="Material" id=10]
+[ext_resource path="res://assets/materials/vehicles/car_blue_body.tres" type="Material" id=11]
+[ext_resource path="res://assets/materials/vehicles/car_grill.tres" type="Material" id=12]
 
 [sub_resource type="ArrayMesh" id=48]
 resource_name = "Plane.021"
@@ -301,7 +303,7 @@ mesh = SubResource( 15 )
 material/0 = ExtResource( 1 )
 
 [node name="chrome004" parent="." index="13"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11365, 2.19973, 6.67809 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11365, 2.25937, 6.67809 )
 material/0 = ExtResource( 5 )
 
 [node name="chrome014" parent="." index="14"]
@@ -314,6 +316,7 @@ material/0 = ExtResource( 6 )
 
 [node name="Mesh003" parent="." index="16"]
 transform = Transform( 1.26481, 0, 0, 0, 1.26481, 0, 0, 0, 1.26481, 0.0541425, 0.413136, 0.857477 )
+material/0 = ExtResource( 12 )
 
 [node name="Mesh017" parent="." index="17"]
 transform = Transform( 1.29241, 0, 0, 0, 1.29241, 0, 0, 0, 1.29241, 0.09445, 0.208856, 0.45468 )
@@ -323,6 +326,7 @@ transform = Transform( 1.29241, 0, 0, 0, 1.29241, 0, 0, 0, 1.29241, 0.09445, 0.2
 
 [node name="Mesh022" parent="." index="19"]
 transform = Transform( 1.25734, 0, 0, 0, 1.25734, 0, 0, 0, 1.25734, 0.0327289, 0.41965, 0.823165 )
+material/0 = ExtResource( 11 )
 
 [node name="Plane010" parent="." index="20"]
 transform = Transform( 0.00591115, 0.999982, -4.4703e-08, -0.999982, 0.00591115, 4.44392e-08, 4.47027e-08, 4.44395e-08, 1, -1.33196, 2.06349, 8.22197 )

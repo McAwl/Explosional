@@ -33,7 +33,7 @@ albedo_texture = ExtResource( 1 )
 resource_local_to_scene = true
 material = SubResource( 36 )
 
-[node name="smoke_trail" type="Particles"]
+[node name="SmokeTrail" type="Particles"]
 emitting = false
 amount = 20
 lifetime = 4.48

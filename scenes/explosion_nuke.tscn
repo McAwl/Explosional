@@ -101,7 +101,7 @@ material = SubResource( 16 )
 [sub_resource type="Animation" id=1]
 length = 0.001
 tracks/0/type = "value"
-tracks/0/path = NodePath("column:process_material:emission_ring_height")
+tracks/0/path = NodePath("Column:process_material:emission_ring_height")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -113,7 +113,7 @@ tracks/0/keys = {
 "values": [ 1.0 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("column:translation")
+tracks/1/path = NodePath("Column:translation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -125,7 +125,7 @@ tracks/1/keys = {
 "values": [ Vector3( 0, 0, 0 ) ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("column:amount")
+tracks/2/path = NodePath("Column:amount")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -137,7 +137,7 @@ tracks/2/keys = {
 "values": [ 200 ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("top/bottom:process_material:emission_ring_radius")
+tracks/3/path = NodePath("Top/Bottom:process_material:emission_ring_radius")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -149,7 +149,7 @@ tracks/3/keys = {
 "values": [ 2.0 ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("top/bottom:process_material:emission_ring_inner_radius")
+tracks/4/path = NodePath("Top/Bottom:process_material:emission_ring_inner_radius")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
@@ -161,7 +161,7 @@ tracks/4/keys = {
 "values": [ 0.0 ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("top:translation")
+tracks/5/path = NodePath("Top:translation")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
@@ -173,7 +173,7 @@ tracks/5/keys = {
 "values": [ Vector3( 0, 0, 0 ) ]
 }
 tracks/6/type = "value"
-tracks/6/path = NodePath("top/top:process_material:emission_ring_radius")
+tracks/6/path = NodePath("Top/Top:process_material:emission_ring_radius")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/imported = false
@@ -185,7 +185,7 @@ tracks/6/keys = {
 "values": [ 10.0 ]
 }
 tracks/7/type = "value"
-tracks/7/path = NodePath("top/top:process_material:emission_ring_inner_radius")
+tracks/7/path = NodePath("Top/Top:process_material:emission_ring_inner_radius")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/imported = false
@@ -197,7 +197,7 @@ tracks/7/keys = {
 "values": [ 0.0 ]
 }
 tracks/8/type = "value"
-tracks/8/path = NodePath("top/top:process_material:emission_ring_height")
+tracks/8/path = NodePath("Top/Top:process_material:emission_ring_height")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/imported = false
@@ -209,7 +209,7 @@ tracks/8/keys = {
 "values": [ 1.0 ]
 }
 tracks/9/type = "value"
-tracks/9/path = NodePath("top/top:process_material:radial_accel")
+tracks/9/path = NodePath("Top/Top:process_material:radial_accel")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/imported = false
@@ -221,7 +221,7 @@ tracks/9/keys = {
 "values": [ 13.0 ]
 }
 tracks/10/type = "value"
-tracks/10/path = NodePath("top/bottom:process_material:radial_accel")
+tracks/10/path = NodePath("Top/Bottom:process_material:radial_accel")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
 tracks/10/imported = false
@@ -233,7 +233,7 @@ tracks/10/keys = {
 "values": [ -2.0 ]
 }
 tracks/11/type = "value"
-tracks/11/path = NodePath("top/OmniLight:light_energy")
+tracks/11/path = NodePath("Top/OmniLight:light_energy")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/imported = false
@@ -245,7 +245,7 @@ tracks/11/keys = {
 "values": [ 1.0 ]
 }
 tracks/12/type = "value"
-tracks/12/path = NodePath("column:emitting")
+tracks/12/path = NodePath("Column:emitting")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/imported = false
@@ -257,7 +257,7 @@ tracks/12/keys = {
 "values": [ false, false ]
 }
 tracks/13/type = "value"
-tracks/13/path = NodePath("top/bottom:emitting")
+tracks/13/path = NodePath("Top/Bottom:emitting")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/imported = false
@@ -269,7 +269,7 @@ tracks/13/keys = {
 "values": [ false, false ]
 }
 tracks/14/type = "value"
-tracks/14/path = NodePath("top/top:emitting")
+tracks/14/path = NodePath("Top/Top:emitting")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/imported = false
@@ -281,7 +281,7 @@ tracks/14/keys = {
 "values": [ false, false ]
 }
 tracks/15/type = "value"
-tracks/15/path = NodePath("column:process_material:scale")
+tracks/15/path = NodePath("Column:process_material:scale")
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
 tracks/15/imported = false
@@ -293,7 +293,7 @@ tracks/15/keys = {
 "values": [ 3.0 ]
 }
 tracks/16/type = "value"
-tracks/16/path = NodePath("top/bottom:process_material:scale")
+tracks/16/path = NodePath("Top/Bottom:process_material:scale")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/imported = false
@@ -305,7 +305,7 @@ tracks/16/keys = {
 "values": [ 3.0 ]
 }
 tracks/17/type = "value"
-tracks/17/path = NodePath("top/top:process_material:scale")
+tracks/17/path = NodePath("Top/Top:process_material:scale")
 tracks/17/interp = 1
 tracks/17/loop_wrap = true
 tracks/17/imported = false
@@ -346,7 +346,7 @@ resource_name = "nuke"
 length = 15.0
 step = 0.25
 tracks/0/type = "value"
-tracks/0/path = NodePath("column:process_material:emission_ring_height")
+tracks/0/path = NodePath("Column:process_material:emission_ring_height")
 tracks/0/interp = 1
 tracks/0/loop_wrap = false
 tracks/0/imported = false
@@ -358,7 +358,7 @@ tracks/0/keys = {
 "values": [ 1.0, 25.0 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("column:translation")
+tracks/1/path = NodePath("Column:translation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = false
 tracks/1/imported = false
@@ -370,7 +370,7 @@ tracks/1/keys = {
 "values": [ Vector3( 0, -10, 0 ), Vector3( 0, 24, 0 ) ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("top/bottom:process_material:emission_ring_radius")
+tracks/2/path = NodePath("Top/Bottom:process_material:emission_ring_radius")
 tracks/2/interp = 1
 tracks/2/loop_wrap = false
 tracks/2/imported = false
@@ -382,7 +382,7 @@ tracks/2/keys = {
 "values": [ 4.0, 24.0 ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("top/bottom:process_material:emission_ring_inner_radius")
+tracks/3/path = NodePath("Top/Bottom:process_material:emission_ring_inner_radius")
 tracks/3/interp = 1
 tracks/3/loop_wrap = false
 tracks/3/imported = false
@@ -394,7 +394,7 @@ tracks/3/keys = {
 "values": [ 4.0, 24.0 ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("top:translation")
+tracks/4/path = NodePath("Top:translation")
 tracks/4/interp = 1
 tracks/4/loop_wrap = false
 tracks/4/imported = false
@@ -406,7 +406,7 @@ tracks/4/keys = {
 "values": [ Vector3( 0, -10, 0 ), Vector3( 0, 40, 0 ) ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("top/top:process_material:emission_ring_radius")
+tracks/5/path = NodePath("Top/Top:process_material:emission_ring_radius")
 tracks/5/interp = 1
 tracks/5/loop_wrap = false
 tracks/5/imported = false
@@ -418,7 +418,7 @@ tracks/5/keys = {
 "values": [ 3.0, 23.0 ]
 }
 tracks/6/type = "value"
-tracks/6/path = NodePath("top/top:process_material:emission_ring_inner_radius")
+tracks/6/path = NodePath("Top/Top:process_material:emission_ring_inner_radius")
 tracks/6/interp = 1
 tracks/6/loop_wrap = false
 tracks/6/imported = false
@@ -430,7 +430,7 @@ tracks/6/keys = {
 "values": [ 1.0, 21.0 ]
 }
 tracks/7/type = "value"
-tracks/7/path = NodePath("top/top:process_material:radial_accel")
+tracks/7/path = NodePath("Top/Top:process_material:radial_accel")
 tracks/7/interp = 1
 tracks/7/loop_wrap = false
 tracks/7/imported = false
@@ -442,7 +442,7 @@ tracks/7/keys = {
 "values": [ 13.0, 13.0 ]
 }
 tracks/8/type = "value"
-tracks/8/path = NodePath("top/bottom:process_material:radial_accel")
+tracks/8/path = NodePath("Top/Bottom:process_material:radial_accel")
 tracks/8/interp = 1
 tracks/8/loop_wrap = false
 tracks/8/imported = false
@@ -454,7 +454,7 @@ tracks/8/keys = {
 "values": [ -1.0, -2.0 ]
 }
 tracks/9/type = "value"
-tracks/9/path = NodePath("top/OmniLight:light_energy")
+tracks/9/path = NodePath("Top/OmniLight:light_energy")
 tracks/9/interp = 1
 tracks/9/loop_wrap = false
 tracks/9/imported = false
@@ -466,7 +466,7 @@ tracks/9/keys = {
 "values": [ 100.0, 10.0, 0.0 ]
 }
 tracks/10/type = "value"
-tracks/10/path = NodePath("column:emitting")
+tracks/10/path = NodePath("Column:emitting")
 tracks/10/interp = 1
 tracks/10/loop_wrap = false
 tracks/10/imported = false
@@ -478,7 +478,7 @@ tracks/10/keys = {
 "values": [ false, true, false ]
 }
 tracks/11/type = "value"
-tracks/11/path = NodePath("top/bottom:emitting")
+tracks/11/path = NodePath("Top/Bottom:emitting")
 tracks/11/interp = 1
 tracks/11/loop_wrap = false
 tracks/11/imported = false
@@ -490,7 +490,7 @@ tracks/11/keys = {
 "values": [ false, true, false ]
 }
 tracks/12/type = "value"
-tracks/12/path = NodePath("top/top:emitting")
+tracks/12/path = NodePath("Top/Top:emitting")
 tracks/12/interp = 1
 tracks/12/loop_wrap = false
 tracks/12/imported = false
@@ -502,7 +502,7 @@ tracks/12/keys = {
 "values": [ false, true, false ]
 }
 tracks/13/type = "value"
-tracks/13/path = NodePath("column:process_material:scale")
+tracks/13/path = NodePath("Column:process_material:scale")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/imported = false
@@ -514,7 +514,7 @@ tracks/13/keys = {
 "values": [ 4.0, 12.0 ]
 }
 tracks/14/type = "value"
-tracks/14/path = NodePath("top/bottom:process_material:scale")
+tracks/14/path = NodePath("Top/Bottom:process_material:scale")
 tracks/14/interp = 1
 tracks/14/loop_wrap = true
 tracks/14/imported = false
@@ -526,7 +526,7 @@ tracks/14/keys = {
 "values": [ 4.0, 12.0 ]
 }
 tracks/15/type = "value"
-tracks/15/path = NodePath("top/top:process_material:scale")
+tracks/15/path = NodePath("Top/Top:process_material:scale")
 tracks/15/interp = 1
 tracks/15/loop_wrap = true
 tracks/15/imported = false
@@ -586,11 +586,11 @@ material = SubResource( 21 )
 
 [node name="ExplosionNuke" type="Spatial"]
 
-[node name="explosion_nuke_sound" type="AudioStreamPlayer" parent="."]
+[node name="ExplosionNukeSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 2 )
 volume_db = -6.992
 
-[node name="column" type="Particles" parent="."]
+[node name="Column" type="Particles" parent="."]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
 emitting = false
 amount = 200
@@ -599,14 +599,14 @@ local_coords = false
 process_material = SubResource( 5 )
 draw_pass_1 = SubResource( 7 )
 
-[node name="top" type="Spatial" parent="."]
+[node name="Top" type="Spatial" parent="."]
 
-[node name="OmniLight" type="OmniLight" parent="top"]
+[node name="OmniLight" type="OmniLight" parent="Top"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 32.118, 0 )
 light_color = Color( 1, 0.937255, 0, 1 )
 omni_range = 250.0
 
-[node name="bottom" type="Particles" parent="top"]
+[node name="Bottom" type="Particles" parent="Top"]
 transform = Transform( 1, 0, 0, 0, 0.00246091, 0.999997, 0, -0.999997, 0.00246091, 0, 12.1783, 0 )
 emitting = false
 amount = 200
@@ -614,7 +614,7 @@ lifetime = 4.0
 process_material = SubResource( 10 )
 draw_pass_1 = SubResource( 12 )
 
-[node name="top" type="Particles" parent="top"]
+[node name="Top" type="Particles" parent="Top"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 13.0565, 0 )
 emitting = false
 amount = 200

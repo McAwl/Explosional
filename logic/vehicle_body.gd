@@ -49,7 +49,7 @@ var old_fwd_mps_0_1 = 0.0
 var fwd_mps_0_1_ewma = 0.0
 var fwd_mps_0_1 = 0.0
 var explosion2_timer = 0.2
-var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn", 
+var vehicle_types = {	"Tank":  {"scene": "res://scenes/vehicle_tank.tscn", 
 									"engine_force_value": 150,  # keep this at 1x mass
 									"mass_kg/100": 200.0, 
 									"suspension_stiffness": 100.0, 
@@ -58,7 +58,7 @@ var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"wheel_friction_slip": 15.0,
 									"wheel_roll_influence": 0.9,
 									"brake": 40.0}, 
-						"racer": {"scene": "res://scenes/vehicle_racer.tscn", 
+						"Racer": {"scene": "res://scenes/vehicle_racer.tscn", 
 									"engine_force_value": 220,  # keep this at 3x mass
 									"mass_kg/100": 70.0, 
 									"suspension_stiffness": 75.0, 
@@ -67,7 +67,7 @@ var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"wheel_friction_slip": 1.1,
 									"wheel_roll_influence": 0.9,
 									"brake": 10.0}, 
-						"rally": {"scene": "res://scenes/vehicle_rally.tscn", 
+						"Rally": {"scene": "res://scenes/vehicle_rally.tscn", 
 									"engine_force_value": 70,  # keep this at 3x mass
 									"mass_kg/100": 50.0, 
 									"suspension_stiffness": 40.0, 
@@ -76,7 +76,7 @@ var vehicle_types = {	"tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"wheel_friction_slip": 1.3,
 									"wheel_roll_influence": 0.9,
 									"brake": 5.0}, 
-						"truck": {"scene": "res://scenes/vehicle_truck.tscn", 
+						"Truck": {"scene": "res://scenes/vehicle_truck.tscn", 
 									"engine_force_value": 200,  # keep this at 1x mass
 									"mass_kg/100": 200.0, 
 									"suspension_stiffness": 90.0, 
@@ -97,7 +97,7 @@ func _ready():
 
 func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	
-	print("vehicle_body:init()")
+	print("VehicleBody:init()")
 	
 	lifetime_so_far_sec = 0.0
 	vehicle_state = "alive"
@@ -111,22 +111,24 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	
 	pos = _pos
 	num_players = _num_players
-	print("vehicle_body() init: num_players="+str(num_players))
+	print("VehicleBody() init: num_players="+str(num_players))
 	
 	if player_number == 1:
-		vehicle_type = "racer"
+		vehicle_type = "Racer"
 	elif player_number == 2:
-		vehicle_type = "rally"
+		vehicle_type = "Rally"
 	elif player_number == 3:
-		vehicle_type = "tank"
+		vehicle_type = "Tank"
 	elif player_number == 4:
-		vehicle_type = "truck" 
+		vehicle_type = "Truck" 
 	else:
-		vehicle_type = "racer"
+		vehicle_type = "Racer"
 	
 	print("vehicle_type="+str(vehicle_type))
 	# Depending on vehicle type, we look for its nodes
 	var vehicle_type_node = $VehicleTypes.get_node(str(vehicle_type))
+	if vehicle_type_node == null:
+		return false
 	# move all the vehicle type nodes to the correct location
 	for ch in vehicle_type_node.get_children():
 		# var ctm = ch.get_node(ch.name)
@@ -152,6 +154,10 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	if has_node("VehicleTypes"):
 		get_node("VehicleTypes").queue_free()
 	
+	if not vehicle_type in vehicle_types:
+		print("vehicle_type "+str(vehicle_type)+" no found")
+		return false
+		
 	configure_vehicle_properties()
 	init_visual_effects()
 	init_audio_effects()
@@ -159,6 +165,7 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	total_damage = 0.0
 	check_accel_damage_timer = 4.0
 	init_camera(num_players)
+	return true
 
 
 func init_audio_effects():
@@ -167,25 +174,25 @@ func init_audio_effects():
 
 func engine_sound_on():
 	if vehicle_type == "racer":
-		$Effects/Audio/engine_sound.playing = false
-		$Effects/Audio/engine_sound_rally.playing = true
+		$Effects/Audio/EngineSound.playing = false
+		$Effects/Audio/EngineSoundRally.playing = true
 	elif vehicle_type == "rally":
-		$Effects/Audio/engine_sound.playing = false
-		$Effects/Audio/engine_sound_rally.playing = true
+		$Effects/Audio/EngineSound.playing = false
+		$Effects/Audio/EngineSoundRally.playing = true
 	elif vehicle_type == "tank":
-		$Effects/Audio/engine_sound.playing = true
-		$Effects/Audio/engine_sound_rally.playing = false
+		$Effects/Audio/EngineSound.playing = true
+		$Effects/Audio/EngineSoundRally.playing = false
 	elif vehicle_type == "truck":
-		$Effects/Audio/engine_sound.playing = true
-		$Effects/Audio/engine_sound_rally.playing = false
+		$Effects/Audio/EngineSound.playing = true
+		$Effects/Audio/EngineSound.playing = false
 	else:
-		$Effects/Audio/engine_sound.playing = false
-		$Effects/Audio/engine_sound_rally.playing = true
+		$Effects/Audio/EngineSound.playing = false
+		$Effects/Audio/EngineSoundRally.playing = true
 
 
 func engine_sound_off():
-	$Effects/Audio/engine_sound.playing = false
-	$Effects/Audio/engine_sound_rally.playing = false
+	$Effects/Audio/EngineSound.playing = false
+	$Effects/Audio/EngineSoundRally.playing = false
 
 
 func init_camera(_num_players):
@@ -200,11 +207,11 @@ func init_visual_effects():
 	$Effects/Damage/ParticlesSmoke.amount = 1
 	$Effects/Damage/ParticlesSmoke.visible = false
 	
-	$Effects/Damage/Lights_onfire/OnFireLight1.visible = true
-	$Effects/Damage/Lights_onfire/OnFireLight1.light_energy = 0.0
-	$Effects/Damage/Lights_onfire/OnFireLight2.light_energy = 0.0
-	$Effects/Damage/Lights_onfire/OnFireLight4.light_energy = 0.0
-	$Effects/Damage/Lights_onfire/OnFireLight5.light_energy = 0.0
+	$Effects/Damage/LightsOnFire/OnFireLight1.visible = true
+	$Effects/Damage/LightsOnFire/OnFireLight1.light_energy = 0.0
+	$Effects/Damage/LightsOnFire/OnFireLight2.light_energy = 0.0
+	$Effects/Damage/LightsOnFire/OnFireLight4.light_energy = 0.0
+	$Effects/Damage/LightsOnFire/OnFireLight5.light_energy = 0.0
 	
 	$Effects/Damage/Explosion2Light.visible = false
 	
@@ -288,9 +295,9 @@ func flicker_lights():
 	
 	for l in [1, 2, 3, 4, 5]:
 		if rng.randf() < 0.1:
-			$Effects/Damage/Lights_onfire.get_node("OnFireLight"+str(l)).light_energy = 0.0
+			$Effects/Damage/LightsOnFire.get_node("OnFireLight"+str(l)).light_energy = 0.0
 		else:
-			$Effects/Damage/Lights_onfire.get_node("OnFireLight"+str(l)).light_energy = total_damage/10.0
+			$Effects/Damage/LightsOnFire.get_node("OnFireLight"+str(l)).light_energy = total_damage/10.0
 
 	if rng.randf() < 0.1*total_damage/max_damage:
 		# print("damaged LightFrontLeft flickering off")
@@ -435,8 +442,8 @@ func check_accel_damage(delta):
 		# print("accel_damage_threshold="+str(accel_damage_threshold))
 		if acceleration_calc_for_damage > accel_damage_threshold:
 			var rammed_another_car = false
-			$Effects/Audio/crash_sound.playing = true
-			$Effects/Audio/crash_sound.volume_db = 0.0
+			$Effects/Audio/CrashSound.playing = true
+			$Effects/Audio/CrashSound.volume_db = 0.0
 			if $Raycasts/RayCastFrontRamDamage1.is_colliding():
 				var collider_name = $Raycasts/RayCastFrontRamDamage1.get_collider().name
 				if "car" in collider_name.to_lower():
@@ -460,8 +467,8 @@ func check_accel_damage(delta):
 				
 			check_accel_damage_timer = 0.5
 		elif acceleration_calc_for_damage > accel_damage_threshold/2.0:
-			$Effects/Audio/crash_sound.playing = true
-			$Effects/Audio/crash_sound.volume_db = -18.0
+			$Effects/Audio/CrashSound.playing = true
+			$Effects/Audio/CrashSound.volume_db = -18.0
 			
 	else:
 		check_accel_damage_timer -=delta
@@ -510,11 +517,9 @@ func _physics_process(delta):
 			engine_force = 0
 			
 		if Input.is_action_pressed("reverse_player"+str(player_number)):
-			if fwd_mps < 0.0:
-				engine_force = -engine_force_value/2.0  # slower in reverse
-			else:
-				engine_force = 0
-				brake = vehicle_types[vehicle_type]["brake"]
+			engine_force = -engine_force_value/2.0
+			if fwd_mps > speed_low_limit:
+				brake = vehicle_types[vehicle_type]["brake"] / 5.0
 		else:
 			brake = 0.0
 			
@@ -552,6 +557,7 @@ func _physics_process(delta):
 	if timer_1_sec_physics < 0.0:
 		timer_1_sec_physics = 1.0
 		check_for_clipping()
+
 
 func check_for_clipping():
 	if abs(fwd_mps_0_1) < 0.1:  # stationary
@@ -600,10 +606,10 @@ func add_damage(amount):
 	$Effects/Damage/Flames3D.amount *= 4
 	if $Effects/Damage/Flames3D.amount > 100:
 		$Effects/Damage/Flames3D.amount = 100
-	$Effects/Damage/Lights_onfire/OnFireLight1.light_energy = total_damage/20.0
-	$Effects/Damage/Lights_onfire/OnFireLight2.light_energy = total_damage/20.0
-	$Effects/Damage/Lights_onfire/OnFireLight4.light_energy = total_damage/20.0
-	$Effects/Damage/Lights_onfire/OnFireLight5.light_energy = total_damage/20.0
+	$Effects/Damage/LightsOnFire/OnFireLight1.light_energy = total_damage/20.0
+	$Effects/Damage/LightsOnFire/OnFireLight2.light_energy = total_damage/20.0
+	$Effects/Damage/LightsOnFire/OnFireLight4.light_energy = total_damage/20.0
+	$Effects/Damage/LightsOnFire/OnFireLight5.light_energy = total_damage/20.0
 	engine_force_value *= 0.75  # decrease engine power to indicate damage
 
 	if total_damage >= max_damage and vehicle_state != "dying":
@@ -630,7 +636,7 @@ func fire_mine_or_nuke():
 	weapons[weapon_select]["active"] = true
 	if weapon_select == 0:
 		weapon_instance.set_as_mine()
-		weapon_instance.activate($Positions/weapons/BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
+		weapon_instance.activate($Positions/Weapons/BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
 	elif weapon_select == 3:
 		# print("activating nuke")
 		weapon_instance.set_as_nuke()
@@ -726,7 +732,7 @@ func start_vehicle_dying():
 		for ch in $Effects/Audio.get_children():  # turn off engine sounds
 			ch.playing = false
 		
-		$Effects/Audio/crash_sound.playing = true
+		$Effects/Audio/CrashSound.playing = true
 		$Effects/Damage/Explosion/AnimationPlayer.play("explosion")
 		
 		remove_nodes_for_dying()
@@ -790,7 +796,7 @@ func explode_vehicle_meshes():
 		# self.remove_child(ch)
 		# ch.set_as_toplevel(true)
 		$Effects/Damage/Explosion2.emitting = true
-		# move the exploded mesh to the player, as the vehicle_body will be deleted after the explosion
+		# move the exploded mesh to the player, as the VehicleBody will be deleted after the explosion
 		remove_child(vm)
 		get_player().add_child(vm)
 		vm.name = "vehicle_parts_exploded"

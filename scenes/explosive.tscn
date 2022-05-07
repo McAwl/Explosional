@@ -81,7 +81,7 @@ local_coords = false
 process_material = SubResource( 6 )
 draw_pass_1 = SubResource( 8 )
 
-[node name="explosion_sound_mine_bomb" type="AudioStreamPlayer" parent="."]
+[node name="ExplosionSoundMineBomb" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 2 )
 volume_db = -6.992
 

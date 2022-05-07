@@ -79,9 +79,8 @@ albedo_texture = ExtResource( 2 )
 
 [node name="Particles2" type="Particles" parent="."]
 transform = Transform( 1, -9.54835e-05, -2.54864e-05, 9.5492e-05, 1, 0.00018429, 2.54776e-05, -0.00018429, 1, 0.209063, 0, 0 )
-emitting = false
 amount = 250
-speed_scale = 20.0
+speed_scale = 16.57
 process_material = SubResource( 15 )
 draw_pass_1 = SubResource( 17 )
 
@@ -92,19 +91,16 @@ material/0 = SubResource( 26 )
 
 [node name="muzzle_mesh2" type="MeshInstance" parent="."]
 transform = Transform( 0.351598, 0.355498, 0, -0.355498, 0.351598, 0, 0, 0, 0.5, 0.0705296, -0.0146319, 0 )
-visible = false
 mesh = ExtResource( 4 )
 material/0 = SubResource( 26 )
 
 [node name="muzzle_mesh3" type="MeshInstance" parent="."]
 transform = Transform( -0.282015, 0.412877, 0, -0.412877, -0.282015, 0, 0, 0, 0.5, 0.0506733, -0.0394653, 0 )
-visible = false
 mesh = ExtResource( 4 )
 material/0 = SubResource( 26 )
 
 [node name="muzzle_mesh4" type="MeshInstance" parent="."]
 transform = Transform( -0.0290173, 0.402011, -0.29588, -0.499157, -0.02337, 0.0172003, 2.79397e-09, 0.296379, 0.40269, 0.0705296, -0.0146319, 0.0519256 )
-visible = false
 mesh = ExtResource( 4 )
 material/0 = SubResource( 26 )
 
@@ -115,6 +111,5 @@ material/0 = SubResource( 26 )
 
 [node name="muzzle_core" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.262779, 0, 0 )
-visible = false
 mesh = SubResource( 22 )
 material/0 = SubResource( 23 )

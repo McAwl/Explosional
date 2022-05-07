@@ -12,9 +12,9 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	var rotation_speed = delta * 100.0
-	$Outer_shell.rotation_degrees.x += rng.randf()*rotation_speed
-	$Outer_shell.rotation_degrees.y += rng.randf()*rotation_speed
-	$Outer_shell.rotation_degrees.z += rng.randf()*rotation_speed
-	$Inner_cut.rotation_degrees.x += rng.randf()*rotation_speed
-	$Inner_cut.rotation_degrees.y += rng.randf()*rotation_speed
-	$Inner_cut.rotation_degrees.z += rng.randf()*rotation_speed
+	$OuterShell.rotation_degrees.x += rng.randf()*rotation_speed
+	$OuterShell.rotation_degrees.y += rng.randf()*rotation_speed
+	$OuterShell.rotation_degrees.z += rng.randf()*rotation_speed
+	$InnerCut.rotation_degrees.x += rng.randf()*rotation_speed
+	$InnerCut.rotation_degrees.y += rng.randf()*rotation_speed
+	$InnerCut.rotation_degrees.z += rng.randf()*rotation_speed

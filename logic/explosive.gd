@@ -53,7 +53,7 @@ func _ready():
 	material_black = SpatialMaterial.new() #Make a new Spatial Material
 	material_black.albedo_color = Color(0.0, 0.0, 0.0, 0.0) #Set color of new material
 	$SpotLight.spot_range = 0.0
-	$ExplosionNuke/top/OmniLight.visible = false
+	$ExplosionNuke/Top/OmniLight.visible = false
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -139,7 +139,7 @@ func no_animations_or_sound_playing():
 	if $ParticlesExplosion.emitting == true: 
 		# print("$ParticlesExplosion.emitting == true")
 		return false
-	if $explosion_sound_mine_bomb.playing == true: 
+	if $ExplosionSoundMineBomb.playing == true: 
 		# print("$explosion_sound_mine_bomb.playing == true")
 		return false
 	if $ExplosionNuke/AnimationPlayer.current_animation == "nuke":
@@ -174,14 +174,14 @@ func _physics_process(_delta):
 			$ExplosionNuke/AnimationPlayer.seek(0.0)
 			$ExplosionNuke/AnimationPlayer.play("nuke")
 			$ExplosionNuke/AnimationPlayer.seek(0.0)
-			$ExplosionNuke/explosion_nuke_sound.playing = true
+			$ExplosionNuke/ExplosionNukeSound.playing = true
 		elif type == TYPES.MINE:
 			$ParticlesExplosion.global_transform.origin = global_transform.origin
 			# print("type == TYPES.MINE setting $ParticlesExplosion.emitting = true")
 			$ParticlesExplosion.emitting = true
-			$explosion_sound_mine_bomb.playing = true
+			$ExplosionSoundMineBomb.playing = true
 		elif type == TYPES.BOMB:
-			$explosion_sound_mine_bomb.playing = true
+			$ExplosionSoundMineBomb.playing = true
 			# print(" type == TYPES.BOMB setting $ParticlesExplosion.emitting = true")
 			$ParticlesExplosion.emitting = true
 		var targets = []

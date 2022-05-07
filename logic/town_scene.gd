@@ -51,7 +51,7 @@ func turn_airstrike_on():
 	air_strike_label().visible = true
 	air_strike_label().get_node("TextFlash").play("font_blink")
 	$VC/CL/IconRadiation.visible = true
-	$siren.playing = true
+	$Effects/Siren.playing = true
 
 
 func turn_airstrike_off():
@@ -61,7 +61,7 @@ func turn_airstrike_off():
 	air_strike_label().visible = false
 	air_strike_label().get_node("TextFlash").stop()
 	$VC/CL/IconRadiation.visible = false
-	$siren.playing = false
+	$Effects/Siren.playing = false
 	
 
 func _process(delta):
@@ -178,8 +178,8 @@ func check_game_over():
 
 
 func all_audio_pitch(pitch):
-	$background_music.pitch_scale = pitch
-	$siren.pitch_scale = pitch
+	$Effects/BackgroundMusic.pitch_scale = pitch
+	$Effects/Siren.pitch_scale = pitch
 
 
 func get_spawn_points():

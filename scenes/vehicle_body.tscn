@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=2]
+[gd_scene load_steps=37 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://logic/vehicle_body.gd" type="Script" id=2]
@@ -7,7 +7,7 @@
 [ext_resource path="res://assets/materials/shield.tres" type="Material" id=5]
 [ext_resource path="res://assets/materials/shield_outer.tres" type="Material" id=6]
 [ext_resource path="res://logic/audio_stream_player.gd" type="Script" id=7]
-[ext_resource path="res://logic/Shield.gd" type="Script" id=8]
+[ext_resource path="res://logic/shield.gd" type="Script" id=8]
 [ext_resource path="res://logic/follow_camera.gd" type="Script" id=9]
 [ext_resource path="res://scenes/flames.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/explosion.tscn" type="PackedScene" id=11]
@@ -23,8 +23,6 @@
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
 absorbent = true
-
-[sub_resource type="CapsuleMesh" id=30]
 
 [sub_resource type="Gradient" id=33]
 offsets = PoolRealArray( 0, 0.242236, 0.732919, 0.993789, 1 )
@@ -98,7 +96,7 @@ height = 1.43153
 
 [sub_resource type="CylinderMesh" id=52]
 
-[node name="vehicle_body" type="VehicleBody"]
+[node name="VehicleBody" type="VehicleBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
 mass = 500.0
 physics_material_override = SubResource( 1 )
@@ -121,39 +119,19 @@ script = ExtResource( 9 )
 min_distance = 3.0
 height = 1.25
 
-[node name="MeshInstance" type="MeshInstance" parent="CameraBase/Camera"]
-transform = Transform( 0.1, 0, -2.32831e-10, 5.82077e-11, 0.1, 0, 0, 0, 0.1, -1.49012e-08, 0.233574, 0.0581388 )
-visible = false
-mesh = SubResource( 30 )
-material/0 = null
-
 [node name="CameraFPFront" type="Camera" parent="CameraBase"]
-transform = Transform( -0.998921, 0.0022015, 0.0463806, -2.11161e-08, 0.998875, -0.0474129, -0.0464328, -0.0473618, -0.997798, -0.206391, -1.09972, 2.8348 )
+transform = Transform( -0.998921, 0.00220149, 0.0463805, -2.11161e-08, 0.998875, -0.047413, -0.0464328, -0.0473618, -0.997798, -0.124779, -1.27877, 2.63899 )
 visible = false
 current = true
-fov = 74.0
-near = 0.1
 far = 1000.0
-
-[node name="MeshInstance" type="MeshInstance" parent="CameraBase/CameraFPFront"]
-transform = Transform( 0.1, 0, -2.32831e-10, 5.82077e-11, 0.1, 0, 0, 0, 0.1, -1.49012e-08, 0.233574, 0.0581388 )
-visible = false
-mesh = SubResource( 30 )
-material/0 = null
 
 [node name="CameraFPBack" type="Camera" parent="CameraBase"]
-transform = Transform( 0.999135, 0.0022015, -0.0415334, -0.000230025, 0.998875, 0.0474124, 0.0415911, -0.0473618, 0.998012, -0.0271316, -1.06924, 1.60346 )
+transform = Transform( 0.998315, 0.00220149, -0.0579889, 0.000551148, 0.998875, 0.0474098, 0.058028, -0.0473618, 0.997191, -0.105369, -1.16767, 2.33515 )
 visible = false
 current = true
 fov = 74.0
 near = 0.1
 far = 1000.0
-
-[node name="MeshInstance" type="MeshInstance" parent="CameraBase/CameraFPBack"]
-transform = Transform( 0.1, 0, -2.32831e-10, 5.82077e-11, 0.1, 0, 0, 0, 0.1, -1.49012e-08, 0.233574, 0.0581388 )
-visible = false
-mesh = SubResource( 30 )
-material/0 = null
 
 [node name="Effects" type="Spatial" parent="."]
 
@@ -191,204 +169,204 @@ omni_range = 50.0
 
 [node name="Audio" type="Spatial" parent="Effects"]
 
-[node name="engine_sound" type="AudioStreamPlayer" parent="Effects/Audio"]
+[node name="EngineSound" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 3 )
 volume_db = -9.0
 pitch_scale = 0.56
 script = ExtResource( 7 )
 
-[node name="crash_sound" type="AudioStreamPlayer" parent="Effects/Audio"]
+[node name="CrashSound" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 1 )
 
-[node name="engine_sound_rally" type="AudioStreamPlayer" parent="Effects/Audio"]
+[node name="EngineSoundRally" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 18 )
 volume_db = 12.0
 script = ExtResource( 19 )
 
-[node name="Tween" type="Tween" parent="Effects/Audio/engine_sound_rally"]
+[node name="Tween" type="Tween" parent="Effects/Audio/EngineSoundRally"]
 
 [node name="Shield" type="Spatial" parent="Effects"]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -0.00169557, 0.222867, -0.0955184 )
 visible = false
 script = ExtResource( 8 )
 
-[node name="Outer_shell" type="CSGSphere" parent="Effects/Shield"]
+[node name="OuterShell" type="CSGSphere" parent="Effects/Shield"]
 radial_segments = 42
 rings = 15
 material = ExtResource( 5 )
 
-[node name="Inner_cut" type="CSGSphere" parent="Effects/Shield"]
+[node name="InnerCut" type="CSGSphere" parent="Effects/Shield"]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
 radial_segments = 24
 material = ExtResource( 6 )
 
 [node name="VehicleTypes" type="Node" parent="."]
 
-[node name="racer" type="Spatial" parent="VehicleTypes"]
+[node name="Racer" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
 visible = false
 
-[node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/racer"]
+[node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Racer"]
 
-[node name="CamTargetForward" type="Spatial" parent="VehicleTypes/racer/CameraBasesTargets"]
+[node name="CamTargetForward" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, 1.3331, -1.53865 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/CameraBasesTargets/CamTargetForward"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamTargetForward"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetForward_UD" type="Spatial" parent="VehicleTypes/racer/CameraBasesTargets"]
+[node name="CamTargetForward_UD" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, -0.580223, -1.53865 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/CameraBasesTargets/CamTargetForward_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamTargetForward_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward" type="Spatial" parent="VehicleTypes/racer/CameraBasesTargets"]
+[node name="CamBaseForward" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, 2.29221, -3.42512 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/CameraBasesTargets/CamBaseForward"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamBaseForward"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/racer/CameraBasesTargets"]
+[node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, -0.714103, -3.42512 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/CameraBasesTargets/CamBaseForward_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamBaseForward_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/racer/CameraBasesTargets"]
+[node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, 5.37126, -15.4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/CameraBasesTargets/CamBaseForward2"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamBaseForward2"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/racer/CameraBasesTargets"]
+[node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, -3.40113, -15.4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/CameraBasesTargets/CamBaseForward2_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamBaseForward2_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/racer/CameraBasesTargets"]
+[node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 0.451696 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/CameraBasesTargets/CamTargetReverse"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamTargetReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetReverse_UD" type="Spatial" parent="VehicleTypes/racer/CameraBasesTargets"]
+[node name="CamTargetReverse_UD" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, -0.313553, 0.451696 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/CameraBasesTargets/CamTargetReverse_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamTargetReverse_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/racer/CameraBasesTargets"]
+[node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 2.59098 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/CameraBasesTargets/CamBaseReverse"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamBaseReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseReverse_UD" type="Spatial" parent="VehicleTypes/racer/CameraBasesTargets"]
+[node name="CamBaseReverse_UD" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, -0.927673, 2.59098 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/CameraBasesTargets/CamBaseReverse_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamBaseReverse_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CollisionShapes" type="Spatial" parent="VehicleTypes/racer"]
+[node name="CollisionShapes" type="Spatial" parent="VehicleTypes/Racer"]
 
-[node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/racer/CollisionShapes"]
+[node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
 transform = Transform( 0.902692, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.715644, -0.123573 )
 shape = SubResource( 51 )
 
-[node name="Effects" type="Spatial" parent="VehicleTypes/racer"]
+[node name="Effects" type="Spatial" parent="VehicleTypes/Racer"]
 
-[node name="Damage" type="Spatial" parent="VehicleTypes/racer/Effects"]
+[node name="Damage" type="Spatial" parent="VehicleTypes/Racer/Effects"]
 
-[node name="LavaLight1" type="OmniLight" parent="VehicleTypes/racer/Effects/Damage"]
+[node name="LavaLight1" type="OmniLight" parent="VehicleTypes/Racer/Effects/Damage"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00339114, 4.42257, -0.578094 )
 visible = false
 light_color = Color( 1, 0.188235, 0, 1 )
 omni_range = 20.0
 
-[node name="Lights_onfire" type="Spatial" parent="VehicleTypes/racer/Effects/Damage"]
+[node name="LightsOnFire" type="Spatial" parent="VehicleTypes/Racer/Effects/Damage"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00339114, 0.445734, -0.191037 )
 visible = false
 
-[node name="OnFireLight1" type="OmniLight" parent="VehicleTypes/racer/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight1" type="OmniLight" parent="VehicleTypes/Racer/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.38582, -0.192124 )
 light_color = Color( 1, 0.329412, 0, 1 )
 light_energy = 0.0
 omni_range = 8.0
 
-[node name="OnFireLight2" type="OmniLight" parent="VehicleTypes/racer/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight2" type="OmniLight" parent="VehicleTypes/Racer/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.21085, -2.18122 )
 light_color = Color( 1, 0.470588, 0, 1 )
 light_energy = 0.0
 omni_range = 12.0
 
-[node name="OnFireLight3" type="OmniLight" parent="VehicleTypes/racer/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight3" type="OmniLight" parent="VehicleTypes/Racer/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.63362, 0.635122, -0.0496354 )
 light_color = Color( 1, 0.819608, 0, 1 )
 light_energy = 0.0
 omni_range = 4.0
 
-[node name="OnFireLight4" type="OmniLight" parent="VehicleTypes/racer/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight4" type="OmniLight" parent="VehicleTypes/Racer/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23788, 1.99519 )
 light_color = Color( 1, 0.701961, 0, 1 )
 light_energy = 0.0
 omni_range = 9.0
 
-[node name="OnFireLight5" type="OmniLight" parent="VehicleTypes/racer/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight5" type="OmniLight" parent="VehicleTypes/Racer/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.70778, 0.780357, -0.105502 )
 light_color = Color( 1, 0.913725, 0, 1 )
 light_energy = 0.0
 omni_range = 7.0
 
-[node name="Flames3D" parent="VehicleTypes/racer/Effects/Damage" instance=ExtResource( 10 )]
+[node name="Flames3D" parent="VehicleTypes/Racer/Effects/Damage" instance=ExtResource( 10 )]
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.00169557, 0.638577, -0.0955184 )
 amount = 1
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 local_coords = false
 
-[node name="Lights" type="Spatial" parent="VehicleTypes/racer"]
+[node name="Lights" type="Spatial" parent="VehicleTypes/Racer"]
 
-[node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/racer/Lights"]
+[node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.385479, 0.422091, 1.51829 )
 visible = false
 light_energy = 5.0
@@ -396,7 +374,7 @@ shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
-[node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/racer/Lights"]
+[node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.417757, 1.48845 )
 visible = false
 light_energy = 5.0
@@ -404,7 +382,7 @@ shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
-[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/racer/Lights"]
+[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.564825, 0.566112, -1.39086 )
 visible = false
 light_color = Color( 1, 0, 0, 1 )
@@ -412,7 +390,7 @@ light_energy = 0.1
 shadow_enabled = true
 shadow_reverse_cull_face = true
 
-[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/racer/Lights"]
+[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.606162, 0.553532, -1.42855 )
 visible = false
 light_color = Color( 1, 0, 0, 1 )
@@ -420,7 +398,7 @@ light_energy = 0.1
 shadow_enabled = true
 shadow_reverse_cull_face = true
 
-[node name="LightUnder1" type="OmniLight" parent="VehicleTypes/racer/Lights"]
+[node name="LightUnder1" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 0 )
 visible = false
 light_energy = 2.0
@@ -428,7 +406,7 @@ shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder2" type="OmniLight" parent="VehicleTypes/racer/Lights"]
+[node name="LightUnder2" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 1 )
 visible = false
 light_energy = 2.0
@@ -436,7 +414,7 @@ shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder3" type="OmniLight" parent="VehicleTypes/racer/Lights"]
+[node name="LightUnder3" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, -1 )
 visible = false
 light_energy = 2.0
@@ -444,7 +422,7 @@ shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder4" type="OmniLight" parent="VehicleTypes/racer/Lights"]
+[node name="LightUnder4" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, -0.528934, -0.1, -0.0325493 )
 visible = false
 light_energy = 2.0
@@ -452,7 +430,7 @@ shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder5" type="OmniLight" parent="VehicleTypes/racer/Lights"]
+[node name="LightUnder5" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.496284, -0.1, 0.012954 )
 visible = false
 light_energy = 2.0
@@ -460,136 +438,139 @@ shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="MeshInstances" parent="VehicleTypes/racer" instance=ExtResource( 12 )]
+[node name="MeshInstances" parent="VehicleTypes/Racer" instance=ExtResource( 12 )]
 transform = Transform( 0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, -0.00169557, 0.48467, 0.105337 )
 
-[node name="Positions" type="Spatial" parent="VehicleTypes/racer"]
+[node name="Positions" type="Spatial" parent="VehicleTypes/Racer"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
 
-[node name="HUDPositionLocation" type="Position3D" parent="VehicleTypes/racer/Positions"]
+[node name="HUDPositionLocation" type="Position3D" parent="VehicleTypes/Racer/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.32512, 0.101055 )
 
-[node name="weapons" type="Spatial" parent="VehicleTypes/racer/Positions"]
+[node name="Weapons" type="Spatial" parent="VehicleTypes/Racer/Positions"]
 
-[node name="BombPosition" type="Position3D" parent="VehicleTypes/racer/Positions/weapons"]
+[node name="BombPosition" type="Position3D" parent="VehicleTypes/Racer/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.11065 )
 
-[node name="MissilePosition" type="Position3D" parent="VehicleTypes/racer/Positions/weapons"]
+[node name="MissilePosition" type="Position3D" parent="VehicleTypes/Racer/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 1.1137 )
 
-[node name="RocketPosition" type="Position3D" parent="VehicleTypes/racer/Positions/weapons"]
+[node name="RocketPosition" type="Position3D" parent="VehicleTypes/Racer/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.511921, 1.3363 )
 
-[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/racer/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.471426, 0.706395 )
+[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/Racer/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0728733, 0.533305, 0.273624 )
 
-[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/racer/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.790727, -0.831568 )
+[node name="FirstPersonViewRear" type="Spatial" parent="VehicleTypes/Racer/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0684594, 0.58042, -0.0160496 )
 
-[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/racer/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.675392, 1.04335 )
+[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/Racer/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.650181, -1.17816 )
 
-[node name="Raycasts" type="Spatial" parent="VehicleTypes/racer"]
+[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/Racer/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.015223, 0.42949, 1.01244 )
+
+[node name="Raycasts" type="Spatial" parent="VehicleTypes/Racer"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
 
-[node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.204935, 0 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastBonnetUp" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastBonnetUp" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.259108, 0.157628 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastForward" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastForward" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.17811, 0.425463 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="RayCastBackward" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastBackward" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.165351, -0.759133 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="RayCastLeft" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastLeft" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.338632, 0.278778, -0.222668 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastRight" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastRight" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.411788, 0.130265, -0.0225632 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastFrontRamDamage1" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastFrontRamDamage1" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.0164928, 1.07205 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastFrontRamDamage2" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastFrontRamDamage2" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, 0.0683587, 1.16287 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastFrontRamDamage3" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastFrontRamDamage3" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.0509302, 0.88265 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.741826, 0.0891303, 1.04852 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.786025, 0.0504065, -0.785482 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.750975, 0.0556056, 1.01756 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.753279, 0.089927, -0.784482 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastCamToVehicle" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastCamToVehicle" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.569466, 0.822015, 0, -0.822015, 0.569466, 0, 1.83384, -3.28202 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/Raycasts/RayCastCamToVehicle"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/Raycasts/RayCastCamToVehicle"]
 transform = Transform( 0, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
 visible = false
 mesh = SubResource( 53 )
 material/0 = null
 
-[node name="RayCastVehicleToCam" type="RayCast" parent="VehicleTypes/racer/Raycasts"]
+[node name="RayCastVehicleToCam" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -0.536843, -0.843682, 0, 0.843682, -0.536843, 0.02299, 0.638988, -1.21612 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/racer/Raycasts/RayCastVehicleToCam"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/Raycasts/RayCastVehicleToCam"]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
 visible = false
 mesh = SubResource( 53 )
 material/0 = null
 
-[node name="Wheels" type="Spatial" parent="VehicleTypes/racer"]
+[node name="Wheels" type="Spatial" parent="VehicleTypes/Racer"]
 
-[node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/racer/Wheels"]
+[node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/Racer/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.565, 0.275, 0.953 )
 use_as_traction = true
 use_as_steering = true
@@ -600,13 +581,13 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel1" type="MeshInstance" parent="VehicleTypes/racer/Wheels/Wheel1"]
+[node name="Wheel1" type="MeshInstance" parent="VehicleTypes/Racer/Wheels/Wheel1"]
 transform = Transform( -0.00331974, 0.0999896, 0, -0.229976, -0.00144336, 0, 0, 0, 0.23, -0.0131113, -0.0121696, 0.00509012 )
 visible = false
 mesh = SubResource( 52 )
 material/0 = ExtResource( 13 )
 
-[node name="Wheel1CSG" type="CSGTorus" parent="VehicleTypes/racer/Wheels/Wheel1"]
+[node name="Wheel1CSG" type="CSGTorus" parent="VehicleTypes/Racer/Wheels/Wheel1"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, -0.0027858, 0, 0 )
 inner_radius = 0.1
 outer_radius = 0.23
@@ -614,7 +595,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/racer/Wheels"]
+[node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/Racer/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.571, 0.275, -0.881 )
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -624,13 +605,13 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel2" type="MeshInstance" parent="VehicleTypes/racer/Wheels/Wheel2"]
+[node name="Wheel2" type="MeshInstance" parent="VehicleTypes/Racer/Wheels/Wheel2"]
 transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0, 0, 0, 0.23, -0.0301507, 0.0100485, 0.0114711 )
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel2CSG" type="CSGTorus" parent="VehicleTypes/racer/Wheels/Wheel2"]
+[node name="Wheel2CSG" type="CSGTorus" parent="VehicleTypes/Racer/Wheels/Wheel2"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00348157, 0.00229442, -0.00175607 )
 inner_radius = 0.1
 outer_radius = 0.23
@@ -638,7 +619,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/racer/Wheels"]
+[node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/Racer/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.577, 0.275, 0.922 )
 use_as_traction = true
 use_as_steering = true
@@ -649,14 +630,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel3" type="MeshInstance" parent="VehicleTypes/racer/Wheels/Wheel3"]
+[node name="Wheel3" type="MeshInstance" parent="VehicleTypes/Racer/Wheels/Wheel3"]
 transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0.000158877, 0.000158875, 3.44299e-07, 0.23, 0.0204801, 0.000714689, 0.0108781 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel3CSG" type="CSGTorus" parent="VehicleTypes/racer/Wheels/Wheel3"]
+[node name="Wheel3CSG" type="CSGTorus" parent="VehicleTypes/Racer/Wheels/Wheel3"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0.000690771, -0.000690771, 6.03891e-11, 1, 0.0165168, -0.00189039, 0.00578099 )
 inner_radius = 0.1
 outer_radius = 0.23
@@ -664,7 +645,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/racer/Wheels"]
+[node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/Racer/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.577, 0.275, -0.88 )
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -674,14 +655,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/racer/Wheels/Wheel4"]
+[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/Racer/Wheels/Wheel4"]
 transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0, 0, 0, 0.23, 0.0479246, -0.00331897, 0.00355035 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/racer/Wheels/Wheel4"]
+[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/Racer/Wheels/Wheel4"]
 transform = Transform( -4.21324e-08, -1.92775, 0, 0.963876, -8.42647e-08, 0, 0, 0, 0.963876, 0.00150269, -0.00304165, 0.00200105 )
 inner_radius = 0.1
 outer_radius = 0.23
@@ -689,376 +670,337 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="rally" type="Spatial" parent="VehicleTypes"]
+[node name="Rally" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.585815, -0.0955184 )
 visible = false
 
-[node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/rally"]
+[node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Rally"]
 
-[node name="CamTargetForward" type="Spatial" parent="VehicleTypes/rally/CameraBasesTargets"]
+[node name="CamTargetForward" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, 1.3331, -1.53865 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/CameraBasesTargets/CamTargetForward"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamTargetForward"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetForward_UD" type="Spatial" parent="VehicleTypes/rally/CameraBasesTargets"]
+[node name="CamTargetForward_UD" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, -0.580223, -1.53865 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/CameraBasesTargets/CamTargetForward_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamTargetForward_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward" type="Spatial" parent="VehicleTypes/rally/CameraBasesTargets"]
+[node name="CamBaseForward" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, 2.29221, -3.42512 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/CameraBasesTargets/CamBaseForward"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseForward"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/rally/CameraBasesTargets"]
+[node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, -0.714103, -3.42512 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/CameraBasesTargets/CamBaseForward_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseForward_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/rally/CameraBasesTargets"]
+[node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, 5.37126, -15.4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/CameraBasesTargets/CamBaseForward2"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseForward2"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/rally/CameraBasesTargets"]
+[node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, -3.40113, -15.4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/CameraBasesTargets/CamBaseForward2_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseForward2_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/rally/CameraBasesTargets"]
+[node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 0.451696 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/CameraBasesTargets/CamTargetReverse"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamTargetReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetReverse_UD" type="Spatial" parent="VehicleTypes/rally/CameraBasesTargets"]
+[node name="CamTargetReverse_UD" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, -0.313553, 0.451696 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/CameraBasesTargets/CamTargetReverse_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamTargetReverse_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/rally/CameraBasesTargets"]
+[node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 2.59098 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/CameraBasesTargets/CamBaseReverse"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseReverse_UD" type="Spatial" parent="VehicleTypes/rally/CameraBasesTargets"]
+[node name="CamBaseReverse_UD" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, -0.927673, 2.59098 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/CameraBasesTargets/CamBaseReverse_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseReverse_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CollisionShapes" type="Spatial" parent="VehicleTypes/rally"]
+[node name="CollisionShapes" type="Spatial" parent="VehicleTypes/Rally"]
 
-[node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/rally/CollisionShapes"]
+[node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/Rally/CollisionShapes"]
 transform = Transform( 1.2108, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.29465, 0.0492305 )
 shape = SubResource( 51 )
 
-[node name="Effects" type="Spatial" parent="VehicleTypes/rally"]
+[node name="Effects" type="Spatial" parent="VehicleTypes/Rally"]
 
-[node name="Damage" type="Spatial" parent="VehicleTypes/rally/Effects"]
+[node name="Damage" type="Spatial" parent="VehicleTypes/Rally/Effects"]
 
-[node name="LavaLight1" type="OmniLight" parent="VehicleTypes/rally/Effects/Damage"]
+[node name="LavaLight1" type="OmniLight" parent="VehicleTypes/Rally/Effects/Damage"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00339114, 4.42257, -0.578094 )
 visible = false
 light_color = Color( 1, 0.188235, 0, 1 )
 omni_range = 20.0
 
-[node name="Lights_onfire" type="Spatial" parent="VehicleTypes/rally/Effects/Damage"]
+[node name="LightsOnFire" type="Spatial" parent="VehicleTypes/Rally/Effects/Damage"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00339114, 0.445734, -0.191037 )
 
-[node name="OnFireLight1" type="OmniLight" parent="VehicleTypes/rally/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight1" type="OmniLight" parent="VehicleTypes/Rally/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.38582, -0.192124 )
 light_color = Color( 1, 0.329412, 0, 1 )
 light_energy = 0.0
 omni_range = 8.0
 
-[node name="OnFireLight2" type="OmniLight" parent="VehicleTypes/rally/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight2" type="OmniLight" parent="VehicleTypes/Rally/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.21085, -2.18122 )
 light_color = Color( 1, 0.470588, 0, 1 )
 light_energy = 0.0
 omni_range = 12.0
 
-[node name="OnFireLight3" type="OmniLight" parent="VehicleTypes/rally/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight3" type="OmniLight" parent="VehicleTypes/Rally/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.63362, 0.635122, -0.0496354 )
 light_color = Color( 1, 0.819608, 0, 1 )
 light_energy = 0.0
 omni_range = 4.0
 
-[node name="OnFireLight4" type="OmniLight" parent="VehicleTypes/rally/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight4" type="OmniLight" parent="VehicleTypes/Rally/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23788, 1.99519 )
 light_color = Color( 1, 0.701961, 0, 1 )
 light_energy = 0.0
 omni_range = 9.0
 
-[node name="OnFireLight5" type="OmniLight" parent="VehicleTypes/rally/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight5" type="OmniLight" parent="VehicleTypes/Rally/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.70778, 0.780357, -0.105502 )
 light_color = Color( 1, 0.913725, 0, 1 )
 light_energy = 0.0
 omni_range = 7.0
 
-[node name="Flames3D" parent="VehicleTypes/rally/Effects/Damage" instance=ExtResource( 10 )]
+[node name="Flames3D" parent="VehicleTypes/Rally/Effects/Damage" instance=ExtResource( 10 )]
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.00169557, 0.222867, -0.0955184 )
 emitting = false
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 
-[node name="Lights" type="Spatial" parent="VehicleTypes/rally"]
+[node name="Lights" type="Spatial" parent="VehicleTypes/Rally"]
 
-[node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/rally/Lights"]
+[node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/Rally/Lights"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.46672, 0.163859, 1.68761 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
-[node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/rally/Lights"]
+[node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/Rally/Lights"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.482884, 0.163859, 1.63538 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
-[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/rally/Lights"]
+[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/Rally/Lights"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.63485 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
 shadow_reverse_cull_face = true
 
-[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/rally/Lights"]
+[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/Rally/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.354234, 0.190666, -1.61123 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
 shadow_reverse_cull_face = true
 
-[node name="LightUnder1" type="OmniLight" parent="VehicleTypes/rally/Lights"]
+[node name="LightUnder1" type="OmniLight" parent="VehicleTypes/Rally/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 0 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder2" type="OmniLight" parent="VehicleTypes/rally/Lights"]
+[node name="LightUnder2" type="OmniLight" parent="VehicleTypes/Rally/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 1 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder3" type="OmniLight" parent="VehicleTypes/rally/Lights"]
+[node name="LightUnder3" type="OmniLight" parent="VehicleTypes/Rally/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, -1 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder4" type="OmniLight" parent="VehicleTypes/rally/Lights"]
+[node name="LightUnder4" type="OmniLight" parent="VehicleTypes/Rally/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, -0.528934, -0.1, -0.0325493 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder5" type="OmniLight" parent="VehicleTypes/rally/Lights"]
+[node name="LightUnder5" type="OmniLight" parent="VehicleTypes/Rally/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.496284, -0.1, 0.012954 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="MeshInstances" parent="VehicleTypes/rally" instance=ExtResource( 15 )]
+[node name="MeshInstances" parent="VehicleTypes/Rally" instance=ExtResource( 15 )]
 
-[node name="Positions" type="Spatial" parent="VehicleTypes/rally"]
+[node name="Positions" type="Spatial" parent="VehicleTypes/Rally"]
 
-[node name="HUDPositionLocation" type="Position3D" parent="VehicleTypes/rally/Positions"]
+[node name="HUDPositionLocation" type="Position3D" parent="VehicleTypes/Rally/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.32512, 0.101055 )
 
-[node name="weapons" type="Spatial" parent="VehicleTypes/rally/Positions"]
+[node name="Weapons" type="Spatial" parent="VehicleTypes/Rally/Positions"]
 
-[node name="BombPosition" type="Position3D" parent="VehicleTypes/rally/Positions/weapons"]
+[node name="BombPosition" type="Position3D" parent="VehicleTypes/Rally/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.11065 )
 
-[node name="MissilePosition" type="Position3D" parent="VehicleTypes/rally/Positions/weapons"]
+[node name="MissilePosition" type="Position3D" parent="VehicleTypes/Rally/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 1.1137 )
 
-[node name="RocketPosition" type="Position3D" parent="VehicleTypes/rally/Positions/weapons"]
+[node name="RocketPosition" type="Position3D" parent="VehicleTypes/Rally/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.511921, 1.3363 )
 
-[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/rally/Positions"]
+[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/Rally/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.768255, -1.42907 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/Positions/CamRaycastTargetRear"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
-visible = false
-mesh = SubResource( 53 )
-material/0 = null
-
-[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/rally/Positions"]
+[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/Rally/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.458232, 1.04335 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/Positions/CamRaycastTargetFront"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
-visible = false
-mesh = SubResource( 53 )
-material/0 = null
+[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/Rally/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.571755, 0.261212 )
 
-[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/rally/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.471426, 0.706395 )
+[node name="FirstPersonViewRear" type="Spatial" parent="VehicleTypes/Rally/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0684594, 0.58042, -0.708691 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/Positions/FirstPersonViewFront"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
-visible = false
-mesh = SubResource( 53 )
-material/0 = null
+[node name="Raycasts" type="Spatial" parent="VehicleTypes/Rally"]
 
-[node name="Raycasts" type="Spatial" parent="VehicleTypes/rally"]
-
-[node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.027562, 0 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastBonnetUp" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastBonnetUp" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.503939, -0.248155 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastForward" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastForward" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.502828, 0.425463 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="RayCastBackward" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastBackward" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.258664, -0.759133 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="RayCastLeft" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastLeft" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.627488, 0.378937, -0.222668 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastRight" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastRight" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.548427, 0.353845, -0.0225632 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastFrontRamDamage1" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastFrontRamDamage1" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.0849773, 1.06883 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastFrontRamDamage2" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastFrontRamDamage2" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, 0.0443322, 1.15579 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastFrontRamDamage3" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastFrontRamDamage3" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.333963, 0.882435 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.886215, -0.0541788, 1.046 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.885998, -0.0273803, -0.814 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.928464, -0.0852042, 1.03803 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
+[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.834748, -0.0861212, -0.774 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastCamToVehicle" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.569466, 0.822015, 0, -0.822015, 0.569466, 0, 1.83384, -3.28202 )
-enabled = true
-cast_to = Vector3( 0, -2, 0 )
-collide_with_areas = true
+[node name="Wheels" type="Spatial" parent="VehicleTypes/Rally"]
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/Raycasts/RayCastCamToVehicle"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
-visible = false
-mesh = SubResource( 53 )
-material/0 = null
-
-[node name="RayCastVehicleToCam" type="RayCast" parent="VehicleTypes/rally/Raycasts"]
-transform = Transform( 1, 0, 0, 0, -0.536843, -0.843682, 0, 0.843682, -0.536843, -0.0364914, 0.746724, -1.57367 )
-enabled = true
-cast_to = Vector3( 0, -2, 0 )
-collide_with_areas = true
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/rally/Raycasts/RayCastVehicleToCam"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
-visible = false
-mesh = SubResource( 53 )
-material/0 = null
-
-[node name="Wheels" type="Spatial" parent="VehicleTypes/rally"]
-
-[node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/rally/Wheels"]
+[node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/Rally/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.565, -0.07, 1.046 )
 use_as_traction = true
 use_as_steering = true
@@ -1069,13 +1011,13 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel1" type="MeshInstance" parent="VehicleTypes/rally/Wheels/Wheel1"]
+[node name="Wheel1" type="MeshInstance" parent="VehicleTypes/Rally/Wheels/Wheel1"]
 transform = Transform( -0.00433009, 0.0999896, 0, -0.299969, -0.00144336, 0, 0, 0, 0.3, -0.124151, -0.0105667, 0.00509012 )
 visible = false
 mesh = SubResource( 52 )
 material/0 = ExtResource( 13 )
 
-[node name="Wheel1CSG" type="CSGTorus" parent="VehicleTypes/rally/Wheels/Wheel1"]
+[node name="Wheel1CSG" type="CSGTorus" parent="VehicleTypes/Rally/Wheels/Wheel1"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00752211, 0, 0 )
 inner_radius = 0.1
 outer_radius = 0.3
@@ -1083,7 +1025,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/rally/Wheels"]
+[node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/Rally/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.571, -0.07, -0.814 )
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -1093,14 +1035,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel2" type="MeshInstance" parent="VehicleTypes/rally/Wheels/Wheel2"]
+[node name="Wheel2" type="MeshInstance" parent="VehicleTypes/Rally/Wheels/Wheel2"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, -0.0301507, 0.0100485, 0.0114711 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel2CSG" type="CSGTorus" parent="VehicleTypes/rally/Wheels/Wheel2"]
+[node name="Wheel2CSG" type="CSGTorus" parent="VehicleTypes/Rally/Wheels/Wheel2"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00348157, 0.00229442, -0.00175607 )
 inner_radius = 0.1
 outer_radius = 0.3
@@ -1108,7 +1050,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/rally/Wheels"]
+[node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/Rally/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.577, -0.07, 1.038 )
 use_as_traction = true
 use_as_steering = true
@@ -1119,14 +1061,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel3" type="MeshInstance" parent="VehicleTypes/rally/Wheels/Wheel3"]
+[node name="Wheel3" type="MeshInstance" parent="VehicleTypes/Rally/Wheels/Wheel3"]
 transform = Transform( -0.00149528, 0.0999988, 2.71065e-13, -0.299996, -0.000498428, 0.000207231, 0.000207228, 3.44299e-07, 0.3, 0.0204801, 0.000714689, 0.0108781 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel3CSG" type="CSGTorus" parent="VehicleTypes/rally/Wheels/Wheel3"]
+[node name="Wheel3CSG" type="CSGTorus" parent="VehicleTypes/Rally/Wheels/Wheel3"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0.000690771, -0.000690771, 6.03891e-11, 1, 0.0165168, -0.012314, 0.00578821 )
 inner_radius = 0.1
 outer_radius = 0.3
@@ -1134,7 +1076,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/rally/Wheels"]
+[node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/Rally/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.577, -0.07, -0.774 )
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -1144,14 +1086,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/rally/Wheels/Wheel4"]
+[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/Rally/Wheels/Wheel4"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/rally/Wheels/Wheel4"]
+[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/Rally/Wheels/Wheel4"]
 transform = Transform( -4.21324e-08, -1.92775, 0, 0.963876, -8.42647e-08, 0, 0, 0, 0.963876, 0.00150269, -0.00304165, 0.00200105 )
 inner_radius = 0.1
 outer_radius = 0.3
@@ -1159,369 +1101,348 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="tank" type="Spatial" parent="VehicleTypes"]
+[node name="Tank" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.516244, 0 )
 visible = false
 
-[node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/tank"]
+[node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Tank"]
 
-[node name="CamTargetForward" type="Spatial" parent="VehicleTypes/tank/CameraBasesTargets"]
+[node name="CamTargetForward" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, 1.3331, -1.53865 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/CameraBasesTargets/CamTargetForward"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamTargetForward"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetForward_UD" type="Spatial" parent="VehicleTypes/tank/CameraBasesTargets"]
+[node name="CamTargetForward_UD" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, -0.580223, -1.53865 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/CameraBasesTargets/CamTargetForward_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamTargetForward_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward" type="Spatial" parent="VehicleTypes/tank/CameraBasesTargets"]
+[node name="CamBaseForward" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, 2.29221, -3.42512 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/CameraBasesTargets/CamBaseForward"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseForward"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/tank/CameraBasesTargets"]
+[node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, -0.714103, -3.42512 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/CameraBasesTargets/CamBaseForward_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseForward_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/tank/CameraBasesTargets"]
+[node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, 5.37126, -15.4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/CameraBasesTargets/CamBaseForward2"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseForward2"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/tank/CameraBasesTargets"]
+[node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, -3.40113, -15.4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/CameraBasesTargets/CamBaseForward2_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseForward2_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/tank/CameraBasesTargets"]
+[node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 0.451696 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/CameraBasesTargets/CamTargetReverse"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamTargetReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetReverse_UD" type="Spatial" parent="VehicleTypes/tank/CameraBasesTargets"]
+[node name="CamTargetReverse_UD" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, -0.313553, 0.451696 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/CameraBasesTargets/CamTargetReverse_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamTargetReverse_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/tank/CameraBasesTargets"]
+[node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 2.59098 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/CameraBasesTargets/CamBaseReverse"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseReverse_UD" type="Spatial" parent="VehicleTypes/tank/CameraBasesTargets"]
+[node name="CamBaseReverse_UD" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, -0.927673, 2.59098 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/CameraBasesTargets/CamBaseReverse_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseReverse_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CollisionShapes" type="Spatial" parent="VehicleTypes/tank"]
+[node name="CollisionShapes" type="Spatial" parent="VehicleTypes/Tank"]
 
-[node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/tank/CollisionShapes"]
+[node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/Tank/CollisionShapes"]
 transform = Transform( 1.63905, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.265176, 0.0492305 )
 shape = SubResource( 51 )
 
-[node name="Effects" type="Spatial" parent="VehicleTypes/tank"]
+[node name="Effects" type="Spatial" parent="VehicleTypes/Tank"]
 
-[node name="Damage" type="Spatial" parent="VehicleTypes/tank/Effects"]
+[node name="Damage" type="Spatial" parent="VehicleTypes/Tank/Effects"]
 
-[node name="LavaLight1" type="OmniLight" parent="VehicleTypes/tank/Effects/Damage"]
+[node name="LavaLight1" type="OmniLight" parent="VehicleTypes/Tank/Effects/Damage"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00339114, 4.42257, -0.578094 )
 light_color = Color( 1, 0.188235, 0, 1 )
 omni_range = 20.0
 
-[node name="Lights_onfire" type="Spatial" parent="VehicleTypes/tank/Effects/Damage"]
+[node name="LightsOnFire" type="Spatial" parent="VehicleTypes/Tank/Effects/Damage"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00339114, 1.00785, -0.191037 )
 
-[node name="OnFireLight1" type="OmniLight" parent="VehicleTypes/tank/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight1" type="OmniLight" parent="VehicleTypes/Tank/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.38582, -0.192124 )
 light_color = Color( 1, 0.329412, 0, 1 )
 light_energy = 0.0
 omni_range = 8.0
 
-[node name="OnFireLight2" type="OmniLight" parent="VehicleTypes/tank/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight2" type="OmniLight" parent="VehicleTypes/Tank/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.21085, -2.18122 )
 light_color = Color( 1, 0.470588, 0, 1 )
 light_energy = 0.0
 omni_range = 12.0
 
-[node name="OnFireLight3" type="OmniLight" parent="VehicleTypes/tank/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight3" type="OmniLight" parent="VehicleTypes/Tank/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.63362, 0.635122, -0.0496354 )
 light_color = Color( 1, 0.819608, 0, 1 )
 light_energy = 0.0
 omni_range = 4.0
 
-[node name="OnFireLight4" type="OmniLight" parent="VehicleTypes/tank/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight4" type="OmniLight" parent="VehicleTypes/Tank/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23788, 1.99519 )
 light_color = Color( 1, 0.701961, 0, 1 )
 light_energy = 0.0
 omni_range = 9.0
 
-[node name="OnFireLight5" type="OmniLight" parent="VehicleTypes/tank/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight5" type="OmniLight" parent="VehicleTypes/Tank/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.70778, 0.780357, -0.105502 )
 light_color = Color( 1, 0.913725, 0, 1 )
 light_energy = 0.0
 omni_range = 7.0
 
-[node name="Flames3D" parent="VehicleTypes/tank/Effects/Damage" instance=ExtResource( 10 )]
+[node name="Flames3D" parent="VehicleTypes/Tank/Effects/Damage" instance=ExtResource( 10 )]
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.00169557, 0.747907, -0.0955184 )
 amount = 1
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 
-[node name="Lights" type="Spatial" parent="VehicleTypes/tank"]
+[node name="Lights" type="Spatial" parent="VehicleTypes/Tank"]
 
-[node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/tank/Lights"]
+[node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/Tank/Lights"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.539139, 0.466657, 1.70429 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
-[node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/tank/Lights"]
+[node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/Tank/Lights"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.532327, 0.487505, 1.59364 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
-[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/tank/Lights"]
+[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/Tank/Lights"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.565196, 0.379824, -1.79346 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
 shadow_reverse_cull_face = true
 
-[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/tank/Lights"]
+[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/Tank/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.595673, 0.38998, -1.75889 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
 shadow_reverse_cull_face = true
 
-[node name="LightUnder1" type="OmniLight" parent="VehicleTypes/tank/Lights"]
+[node name="LightUnder1" type="OmniLight" parent="VehicleTypes/Tank/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.343288, -0.1, -0.00977476 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder2" type="OmniLight" parent="VehicleTypes/tank/Lights"]
+[node name="LightUnder2" type="OmniLight" parent="VehicleTypes/Tank/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.269975, -0.0696222, 0.992313 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder3" type="OmniLight" parent="VehicleTypes/tank/Lights"]
+[node name="LightUnder3" type="OmniLight" parent="VehicleTypes/Tank/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.00823869, -0.1, -0.710659 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder4" type="OmniLight" parent="VehicleTypes/tank/Lights"]
+[node name="LightUnder4" type="OmniLight" parent="VehicleTypes/Tank/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, -0.211197, -0.1, -0.0415965 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder5" type="OmniLight" parent="VehicleTypes/tank/Lights"]
+[node name="LightUnder5" type="OmniLight" parent="VehicleTypes/Tank/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.336704, -0.1, 0.565458 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="MeshInstances" parent="VehicleTypes/tank" instance=ExtResource( 17 )]
+[node name="MeshInstances" parent="VehicleTypes/Tank" instance=ExtResource( 17 )]
 
-[node name="Positions" type="Spatial" parent="VehicleTypes/tank"]
+[node name="Positions" type="Spatial" parent="VehicleTypes/Tank"]
 
-[node name="HUDPositionLocation" type="Position3D" parent="VehicleTypes/tank/Positions"]
+[node name="HUDPositionLocation" type="Position3D" parent="VehicleTypes/Tank/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.90265, 0.101055 )
 
-[node name="weapons" type="Spatial" parent="VehicleTypes/tank/Positions"]
+[node name="Weapons" type="Spatial" parent="VehicleTypes/Tank/Positions"]
 
-[node name="BombPosition" type="Position3D" parent="VehicleTypes/tank/Positions/weapons"]
+[node name="BombPosition" type="Position3D" parent="VehicleTypes/Tank/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.11065 )
 
-[node name="MissilePosition" type="Position3D" parent="VehicleTypes/tank/Positions/weapons"]
+[node name="MissilePosition" type="Position3D" parent="VehicleTypes/Tank/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.860642, 2.71406 )
 
-[node name="RocketPosition" type="Position3D" parent="VehicleTypes/tank/Positions/weapons"]
+[node name="RocketPosition" type="Position3D" parent="VehicleTypes/Tank/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.876156, 2.57317 )
 
-[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/tank/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.471426, 0.706395 )
+[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/Tank/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09049, 0.374727 )
 
-[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/tank/Positions"]
+[node name="FirstPersonViewRear" type="Spatial" parent="VehicleTypes/Tank/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0684594, 1.12187, -0.472656 )
+
+[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/Tank/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.790727, -0.831568 )
 
-[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/tank/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.675392, 1.04335 )
+[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/Tank/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.922115, 1.04335 )
 
-[node name="Raycasts" type="Spatial" parent="VehicleTypes/tank"]
+[node name="Raycasts" type="Spatial" parent="VehicleTypes/Tank"]
 
-[node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.027562, 0 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastBonnetUp" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastBonnetUp" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0.749545, 0.421044 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastForward" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastForward" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.502828, 0.425463 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="RayCastBackward" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastBackward" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.524598, -0.759133 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="RayCastLeft" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastLeft" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.285423, 0.198223, 0.260646 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastRight" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastRight" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.702576, 0.347898, -0.0225632 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastFrontRamDamage1" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastFrontRamDamage1" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.2569, 1.07205 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastFrontRamDamage2" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastFrontRamDamage2" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, 0.2569, 1.15978 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastFrontRamDamage3" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastFrontRamDamage3" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.345418, 0.88265 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.995554, -0.0263021, 1.07156 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.00449, -0.0168464, -1.05442 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.988651, -0.0411682, 1.038 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1158, -0.0326644, -1.06772 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel5" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastWheel5" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.01559, -0.0510206, -0.0672405 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel6" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
+[node name="RayCastWheel6" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.959374, -0.0285062, -0.0256135 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastCamToVehicle" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.569466, 0.822015, 0, -0.822015, 0.569466, 0, 1.83384, -3.28202 )
-enabled = true
-cast_to = Vector3( 0, -2, 0 )
-collide_with_areas = true
+[node name="Wheels" type="Spatial" parent="VehicleTypes/Tank"]
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/Raycasts/RayCastCamToVehicle"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
-visible = false
-mesh = SubResource( 53 )
-material/0 = null
-
-[node name="RayCastVehicleToCam" type="RayCast" parent="VehicleTypes/tank/Raycasts"]
-transform = Transform( 1, 0, 0, 0, -0.536843, -0.843682, 0, 0.843682, -0.536843, -0.0364914, 0.746724, -1.57367 )
-enabled = true
-cast_to = Vector3( 0, -2, 0 )
-collide_with_areas = true
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/tank/Raycasts/RayCastVehicleToCam"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
-visible = false
-mesh = SubResource( 53 )
-material/0 = null
-
-[node name="Wheels" type="Spatial" parent="VehicleTypes/tank"]
-
-[node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
+[node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/Tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.690934, 0.0377834, 1.07156 )
 use_as_traction = true
 use_as_steering = true
@@ -1532,13 +1453,13 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel1" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel1"]
+[node name="Wheel1" type="MeshInstance" parent="VehicleTypes/Tank/Wheels/Wheel1"]
 transform = Transform( -0.00433009, 0.0999896, 0, -0.299969, -0.00144336, 0, 0, 0, 0.3, -0.124151, -0.0105667, 0.00509012 )
 visible = false
 mesh = SubResource( 52 )
 material/0 = ExtResource( 13 )
 
-[node name="Wheel1CSG" type="CSGTorus" parent="VehicleTypes/tank/Wheels/Wheel1"]
+[node name="Wheel1CSG" type="CSGTorus" parent="VehicleTypes/Tank/Wheels/Wheel1"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00752211, 0, 0 )
 visible = false
 inner_radius = 0.1
@@ -1547,7 +1468,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
+[node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/Tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.692721, 0.0405158, -1.05442 )
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -1557,14 +1478,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel2" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel2"]
+[node name="Wheel2" type="MeshInstance" parent="VehicleTypes/Tank/Wheels/Wheel2"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, -0.0301507, 0.0100485, 0.0114711 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel2CSG" type="CSGTorus" parent="VehicleTypes/tank/Wheels/Wheel2"]
+[node name="Wheel2CSG" type="CSGTorus" parent="VehicleTypes/Tank/Wheels/Wheel2"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00348157, 0.00229442, -0.00175607 )
 visible = false
 inner_radius = 0.1
@@ -1573,7 +1494,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
+[node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/Tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.682086, 0.014165, 1.038 )
 use_as_traction = true
 use_as_steering = true
@@ -1584,14 +1505,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel3" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel3"]
+[node name="Wheel3" type="MeshInstance" parent="VehicleTypes/Tank/Wheels/Wheel3"]
 transform = Transform( -0.00149528, 0.0999988, 2.71065e-13, -0.299996, -0.000498428, 0.000207231, 0.000207228, 3.44299e-07, 0.3, 0.0204801, 0.000714689, 0.0108781 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel3CSG" type="CSGTorus" parent="VehicleTypes/tank/Wheels/Wheel3"]
+[node name="Wheel3CSG" type="CSGTorus" parent="VehicleTypes/Tank/Wheels/Wheel3"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0.000690771, -0.000690771, 6.03891e-11, 1, 0.0165168, -0.012314, 0.00578821 )
 visible = false
 inner_radius = 0.1
@@ -1600,7 +1521,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
+[node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/Tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.680638, 0.014165, -1.06772 )
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -1610,14 +1531,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel4"]
+[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/Tank/Wheels/Wheel4"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/tank/Wheels/Wheel4"]
+[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/Tank/Wheels/Wheel4"]
 transform = Transform( -4.21324e-08, -1.92775, 0, 0.963876, -8.42647e-08, 0, 0, 0, 0.963876, 0.00150269, -0.00304165, 0.00200105 )
 visible = false
 inner_radius = 0.1
@@ -1626,7 +1547,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel5" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
+[node name="Wheel5" type="VehicleWheel" parent="VehicleTypes/Tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.680638, 0.014165, -0.0672405 )
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -1636,14 +1557,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel5"]
+[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/Tank/Wheels/Wheel5"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/tank/Wheels/Wheel5"]
+[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/Tank/Wheels/Wheel5"]
 transform = Transform( -4.21324e-08, -1.92775, 0, 0.963876, -8.42647e-08, 0, 0, 0, 0.963876, 0.00150269, -0.00304165, 0.00200105 )
 visible = false
 inner_radius = 0.1
@@ -1652,7 +1573,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel6" type="VehicleWheel" parent="VehicleTypes/tank/Wheels"]
+[node name="Wheel6" type="VehicleWheel" parent="VehicleTypes/Tank/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.692359, 0.014165, -0.0256135 )
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -1662,14 +1583,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/tank/Wheels/Wheel6"]
+[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/Tank/Wheels/Wheel6"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/tank/Wheels/Wheel6"]
+[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/Tank/Wheels/Wheel6"]
 transform = Transform( -4.21324e-08, -1.92775, 0, 0.963876, -8.42647e-08, 0, 0, 0, 0.963876, 0.00150269, -0.00304165, 0.00200105 )
 visible = false
 inner_radius = 0.1
@@ -1678,358 +1599,337 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="truck" type="Spatial" parent="VehicleTypes"]
+[node name="Truck" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.476245, 0 )
 visible = false
 
-[node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/truck"]
+[node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Truck"]
 
-[node name="CamTargetForward" type="Spatial" parent="VehicleTypes/truck/CameraBasesTargets"]
+[node name="CamTargetForward" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, 1.98799, -2.92262 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/CameraBasesTargets/CamTargetForward"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamTargetForward"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetForward_UD" type="Spatial" parent="VehicleTypes/truck/CameraBasesTargets"]
+[node name="CamTargetForward_UD" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, -0.580223, -1.53865 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/CameraBasesTargets/CamTargetForward_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamTargetForward_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward" type="Spatial" parent="VehicleTypes/truck/CameraBasesTargets"]
+[node name="CamBaseForward" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, 2.29221, -3.42512 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/CameraBasesTargets/CamBaseForward"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseForward"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/truck/CameraBasesTargets"]
+[node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, -0.714103, -3.42512 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/CameraBasesTargets/CamBaseForward_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseForward_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/truck/CameraBasesTargets"]
+[node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, 5.37126, -15.4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/CameraBasesTargets/CamBaseForward2"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseForward2"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/truck/CameraBasesTargets"]
+[node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, -3.40113, -15.4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/CameraBasesTargets/CamBaseForward2_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseForward2_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/truck/CameraBasesTargets"]
+[node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 3.41843 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/CameraBasesTargets/CamTargetReverse"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamTargetReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamTargetReverse_UD" type="Spatial" parent="VehicleTypes/truck/CameraBasesTargets"]
+[node name="CamTargetReverse_UD" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, -0.313553, 0.451696 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/CameraBasesTargets/CamTargetReverse_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamTargetReverse_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/truck/CameraBasesTargets"]
+[node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 1.59623 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/CameraBasesTargets/CamBaseReverse"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CamBaseReverse_UD" type="Spatial" parent="VehicleTypes/truck/CameraBasesTargets"]
+[node name="CamBaseReverse_UD" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, -0.927673, 2.59098 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/CameraBasesTargets/CamBaseReverse_UD"]
+[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseReverse_UD"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
 visible = false
 mesh = SubResource( 29 )
 skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
-[node name="CollisionShapes" type="Spatial" parent="VehicleTypes/truck"]
+[node name="CollisionShapes" type="Spatial" parent="VehicleTypes/Truck"]
 
-[node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/truck/CollisionShapes"]
+[node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/Truck/CollisionShapes"]
 transform = Transform( 1.04562, 0, 0, 0, 2.35664, 0, 0, 0, 1.71061, -0.00339114, 0.963366, 0.0630144 )
 shape = SubResource( 51 )
 
-[node name="Effects" type="Spatial" parent="VehicleTypes/truck"]
+[node name="Effects" type="Spatial" parent="VehicleTypes/Truck"]
 
-[node name="Damage" type="Spatial" parent="VehicleTypes/truck/Effects"]
+[node name="Damage" type="Spatial" parent="VehicleTypes/Truck/Effects"]
 
-[node name="LavaLight1" type="OmniLight" parent="VehicleTypes/truck/Effects/Damage"]
+[node name="LavaLight1" type="OmniLight" parent="VehicleTypes/Truck/Effects/Damage"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00339114, 3.48541, -0.578094 )
 light_color = Color( 1, 0.188235, 0, 1 )
 omni_range = 20.0
 
-[node name="Lights_onfire" type="Spatial" parent="VehicleTypes/truck/Effects/Damage"]
+[node name="LightsOnFire" type="Spatial" parent="VehicleTypes/Truck/Effects/Damage"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00339114, 0.445734, -0.191037 )
 
-[node name="OnFireLight1" type="OmniLight" parent="VehicleTypes/truck/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight1" type="OmniLight" parent="VehicleTypes/Truck/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.38582, -0.192124 )
 light_color = Color( 1, 0.329412, 0, 1 )
 light_energy = 0.0
 omni_range = 8.0
 
-[node name="OnFireLight2" type="OmniLight" parent="VehicleTypes/truck/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight2" type="OmniLight" parent="VehicleTypes/Truck/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.21085, -2.18122 )
 light_color = Color( 1, 0.470588, 0, 1 )
 light_energy = 0.0
 omni_range = 12.0
 
-[node name="OnFireLight3" type="OmniLight" parent="VehicleTypes/truck/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight3" type="OmniLight" parent="VehicleTypes/Truck/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.63362, 0.635122, -0.0496354 )
 light_color = Color( 1, 0.819608, 0, 1 )
 light_energy = 0.0
 omni_range = 4.0
 
-[node name="OnFireLight4" type="OmniLight" parent="VehicleTypes/truck/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight4" type="OmniLight" parent="VehicleTypes/Truck/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.23788, 1.99519 )
 light_color = Color( 1, 0.701961, 0, 1 )
 light_energy = 0.0
 omni_range = 9.0
 
-[node name="OnFireLight5" type="OmniLight" parent="VehicleTypes/truck/Effects/Damage/Lights_onfire"]
+[node name="OnFireLight5" type="OmniLight" parent="VehicleTypes/Truck/Effects/Damage/LightsOnFire"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.70778, 0.780357, -0.105502 )
 light_color = Color( 1, 0.913725, 0, 1 )
 light_energy = 0.0
 omni_range = 7.0
 
-[node name="Flames3D" parent="VehicleTypes/truck/Effects/Damage" instance=ExtResource( 10 )]
+[node name="Flames3D" parent="VehicleTypes/Truck/Effects/Damage" instance=ExtResource( 10 )]
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.0220416, 1.46262, -0.333249 )
 emitting = false
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 
-[node name="Lights" type="Spatial" parent="VehicleTypes/truck"]
+[node name="Lights" type="Spatial" parent="VehicleTypes/Truck"]
 
-[node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/truck/Lights"]
+[node name="LightFrontLeft" type="SpotLight" parent="VehicleTypes/Truck/Lights"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.3525, 0.0908399, 2.06702 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
-[node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/truck/Lights"]
+[node name="LightFrontRight" type="SpotLight" parent="VehicleTypes/Truck/Lights"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.341901, -0.0107324, 2.09319 )
 light_energy = 5.0
 shadow_enabled = true
 spot_range = 50.0
 spot_angle = 20.0
 
-[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/truck/Lights"]
+[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/Truck/Lights"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45969, 0.0288355, -1.59224 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
 shadow_reverse_cull_face = true
 
-[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/truck/Lights"]
+[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/Truck/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.444881, 0.0333847, -1.55395 )
 light_color = Color( 1, 0, 0, 1 )
 light_energy = 0.1
 shadow_enabled = true
 shadow_reverse_cull_face = true
 
-[node name="LightUnder1" type="OmniLight" parent="VehicleTypes/truck/Lights"]
+[node name="LightUnder1" type="OmniLight" parent="VehicleTypes/Truck/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 0 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder2" type="OmniLight" parent="VehicleTypes/truck/Lights"]
+[node name="LightUnder2" type="OmniLight" parent="VehicleTypes/Truck/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 1 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder3" type="OmniLight" parent="VehicleTypes/truck/Lights"]
+[node name="LightUnder3" type="OmniLight" parent="VehicleTypes/Truck/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, -1 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder4" type="OmniLight" parent="VehicleTypes/truck/Lights"]
+[node name="LightUnder4" type="OmniLight" parent="VehicleTypes/Truck/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, -0.528934, -0.1, -0.0325493 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="LightUnder5" type="OmniLight" parent="VehicleTypes/truck/Lights"]
+[node name="LightUnder5" type="OmniLight" parent="VehicleTypes/Truck/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.496284, -0.1, 0.012954 )
 light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
-[node name="MeshInstances" parent="VehicleTypes/truck" instance=ExtResource( 16 )]
+[node name="MeshInstances" parent="VehicleTypes/Truck" instance=ExtResource( 16 )]
 
-[node name="Positions" type="Spatial" parent="VehicleTypes/truck"]
+[node name="Positions" type="Spatial" parent="VehicleTypes/Truck"]
 
-[node name="HUDPositionLocation" type="Position3D" parent="VehicleTypes/truck/Positions"]
+[node name="HUDPositionLocation" type="Position3D" parent="VehicleTypes/Truck/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.84618, 0.101055 )
 
-[node name="weapons" type="Spatial" parent="VehicleTypes/truck/Positions"]
+[node name="Weapons" type="Spatial" parent="VehicleTypes/Truck/Positions"]
 
-[node name="BombPosition" type="Position3D" parent="VehicleTypes/truck/Positions/weapons"]
+[node name="BombPosition" type="Position3D" parent="VehicleTypes/Truck/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.11065 )
 
-[node name="MissilePosition" type="Position3D" parent="VehicleTypes/truck/Positions/weapons"]
+[node name="MissilePosition" type="Position3D" parent="VehicleTypes/Truck/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 2.29528 )
 
-[node name="RocketPosition" type="Position3D" parent="VehicleTypes/truck/Positions/weapons"]
+[node name="RocketPosition" type="Position3D" parent="VehicleTypes/Truck/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 1.09402, 2.36637 )
 
-[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/truck/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.18967, 1.55989 )
-
-[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/truck/Positions"]
+[node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/Truck/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.790728, -1.90322 )
 
-[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/truck/Positions"]
+[node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/Truck/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.02189, 1.895 )
 
-[node name="Raycasts" type="Spatial" parent="VehicleTypes/truck"]
+[node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/Truck/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17012, 1.55989 )
+
+[node name="FirstPersonViewRear" type="Spatial" parent="VehicleTypes/Truck/Positions"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00535774, 0.58042, -1.84253 )
+
+[node name="Raycasts" type="Spatial" parent="VehicleTypes/Truck"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.33902 )
 
-[node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.169064, -2.29914 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastBonnetUp" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastBonnetUp" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 1.40513, -0.981438 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastForward" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastForward" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.502828, -0.688713 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="RayCastBackward" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastBackward" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.524598, -3.481 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 collide_with_areas = true
 
-[node name="RayCastLeft" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastLeft" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, 0, -3.82137e-15, 8.74228e-08, -1, 0.614443, 0.505677, -1.78257 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastRight" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastRight" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 4.37114e-08, 1, 8.74228e-08, 1, -4.37114e-08, 0, 3.82137e-15, 8.74228e-08, -1, -0.624142, 0.514269, -1.52418 )
 enabled = true
 collide_with_areas = true
 
-[node name="RayCastFrontRamDamage1" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastFrontRamDamage1" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.280808, -0.808584 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastFrontRamDamage2" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastFrontRamDamage2" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, 0.277222, -0.677509 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastFrontRamDamage3" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastFrontRamDamage3" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.640673, -0.746656 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.84193, -0.264085, -1.09202 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.869947, -0.250144, -3.13202 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, 0.790202, -0.219349, -1.097 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
+[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.911611, -0.218205, -3.20793 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastCamToVehicle" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.569466, 0.822015, 0, -0.822015, 0.569466, 0, 2.51376, -5.96895 )
-enabled = true
-cast_to = Vector3( 0, -2, 0 )
-collide_with_areas = true
+[node name="Wheels" type="Spatial" parent="VehicleTypes/Truck"]
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/Raycasts/RayCastCamToVehicle"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
-visible = false
-mesh = SubResource( 53 )
-material/0 = null
-
-[node name="RayCastVehicleToCam" type="RayCast" parent="VehicleTypes/truck/Raycasts"]
-transform = Transform( 1, 0, 0, 0, -0.536843, -0.843682, 0, 0.843682, -0.536843, -0.0364914, 1.32061, -4.31257 )
-enabled = true
-cast_to = Vector3( 0, -2, 0 )
-collide_with_areas = true
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/truck/Raycasts/RayCastVehicleToCam"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
-visible = false
-mesh = SubResource( 53 )
-material/0 = null
-
-[node name="Wheels" type="Spatial" parent="VehicleTypes/truck"]
-
-[node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/truck/Wheels"]
+[node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/Truck/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.438, -0.2, 1.247 )
 use_as_traction = true
 use_as_steering = true
@@ -2040,13 +1940,13 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel1" type="MeshInstance" parent="VehicleTypes/truck/Wheels/Wheel1"]
+[node name="Wheel1" type="MeshInstance" parent="VehicleTypes/Truck/Wheels/Wheel1"]
 transform = Transform( -0.00433009, 0.0999896, 0, -0.299969, -0.00144336, 0, 0, 0, 0.3, -0.124151, -0.0105667, 0.00509012 )
 visible = false
 mesh = SubResource( 52 )
 material/0 = ExtResource( 13 )
 
-[node name="Wheel1CSG" type="CSGTorus" parent="VehicleTypes/truck/Wheels/Wheel1"]
+[node name="Wheel1CSG" type="CSGTorus" parent="VehicleTypes/Truck/Wheels/Wheel1"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00752211, 0, 0 )
 inner_radius = 0.1
 outer_radius = 0.3
@@ -2054,7 +1954,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/truck/Wheels"]
+[node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/Truck/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.535, -0.2, -0.793 )
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -2064,14 +1964,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel2" type="MeshInstance" parent="VehicleTypes/truck/Wheels/Wheel2"]
+[node name="Wheel2" type="MeshInstance" parent="VehicleTypes/Truck/Wheels/Wheel2"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, -0.0301507, 0.0100485, 0.0114711 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel2CSG" type="CSGTorus" parent="VehicleTypes/truck/Wheels/Wheel2"]
+[node name="Wheel2CSG" type="CSGTorus" parent="VehicleTypes/Truck/Wheels/Wheel2"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00348157, 0.00229442, -0.00175607 )
 inner_radius = 0.1
 outer_radius = 0.3
@@ -2079,7 +1979,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/truck/Wheels"]
+[node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/Truck/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.488, -0.2, 1.242 )
 use_as_traction = true
 use_as_steering = true
@@ -2090,14 +1990,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel3" type="MeshInstance" parent="VehicleTypes/truck/Wheels/Wheel3"]
+[node name="Wheel3" type="MeshInstance" parent="VehicleTypes/Truck/Wheels/Wheel3"]
 transform = Transform( -0.00149528, 0.0999988, 2.71065e-13, -0.299996, -0.000498428, 0.000207231, 0.000207228, 3.44299e-07, 0.3, 0.0204801, 0.000714689, 0.0108781 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel3CSG" type="CSGTorus" parent="VehicleTypes/truck/Wheels/Wheel3"]
+[node name="Wheel3CSG" type="CSGTorus" parent="VehicleTypes/Truck/Wheels/Wheel3"]
 transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0.000690771, -0.000690771, 6.03891e-11, 1, 0.0165168, -0.012314, 0.00578821 )
 inner_radius = 0.1
 outer_radius = 0.3
@@ -2105,7 +2005,7 @@ sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
 
-[node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/truck/Wheels"]
+[node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/Truck/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.538562, -0.200321, -0.868905 )
 use_as_traction = true
 wheel_roll_influence = 0.9
@@ -2115,14 +2015,14 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/truck/Wheels/Wheel4"]
+[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/Truck/Wheels/Wheel4"]
 transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )
 visible = false
 mesh = SubResource( 52 )
 skeleton = NodePath("../../Wheel1")
 material/0 = ExtResource( 13 )
 
-[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/truck/Wheels/Wheel4"]
+[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/Truck/Wheels/Wheel4"]
 transform = Transform( -4.21324e-08, -1.92775, 0, 0.963876, -8.42647e-08, 0, 0, 0, 0.963876, 0.00150269, -0.00304165, 0.00200105 )
 inner_radius = 0.1
 outer_radius = 0.3

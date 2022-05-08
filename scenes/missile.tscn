@@ -72,11 +72,14 @@ vertex_color_use_as_albedo = true
 material = SubResource( 32 )
 
 [node name="Missile" type="RigidBody" groups=["missile"]]
+transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0 )
 mass = 20.0
+gravity_scale = 0.0
+continuous_cd = true
 contacts_reported = 2
 contact_monitor = true
+can_sleep = false
 script = ExtResource( 1 )
-muzzle_velocity = 35
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 0.142666, 0, 0, 0, -1.32541e-08, -0.0807597, 0, 0.462283, -5.38198e-09, 0, 0, 0 )
@@ -113,5 +116,27 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.578202 )
 light_color = Color( 0.972549, 0.592157, 0.054902, 1 )
 shadow_enabled = true
 omni_range = 30.0
+
+[node name="Raycasts" type="Spatial" parent="."]
+
+[node name="RayCastBitLeft" type="RayCast" parent="Raycasts"]
+transform = Transform( -0.932412, -0.361397, 1.95014e-08, 3.02229e-08, -2.40146e-08, 1, -0.361397, 0.932412, 3.33139e-08, 0, 0, 0 )
+enabled = true
+cast_to = Vector3( 0, -20, 0 )
+
+[node name="RayCastBitRight" type="RayCast" parent="Raycasts"]
+transform = Transform( -0.950266, 0.311439, -2.5877e-08, -3.45903e-08, -2.24537e-08, 1, 0.311439, 0.950266, 3.21098e-08, 0, 0, 0 )
+enabled = true
+cast_to = Vector3( 0, -20, 0 )
+
+[node name="RayCastDown" type="RayCast" parent="Raycasts"]
+transform = Transform( -1, 8.74228e-08, 3.82137e-15, -9.4325e-09, -0.107895, 0.994162, 8.69124e-08, 0.994162, 0.107895, 0, 0, 0 )
+enabled = true
+cast_to = Vector3( 0, -20, 0 )
+
+[node name="RayCastForward" type="RayCast" parent="Raycasts"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0 )
+enabled = true
+cast_to = Vector3( 0, -20, 0 )
 
 [connection signal="body_entered" from="." to="." method="_on_Missile_body_entered"]

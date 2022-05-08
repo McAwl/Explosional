@@ -20,8 +20,9 @@ export var speed = 0.0
 var speed_low_limit = 5
 var rng = RandomNumberGenerator.new()
 
-const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "missile": 60.0, "nuke": 10.0}
+const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "missile": 6.0, "nuke": 10.0}
 var cooldown_timer = COOLDOWN_TIMER_DEFAULTS["mine"]
+
 var timer_0_1_sec = 0.1
 var timer_1_sec = 1.0  # timer to eg: check if car needs to turn light on 
 var timer_1_sec_physics = 1.0  # to check and correct clipping, etc
@@ -656,23 +657,29 @@ func fire_missile_or_rocket():
 	weapons[weapon_select]["instance"] = weapon_instance
 	add_child(weapon_instance)
 	
-	weapon_instance.velocity = transform.basis.z * weapon_instance.muzzle_velocity
-	weapon_instance.initial_speed = weapon_instance.velocity.length()
-	weapon_instance.linear_velocity = linear_velocity
+	# weapon_instance.velocity = transform.basis.z * weapon_instance.muzzle_velocity
+	# weapon_instance.initial_speed = weapon_instance.velocity.length()
+	#weapon_instance.linear_velocity = Vector3(0, 0, 1)  # linear_velocity * weapon_instance.muzzle_velocity
+	var a = get_transform().basis
+	#weapon_instance.set_linear_velocity(Vector3(a.x.z, a.y.z, a.z.z) * weapon_instance.muzzle_velocity)
+	#weapon_instance.linear_velocity = transform.basis.z * Vector3(0, 0, )
 	weapon_instance.angular_velocity = angular_velocity
 	if weapon_select == 2:
-		weapon_instance.velocity[1] += 1.0   # angle it up a bit
-		weapon_instance.global_transform.origin = $Positions/weapons/MissilePosition.global_transform.origin
+		# weapon_instance.velocity[1] += 1.0   # angle it up a bit
+		weapon_instance.global_transform.origin = $Positions/Weapons/MissilePosition.global_transform.origin
 	else:
-		weapon_instance.global_transform.origin = $Positions/weapons/RocketPosition.global_transform.origin
-		weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
+		weapon_instance.global_transform.origin = $Positions/Weapons/RocketPosition.global_transform.origin
+		# weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
 	if weapon_select == 1:
 		weapon_instance.activate(player_number, false)  # homing = false
 	else:
 		weapon_instance.activate(player_number, true)  # homing = true
 	weapon_instance.set_as_toplevel(true)
 	weapons[weapon_select]["active"] = true
-	
+	weapon_instance.linear_velocity = linear_velocity  # + (transform.basis.z * weapon_instance.muzzle_velocity)
+	weapon_instance.apply_impulse(transform.basis.z, 100.0*transform.basis.z * weapon_instance.muzzle_velocity) 
+	print("weapon_instance.linear_velocity = "+str(weapon_instance.linear_velocity))
+	print("vehicle linear_velocity = "+str(linear_velocity))
 
 func lights_on():
 	set_all_lights(true)

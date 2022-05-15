@@ -20,7 +20,7 @@ export var speed = 0.0
 var speed_low_limit = 5
 var rng = RandomNumberGenerator.new()
 
-const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "missile": 6.0, "nuke": 10.0}
+const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 0.0, "missile": 0.0, "nuke": 10.0}
 var cooldown_timer = COOLDOWN_TIMER_DEFAULTS["mine"]
 
 var timer_0_1_sec = 0.1
@@ -677,7 +677,7 @@ func fire_missile_or_rocket():
 	weapon_instance.set_as_toplevel(true)
 	weapons[weapon_select]["active"] = true
 	weapon_instance.linear_velocity = linear_velocity  # + (transform.basis.z * weapon_instance.muzzle_velocity)
-	weapon_instance.apply_impulse(transform.basis.z, 100.0*transform.basis.z * weapon_instance.muzzle_velocity) 
+	weapon_instance.fwd_speed = abs(global_transform.basis.xform_inv(linear_velocity).z + weapon_instance.muzzle_velocity)
 	print("weapon_instance.linear_velocity = "+str(weapon_instance.linear_velocity))
 	print("vehicle linear_velocity = "+str(linear_velocity))
 

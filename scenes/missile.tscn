@@ -1,9 +1,8 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://logic/missile.gd" type="Script" id=1]
 [ext_resource path="res://assets/audio/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=2]
 [ext_resource path="res://assets/materials/vehicles/car_grill.tres" type="Material" id=3]
-[ext_resource path="res://assets/materials/sun.tres" type="Material" id=4]
 
 [sub_resource type="CapsuleMesh" id=25]
 
@@ -11,27 +10,26 @@
 radius = 1.01069
 
 [sub_resource type="Gradient" id=11]
-offsets = PoolRealArray( 0, 0.291925, 0.642336, 1 )
-colors = PoolColorArray( 0.983398, 1, 0, 1, 1, 0, 0, 0.239216, 0.505882, 0, 0, 0.156863, 0, 0, 0, 0 )
+offsets = PoolRealArray( 0, 0.291925, 0.639752, 1 )
+colors = PoolColorArray( 0.983398, 1, 0, 1, 1, 0, 0, 0.823529, 0.027451, 0.0235294, 0.0235294, 0.192157, 0, 0, 0, 0 )
 
 [sub_resource type="GradientTexture" id=33]
 gradient = SubResource( 11 )
 
 [sub_resource type="Curve" id=12]
-_data = [ Vector2( 0, 0.00185597 ), 0.0, 9.93939, 0, 0, Vector2( 0.1625, 0.983674 ), 0.0, 0.0, 0, 0, Vector2( 0.978261, 0.999161 ), -0.118322, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 0.999161 ), 0.0, -0.252055, 0, 0, Vector2( 0.978261, 0.999161 ), -0.118322, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=34]
 curve = SubResource( 12 )
 
 [sub_resource type="ParticlesMaterial" id=13]
-lifetime_randomness = 0.18
 direction = Vector3( 0, 0, 1 )
 spread = 10.0
 gravity = Vector3( 0, 0, 0 )
 initial_velocity = 5.0
 initial_velocity_random = 0.5
 damping = 10.0
-scale = 0.1
+scale = 0.25
 scale_curve = SubResource( 34 )
 color_ramp = SubResource( 33 )
 
@@ -73,13 +71,12 @@ vertex_color_use_as_albedo = true
 [sub_resource type="SphereMesh" id=24]
 material = SubResource( 32 )
 
-[sub_resource type="SphereMesh" id=36]
-
 [node name="Missile" type="RigidBody" groups=["missile"]]
-transform = Transform( 1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, 0 )
-gravity_scale = 0.0
-can_sleep = false
+mass = 20.0
+contacts_reported = 2
+contact_monitor = true
 script = ExtResource( 1 )
+muzzle_velocity = 35
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 0.142666, 0, 0, 0, -1.32541e-08, -0.0807597, 0, 0.462283, -5.38198e-09, 0, 0, 0 )
@@ -91,8 +88,9 @@ transform = Transform( 0.140476, 0, 0, 0, 0.126892, 0, 0, 0, 0.315844, 0, 0, 0 )
 shape = SubResource( 26 )
 
 [node name="ParticlesThrust" type="Particles" parent="."]
-transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, -1.10984e-08, 0.406148 )
-amount = 100
+transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 0, 0.533099 )
+amount = 40
+lifetime = 1.21
 explosiveness = 0.1
 local_coords = false
 process_material = SubResource( 13 )
@@ -113,67 +111,7 @@ draw_pass_1 = SubResource( 24 )
 [node name="OmniLight" type="OmniLight" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.578202 )
 light_color = Color( 0.972549, 0.592157, 0.054902, 1 )
-light_energy = 16.0
 shadow_enabled = true
 omni_range = 30.0
 
-[node name="Raycasts" type="Spatial" parent="."]
-
-[node name="RayCastBitLeft" type="RayCast" parent="Raycasts"]
-transform = Transform( -0.932412, -0.361397, 1.95014e-08, 3.02229e-08, -2.40146e-08, 1, -0.361397, 0.932412, 3.33139e-08, 0.000131726, -5.54404e-08, -0.634164 )
-enabled = true
-cast_to = Vector3( 0, -20, 0 )
-
-[node name="RayCastBitRight" type="RayCast" parent="Raycasts"]
-transform = Transform( -0.950266, 0.311439, -2.5877e-08, -3.45903e-08, -2.24537e-08, 1, 0.311439, 0.950266, 3.21098e-08, 0, -4.89603e-08, -0.56004 )
-enabled = true
-cast_to = Vector3( 0, -20, 0 )
-
-[node name="RayCastBitDown" type="RayCast" parent="Raycasts"]
-transform = Transform( -1, 8.74228e-08, 3.82137e-15, -1.10281e-08, -0.126147, 0.992011, 8.67244e-08, 0.992011, 0.126147, 0, -0.000986686, -0.577668 )
-enabled = true
-cast_to = Vector3( 0, -20, 0 )
-
-[node name="RayCastDown" type="RayCast" parent="Raycasts"]
-transform = Transform( -1, 8.74228e-08, 3.82137e-15, -8.74202e-08, -0.99997, 0.00762698, 6.66799e-10, 0.00762698, 0.99997, 0, -0.024884, -0.568135 )
-enabled = true
-cast_to = Vector3( 0, -2, 0 )
-
-[node name="RayCastBitUp" type="RayCast" parent="Raycasts"]
-transform = Transform( -1, 8.74228e-08, 3.82137e-15, 1.10599e-08, 0.126511, 0.991965, 8.67203e-08, 0.991965, -0.126511, 0, -0.0396135, -0.581099 )
-enabled = true
-cast_to = Vector3( 0, -20, 0 )
-
-[node name="RayCastUp" type="RayCast" parent="Raycasts"]
-transform = Transform( -1, 8.74228e-08, 3.82137e-15, 8.74156e-08, 0.999918, 0.0127925, 1.11839e-09, 0.0127925, -0.999918, 0, -0.0179799, -0.569029 )
-enabled = true
-cast_to = Vector3( 0, -2, 0 )
-
-[node name="RayCastForward" type="RayCast" parent="Raycasts"]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -5.53704e-08, -0.633363 )
-enabled = true
-cast_to = Vector3( 0, -20, 0 )
-
-[node name="ThrustUp" type="MeshInstance" parent="."]
-transform = Transform( 0.0855367, 0, 0, 0, 0.0943437, 1.33139e-09, 0, 1.33139e-09, 0.109573, 0, 0.0976577, -8.53751e-09 )
-visible = false
-mesh = SubResource( 36 )
-material/0 = ExtResource( 4 )
-
-[node name="ThrustDown" type="MeshInstance" parent="."]
-transform = Transform( 0.0855367, 0, 0, 0, 0.0943437, 1.33139e-09, 0, 1.33139e-09, 0.109573, 0, -0.100835, 8.81528e-09 )
-visible = false
-mesh = SubResource( 36 )
-material/0 = ExtResource( 4 )
-
-[node name="ThrustLeft" type="MeshInstance" parent="."]
-transform = Transform( 0.0855367, 0, 0, 0, 0.0943437, 1.33139e-09, 0, 1.33139e-09, 0.109573, 0.165255, 0.0143703, -1.25629e-09 )
-visible = false
-mesh = SubResource( 36 )
-material/0 = ExtResource( 4 )
-
-[node name="ThrustRight" type="MeshInstance" parent="."]
-transform = Transform( 0.0855367, 0, 0, 0, 0.0943437, 1.33139e-09, 0, 1.33139e-09, 0.109573, -0.162998, -0.0215018, 1.87975e-09 )
-visible = false
-mesh = SubResource( 36 )
-material/0 = ExtResource( 4 )
+[connection signal="body_entered" from="." to="." method="_on_Missile_body_entered"]

@@ -143,9 +143,6 @@ margin_bottom = 2320.36
 rect_scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 5 )
 expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Logo" type="RichTextLabel" parent="."]
 anchor_right = 0.989

@@ -1,7 +1,7 @@
 extends RigidBody
 
 
-export var muzzle_velocity = 5  #25
+export var muzzle_velocity = 2  #25
 export var g = Vector3.DOWN * 0  # 20
 
 var velocity = Vector3.ZERO
@@ -17,6 +17,7 @@ var closest_target_direction_normalised
 var print_timer = 0.1
 var initial_speed
 var explosion_range = 10.0
+var fwd_speed
 
 var rng = RandomNumberGenerator.new()
 
@@ -40,7 +41,7 @@ func _process(delta):
 	print_timer -= delta
 	
 	if print_timer < 0.0:
-		print(" hit_something="+str(hit_something))
+		# print(" hit_something="+str(hit_something))
 		# print("$ParticlesExplosion2.visible="+str($ParticlesExplosion2.visible))
 		# print("$ParticlesExplosion2.emitting="+str($ParticlesExplosion2.emitting))
 		# print("$ExplosionSound.playing="+str($ExplosionSound.playing))
@@ -61,6 +62,11 @@ func _process(delta):
 
 
 func _physics_process(delta):
+	if fwd_speed == null:
+		fwd_speed = abs(transform.basis.xform_inv(linear_velocity).z)
+		print("setting fwd_speed="+str(fwd_speed))
+		print("initial_speed="+str(initial_speed))
+		
 	if hit_something == false:
 		if closest_target != null and homing == true: 
 			
@@ -73,6 +79,8 @@ func _physics_process(delta):
 			velocity += g
 			if print_timer<0.0:
 				print_timer = 0.1
+		
+		velocity = (velocity.normalized())*initial_speed
 		
 		transform.origin += velocity * delta
 		look_at(transform.origin + velocity.normalized(), Vector3.UP)

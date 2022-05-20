@@ -20,8 +20,7 @@ export var speed = 0.0
 var speed_low_limit = 5
 var rng = RandomNumberGenerator.new()
 
-const COOLDOWN_TIMER_DEFAULTS = {"mine": 1.0, "rocket": 1.0, "missile": 1.0, "nuke": 10.0}
-var cooldown_timer = COOLDOWN_TIMER_DEFAULTS["mine"]
+var cooldown_timer = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["mine"]
 var timer_0_1_sec = 0.1
 var timer_1_sec = 1.0  # timer to eg: check if car needs to turn light on 
 var timer_1_sec_physics = 1.0  # to check and correct clipping, etc
@@ -32,10 +31,11 @@ var total_damage = 0.0
 var take_damage = true
 var wheel_positions = []
 var wheels = []
-var weapons = {0: {"name": "mine", "damage": 2, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["mine"], "scene": "res://scenes/explosive.tscn", "enabled": true}, \
-			   1: {"name": "rocket", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["rocket"], "scene": "res://scenes/missile.tscn", "enabled": true}, \
-			   2: {"name": "missile", "damage": 5, "indirect_damage": 1, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["missile"], "scene": "res://scenes/missile.tscn", "enabled": true}, \
-			   3: {"name": "nuke", "damage": 10, "active": false, "cooldown_timer": COOLDOWN_TIMER_DEFAULTS["nuke"], "scene": "res://scenes/explosive.tscn", "enabled": false, "test_mode": false}}
+# this is changingstate info, see config_weapons.gd for constants
+var weapons = {0: {"name": "mine", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["mine"], "enabled": true}, \
+			   1: {"name": "rocket", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["rocket"], "enabled": true}, \
+			   2: {"name": "missile", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["missile"], "enabled": true}, \
+			   3: {"name": "nuke", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["nuke"], "enabled": false, "test_mode": false}}
 var weapon_select = 0
 var lights_disabled = false
 var acceleration_calc_for_damage = 0.0
@@ -395,7 +395,7 @@ func _process(delta):
 		#	print(str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
 		get_player().set_label_player_name()  # , total_damage, weapons[weapon_select].damage)
 		get_player().set_label_lives_left()
-		get_player().get_canvaslayer().get_node("cooldown").max_value = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select]["name"]]
+		get_player().get_canvaslayer().get_node("cooldown").max_value = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select]["name"]]
 		get_player().get_canvaslayer().get_node("cooldown").value = cooldown_timer
 		
 		# Update all the 0.1 sec physical calculations
@@ -415,7 +415,7 @@ func _process(delta):
 	
 	if Input.is_action_just_released("fire_player"+str(player_number)) and weapons[weapon_select]["active"] == false and weapons[weapon_select]["cooldown_timer"] <= 0.0 and weapons[weapon_select]["enabled"] == true:
 		# print("Player pressed fire")
-		weapons[weapon_select]["cooldown_timer"] = COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select].name]
+		weapons[weapon_select]["cooldown_timer"] = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select].name]
 		get_player().set_label_player_name()
 		get_player().set_label_lives_left()
 		if weapon_select == 0 or weapon_select == 3:  # mine or nuke
@@ -652,11 +652,13 @@ func fire_mine_or_nuke():
 
 func fire_missile_or_rocket():
 	
-	var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
+	var weapon_instance = load(ConfigWeapons.SCENE[weapons[weapon_select]["name"]]).instance()
 	weapons[weapon_select]["instance"] = weapon_instance
 	add_child(weapon_instance)
 	# Shoot out fast (current speed + muzzle speed), it will then slow/speed to approach weapon_instance.target_speed	
-	weapon_instance.velocity = (transform.basis.z.normalized()) * (weapon_instance.muzzle_speed + abs(transform.basis.xform_inv(linear_velocity).z))  
+	weapon_instance.weapon_type = weapon_select
+	weapon_instance.weapon_type_name = ConfigWeapons.weapon_types[weapon_select]["name"]
+	weapon_instance.velocity = (transform.basis.z.normalized()) * (weapon_instance.muzzle_speed() + abs(transform.basis.xform_inv(linear_velocity).z))  
 	weapon_instance.linear_velocity = linear_velocity  # initial only, this is not used, "velocity" is used to change it's position
 	weapon_instance.angular_velocity = angular_velocity
 	if weapon_select == 2:

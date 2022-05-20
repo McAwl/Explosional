@@ -655,10 +655,9 @@ func fire_missile_or_rocket():
 	var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
 	weapons[weapon_select]["instance"] = weapon_instance
 	add_child(weapon_instance)
-	
-	weapon_instance.velocity = transform.basis.z  # * weapon_instance.muzzle_velocity
-	weapon_instance.initial_speed = abs(transform.basis.xform_inv(linear_velocity).z) + weapon_instance.muzzle_velocity  #weapon_instance.velocity.length()
-	weapon_instance.linear_velocity = linear_velocity
+	# Shoot out fast (current speed + muzzle speed), it will then slow/speed to approach weapon_instance.target_speed	
+	weapon_instance.velocity = (transform.basis.z.normalized()) * (weapon_instance.muzzle_speed + abs(transform.basis.xform_inv(linear_velocity).z))  
+	weapon_instance.linear_velocity = linear_velocity  # initial only, this is not used, "velocity" is used to change it's position
 	weapon_instance.angular_velocity = angular_velocity
 	if weapon_select == 2:
 		weapon_instance.velocity[1] += 1.0   # angle it up a bit

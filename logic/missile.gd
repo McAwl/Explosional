@@ -1,7 +1,5 @@
 extends RigidBody
 
-var muzzle_speed = 10.0  #
-var target_speed = 10.0  #
 var velocity = Vector3.ZERO
 onready var lifetime_seconds = 10.0
 var homing = true
@@ -18,7 +16,8 @@ var explosion_range = 10.0
 var fwd_speed
 var rng = RandomNumberGenerator.new()
 var hit_something = false
-
+var weapon_type  
+var weapon_type_name  
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -28,6 +27,10 @@ func _ready():
 	$ParticlesExplosion.visible = false
 	# $ParticlesExplosion2.visible = false
 	$MeshInstance.visible = true
+
+
+func muzzle_speed():
+	return ConfigWeapons.MUZZLE_SPEED[weapon_type_name]
 
 
 func _process(delta):
@@ -61,8 +64,7 @@ func _physics_process(delta):
 	if fwd_speed == null:
 		fwd_speed = abs(transform.basis.xform_inv(linear_velocity).z)
 		print("fwd_speed="+str(fwd_speed))
-		print("target_speed="+str(target_speed))
-		print("target_speed="+str(target_speed))
+		print("target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
 		
 	if hit_something == false:
 		if closest_target != null and homing == true: 
@@ -71,7 +73,7 @@ func _physics_process(delta):
 			velocity = velocity.linear_interpolate(closest_target_direction, delta*homing_force)
 		
 		# interpolate to the target speed
-		velocity = velocity.linear_interpolate((velocity.normalized())*target_speed, delta*speed_up_down_rate) 
+		velocity = velocity.linear_interpolate((velocity.normalized())*ConfigWeapons.TARGET_SPEED[weapon_type_name], delta*speed_up_down_rate) 
 		
 		transform.origin += velocity * delta  # move the missile
 		look_at(transform.origin + velocity.normalized(), Vector3.UP)  # point the missile in the direction it's moving

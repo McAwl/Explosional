@@ -1,26 +1,22 @@
 extends RigidBody
 
-
-export var muzzle_velocity = 2  #25
-export var g = Vector3.DOWN * 0  # 20
-
+var muzzle_speed = 10.0  #
+var target_speed = 10.0  #
 var velocity = Vector3.ZERO
-onready var lifetime_seconds = 2.0
+onready var lifetime_seconds = 10.0
 var homing = true
 var homing_check_target_timer = 0.1
-var homing_force = 0.2  # 0.1 OK 1.0 too strong, keep < 0.1
+var homing_force = 1.0  # 
 var parent_player_number
 var closest_target
 var closest_target_distance
 var closest_target_direction
 var closest_target_direction_normalised
 var print_timer = 0.1
-var initial_speed
+var speed_up_down_rate = 1.0
 var explosion_range = 10.0
 var fwd_speed
-
 var rng = RandomNumberGenerator.new()
-
 var hit_something = false
 
 
@@ -52,10 +48,10 @@ func _process(delta):
 		if $ExplosionSound.playing == false and $ParticlesExplosion.emitting == false:
 		# if $ExplosionSound.playing == false and $ParticlesExplosion2/AnimationPlayer.current_animation != "Explode":
 			# explosion noise finished
-			print("missile:process(): queue_free()")
+			#print("missile:process(): queue_free()")
 			queue_free()
-		else:
-			print("missile:process(): $ExplosionSound.playing OR $ParticlesExplosion.emitting")
+		#else:
+		#	print("missile:process(): $ExplosionSound.playing OR $ParticlesExplosion.emitting")
 	
 	if lifetime_seconds < 0.0:
 		queue_free()
@@ -64,26 +60,21 @@ func _process(delta):
 func _physics_process(delta):
 	if fwd_speed == null:
 		fwd_speed = abs(transform.basis.xform_inv(linear_velocity).z)
-		print("setting fwd_speed="+str(fwd_speed))
-		print("initial_speed="+str(initial_speed))
+		print("fwd_speed="+str(fwd_speed))
+		print("target_speed="+str(target_speed))
+		print("target_speed="+str(target_speed))
 		
 	if hit_something == false:
 		if closest_target != null and homing == true: 
 			
-			velocity = initial_speed * ( ((1.0-homing_force)*velocity.normalized()) + (homing_force*closest_target_direction.normalized()) )  # update this periodically below
-			
-			if print_timer<0.0:
-				print_timer = 0.1
-				
-		else:
-			velocity += g
-			if print_timer<0.0:
-				print_timer = 0.1
+			# redirect the missile towards the target
+			velocity = velocity.linear_interpolate(closest_target_direction, delta*homing_force)
 		
-		velocity = (velocity.normalized())*initial_speed
+		# interpolate to the target speed
+		velocity = velocity.linear_interpolate((velocity.normalized())*target_speed, delta*speed_up_down_rate) 
 		
-		transform.origin += velocity * delta
-		look_at(transform.origin + velocity.normalized(), Vector3.UP)
+		transform.origin += velocity * delta  # move the missile
+		look_at(transform.origin + velocity.normalized(), Vector3.UP)  # point the missile in the direction it's moving
 		
 		if homing:
 			if homing_check_target_timer < 0.0:

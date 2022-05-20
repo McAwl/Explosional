@@ -204,7 +204,6 @@ material = ExtResource( 6 )
 
 [node name="Racer" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Racer"]
 
@@ -453,10 +452,10 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.32512, 0.101055 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.11065 )
 
 [node name="MissilePosition" type="Position3D" parent="VehicleTypes/Racer/Positions/Weapons"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 1.1137 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.727984, 1.51689 )
 
 [node name="RocketPosition" type="Position3D" parent="VehicleTypes/Racer/Positions/Weapons"]
-transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.511921, 1.3363 )
+transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.677178, 1.49872 )
 
 [node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/Racer/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0728733, 0.533305, 0.273624 )

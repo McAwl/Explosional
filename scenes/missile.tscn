@@ -76,7 +76,6 @@ mass = 20.0
 contacts_reported = 2
 contact_monitor = true
 script = ExtResource( 1 )
-muzzle_velocity = 35
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 0.142666, 0, 0, 0, -1.32541e-08, -0.0807597, 0, 0.462283, -5.38198e-09, 0, 0, 0 )

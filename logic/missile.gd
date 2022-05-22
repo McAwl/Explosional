@@ -79,43 +79,58 @@ func _physics_process(delta):
 			if closest_target != null: 
 				
 				# redirect the missile towards the target
-				velocity = velocity.linear_interpolate(closest_target_direction, delta*homing_force)
+				# velocity = velocity.linear_interpolate(closest_target_direction, delta*homing_force)
+				var homing_force_adjusted
+				if closest_target_distance > 200.0:
+					 homing_force_adjusted = homing_force/10.0
+				elif closest_target_distance > 50.0:
+					 homing_force_adjusted = homing_force/5.0
+				elif closest_target_distance > 20.0:
+					 homing_force_adjusted = homing_force/2.0
+				elif closest_target_distance > 10.0:
+					 homing_force_adjusted = homing_force*1.0
+				else:
+					 homing_force_adjusted = homing_force*2.0
+				velocity = velocity.linear_interpolate(closest_target_direction, delta*homing_force_adjusted)  # scale homing force by range
 				
 			else:
 				if weapon_type == 4:
 					velocity += Vector3.DOWN * 0.05
 			
-			# steer up if getting close to the terrain underneath
-			if $RayCastDown.is_colliding():
-				if "terrain" in $RayCastDown.get_collider().name.to_lower():
-					velocity += Vector3.UP * 0.1
-			else:  # steer down a bit
-				velocity += Vector3.DOWN * 0.05
+			if closest_target == null or (closest_target != null and closest_target_distance > 20.0): 
+				# If not too close to a target (no there's no target), try to avoid the terrain
 				
-			# steer up if aiming at the terrain
-			if $RayCastForward.is_colliding():
-				if "terrain" in $RayCastForward.get_collider().name.to_lower():
-					velocity += Vector3.UP * 0.1
-			
-			# steer right a bit
-			if $RayCastForwardLeft.is_colliding():
-				if "terrain" in $RayCastForwardLeft.get_collider().name.to_lower():
-					velocity += Vector3.LEFT * 0.025
+				# steer up if getting close to the terrain underneath
+				if $RayCastDown.is_colliding():
+					if "terrain" in $RayCastDown.get_collider().name.to_lower():
+						velocity += Vector3.UP * 0.1
+				else:  # steer down a bit
+					velocity += Vector3.DOWN * 0.05
 					
-			# steer left a bit
-			if $RayCastForwardRight.is_colliding():
-				if "terrain" in $RayCastForwardRight.get_collider().name.to_lower():
-					velocity += Vector3.RIGHT * 0.025
-			
-			# steer up a bit
-			if $RayCastForwardDown.is_colliding():
-				if "terrain" in $RayCastForwardDown.get_collider().name.to_lower():
-					velocity += Vector3.UP * 0.025
-					
-			# steer down a bit
-			if $RayCastForwardUp.is_colliding():
-				if "terrain" in $RayCastForwardUp.get_collider().name.to_lower():
-					velocity += Vector3.DOWN * 0.025
+				# steer up if aiming at the terrain
+				if $RayCastForward.is_colliding():
+					if "terrain" in $RayCastForward.get_collider().name.to_lower():
+						velocity += Vector3.UP * 0.1
+				
+				# steer right a bit
+				if $RayCastForwardLeft.is_colliding():
+					if "terrain" in $RayCastForwardLeft.get_collider().name.to_lower():
+						velocity += Vector3.LEFT * 0.025
+						
+				# steer left a bit
+				if $RayCastForwardRight.is_colliding():
+					if "terrain" in $RayCastForwardRight.get_collider().name.to_lower():
+						velocity += Vector3.RIGHT * 0.025
+				
+				# steer up a bit
+				if $RayCastForwardDown.is_colliding():
+					if "terrain" in $RayCastForwardDown.get_collider().name.to_lower():
+						velocity += Vector3.UP * 0.025
+						
+				# steer down a bit
+				if $RayCastForwardUp.is_colliding():
+					if "terrain" in $RayCastForwardUp.get_collider().name.to_lower():
+						velocity += Vector3.DOWN * 0.025
 			
 		# interpolate to the target speed
 		velocity = velocity.linear_interpolate((velocity.normalized())*ConfigWeapons.TARGET_SPEED[weapon_type_name], delta*speed_up_down_rate) 

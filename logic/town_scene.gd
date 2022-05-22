@@ -120,9 +120,9 @@ func _process(delta):
 
 
 func pause_game():
-	$VC/CL/PopupMenu.popup()  # this shows the popup 
-	$VC/CL/PopupMenu.show()
+	#$VC/CL/PopupMenu.popup()  # this shows the popup - but doesn't seem to work
 	$VC/CL/PopupMenu.visible = true
+	print("pausing game")
 	get_tree().paused = true
 
 

@@ -113,4 +113,33 @@ light_color = Color( 0.972549, 0.592157, 0.054902, 1 )
 shadow_enabled = true
 omni_range = 30.0
 
+[node name="RayCastDown" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.630978 )
+enabled = true
+
+[node name="RayCastForward" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, -0.00581194, -0.999983, 0, 0.999983, -0.00581194, 0, 0, -0.630978 )
+enabled = true
+cast_to = Vector3( 0, -10, 0 )
+
+[node name="RayCastForwardDown" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.0930483, -0.995662, 0, 0.995662, 0.0930483, 0, -0.16439, -0.630978 )
+enabled = true
+cast_to = Vector3( 0, -10, 0 )
+
+[node name="RayCastForwardUp" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, -0.114226, -0.993455, 0, 0.993455, -0.114226, 0, 0.140695, -0.630978 )
+enabled = true
+cast_to = Vector3( 0, -10, 0 )
+
+[node name="RayCastForwardRight" type="RayCast" parent="."]
+transform = Transform( 0.993093, -0.117327, 0.000681912, 0, -0.00581194, -0.999983, 0.117329, 0.993076, -0.0057718, 0.160343, 0, -0.630978 )
+enabled = true
+cast_to = Vector3( 0, -10, 0 )
+
+[node name="RayCastForwardLeft" type="RayCast" parent="."]
+transform = Transform( 0.993015, 0.117986, -0.000685739, 0, -0.00581194, -0.999983, -0.117988, 0.992998, -0.00577134, -0.157368, 0, -0.630978 )
+enabled = true
+cast_to = Vector3( 0, -10, 0 )
+
 [connection signal="body_entered" from="." to="." method="_on_Missile_body_entered"]

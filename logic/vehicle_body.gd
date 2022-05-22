@@ -35,7 +35,8 @@ var wheels = []
 var weapons = {0: {"name": "mine", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["mine"], "enabled": true}, \
 			   1: {"name": "rocket", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["rocket"], "enabled": true}, \
 			   2: {"name": "missile", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["missile"], "enabled": true}, \
-			   3: {"name": "nuke", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["nuke"], "enabled": false, "test_mode": false}}
+			   3: {"name": "nuke", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["nuke"], "enabled": false, "test_mode": false},
+			   4: {"name": "ballistic", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["ballistic"], "enabled": true}}
 var weapon_select = 0
 var lights_disabled = false
 var acceleration_calc_for_damage = 0.0
@@ -424,6 +425,8 @@ func _process(delta):
 			fire_missile_or_rocket()
 		elif weapon_select == 2:
 			fire_missile_or_rocket()
+		elif weapon_select == 4:
+			fire_missile_or_rocket()
 
 	if weapons[weapon_select]["active"] == false:
 		if weapons[weapon_select]["cooldown_timer"] > 0.0:
@@ -476,15 +479,16 @@ func check_accel_damage(delta):
 
 func cycle_weapon():
 		weapon_select += 1
-		if weapon_select > 3:
+		if weapon_select > 4:
 			weapon_select = 0
 		if weapons[weapon_select].enabled == false:
 			weapon_select += 1
-		if weapon_select > 3:
+		if weapon_select > 4:
 			weapon_select = 0
 		get_player().get_canvaslayer().get_node("icon_mine").hide()
 		get_player().get_canvaslayer().get_node("icon_rocket").hide()
 		get_player().get_canvaslayer().get_node("icon_missile").hide()
+		get_player().get_canvaslayer().get_node("icon_ballistic").hide()
 		get_player().get_canvaslayer().get_node("icon_nuke").hide()
 		get_player().get_canvaslayer().get_node("icon_"+weapons[weapon_select].name).show()
 		get_player().set_label_player_name()
@@ -630,7 +634,7 @@ func get_wheel(num):
 
 func fire_mine_or_nuke():
 	# print("Firing weapon="+str(weapon_select))
-	var weapon_instance = load(weapons[weapon_select]["scene"]).instance()
+	var weapon_instance = load(ConfigWeapons.SCENE[weapons[weapon_select]["name"]]).instance()
 	add_child(weapon_instance) 
 	weapon_instance.rotation_degrees = rotation_degrees
 	weapons[weapon_select]["active"] = true
@@ -669,6 +673,10 @@ func fire_missile_or_rocket():
 		weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
 	if weapon_select == 1:
 		weapon_instance.activate(player_number, false)  # homing = false
+	elif weapon_select == 4:
+		weapon_instance.activate(player_number, false)  # homing = false
+		weapon_instance.get_node("ParticlesThrust").visible = false
+		weapon_instance.velocity += Vector3.UP * 2.0  # fire upwards a bit
 	else:
 		weapon_instance.activate(player_number, true)  # homing = true
 	weapon_instance.set_as_toplevel(true)

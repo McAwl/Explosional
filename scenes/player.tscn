@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://assets/display/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://logic/player.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://assets/display/icons/rocket.png" type="Texture" id=5]
 [ext_resource path="res://assets/display/icons/lifebar_fill.png" type="Texture" id=6]
 [ext_resource path="res://assets/display/icons/energy_bar_fill.png" type="Texture" id=7]
+[ext_resource path="res://assets/display/icons/ballistic.png" type="Texture" id=8]
 [ext_resource path="res://assets/display/icons/nuke.png" type="Texture" id=9]
 [ext_resource path="res://assets/display/icons/heart.png" type="Texture" id=11]
 
@@ -89,6 +90,17 @@ margin_left = 120.0
 margin_top = 20.0
 rect_scale = Vector2( 0.105, 0.105 )
 texture = ExtResource( 3 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon_ballistic" type="TextureRect" parent="VC/V/CanvasLayer"]
+visible = false
+margin_left = 120.0
+margin_top = 20.0
+rect_scale = Vector2( 0.105, 0.105 )
+texture = ExtResource( 8 )
 stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false

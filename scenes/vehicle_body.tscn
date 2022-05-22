@@ -111,7 +111,6 @@ transform = Transform( 0.998172, 0, 0.0604388, 0, 1, 0, -0.0604388, 0, 0.998172,
 
 [node name="Camera" type="Camera" parent="CameraBase"]
 transform = Transform( -0.998921, -0.0112154, 0.0450581, -2.11161e-08, 0.970391, 0.24154, -0.0464329, 0.241279, -0.969344, -0.138464, 0.281651, -1.96593 )
-current = true
 fov = 74.0
 near = 0.1
 far = 1000.0
@@ -122,7 +121,6 @@ height = 1.25
 [node name="CameraFPFront" type="Camera" parent="CameraBase"]
 transform = Transform( -0.998921, 0.00220149, 0.0463805, -2.11161e-08, 0.998875, -0.047413, -0.0464328, -0.0473618, -0.997798, -0.124779, -1.27877, 2.63899 )
 visible = false
-current = true
 far = 1000.0
 
 [node name="CameraFPBack" type="Camera" parent="CameraBase"]

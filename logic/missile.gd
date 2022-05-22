@@ -100,34 +100,34 @@ func _physics_process(delta):
 				# steer up if getting close to the terrain underneath
 				if $RayCastDown.is_colliding():
 					if "terrain" in $RayCastDown.get_collider().name.to_lower():
-						velocity += Vector3.UP * 0.1
+						velocity += transform.basis.y * 0.1
 				else:  # steer down a bit
-					velocity += Vector3.DOWN * 0.05
+					velocity += -transform.basis.y * 0.05
 					
 				# steer up if aiming at the terrain
 				if $RayCastForward.is_colliding():
 					if "terrain" in $RayCastForward.get_collider().name.to_lower():
-						velocity += Vector3.UP * 0.1
+						velocity += transform.basis.y * 0.1
 				
 				# steer right a bit
 				if $RayCastForwardLeft.is_colliding():
 					if "terrain" in $RayCastForwardLeft.get_collider().name.to_lower():
-						velocity += Vector3.LEFT * 0.025
+						velocity += transform.basis.x * 0.025
 						
 				# steer left a bit
 				if $RayCastForwardRight.is_colliding():
 					if "terrain" in $RayCastForwardRight.get_collider().name.to_lower():
-						velocity += Vector3.RIGHT * 0.025
+						velocity += -transform.basis.x * 0.025
 				
 				# steer up a bit
 				if $RayCastForwardDown.is_colliding():
 					if "terrain" in $RayCastForwardDown.get_collider().name.to_lower():
-						velocity += Vector3.UP * 0.025
+						velocity += transform.basis.y * 0.025
 						
 				# steer down a bit
 				if $RayCastForwardUp.is_colliding():
 					if "terrain" in $RayCastForwardUp.get_collider().name.to_lower():
-						velocity += Vector3.DOWN * 0.025
+						velocity += -transform.basis.y * 0.025
 		
 		if weapon_type == 4:  # for ballistic weapons, add gravity
 			velocity += Vector3.DOWN * 0.04

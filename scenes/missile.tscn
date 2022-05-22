@@ -97,8 +97,8 @@ shape = SubResource( 26 )
 
 [node name="ParticlesThrust" type="Particles" parent="."]
 transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 0, 0.533099 )
-amount = 40
-lifetime = 1.2
+amount = 50
+lifetime = 1.5
 preprocess = 1.14
 local_coords = false
 process_material = SubResource( 13 )

@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://logic/vehicle_body.gd" type="Script" id=2]
@@ -19,6 +19,7 @@
 [ext_resource path="res://scenes/vehicle_tank_mesh_import.tscn" type="PackedScene" id=17]
 [ext_resource path="res://assets/audio/sounds/181161__martian__motorbike-hornet-600-onboard-clip-0005-n3-f.wav" type="AudioStream" id=18]
 [ext_resource path="res://logic/engine_sound_rally.gd" type="Script" id=19]
+[ext_resource path="res://assets/audio/sounds/371041__morganpurkis__single-gunshot-3.wav" type="AudioStream" id=20]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
@@ -182,6 +183,10 @@ volume_db = 12.0
 script = ExtResource( 19 )
 
 [node name="Tween" type="Tween" parent="Effects/Audio/EngineSoundRally"]
+
+[node name="GunshotSound" type="AudioStreamPlayer" parent="Effects/Audio"]
+stream = ExtResource( 20 )
+pitch_scale = 0.3
 
 [node name="Shield" type="Spatial" parent="Effects"]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -0.00169557, 0.222867, -0.0955184 )

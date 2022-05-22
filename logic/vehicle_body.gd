@@ -50,6 +50,8 @@ var old_fwd_mps_0_1 = 0.0
 var fwd_mps_0_1_ewma = 0.0
 var fwd_mps_0_1 = 0.0
 var explosion2_timer = 0.2
+var knock_back_firing_ballistic = false  # knock the vehicle backwards when firing a ballistic weapons
+
 var vehicle_types = {	"Tank":  {"scene": "res://scenes/vehicle_tank.tscn", 
 									"engine_force_value": 150,  # keep this at 1x mass
 									"mass_kg/100": 200.0, 
@@ -557,6 +559,13 @@ func _physics_process(delta):
 			
 		hit_by_missile["active"] = false
 
+	# If we've fired a ballistic weapon, know backwards here
+	if knock_back_firing_ballistic == true:
+		print("knock_back_firing_ballistic: knocing vehicle back")
+		knock_back_firing_ballistic = false
+		apply_impulse( Vector3(0,0,0), -100.0*transform.basis.z )   # offset, impulse(=direction*force)
+		apply_impulse( Vector3(0,0,0), 50.0*transform.basis.y )   # offset, impulse(=direction*force)
+
 	timer_1_sec_physics -= delta
 	if timer_1_sec_physics < 0.0:
 		timer_1_sec_physics = 1.0
@@ -674,9 +683,11 @@ func fire_missile_or_rocket():
 	if weapon_select == 1:
 		weapon_instance.activate(player_number, false)  # homing = false
 	elif weapon_select == 4:
+		knock_back_firing_ballistic = true
 		weapon_instance.activate(player_number, false)  # homing = false
 		weapon_instance.get_node("ParticlesThrust").visible = false
-		weapon_instance.velocity += Vector3.UP * 2.0  # fire upwards a bit
+		weapon_instance.velocity += Vector3.UP * 5.0  # fire upwards a bit
+		$Effects/Audio/GunshotSound.playing = true
 	else:
 		weapon_instance.activate(player_number, true)  # homing = true
 	weapon_instance.set_as_toplevel(true)

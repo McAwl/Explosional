@@ -9,8 +9,8 @@ const SCENE = {"mine": "res://scenes/explosive.tscn", \
 			   "missile": "res://scenes/missile.tscn", \
 			   "nuke": "res://scenes/explosive.tscn",
 			   "ballistic": "res://scenes/missile.tscn"}
-const TARGET_SPEED = {"rocket": 10.0, "missile": 10.0, "ballistic": 30.0}
-const MUZZLE_SPEED = {"rocket": 10.0, "missile": 10.0, "ballistic": 30.0}
+const TARGET_SPEED = {"rocket": 10.0, "missile": 10.0, "ballistic": 20.0}
+const MUZZLE_SPEED = {"rocket": 10.0, "missile": 10.0, "ballistic": 20.0}
 
 var weapon_types = {0: {"name": "mine"}, \
 					1: {"name": "rocket"}, \

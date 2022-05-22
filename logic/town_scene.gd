@@ -5,6 +5,7 @@ var timer_1_sec = 1.0
 var num_players
 var players
 var rng = RandomNumberGenerator.new()
+var is_game_paused = false
 
 export var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 export var start_clock_hrs = 12.0
@@ -14,6 +15,10 @@ export var test_turn_off_airstrike = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
+	# hide the mouse
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
 	if fake_sun_omni_light == true:
 		$Sun/OmniLight.visible = true
 		$DirectionalLightSun.visible = false
@@ -66,6 +71,10 @@ func turn_airstrike_off():
 
 func _process(delta):
 	
+	if Input.is_action_just_released("pause"):
+		is_game_paused = !is_game_paused
+		pause_game()
+		
 	air_strike["interval_so_far_sec"] +=delta
 	air_strike["duration_so_far_sec"] += delta
 		
@@ -108,6 +117,17 @@ func _process(delta):
 		timer_1_sec = 1.0
 	
 	update_player_hud()
+
+
+func pause_game():
+	$VC/CL/PopupMenu.popup()  # this shows the popup 
+	$VC/CL/PopupMenu.show()
+	$VC/CL/PopupMenu.visible = true
+	get_tree().paused = true
+
+
+#func _on_pause_popup_close_pressed():
+#    $pause_popup.hide()
 
 
 func check_slow_motion():

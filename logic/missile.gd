@@ -4,14 +4,15 @@ var velocity = Vector3.ZERO
 onready var lifetime_seconds = 10.0
 var homing = true
 var homing_check_target_timer = 0.1
-var homing_force = 1.0  # 
+var homing_force = 0.5  # 1.0  # 
+var homing_start_timer = 0.5
 var parent_player_number
 var closest_target
 var closest_target_distance
 var closest_target_direction
 var closest_target_direction_normalised
 var print_timer = 0.1
-var speed_up_down_rate = 1.0
+var speed_up_down_rate = 0.5  # 1.0
 var explosion_range = 10.0
 var fwd_speed
 var rng = RandomNumberGenerator.new()
@@ -35,6 +36,8 @@ func muzzle_speed():
 
 func _process(delta):
 	lifetime_seconds -= delta
+	if homing_start_timer >= 0.0:
+		homing_start_timer -= delta
 	if homing == true:
 		homing_check_target_timer -= delta
 	print_timer -= delta
@@ -44,7 +47,10 @@ func _process(delta):
 		# print("$ParticlesExplosion2.visible="+str($ParticlesExplosion2.visible))
 		# print("$ParticlesExplosion2.emitting="+str($ParticlesExplosion2.emitting))
 		# print("$ExplosionSound.playing="+str($ExplosionSound.playing))
-		print_timer = 0.1
+		print_timer = 0.5
+		fwd_speed = abs(transform.basis.xform_inv(linear_velocity).z)
+		print("fwd_speed="+str(fwd_speed))
+		print("target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
 	
 	if hit_something == true:
 		lifetime_seconds = 2.0  # otherwise it might cut off the explosion anim/sound
@@ -64,14 +70,53 @@ func _physics_process(delta):
 	if fwd_speed == null:
 		fwd_speed = abs(transform.basis.xform_inv(linear_velocity).z)
 		print("fwd_speed="+str(fwd_speed))
+		print("transform.basis.z="+str(transform.basis.z))
 		print("target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
 		
 	if hit_something == false:
-		if closest_target != null and homing == true: 
+		if homing == true and homing_start_timer <= 0.0:
 			
-			# redirect the missile towards the target
-			velocity = velocity.linear_interpolate(closest_target_direction, delta*homing_force)
-		
+			if closest_target != null: 
+				
+				# redirect the missile towards the target
+				velocity = velocity.linear_interpolate(closest_target_direction, delta*homing_force)
+				
+			else:
+				if weapon_type == 4:
+					velocity += Vector3.DOWN * 0.05
+			
+			# steer up if getting close to the terrain underneath
+			if $RayCastDown.is_colliding():
+				if "terrain" in $RayCastDown.get_collider().name.to_lower():
+					velocity += Vector3.UP * 0.1
+			else:  # steer down a bit
+				velocity += Vector3.DOWN * 0.05
+				
+			# steer up if aiming at the terrain
+			if $RayCastForward.is_colliding():
+				if "terrain" in $RayCastForward.get_collider().name.to_lower():
+					velocity += Vector3.UP * 0.1
+			
+			# steer right a bit
+			if $RayCastForwardLeft.is_colliding():
+				if "terrain" in $RayCastForwardLeft.get_collider().name.to_lower():
+					velocity += Vector3.LEFT * 0.025
+					
+			# steer left a bit
+			if $RayCastForwardRight.is_colliding():
+				if "terrain" in $RayCastForwardRight.get_collider().name.to_lower():
+					velocity += Vector3.RIGHT * 0.025
+			
+			# steer up a bit
+			if $RayCastForwardDown.is_colliding():
+				if "terrain" in $RayCastForwardDown.get_collider().name.to_lower():
+					velocity += Vector3.UP * 0.025
+					
+			# steer down a bit
+			if $RayCastForwardUp.is_colliding():
+				if "terrain" in $RayCastForwardUp.get_collider().name.to_lower():
+					velocity += Vector3.DOWN * 0.025
+			
 		# interpolate to the target speed
 		velocity = velocity.linear_interpolate((velocity.normalized())*ConfigWeapons.TARGET_SPEED[weapon_type_name], delta*speed_up_down_rate) 
 		

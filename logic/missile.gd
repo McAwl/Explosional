@@ -49,8 +49,8 @@ func _process(delta):
 		# print("$ExplosionSound.playing="+str($ExplosionSound.playing))
 		print_timer = 0.5
 		fwd_speed = abs(transform.basis.xform_inv(linear_velocity).z)
-		print("fwd_speed="+str(fwd_speed))
-		print("target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
+		#print("fwd_speed="+str(fwd_speed))
+		#print("target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
 	
 	if hit_something == true:
 		lifetime_seconds = 2.0  # otherwise it might cut off the explosion anim/sound

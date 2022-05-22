@@ -1,8 +1,9 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://logic/missile.gd" type="Script" id=1]
 [ext_resource path="res://assets/audio/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=2]
 [ext_resource path="res://assets/materials/vehicles/car_grill.tres" type="Material" id=3]
+[ext_resource path="res://assets/textures/dot.png" type="Texture" id=4]
 
 [sub_resource type="CapsuleMesh" id=25]
 
@@ -10,14 +11,14 @@
 radius = 1.01069
 
 [sub_resource type="Gradient" id=11]
-offsets = PoolRealArray( 0, 0.291925, 0.639752, 1 )
-colors = PoolColorArray( 0.983398, 1, 0, 1, 1, 0, 0, 0.823529, 0.027451, 0.0235294, 0.0235294, 0.192157, 0, 0, 0, 0 )
+offsets = PoolRealArray( 0, 0.0729927, 0.248175, 0.510949, 1 )
+colors = PoolColorArray( 0.983398, 1, 0, 1, 1, 0, 0, 0.823529, 0.0431373, 0.0392157, 0.0392157, 0.462745, 0.0541921, 0.0503817, 0.0503817, 0.249735, 0, 0, 0, 0 )
 
 [sub_resource type="GradientTexture" id=33]
 gradient = SubResource( 11 )
 
 [sub_resource type="Curve" id=12]
-_data = [ Vector2( 0, 0.999161 ), 0.0, -0.252055, 0, 0, Vector2( 0.978261, 0.999161 ), -0.118322, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 0.263018 ), 0.0, 6.47934, 0, 0, Vector2( 0.1125, 0.917563 ), 0.207792, 0.207792, 0, 0, Vector2( 0.85, 0.826654 ), -0.700337, -0.700337, 0, 0, Vector2( 1, 0.0175631 ), -0.118322, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=34]
 curve = SubResource( 12 )
@@ -29,7 +30,6 @@ gravity = Vector3( 0, 0, 0 )
 initial_velocity = 5.0
 initial_velocity_random = 0.5
 damping = 10.0
-scale = 0.25
 scale_curve = SubResource( 34 )
 color_ramp = SubResource( 33 )
 
@@ -37,19 +37,24 @@ color_ramp = SubResource( 33 )
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+albedo_texture = ExtResource( 4 )
 
-[sub_resource type="SphereMesh" id=14]
+[sub_resource type="QuadMesh" id=36]
 material = SubResource( 35 )
 
 [sub_resource type="Gradient" id=18]
-offsets = PoolRealArray( 0.00621118, 0.503106, 1 )
-colors = PoolColorArray( 0.989593, 1, 0, 1, 0, 0, 0, 0.541176, 0.603922, 0.54902, 0.231373, 0 )
+offsets = PoolRealArray( 0.00621118, 0.255474, 1 )
+colors = PoolColorArray( 0.989593, 1, 0, 1, 0.0980392, 0.095743, 0.0941176, 0.517647, 0.00123501, 0.00123501, 0.00123501, 0 )
 
 [sub_resource type="GradientTexture" id=30]
 gradient = SubResource( 18 )
 
 [sub_resource type="Curve" id=20]
-_data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 0.995334 ), 0.0, -0.193939, 0, 0, Vector2( 0.65, 0.94988 ), 0.0501567, 0.0501567, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=31]
 curve = SubResource( 20 )
@@ -59,17 +64,21 @@ direction = Vector3( 1, 1, 1 )
 spread = 180.0
 initial_velocity = 11.63
 damping = 13.73
+scale = 2.0
 scale_curve = SubResource( 31 )
 color = Color( 1, 0.937255, 0, 1 )
 color_ramp = SubResource( 30 )
 
-[sub_resource type="SpatialMaterial" id=32]
+[sub_resource type="SpatialMaterial" id=37]
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
+params_billboard_mode = 1
+params_billboard_keep_scale = true
+albedo_texture = ExtResource( 4 )
 
-[sub_resource type="SphereMesh" id=24]
-material = SubResource( 32 )
+[sub_resource type="QuadMesh" id=38]
+material = SubResource( 37 )
 
 [node name="Missile" type="RigidBody" groups=["missile"]]
 mass = 20.0
@@ -89,11 +98,11 @@ shape = SubResource( 26 )
 [node name="ParticlesThrust" type="Particles" parent="."]
 transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 0, 0.533099 )
 amount = 40
-lifetime = 1.21
-explosiveness = 0.1
+lifetime = 1.2
+preprocess = 1.14
 local_coords = false
 process_material = SubResource( 13 )
-draw_pass_1 = SubResource( 14 )
+draw_pass_1 = SubResource( 36 )
 
 [node name="ExplosionSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 2 )
@@ -105,7 +114,7 @@ one_shot = true
 explosiveness = 0.54
 local_coords = false
 process_material = SubResource( 22 )
-draw_pass_1 = SubResource( 24 )
+draw_pass_1 = SubResource( 38 )
 
 [node name="OmniLight" type="OmniLight" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.578202 )

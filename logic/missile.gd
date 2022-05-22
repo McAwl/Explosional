@@ -69,9 +69,9 @@ func _process(delta):
 func _physics_process(delta):
 	if fwd_speed == null:
 		fwd_speed = abs(transform.basis.xform_inv(linear_velocity).z)
-		print("fwd_speed="+str(fwd_speed))
-		print("transform.basis.z="+str(transform.basis.z))
-		print("target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
+		#print("fwd_speed="+str(fwd_speed))
+		#print("transform.basis.z="+str(transform.basis.z))
+		#print("target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
 		
 	if hit_something == false:
 		if homing == true and homing_start_timer <= 0.0:
@@ -80,6 +80,7 @@ func _physics_process(delta):
 				
 				# redirect the missile towards the target
 				# velocity = velocity.linear_interpolate(closest_target_direction, delta*homing_force)
+				# Vary the homing strength by distance
 				var homing_force_adjusted
 				if closest_target_distance > 200.0:
 					 homing_force_adjusted = homing_force/10.0
@@ -92,10 +93,6 @@ func _physics_process(delta):
 				else:
 					 homing_force_adjusted = homing_force*2.0
 				velocity = velocity.linear_interpolate(closest_target_direction, delta*homing_force_adjusted)  # scale homing force by range
-				
-			else:
-				if weapon_type == 4:
-					velocity += Vector3.DOWN * 0.05
 			
 			if closest_target == null or (closest_target != null and closest_target_distance > 20.0): 
 				# If not too close to a target (no there's no target), try to avoid the terrain
@@ -131,7 +128,10 @@ func _physics_process(delta):
 				if $RayCastForwardUp.is_colliding():
 					if "terrain" in $RayCastForwardUp.get_collider().name.to_lower():
 						velocity += Vector3.DOWN * 0.025
-			
+		
+		if weapon_type == 4:  # for ballistic weapons, add gravity
+			velocity += Vector3.DOWN * 0.04
+					
 		# interpolate to the target speed
 		velocity = velocity.linear_interpolate((velocity.normalized())*ConfigWeapons.TARGET_SPEED[weapon_type_name], delta*speed_up_down_rate) 
 		

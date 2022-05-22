@@ -1,4 +1,4 @@
-[gd_resource type="AudioBusLayout" load_steps=4 format=2]
+[gd_resource type="AudioBusLayout" load_steps=5 format=2]
 
 [sub_resource type="AudioEffectHighPassFilter" id=1]
 resource_name = "HighPassFilter"
@@ -9,6 +9,9 @@ resource_name = "Amplify"
 [sub_resource type="AudioEffectPitchShift" id=3]
 resource_name = "PitchShift"
 
+[sub_resource type="AudioEffectPitchShift" id=4]
+resource_name = "PitchShift"
+
 [resource]
 bus/0/volume_db = 1.65599
 bus/0/effect/0/effect = SubResource( 1 )
@@ -17,3 +20,5 @@ bus/0/effect/1/effect = SubResource( 2 )
 bus/0/effect/1/enabled = true
 bus/0/effect/2/effect = SubResource( 3 )
 bus/0/effect/2/enabled = true
+bus/0/effect/3/effect = SubResource( 4 )
+bus/0/effect/3/enabled = true

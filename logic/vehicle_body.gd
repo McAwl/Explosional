@@ -646,7 +646,7 @@ func fire_mine_or_nuke():
 	var weapon_instance = load(ConfigWeapons.SCENE[weapons[weapon_select]["name"]]).instance()
 	add_child(weapon_instance) 
 	weapon_instance.rotation_degrees = rotation_degrees
-	weapons[weapon_select]["active"] = true
+	# weapons[weapon_select]["active"] = true
 	if weapon_select == 0:
 		weapon_instance.set_as_mine()
 		weapon_instance.activate($Positions/Weapons/BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
@@ -672,8 +672,8 @@ func fire_missile_or_rocket():
 	weapon_instance.weapon_type = weapon_select
 	weapon_instance.weapon_type_name = ConfigWeapons.weapon_types[weapon_select]["name"]
 	weapon_instance.velocity = (transform.basis.z.normalized()) * (weapon_instance.muzzle_speed() + abs(transform.basis.xform_inv(linear_velocity).z))  
-	weapon_instance.linear_velocity = linear_velocity  # initial only, this is not used, "velocity" is used to change it's position
-	weapon_instance.angular_velocity = angular_velocity
+	weapon_instance.set_linear_velocity(linear_velocity)  # initial only, this is not used, "velocity" is used to change it's position
+	weapon_instance.set_angular_velocity(angular_velocity)
 	if weapon_select == 2:
 		weapon_instance.velocity[1] += 1.0   # angle it up a bit
 		weapon_instance.global_transform.origin = $Positions/Weapons/MissilePosition.global_transform.origin
@@ -691,7 +691,7 @@ func fire_missile_or_rocket():
 	else:
 		weapon_instance.activate(player_number, true)  # homing = true
 	weapon_instance.set_as_toplevel(true)
-	weapons[weapon_select]["active"] = true
+	# weapons[weapon_select]["active"] = true
 	
 
 func lights_on():

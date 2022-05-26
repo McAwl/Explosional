@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/151858__nhmwretched__missile-firing-fl.mp3-d954d58e59d9f1a089de5d927843721b.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/sounds/151858__nhmwretched__missile-firing-fl.mp3"
+dest_files=[ "res://.import/151858__nhmwretched__missile-firing-fl.mp3-d954d58e59d9f1a089de5d927843721b.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

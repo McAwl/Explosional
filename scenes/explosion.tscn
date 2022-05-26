@@ -1,8 +1,10 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=39 format=2]
 
-[ext_resource path="res://assets/textures/dot.png" type="Texture" id=1]
+[ext_resource path="res://assets/textures/PNG/Black smoke/blackSmoke00.png" type="Texture" id=1]
 [ext_resource path="res://assets/materials/shockwave.tres" type="Material" id=2]
 [ext_resource path="res://assets/audio/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=3]
+[ext_resource path="res://assets/textures/PNG/Explosion/explosion00.png" type="Texture" id=4]
+[ext_resource path="res://scenes/explosion.gd" type="Script" id=5]
 
 [sub_resource type="Animation" id=82]
 length = 0.001
@@ -19,7 +21,7 @@ tracks/0/keys = {
 "values": [ false ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("Shrapnel:emitting")
+tracks/1/path = NodePath("Sparks:emitting")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -139,7 +141,7 @@ tracks/10/keys = {
 "values": [ 0.014463 ]
 }
 tracks/11/type = "value"
-tracks/11/path = NodePath("Shrapnel:draw_pass_1:material:albedo_color")
+tracks/11/path = NodePath("Sparks:draw_pass_1:material:albedo_color")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/imported = false
@@ -204,7 +206,7 @@ tracks/1/keys = {
 "values": [ 10.0, 0.0 ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("Shrapnel:emitting")
+tracks/2/path = NodePath("Sparks:emitting")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -324,7 +326,7 @@ tracks/11/keys = {
 "values": [ 0.5, 0.5, 0.04, 0.03, 0.02, 0.014463, 0.0 ]
 }
 tracks/12/type = "value"
-tracks/12/path = NodePath("Shrapnel:draw_pass_1:material:albedo_color")
+tracks/12/path = NodePath("Sparks:draw_pass_1:material:albedo_color")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/imported = false
@@ -385,8 +387,8 @@ tracks/16/keys = {
 }
 
 [sub_resource type="Gradient" id=76]
-offsets = PoolRealArray( 0, 0.192547, 1 )
-colors = PoolColorArray( 0.467773, 0.467773, 0.467773, 1, 0.385742, 0.385742, 0.385742, 0.505882, 0.428711, 0.428711, 0.428711, 0 )
+offsets = PoolRealArray( 0, 0.218978, 0.49635, 0.781022, 1 )
+colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 0.792157, 1, 1, 1, 1, 1, 1, 1, 0.745098, 1, 1, 1, 0 )
 
 [sub_resource type="GradientTexture" id=2]
 gradient = SubResource( 76 )
@@ -398,15 +400,33 @@ _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 97.2287 ), 3.5693, 0.0, 0
 [sub_resource type="CurveTexture" id=71]
 curve = SubResource( 77 )
 
+[sub_resource type="Curve" id=92]
+_data = [ Vector2( 0, 0.534091 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=93]
+curve = SubResource( 92 )
+
 [sub_resource type="ParticlesMaterial" id=78]
-direction = Vector3( 0.5, 0.5, 0 )
+lifetime_randomness = 0.21
+emission_shape = 5
+emission_ring_radius = 2.0
+emission_ring_inner_radius = 0.0
+emission_ring_height = 1.0
+emission_ring_axis = Vector3( 0, 0, 1 )
+direction = Vector3( 0, 0, 0 )
 spread = 180.0
+flatness = 1.0
 gravity = Vector3( 0, 1, 0 )
-initial_velocity = 4.0
-initial_velocity_random = 1.0
+initial_velocity = 3.0
+initial_velocity_random = 0.53
+angular_velocity = 50.0
+angular_velocity_random = 0.5
+radial_accel = 1.0
 damping = 2.0
 damping_random = 0.44
 damping_curve = SubResource( 71 )
+scale = 5.0
+scale_curve = SubResource( 93 )
 color = Color( 0.466667, 0.466667, 0.466667, 1 )
 color_ramp = SubResource( 2 )
 
@@ -414,8 +434,12 @@ color_ramp = SubResource( 2 )
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
-params_billboard_mode = 1
-albedo_color = Color( 0.298039, 0.298039, 0.298039, 1 )
+params_billboard_mode = 3
+params_billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+albedo_color = Color( 1, 1, 1, 0.490196 )
 albedo_texture = ExtResource( 1 )
 
 [sub_resource type="QuadMesh" id=79]
@@ -423,13 +447,22 @@ material = SubResource( 4 )
 
 [sub_resource type="ParticlesMaterial" id=80]
 direction = Vector3( 0, 1, 0 )
-initial_velocity = 4.0
+gravity = Vector3( 0, -7, 0 )
+initial_velocity = 3.0
 initial_velocity_random = 1.0
-scale = 0.05
+scale = 0.01
 
 [sub_resource type="SpatialMaterial" id=75]
-flags_unshaded = true
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
 albedo_color = Color( 0.545098, 0.545098, 0.545098, 1 )
+emission_enabled = true
+emission = Color( 1, 0.964706, 0, 1 )
+emission_energy = 16.0
+emission_operator = 0
+emission_on_uv2 = false
 
 [sub_resource type="SphereMesh" id=81]
 material = SubResource( 75 )
@@ -455,13 +488,13 @@ refraction_texture_channel = 0
 
 [sub_resource type="Gradient" id=86]
 offsets = PoolRealArray( 0, 0.477273, 1 )
-colors = PoolColorArray( 1, 0, 0, 1, 0.832031, 0.50773, 0.162506, 1, 0.605469, 0.54708, 0.231781, 1 )
+colors = PoolColorArray( 1, 0.896869, 0, 1, 0.883236, 0.564145, 0.117305, 0.466667, 0, 0, 0, 0 )
 
 [sub_resource type="GradientTexture" id=24]
 gradient = SubResource( 86 )
 
 [sub_resource type="Curve" id=87]
-_data = [ Vector2( 0, 1 ), 0.0, -1.36733, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
+_data = [ Vector2( 0.00625001, 0.520079 ), 0.0, 1.45455, 0, 0, Vector2( 0.39375, 0.920079 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -0.118322, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=88]
 curve = SubResource( 87 )
@@ -470,19 +503,79 @@ curve = SubResource( 87 )
 direction = Vector3( 0, 1, 0 )
 spread = 75.88
 initial_velocity = 11.63
+initial_velocity_random = 0.52
+angular_velocity = 50.0
+angular_velocity_random = 0.46
 damping = 13.73
+scale = 2.0
 scale_curve = SubResource( 88 )
 color_ramp = SubResource( 24 )
 
-[sub_resource type="SpatialMaterial" id=27]
+[sub_resource type="SpatialMaterial" id=90]
 flags_transparent = true
 flags_unshaded = true
 vertex_color_use_as_albedo = true
+params_billboard_mode = 3
+params_billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+albedo_texture = ExtResource( 4 )
 
-[sub_resource type="SphereMesh" id=90]
-material = SubResource( 27 )
+[sub_resource type="QuadMesh" id=91]
+material = SubResource( 90 )
+
+[sub_resource type="Gradient" id=94]
+offsets = PoolRealArray( 0, 0.189781, 0.992701, 1 )
+colors = PoolColorArray( 1, 0.938272, 0, 0.168627, 0.584314, 0.545098, 0.109804, 0.145098, 0, 0, 0, 0, 0.234375, 0.215807, 0.194092, 0 )
+
+[sub_resource type="GradientTexture" id=95]
+gradient = SubResource( 94 )
+
+[sub_resource type="Curve" id=99]
+_data = [ Vector2( 0, 0.768229 ), 0.0, 0.26829, 0, 0, Vector2( 0.9875, 0.983422 ), -0.121212, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=100]
+curve = SubResource( 99 )
+
+[sub_resource type="ParticlesMaterial" id=96]
+direction = Vector3( 0, 0, 0 )
+spread = 180.0
+flatness = 0.6
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 3.0
+initial_velocity_random = 0.26
+angular_velocity = 50.0
+damping = 5.0
+scale_curve = SubResource( 100 )
+color_ramp = SubResource( 95 )
+
+[sub_resource type="OpenSimplexNoise" id=101]
+
+[sub_resource type="NoiseTexture" id=102]
+noise = SubResource( 101 )
+
+[sub_resource type="SpatialMaterial" id=97]
+flags_transparent = true
+vertex_color_use_as_albedo = true
+params_blend_mode = 1
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+albedo_color = Color( 1, 1, 1, 0.0588235 )
+emission_enabled = true
+emission = Color( 0.968627, 1, 0, 1 )
+emission_energy = 16.0
+emission_operator = 0
+emission_on_uv2 = false
+emission_texture = SubResource( 102 )
+
+[sub_resource type="SphereMesh" id=98]
+material = SubResource( 97 )
 
 [node name="Explosion" type="Spatial"]
+script = ExtResource( 5 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 82 )
@@ -490,21 +583,24 @@ anims/explosion = SubResource( 83 )
 
 [node name="Smoke" type="Particles" parent="."]
 emitting = false
-amount = 1
-lifetime = 0.75
+amount = 10
+lifetime = 5.0
 one_shot = true
 explosiveness = 1.0
 randomness = 0.53
+local_coords = false
 process_material = SubResource( 78 )
 draw_pass_1 = SubResource( 79 )
 
-[node name="Shrapnel" type="Particles" parent="."]
+[node name="Sparks" type="Particles" parent="."]
 transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0 )
 emitting = false
-amount = 40
+amount = 50
+lifetime = 0.5
 one_shot = true
-explosiveness = 1.0
+explosiveness = 0.77
 randomness = 0.32
+local_coords = false
 process_material = SubResource( 80 )
 draw_pass_1 = SubResource( 81 )
 
@@ -516,18 +612,22 @@ omni_range = 22.871
 
 [node name="Shockwave" type="Spatial" parent="."]
 transform = Transform( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 )
+visible = false
 
 [node name="ShockOuter" type="CSGSphere" parent="Shockwave"]
+visible = false
 radial_segments = 17
 material = ExtResource( 2 )
 
 [node name="ShockInner" type="CSGSphere" parent="Shockwave"]
+visible = false
 operation = 2
 radial_segments = 18
 material = ExtResource( 2 )
 
 [node name="RisingDust" type="CSGTorus" parent="Shockwave"]
 transform = Transform( 0.4, 0, 0, 0, 1, 0, 0, 0, 0.4, 0, -0.0305094, 0 )
+visible = false
 sides = 18
 ring_sides = 8
 material = SubResource( 85 )
@@ -535,12 +635,22 @@ material = SubResource( 85 )
 [node name="Explosion" type="Particles" parent="."]
 emitting = false
 amount = 60
-lifetime = 0.8
+lifetime = 0.58
 one_shot = true
-explosiveness = 0.77
+explosiveness = 0.82
 local_coords = false
 process_material = SubResource( 89 )
-draw_pass_1 = SubResource( 90 )
+draw_pass_1 = SubResource( 91 )
 
 [node name="ExplosionSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )
+
+[node name="ParticlesEmittingSpheres" type="Particles" parent="."]
+emitting = false
+amount = 20
+one_shot = true
+explosiveness = 0.83
+randomness = 0.54
+local_coords = false
+process_material = SubResource( 96 )
+draw_pass_1 = SubResource( 98 )

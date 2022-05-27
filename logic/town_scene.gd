@@ -16,6 +16,8 @@ export var test_turn_off_airstrike = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
+	$VC/CL/MainMenu.set_visible(false)
+	
 	# hide the mouse
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
@@ -71,9 +73,16 @@ func turn_airstrike_off():
 
 func _process(delta):
 	
-	if Input.is_action_just_released("pause"):
-		is_game_paused = !is_game_paused
-		pause_game()
+	if Input.is_action_pressed("pause") or Input.is_action_pressed("back"):
+		is_game_paused = true
+		$VC/CL/MainMenu.pause()
+		print("pausing...")
+		get_tree().paused = true  # pause everything, the MainMenu will continue processing
+		
+	
+	if Input.is_action_pressed("toggle_hud"):
+		for player in get_players():
+			player.toggle_hud()
 		
 	air_strike["interval_so_far_sec"] +=delta
 	air_strike["duration_so_far_sec"] += delta
@@ -108,8 +117,6 @@ func _process(delta):
 						#$nuke_mushroom_cloud2.emitting = true
 
 	timer_1_sec -= delta
-	if Input.is_action_pressed("back"):
-		reset_game()
 	
 	if timer_1_sec < 0.0:
 		check_game_over()
@@ -117,17 +124,6 @@ func _process(delta):
 		timer_1_sec = 1.0
 	
 	update_player_hud()
-
-
-func pause_game():
-	#$PopupMenu.popup()  # this shows the popup - but doesn't seem to work
-	$VC/CL/PopupMenu.visible = true
-	print("pausing game")
-	get_tree().paused = true
-
-
-#func _on_pause_popup_close_pressed():
-#    $pause_popup.hide()
 
 
 func check_slow_motion():
@@ -152,7 +148,7 @@ func update_player_hud():
 						var player_dst_hud_pos_loc = player_dst_vehicle_body.get_node("Positions").get_node("HUDPositionLocation")
 						var distance = player_src_vehicle_body.get_global_transform().origin.distance_to(player_dst_hud_pos_loc.global_transform.origin)
 						var player_dst_viewport_pos = player_src_camera.unproject_position ( player_dst_hud_pos_loc.get_global_transform().origin ) 
-						var label = get_player(player_src).get_canvaslayer().get_node("label_player_"+str(player_dst)+"_pos")
+						var label = get_player(player_src).get_hud().get_node("label_player_"+str(player_dst)+"_pos")
 						
 						var font_size = 10
 						if distance < 25.0:
@@ -174,7 +170,7 @@ func update_player_hud():
 							label.rect_position.x -= font_size/2
 							label.rect_position.y -= 20 + (font_size/2)
 			else:
-				var label = get_player(player_src).get_canvaslayer().get_node("label_player_"+str(player_src)+"_pos")
+				var label = get_player(player_src).get_hud().get_node("label_player_"+str(player_src)+"_pos")
 				label.visible = false  # don't show own label
 
 
@@ -194,7 +190,6 @@ func check_game_over():
 				winner_name = get_player(player_number).player_name
 		next_level.player_winner_name = winner_name
 		get_tree().root.call_deferred("add_child", next_level)
-		queue_free()
 
 
 func all_audio_pitch(pitch):

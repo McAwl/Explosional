@@ -157,9 +157,6 @@ margin_bottom = 297.916
 custom_fonts/font = SubResource( 10 )
 text = "Player 1"
 align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Player4" type="Label" parent="."]
 margin_left = 29.0577
@@ -180,9 +177,6 @@ margin_right = 1015.68
 margin_bottom = 305.454
 custom_fonts/font = SubResource( 10 )
 text = "Press E/Left Trigger to select"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="InstructionPlayer2" type="Label" parent="."]
 margin_left = 565.901

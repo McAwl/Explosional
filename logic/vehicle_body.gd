@@ -398,8 +398,8 @@ func _process(delta):
 		#	print(str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
 		get_player().set_label_player_name()  # , total_damage, weapons[weapon_select].damage)
 		get_player().set_label_lives_left()
-		get_player().get_canvaslayer().get_node("cooldown").max_value = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select]["name"]]
-		get_player().get_canvaslayer().get_node("cooldown").value = cooldown_timer
+		get_player().get_hud().get_node("cooldown").max_value = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select]["name"]]
+		get_player().get_hud().get_node("cooldown").value = cooldown_timer
 		
 		# Update all the 0.1 sec physical calculations
 		# speed
@@ -487,12 +487,12 @@ func cycle_weapon():
 			weapon_select += 1
 		if weapon_select > 4:
 			weapon_select = 0
-		get_player().get_canvaslayer().get_node("icon_mine").hide()
-		get_player().get_canvaslayer().get_node("icon_rocket").hide()
-		get_player().get_canvaslayer().get_node("icon_missile").hide()
-		get_player().get_canvaslayer().get_node("icon_ballistic").hide()
-		get_player().get_canvaslayer().get_node("icon_nuke").hide()
-		get_player().get_canvaslayer().get_node("icon_"+weapons[weapon_select].name).show()
+		get_player().get_hud().get_node("icon_mine").hide()
+		get_player().get_hud().get_node("icon_rocket").hide()
+		get_player().get_hud().get_node("icon_missile").hide()
+		get_player().get_hud().get_node("icon_ballistic").hide()
+		get_player().get_hud().get_node("icon_nuke").hide()
+		get_player().get_hud().get_node("icon_"+weapons[weapon_select].name).show()
 		get_player().set_label_player_name()
 		get_player().set_label_lives_left()
 

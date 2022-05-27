@@ -9,16 +9,27 @@ var last_spawn_point
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	$VC/V/CanvasLayer/icon_mine.visible = true
-	$VC/V/CanvasLayer/icon_rocket.visible = false
-	$VC/V/CanvasLayer/icon_missile.visible = false
-	$VC/V/CanvasLayer/icon_nuke.visible = false
-	$VC/V/CanvasLayer/health.tint_progress = "#7e00ff00"  # green
+	$VC/V/CanvasLayer/HeadUpDisplay/icon_mine.visible = true
+	$VC/V/CanvasLayer/HeadUpDisplay/icon_rocket.visible = false
+	$VC/V/CanvasLayer/HeadUpDisplay/icon_missile.visible = false
+	$VC/V/CanvasLayer/HeadUpDisplay/icon_nuke.visible = false
+	$VC/V/CanvasLayer/HeadUpDisplay/health.tint_progress = "#7e00ff00"  # green
 
 
 func reset_health():
 	$VC/V/CanvasLayer/health.value = get_vehicle_body().max_damage
 	$VC/V/CanvasLayer/health.tint_progress = "#7e00ff00"  # green
+
+
+func get_hud():
+	return $VC/V/CanvasLayer/HeadUpDisplay
+
+
+func toggle_hud():
+	if get_hud().visible == true:
+		get_hud().visible = false
+	else:
+		get_hud().visible = true
 
 
 func _process(delta):
@@ -40,7 +51,7 @@ func _process(delta):
 		# periodically update player display
 		set_label_player_name()
 		set_label_lives_left()
-		var health_display = get_canvaslayer().get_node("health")
+		var health_display = get_hud().get_node("health")
 		if get_vehicle_body() != null:
 			health_display.value = get_vehicle_body().max_damage-get_vehicle_body().total_damage
 			if get_vehicle_body().max_damage-get_vehicle_body().total_damage >= 7.0:
@@ -188,11 +199,11 @@ func get_vehicle_body():
 
 
 func get_label_player_name():
-	return $VC/V/CanvasLayer/label_player_name
+	return $VC/V/CanvasLayer/HeadUpDisplay/label_player_name
 
 
 func get_label_lives_left():
-	return $VC/V/CanvasLayer/label_lives_left
+	return $VC/V/CanvasLayer/HeadUpDisplay/label_lives_left
 
 
 func get_canvaslayer():

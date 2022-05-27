@@ -41,9 +41,6 @@ custom_fonts/font = SubResource( 1 )
 text = "Explosional!"
 align = 1
 valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 2.0

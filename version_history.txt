@@ -1,0 +1,29 @@
+Versions:
+
+Features:
+
+Blender terrain
+Lava field
+Tank
+Truck
+Racer
+Rally
+Mines
+Missiles
+Rockets
+Nukes
+Ballistic rounds
+Head-up-display (other players)
+Lava damage
+Air strike
+Health
+Weapon cooldown
+First/third person camera adaptation
+Main menu
+Vehicle clipping fix 
+Music
+Engine sounds v2
+Exploding vehicle
+Explosion impacts - indirect
+Explosion impact - direct
+Acceleration damage

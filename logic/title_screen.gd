@@ -11,8 +11,21 @@ var players
 func _ready():
 	pass
 
+
+# Allow user to skip logo
+func _input(event):
+	if event is InputEventKey and event.pressed:  # not pressed=released
+		change_scene()
+
+
 func _on_Timer_timeout():
-	var next_level_resource = load("res://scenes/start.tscn")
+	change_scene()
+
+
+func change_scene():
+	var next_level_resource = load("res://scenes/main_menu.tscn")
 	var next_level = next_level_resource.instance()
+	next_level.game_active = false
 	get_tree().root.call_deferred("add_child", next_level)
+	next_level.configure()
 	queue_free()

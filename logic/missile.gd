@@ -4,7 +4,7 @@ var velocity = Vector3.ZERO
 onready var lifetime_seconds = 10.0
 var homing = true
 var homing_check_target_timer = 0.1
-var homing_force = 0.5  # 1.0  # 
+var homing_force = 1.0  # 1.0  # 
 var homing_start_timer = 0.5
 var parent_player_number
 var closest_target
@@ -24,8 +24,6 @@ var weapon_type_name
 func _ready():
 	$ParticlesThrust.visible = true
 	$Body/MeshInstance.visible = true
-	$LaunchSound.playing = true
-	$FlyingSound.playing = true
 
 
 func muzzle_speed():
@@ -69,7 +67,7 @@ func _physics_process(delta):
 		#print("target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
 		
 	if exploded == false:
-		if homing == true and homing_start_timer <= 0.0:
+		if homing == true: ## and homing_start_timer <= 0.0:
 			
 			if closest_target != null: 
 				
@@ -79,17 +77,22 @@ func _physics_process(delta):
 				var homing_force_adjusted
 				if closest_target_distance > 200.0:
 					 homing_force_adjusted = homing_force/10.0
+					 speed_up_down_rate = 0.5
 				elif closest_target_distance > 50.0:
 					 homing_force_adjusted = homing_force/5.0
+					 speed_up_down_rate = 0.5
 				elif closest_target_distance > 20.0:
 					 homing_force_adjusted = homing_force*1.0
+					 speed_up_down_rate = 10.0
 				elif closest_target_distance > 10.0:
 					 homing_force_adjusted = homing_force*1.0
+					 speed_up_down_rate = 20.0
 				else:
 					 homing_force_adjusted = homing_force*2.0
+					 speed_up_down_rate = 30.0
 				velocity = velocity.linear_interpolate(closest_target_direction, delta*homing_force_adjusted)  # scale homing force by range
 			
-			if closest_target == null or (closest_target != null and closest_target_distance > 30.0): 
+			if closest_target == null or (closest_target != null and closest_target_distance > 10.0): 
 				# If not too close to a target (or there's no target), try to avoid the terrain
 				
 				# steer up if getting close to the terrain underneath
@@ -146,12 +149,13 @@ func _physics_process(delta):
 					if player.player_number != parent_player_number:
 						var target = player.get_vehicle_body()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 						#var target = get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
-						var distance = global_transform.origin.distance_to(target.global_transform.origin)
-						if closest_target_distance == null or distance < closest_target_distance or closest_target == null or closest_target_direction == null:
-							closest_target = target
-							closest_target_distance = distance
-							closest_target_direction =  closest_target.global_transform.origin - global_transform.origin
-							closest_target_direction_normalised = closest_target_direction.normalized()
+						if target != null:  # it might have exploded already, leaving no body
+							var distance = global_transform.origin.distance_to(target.global_transform.origin)
+							if closest_target_distance == null or distance < closest_target_distance or closest_target == null or closest_target_direction == null:
+								closest_target = target
+								closest_target_distance = distance
+								closest_target_direction =  closest_target.global_transform.origin - global_transform.origin
+								closest_target_direction_normalised = closest_target_direction.normalized()
 
 func add_random_movement(strength):
 	# steer left/right a bit
@@ -165,6 +169,9 @@ func add_random_movement(strength):
 func activate(_parent_player_number, _homing):
 	homing = _homing
 	parent_player_number = _parent_player_number
+	if weapon_type == 1 or weapon_type == 2:  # rocket or missile
+		$LaunchSound.playing = true
+		$FlyingSound.playing = true
 
 
 func _on_Body_body_entered(body):

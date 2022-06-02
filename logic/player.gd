@@ -1,9 +1,6 @@
 extends Spatial
 
 var player_number
-var number_players
-var player_name
-var lives_left = 3
 var timer_0_1_s = 0.1
 var last_spawn_point
 
@@ -44,8 +41,8 @@ func _process(delta):
 			if vb.vehicle_state == "dead":
 				vb.queue_free()
 		else:
-			if lives_left > 0:
-				print("player:_process() "+str(lives_left)+" lives left, spawning...")
+			if StatePlayers.players[player_number]["lives_left"] > 0:
+				print("player:_process() "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...")
 				init_vehicle_body(last_spawn_point)
 		
 		# periodically update player display
@@ -62,15 +59,12 @@ func _process(delta):
 				health_display.tint_progress = "#7eff6c00"  # orange
 
 
-func init(_player_number, _number_players, _player_name, pos=null):
+func init(_player_number, pos=null):
 	last_spawn_point = pos
-	number_players = _number_players
 	print("player:init()")
 	
 	player_number = _player_number
-	player_name = _player_name
-	name = "Player"+str(_player_number)
-	print("player init(): number_players="+str(number_players))
+	print("player init(): StatePlayers.num_players()="+str(StatePlayers.num_players()))
 	
 	# Add a vehicle to the player
 	init_vehicle_body(pos)
@@ -79,23 +73,24 @@ func init(_player_number, _number_players, _player_name, pos=null):
 	set_label_lives_left()
 
 	
-	if number_players == 1:
-		set_viewport_container_one(_player_number)
-	elif number_players == 2:
-		set_viewport_container_two(_player_number)
-	elif number_players == 3:
-		set_viewport_container_three(_player_number)
-	elif number_players == 4:
-		set_viewport_container_four(_player_number)
-	else: 
-		set_viewport_container_two(_player_number)
+	match StatePlayers.num_players():
+		1: 
+			set_viewport_container_one(_player_number)
+		2:
+			set_viewport_container_two(_player_number)
+		3:
+			set_viewport_container_three(_player_number)
+		4:
+			set_viewport_container_four(_player_number)
+		_: 
+			set_viewport_container_two(_player_number)
 
 
 func init_vehicle_body(pos):
 	var vehicle_body = load("res://scenes/vehicle_body.tscn").instance()
 	get_viewport().add_child(vehicle_body)
 	# vehicle_body = load("res://scenes/trailer_truck.tscn").instance()
-	var retval = vehicle_body.init(pos, player_number, "vehicle_body", number_players)
+	var retval = vehicle_body.init(pos, player_number, "vehicle_body")
 	if retval == false:
 		print("Error: couldn't initialise vehicle body")
 	
@@ -211,11 +206,11 @@ func get_canvaslayer():
 
 
 func set_label_player_name():
-	get_label_player_name().text = "Player"+str(player_number)+": "+str(player_name)
+	get_label_player_name().text = StatePlayers.players[player_number]["name"]
 
 
 func set_label_lives_left():
-	get_label_lives_left().text = str(lives_left)
+	get_label_lives_left().text = str(StatePlayers.players[player_number]["lives_left"])
 	
 
 func set_global_transform_origin(o):

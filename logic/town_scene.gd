@@ -2,8 +2,6 @@ extends Spatial
 
 var town = null
 var timer_1_sec = 1.0
-var num_players
-var players
 var rng = RandomNumberGenerator.new()
 var is_game_paused = false
 
@@ -17,6 +15,8 @@ export var test_turn_off_airstrike = false
 func _ready():
 	
 	$VC/CL/MainMenu.set_visible(false)
+	$VC/CL/MainMenu.game_active = true
+	$VC/CL/MainMenu/PlayerSelection.hide()
 	
 	# hide the mouse
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -31,13 +31,13 @@ func _ready():
 		$DirectionalLightSun.visible = true
 		$Moons/OmniLight.visible = false
 		$DirectionalLightMoon.visible = true
-	num_players = len(players)
 	var spawn_points = get_spawn_points()
-	for player_number in range(1, num_players+1):
+	for player_number in range(1, StatePlayers.num_players()+1):
 		var player_instance = load("res://scenes/player.tscn").instance()
 		add_child(player_instance)
+		player_instance.name = "Player"+StatePlayers.players[player_number]["name"]
 		var pos = spawn_points[player_number-1].global_transform.origin
-		player_instance.init(player_number, num_players, players[player_number]["name"], pos)
+		player_instance.init(player_number, pos)
 		player_instance.get_vehicle_body().weapons[3].enabled = test_nuke
 		player_instance.get_vehicle_body().weapons[3].test_mode = test_nuke
 	var anim_time = start_clock_hrs + 12.0
@@ -75,6 +75,8 @@ func _process(delta):
 	
 	if Input.is_action_pressed("pause") or Input.is_action_pressed("back"):
 		is_game_paused = true
+		$VC/CL/MainMenu.game_active = true
+		$VC/CL/MainMenu.configure()
 		$VC/CL/MainMenu.pause()
 		print("pausing...")
 		get_tree().paused = true  # pause everything, the MainMenu will continue processing
@@ -135,10 +137,9 @@ func check_slow_motion():
 		all_audio_pitch(0.1)
 
 
-
 func update_player_hud():
-	for player_src in range(1, num_players+1):
-		for player_dst in range(1, num_players+1):
+	for player_src in range(1, StatePlayers.num_players()+1):
+		for player_dst in range(1, StatePlayers.num_players()+1):
 			if player_src != player_dst:
 				var player_src_vehicle_body = get_player(player_src).get_vehicle_body()
 				if player_src_vehicle_body != null:  # eg if player has no lives left, not in the game any more
@@ -177,17 +178,17 @@ func update_player_hud():
 func check_game_over():
 	var dead_cars = 0
 	var num_cars = 0
-	for player_number in range(1, num_players+1):
+	for player_number in range(1, StatePlayers.num_players()+1):
 		num_cars += 1
-		if get_player(player_number).lives_left < 0:
+		if StatePlayers.players[player_number]["lives_left"] < 0:
 			dead_cars += 1
 	if dead_cars >= (num_cars-1) and num_cars>1:
 		var next_level_resource = load("res://scenes/final_score.tscn")
 		var next_level = next_level_resource.instance()
 		var winner_name = ""
-		for player_number in range(1, num_players+1):
-			if get_player(player_number).lives_left >= 0:
-				winner_name = get_player(player_number).player_name
+		for player_number in range(1, StatePlayers.num_players()+1):
+			if StatePlayers.players[player_number]["lives_left"] >= 0:
+				winner_name = StatePlayers.players[player_number]["name"]  #get_player(player_number).player_name
 		next_level.player_winner_name = winner_name
 		get_tree().root.call_deferred("add_child", next_level)
 

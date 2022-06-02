@@ -14,7 +14,6 @@ var print_timer = 0.0
 export var engine_force_value = ENGINE_FORCE_VALUE_DEFAULT  #40
 var engine_force_ewma
 var player_number
-var num_players
 var camera
 export var speed = 0.0
 var speed_low_limit = 5
@@ -88,7 +87,7 @@ var vehicle_types = {	"Tank":  {"scene": "res://scenes/vehicle_tank.tscn",
 									"wheel_friction_slip":1.0,
 									"wheel_roll_influence": 0.9,
 									"brake": 40.0}}
-var vehicle_type = "racer"
+
 var vehicle_state = 'alive'  # 'alive', 'dying', 'dead'
 var set_pos = false
 var pos
@@ -98,7 +97,7 @@ func _ready():
 	pass
 
 
-func init(_pos=null, _player_number=null, _name=null, _num_players=null):
+func init(_pos=null, _player_number=null, _name=null):
 	
 	print("VehicleBody:init()")
 	
@@ -113,23 +112,11 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 		name = _name
 	
 	pos = _pos
-	num_players = _num_players
-	print("VehicleBody() init: num_players="+str(num_players))
+	print("VehicleBody() init: StatePlayers.num_players()="+str(StatePlayers.num_players()))
 	
-	if player_number == 1:
-		vehicle_type = "Racer"
-	elif player_number == 2:
-		vehicle_type = "Rally"
-	elif player_number == 3:
-		vehicle_type = "Tank"
-	elif player_number == 4:
-		vehicle_type = "Truck" 
-	else:
-		vehicle_type = "Racer"
-	
-	print("vehicle_type="+str(vehicle_type))
+	print("vehicle="+str(StatePlayers.players[player_number]["vehicle"]))
 	# Depending on vehicle type, we look for its nodes
-	var vehicle_type_node = $VehicleTypes.get_node(str(vehicle_type))
+	var vehicle_type_node = $VehicleTypes.get_node(str(StatePlayers.players[player_number]["vehicle"]))
 	if vehicle_type_node == null:
 		return false
 	# move all the vehicle type nodes to the correct location
@@ -157,8 +144,8 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	if has_node("VehicleTypes"):
 		get_node("VehicleTypes").queue_free()
 	
-	if not vehicle_type in vehicle_types:
-		print("vehicle_type "+str(vehicle_type)+" no found")
+	if not StatePlayers.players[player_number]["vehicle"] in vehicle_types:
+		print("vehicle_type "+str(StatePlayers.players[player_number]["vehicle"])+" not found")
 		return false
 		
 	configure_vehicle_properties()
@@ -167,7 +154,7 @@ func init(_pos=null, _player_number=null, _name=null, _num_players=null):
 	
 	total_damage = 0.0
 	check_accel_damage_timer = 4.0
-	init_camera(num_players)
+	init_camera(StatePlayers.num_players())
 	return true
 
 
@@ -176,21 +163,22 @@ func init_audio_effects():
 
 
 func engine_sound_on():
-	if vehicle_type == "racer":
-		$Effects/Audio/EngineSound.playing = false
-		$Effects/Audio/EngineSoundRally.playing = true
-	elif vehicle_type == "rally":
-		$Effects/Audio/EngineSound.playing = false
-		$Effects/Audio/EngineSoundRally.playing = true
-	elif vehicle_type == "tank":
-		$Effects/Audio/EngineSound.playing = true
-		$Effects/Audio/EngineSoundRally.playing = false
-	elif vehicle_type == "truck":
-		$Effects/Audio/EngineSound.playing = true
-		$Effects/Audio/EngineSound.playing = false
-	else:
-		$Effects/Audio/EngineSound.playing = false
-		$Effects/Audio/EngineSoundRally.playing = true
+	match StatePlayers.players[player_number]["vehicle"]:
+		"Racer":
+			$Effects/Audio/EngineSound.playing = false
+			$Effects/Audio/EngineSoundRally.playing = true
+		"Rally":
+			$Effects/Audio/EngineSound.playing = false
+			$Effects/Audio/EngineSoundRally.playing = true
+		"Tank":
+			$Effects/Audio/EngineSound.playing = true
+			$Effects/Audio/EngineSoundRally.playing = false
+		"Truck":
+			$Effects/Audio/EngineSound.playing = true
+			$Effects/Audio/EngineSound.playing = false
+		_:
+			$Effects/Audio/EngineSound.playing = false
+			$Effects/Audio/EngineSoundRally.playing = true
 
 
 func engine_sound_off():
@@ -199,7 +187,7 @@ func engine_sound_off():
 
 
 func init_camera(_num_players):
-	$CameraBase/Camera.number_of_players = num_players
+	$CameraBase/Camera.number_of_players = StatePlayers.num_players()
 
 
 func init_visual_effects():
@@ -236,13 +224,13 @@ func dying_visual_effects():
 
 func configure_vehicle_properties():
 	
-	engine_force_value = vehicle_types[vehicle_type]["engine_force_value"]
-	mass = vehicle_types[vehicle_type]["mass_kg/100"]
-	var vts = vehicle_types[vehicle_type]
-	set_wheel_parameters(vts, vehicle_type)
+	engine_force_value = vehicle_types[StatePlayers.players[player_number]["vehicle"]]["engine_force_value"]
+	mass = vehicle_types[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"]
+	var vts = vehicle_types[StatePlayers.players[player_number]["vehicle"]]
+	set_wheel_parameters(vts)
 
 
-func set_wheel_parameters(_vts, _vehicle_type):
+func set_wheel_parameters(_vts):
 	
 	for wh in get_children():
 		if wh is VehicleWheel:
@@ -254,10 +242,10 @@ func set_wheel_parameters(_vts, _vehicle_type):
 			for ch2 in wh.get_children():
 				if ch2 is MeshInstance:
 					ch2.visible = false
-				if ch2 is CSGTorus and _vehicle_type != "tank":
+				if ch2 is CSGTorus and StatePlayers.players[player_number]["vehicle"] != "tank":
 					ch2.visible = true
 	
-	if vehicle_type == "tank":
+	if StatePlayers.players[player_number]["vehicle"] == "tank":
 		get_wheel(5).use_as_traction = true  # middle
 		get_wheel(6).use_as_traction = true  # middle
 	else:
@@ -499,6 +487,8 @@ func cycle_weapon():
 
 func _physics_process(delta):
 	
+	
+	
 	var new_vel = get_linear_velocity()
 	var new_vel_max = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
 	fwd_mps = transform.basis.xform_inv(linear_velocity).z  # global velocity rotated to our forward (z) direction
@@ -525,7 +515,7 @@ func _physics_process(delta):
 		if Input.is_action_pressed("reverse_player"+str(player_number)):
 			engine_force = -engine_force_value/2.0
 			if fwd_mps > speed_low_limit:
-				brake = vehicle_types[vehicle_type]["brake"] / 5.0
+				brake = vehicle_types[StatePlayers.players[player_number]["vehicle"]]["brake"] / 5.0
 		else:
 			brake = 0.0
 			
@@ -585,7 +575,7 @@ func check_for_clipping():
 					print("raycast "+raycast.name+" is colliding with "+str(raycast.get_collider().name))
 		if num_wheels_clipped > 0:
 			print("applying impulse - wheel(s) are clipped")
-			apply_impulse( Vector3(0, -10.0, 0), Vector3(0.0, 5*vehicle_types[vehicle_type]["mass_kg/100"], 0.0) )   # from underneath, upwards force
+			apply_impulse( Vector3(0, -10.0, 0), Vector3(0.0, 5*vehicle_types[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"], 0.0) )   # from underneath, upwards force
 			check_accel_damage_timer = 2.0  # disable damage for temporarily
 	
 

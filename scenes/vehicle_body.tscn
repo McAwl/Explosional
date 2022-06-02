@@ -105,6 +105,7 @@ continuous_cd = true
 contacts_reported = 8
 contact_monitor = true
 can_sleep = false
+linear_damp = 1.0
 script = ExtResource( 2 )
 
 [node name="CameraBase" type="Spatial" parent="."]
@@ -207,6 +208,7 @@ material = ExtResource( 6 )
 
 [node name="Racer" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
+visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Racer"]
 
@@ -455,10 +457,10 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.32512, 0.101055 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.11065 )
 
 [node name="MissilePosition" type="Position3D" parent="VehicleTypes/Racer/Positions/Weapons"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.727984, 1.51689 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.799254, 1.56261 )
 
 [node name="RocketPosition" type="Position3D" parent="VehicleTypes/Racer/Positions/Weapons"]
-transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.677178, 1.49872 )
+transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.82358, 1.58083 )
 
 [node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/Racer/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0728733, 0.533305, 0.273624 )
@@ -674,7 +676,6 @@ material = ExtResource( 14 )
 
 [node name="Rally" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.585815, -0.0955184 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Rally"]
 
@@ -910,10 +911,10 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.32512, 0.101055 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.11065 )
 
 [node name="MissilePosition" type="Position3D" parent="VehicleTypes/Rally/Positions/Weapons"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 1.1137 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.724978, 1.32338 )
 
 [node name="RocketPosition" type="Position3D" parent="VehicleTypes/Rally/Positions/Weapons"]
-transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.511921, 1.3363 )
+transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.718159, 1.3363 )
 
 [node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/Rally/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.768255, -1.42907 )

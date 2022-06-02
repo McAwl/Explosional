@@ -170,7 +170,19 @@ func get_viewport_container():
 		print_tree()
 		return null
 
-	
+
+func get_player_name():
+	return StatePlayers.players[player_number]["name"]
+
+
+func get_lives_left():
+	return StatePlayers.players[player_number]["lives_left"]
+
+
+func decrement_lives_left():
+	StatePlayers.players[player_number]["lives_left"] -= 1
+
+
 func get_viewport():
 	if get_viewport_container() != null:
 		if get_viewport_container().has_node("V"):

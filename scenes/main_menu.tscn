@@ -124,10 +124,10 @@ text = "Quit to Desktop"
 anchor_left = 0.4
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 141.76
-margin_top = 80.0
-margin_right = -120.0
-margin_bottom = -80.0
+margin_left = 92.0
+margin_top = 212.0
+margin_right = -172.0
+margin_bottom = -186.0
 
 [node name="GridContainer" type="GridContainer" parent="PlayerSelection"]
 anchor_right = 1.0
@@ -140,8 +140,8 @@ custom_constants/hseparation = 20
 columns = 2
 
 [node name="Player1SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
-margin_right = 616.0
-margin_bottom = 607.0
+margin_right = 615.0
+margin_bottom = 488.0
 focus_neighbour_left = NodePath("../../../MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToDesktop")
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -150,9 +150,9 @@ custom_fonts/font = ExtResource( 3 )
 text = "Player 1"
 
 [node name="Player2SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
-margin_left = 636.0
-margin_right = 1252.0
-margin_bottom = 607.0
+margin_left = 635.0
+margin_right = 1250.0
+margin_bottom = 488.0
 focus_neighbour_left = NodePath("../Player1SelectButton")
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -160,9 +160,9 @@ custom_fonts/font = ExtResource( 3 )
 text = "Player 2"
 
 [node name="Player3SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
-margin_top = 627.0
-margin_right = 616.0
-margin_bottom = 1234.0
+margin_top = 508.0
+margin_right = 615.0
+margin_bottom = 996.0
 focus_neighbour_left = NodePath("../Player2SelectButton")
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -171,10 +171,10 @@ disabled = true
 text = "Player 3"
 
 [node name="Player4SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
-margin_left = 636.0
-margin_top = 627.0
-margin_right = 1252.0
-margin_bottom = 1234.0
+margin_left = 635.0
+margin_top = 508.0
+margin_right = 1250.0
+margin_bottom = 996.0
 focus_neighbour_left = NodePath("../Player3SelectButton")
 size_flags_horizontal = 3
 size_flags_vertical = 3

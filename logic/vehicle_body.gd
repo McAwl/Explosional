@@ -487,7 +487,15 @@ func cycle_weapon():
 
 func _physics_process(delta):
 	
-	
+	# test adding constant downwards force so a vehicle can climb walls
+	#change this vector according to your needs. "* delta" scales it to the time-interval of fixed_process
+	#var gravity=Vector3(0,get_mass() * 9.8/2.0,0)*delta
+	#    
+	#local coordinates of objects center of gravity
+	#var local_cog = Vector3(0,0,0)
+	#
+	#apply one gravity "impulse" per process interval
+	#apply_impulse(local_cog,  gravity)
 	
 	var new_vel = get_linear_velocity()
 	var new_vel_max = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
@@ -754,7 +762,7 @@ func start_vehicle_dying():
 		get_main_scene().start_timer_slow_motion()
 		remove_main_collision_shapes()
 		explode_vehicle_meshes()
-		get_player().lives_left -= 1
+		get_player().decrement_lives_left()
 	else:
 		print("start_vehicle_dying(): error, shouldn't be here. vehicle_state="+str(vehicle_state))
 

@@ -253,7 +253,7 @@ func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player
 	var player_str = ""
 	if _launched_by_player != null:
 		launched_by_player = _launched_by_player
-		player_str = " (player "+str(launched_by_player.player_name)+")"
+		player_str = " (player "+str(launched_by_player.get_player_name())+")"
 	print("weapon of type "+str(TYPES.keys()[type]) + " launched by player_number "+str(launched_by_player_number)+player_str)
 
 

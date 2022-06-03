@@ -218,7 +218,7 @@ func explode(body=null):  # null if lifetime has expired
 		var direction = global_transform.origin - target.global_transform.origin
 		var distance = global_transform.origin.distance_to(target.global_transform.origin)
 		if distance < explosion_range and target != body:
-			print("Missile hit "+str(body.name))
+			# print("Missile hit "+str(body.name))
 			target.hit_by_missile["active"] = true
 			target.hit_by_missile["origin"] = transform.origin
 			target.hit_by_missile["direction_for_explosion"] = direction

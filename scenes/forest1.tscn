@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scenes/tree.tscn" type="PackedScene" id=2]
+
+[node name="Forest1" type="Spatial"]
+
+[node name="Tree1" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.846156, 0, -0.532935, 0, 1, 0, 0.532935, 0, 0.846156, 4.85966, 0.149287, 0.0946772 )
+
+[node name="Tree2" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.782021, 0, 0.623252, 0, 1, 0, -0.623252, 0, 0.782021, 1.1608, 0.149287, 9.29184 )
+
+[node name="Tree3" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.861328, 0, -0.50805, 0, 1, 0, 0.50805, 0, 0.861328, 3.72259, 0.149287, -2.46094 )
+
+[node name="Tree4" parent="." instance=ExtResource( 2 )]
+transform = Transform( -0.552257, 0, 0.833674, 0, 1, 0, -0.833674, 0, -0.552257, 0.129521, 0.149287, 0.0946772 )
+
+[node name="Tree5" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.148327, 0, 0.988938, 0, 1, 0, -0.988938, 0, 0.148327, -1.84855, 0.149287, -4.34457 )
+
+[node name="Tree6" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.407486, 0, 0.913212, 0, 1, 0, -0.913212, 0, 0.407486, -5.46375, 0.149287, 7.60399 )
+
+[node name="Tree7" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.490067, 0, -0.871685, 0, 1, 0, 0.871685, 0, 0.490067, -3.28877, 0.149287, 0.0946772 )

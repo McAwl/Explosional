@@ -192,7 +192,7 @@ func _on_Body_body_entered(body):
 
 
 func explode(body=null):  # null if lifetime has expired
-	# print("Missile hit something...")
+	print("Missile hit something...")
 	exploded = true
 	$Body.queue_free()  # remove the body - it's destroyed
 	$ParticlesThrust.visible = false
@@ -201,6 +201,7 @@ func explode(body=null):  # null if lifetime has expired
 	$Explosion.start_effects()  # start the explosion visual and audio effects
 	$ThrustLight.hide()
 	
+	# TODO this shouldbe replaced by signals
 	if not body == null:
 		if body is VehicleBody:
 			# print("Missile hit "+str(body.name))
@@ -209,20 +210,21 @@ func explode(body=null):  # null if lifetime has expired
 			body.hit_by_missile["direction_for_explosion"] = velocity
 			body.hit_by_missile["homing"] = homing
 			body.hit_by_missile["direct_hit"] = true
-	else: 
-		for player in get_node("/root/Main").get_players():  # in range(1, 5): # explosion toward all players
-			var target = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
-			#var target = get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
-			var direction = global_transform.origin - target.global_transform.origin
-			var distance = global_transform.origin.distance_to(target.global_transform.origin)
-			if distance < explosion_range:
-				# print("Missile hit "+str(body.name))
-				target.hit_by_missile["active"] = true
-				target.hit_by_missile["origin"] = transform.origin
-				target.hit_by_missile["direction_for_explosion"] = direction
-				target.hit_by_missile["homing"] = homing
-				target.hit_by_missile["direct_hit"] = false
-				target.hit_by_missile["distance"] = distance
+
+	# regardless of what it hit, calc indirect damage to vehicle nearby, except for the one hit directly
+	for player in get_node("/root/Main").get_players():  # in range(1, 5): # explosion toward all players
+		var target = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+		#var target = get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+		var direction = global_transform.origin - target.global_transform.origin
+		var distance = global_transform.origin.distance_to(target.global_transform.origin)
+		if distance < explosion_range and target != body:
+			print("Missile hit "+str(body.name))
+			target.hit_by_missile["active"] = true
+			target.hit_by_missile["origin"] = transform.origin
+			target.hit_by_missile["direction_for_explosion"] = direction
+			target.hit_by_missile["homing"] = homing
+			target.hit_by_missile["direct_hit"] = false
+			target.hit_by_missile["distance"] = distance
 
 
 func set_linear_velocity(_linear_velocity):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://logic/vehicle_body.gd" type="Script" id=2]
@@ -21,6 +21,7 @@
 [ext_resource path="res://logic/engine_sound_rally.gd" type="Script" id=19]
 [ext_resource path="res://assets/audio/sounds/371041__morganpurkis__single-gunshot-3.wav" type="AudioStream" id=20]
 [ext_resource path="res://scenes/vehicle_headlight.tscn" type="PackedScene" id=21]
+[ext_resource path="res://scenes/vehicle_taillight.tscn" type="PackedScene" id=22]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
@@ -376,20 +377,6 @@ transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.35416
 [node name="LightFrontRight" parent="VehicleTypes/Racer/Lights" instance=ExtResource( 21 )]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.391251, 0.421856, 1.52646 )
 
-[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.564825, 0.566112, -1.39086 )
-light_color = Color( 1, 0, 0, 1 )
-light_energy = 0.1
-shadow_enabled = true
-shadow_reverse_cull_face = true
-
-[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.606162, 0.553532, -1.42855 )
-light_color = Color( 1, 0, 0, 1 )
-light_energy = 0.1
-shadow_enabled = true
-shadow_reverse_cull_face = true
-
 [node name="LightUnder1" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 0 )
 light_energy = 2.0
@@ -424,6 +411,12 @@ light_energy = 2.0
 shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
+
+[node name="LightBackLeft" parent="VehicleTypes/Racer/Lights" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32777, 0.540855, -1.50392 )
+
+[node name="LightBackRight" parent="VehicleTypes/Racer/Lights" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.299164, 0.518095, -1.51409 )
 
 [node name="MeshInstances" parent="VehicleTypes/Racer" instance=ExtResource( 12 )]
 transform = Transform( 0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, -0.00169557, 0.48467, 0.105337 )
@@ -825,21 +818,11 @@ transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.4343
 [node name="LightFrontLeft" parent="VehicleTypes/Rally/Lights" instance=ExtResource( 21 )]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.4113, 0.19515, 1.63232 )
 
-[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/Rally/Lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.354893, 0.200307, -1.63485 )
-light_color = Color( 1, 0, 0, 1 )
-light_energy = 0.1
-shadow_enabled = true
-shadow_bias = 0.0
-shadow_reverse_cull_face = true
+[node name="LightBackLeft" parent="VehicleTypes/Rally/Lights" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.383293, 0.295949, -1.50392 )
 
-[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/Rally/Lights"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.354234, 0.190666, -1.61123 )
-light_color = Color( 1, 0, 0, 1 )
-light_energy = 0.1
-shadow_enabled = true
-shadow_bias = 0.0
-shadow_reverse_cull_face = true
+[node name="LightBackRight" parent="VehicleTypes/Rally/Lights" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.334853, 0.283412, -1.51409 )
 
 [node name="LightUnder1" type="OmniLight" parent="VehicleTypes/Rally/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 0 )
@@ -1249,19 +1232,11 @@ transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.44747
 [node name="LightFrontRight" parent="VehicleTypes/Tank/Lights" instance=ExtResource( 21 )]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.512766, 0.488595, 1.53878 )
 
-[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/Tank/Lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.565196, 0.379824, -1.79346 )
-light_color = Color( 1, 0, 0, 1 )
-light_energy = 0.1
-shadow_enabled = true
-shadow_reverse_cull_face = true
+[node name="LightBackLeft" parent="VehicleTypes/Tank/Lights" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.592035, 0.354465, -1.73684 )
 
-[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/Tank/Lights"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.595673, 0.38998, -1.75889 )
-light_color = Color( 1, 0, 0, 1 )
-light_energy = 0.1
-shadow_enabled = true
-shadow_reverse_cull_face = true
+[node name="LightBackRight" parent="VehicleTypes/Tank/Lights" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.59521, 0.37153, -1.73427 )
 
 [node name="LightUnder1" type="OmniLight" parent="VehicleTypes/Tank/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.343288, -0.1, -0.00977476 )
@@ -1680,7 +1655,7 @@ material/0 = null
 [node name="CollisionShapes" type="Spatial" parent="VehicleTypes/Truck"]
 
 [node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/Truck/CollisionShapes"]
-transform = Transform( 1.04562, 0, 0, 0, 2.35664, 0, 0, 0, 1.71061, -0.00339114, 0.963366, 0.0630144 )
+transform = Transform( 1.04562, 0, 0, 0, 2.35664, 0, 0, 0, 1.71061, -0.00339114, 0.500272, 0.0630144 )
 shape = SubResource( 51 )
 
 [node name="Effects" type="Spatial" parent="VehicleTypes/Truck"]
@@ -1738,19 +1713,11 @@ transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.37553
 [node name="LightFrontRight" parent="VehicleTypes/Truck/Lights" instance=ExtResource( 21 )]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.460729, 0.0680206, 2.07028 )
 
-[node name="LightBackRight" type="OmniLight" parent="VehicleTypes/Truck/Lights"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45969, 0.0288355, -1.59224 )
-light_color = Color( 1, 0, 0, 1 )
-light_energy = 0.1
-shadow_enabled = true
-shadow_reverse_cull_face = true
+[node name="LightBackLeft" parent="VehicleTypes/Truck/Lights" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.464695, 0.0510529, -1.66314 )
 
-[node name="LightBackLeft" type="OmniLight" parent="VehicleTypes/Truck/Lights"]
-transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.444881, 0.0333847, -1.55395 )
-light_color = Color( 1, 0, 0, 1 )
-light_energy = 0.1
-shadow_enabled = true
-shadow_reverse_cull_face = true
+[node name="LightBackRight" parent="VehicleTypes/Truck/Lights" instance=ExtResource( 22 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.436237, 0.0541276, -1.72774 )
 
 [node name="LightUnder1" type="OmniLight" parent="VehicleTypes/Truck/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 0 )

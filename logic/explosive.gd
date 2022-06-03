@@ -75,7 +75,7 @@ func _process(delta):
 		
 	if explosive_stage == 2:  # active waiting for proximity to car 
 		if explosive_proximity_check_timer <= 0:  # check proximity regularly, not too often
-			for player in get_node("/root/TownScene").get_players():  # i in range(1, 5):
+			for player in get_node("/root/Main").get_players():  # i in range(1, 5):
 				# explosion toward all players
 				var get_vehicle_body = player.get_vehicle_body()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
 				if get_vehicle_body != null:
@@ -153,11 +153,11 @@ func no_animations_or_sound_playing():
 
 
 func get_players():
-	return get_node("/root/TownScene").get_players()
+	return get_node("/root/Main").get_players()
 
 
 func get_bombs():
-	return get_node("/root/TownScene").get_players()
+	return get_node("/root/Main").get_players()
 
 
 func _physics_process(_delta):

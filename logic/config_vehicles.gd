@@ -40,7 +40,7 @@ var types = {
 				"suspension_travel":0.2,
 				"all_wheel_drive": false,
 				"wheel_friction_slip":1.0,
-				"wheel_roll_influence": 0.9,
+				"wheel_roll_influence": 0.5,
 				"brake": 40.0}}
 									
 # Called when the node enters the scene tree for the first time.

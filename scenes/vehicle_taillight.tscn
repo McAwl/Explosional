@@ -1,0 +1,6 @@
+[gd_scene format=2]
+
+[node name="VehicleTaillight" type="OmniLight"]
+light_color = Color( 1, 0, 0, 1 )
+shadow_bias = 0.0
+shadow_reverse_cull_face = true

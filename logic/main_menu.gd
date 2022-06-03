@@ -126,6 +126,8 @@ func _on_OptionBackButton_button_up():
 
 
 func start_game():
+	
+	$LoadingText.show()
 	$MainSelection/MainContainer.hide()
 	$PlayerSelection.hide()
 	#players[1] = {"name": "1", "vehicle": "racer"}
@@ -139,7 +141,6 @@ func start_game():
 	StatePlayers.players = players
 	StatePlayers.configure_players()
 	print("players = "+str(players))
-	$LoadingText.show()
 	
 	get_tree().root.call_deferred("add_child", next_level)
 	queue_free()

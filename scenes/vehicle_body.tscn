@@ -274,7 +274,7 @@ skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
 [node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 0.451696 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 1.78961 )
 
 [node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamTargetReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
@@ -294,7 +294,7 @@ skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
 [node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 2.59098 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 3.632 )
 
 [node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Racer/CameraBasesTargets/CamBaseReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
@@ -717,7 +717,7 @@ skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
 [node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 0.451696 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 1.89442 )
 
 [node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamTargetReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
@@ -737,7 +737,7 @@ skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
 [node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 2.59098 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 3.81531 )
 
 [node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
@@ -1132,7 +1132,7 @@ skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
 [node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 0.451696 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 1.92582 )
 
 [node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamTargetReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
@@ -1152,7 +1152,7 @@ skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
 [node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 2.59098 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 3.50239 )
 
 [node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
@@ -1633,7 +1633,7 @@ skeleton = NodePath("../../../../../CameraBase/Camera")
 material/0 = null
 
 [node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 1.59623 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 3.36687 )
 
 [node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseReverse"]
 transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )

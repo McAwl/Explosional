@@ -19,6 +19,7 @@ var rng = RandomNumberGenerator.new()
 var exploded = false
 var weapon_type  
 var weapon_type_name  
+var flicker_thrust_timer = 0.1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -31,12 +32,19 @@ func muzzle_speed():
 
 
 func _process(delta):
+	
 	lifetime_seconds -= delta
+	flicker_thrust_timer -=delta
+	print_timer -= delta
+	
 	if homing_start_timer >= 0.0:
 		homing_start_timer -= delta
 	if homing == true:
 		homing_check_target_timer -= delta
-	print_timer -= delta
+	
+	if flicker_thrust_timer < 0.0:
+		flicker_thrust_timer = 0.1
+		flicker_thrust_light()
 	
 	if print_timer < 0.0:
 		# print(" hit_something="+str(hit_something))
@@ -144,11 +152,11 @@ func _physics_process(delta):
 		if homing:
 			if homing_check_target_timer < 0.0:
 				homing_check_target_timer = 0.1
-				for player in get_node("/root/TownScene").get_players():  # in range(1, 5): # explosion toward all players
+				for player in get_node("/root/Main").get_players():  # in range(1, 5): # explosion toward all players
 					#if i != parent_player_number:
 					if player.player_number != parent_player_number:
-						var target = player.get_vehicle_body()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
-						#var target = get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+						var target = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+						#var target = get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 						if target != null:  # it might have exploded already, leaving no body
 							var distance = global_transform.origin.distance_to(target.global_transform.origin)
 							if closest_target_distance == null or distance < closest_target_distance or closest_target == null or closest_target_direction == null:
@@ -156,6 +164,7 @@ func _physics_process(delta):
 								closest_target_distance = distance
 								closest_target_direction =  closest_target.global_transform.origin - global_transform.origin
 								closest_target_direction_normalised = closest_target_direction.normalized()
+
 
 func add_random_movement(strength):
 	# steer left/right a bit
@@ -172,6 +181,9 @@ func activate(_parent_player_number, _homing):
 	if weapon_type == 1 or weapon_type == 2:  # rocket or missile
 		$LaunchSound.playing = true
 		$FlyingSound.playing = true
+		$ThrustLight.show()
+	else:
+		$ThrustLight.hide()
 
 
 func _on_Body_body_entered(body):
@@ -187,7 +199,8 @@ func explode(body=null):  # null if lifetime has expired
 	$LaunchSound.playing = false
 	$FlyingSound.playing = false
 	$Explosion.start_effects()  # start the explosion visual and audio effects
-		
+	$ThrustLight.hide()
+	
 	if not body == null:
 		if body is VehicleBody:
 			# print("Missile hit "+str(body.name))
@@ -197,9 +210,9 @@ func explode(body=null):  # null if lifetime has expired
 			body.hit_by_missile["homing"] = homing
 			body.hit_by_missile["direct_hit"] = true
 	else: 
-		for player in get_node("/root/TownScene").get_players():  # in range(1, 5): # explosion toward all players
-			var target = player.get_vehicle_body()  # get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
-			#var target = get_node("/root/TownScene/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+		for player in get_node("/root/Main").get_players():  # in range(1, 5): # explosion toward all players
+			var target = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+			#var target = get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 			var direction = global_transform.origin - target.global_transform.origin
 			var distance = global_transform.origin.distance_to(target.global_transform.origin)
 			if distance < explosion_range:
@@ -218,3 +231,15 @@ func set_linear_velocity(_linear_velocity):
 
 func set_angular_velocity(_angular_velocity):
 	$Body.angular_velocity = _angular_velocity
+
+
+func flicker_thrust_light():
+	var rn = rng.randf()
+	if exploded == false:
+		# change tint to various kinds of orange
+		if rn < 0.33:
+			$ThrustLight.light_color = Color(1, 0.4, 0)  
+		elif rn < 0.66: 
+			$ThrustLight.light_color = Color(1, 0.6, 0) 
+		else: 
+			$ThrustLight.light_color = Color(1, 0.2, 0)

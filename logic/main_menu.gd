@@ -15,6 +15,9 @@ var vehicle_selection = -1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	$LoadingText.hide()
+	$OptionMenu.hide()
+	$VersionText.show()
 	var output = []
 	var _os_execute = OS.execute("git", PoolStringArray(["rev-list", "--count", "HEAD"]), true, output)
 	print(str(output))
@@ -35,6 +38,7 @@ func configure():
 		get_resume_button().show()
 		qmmb.show()
 		$PlayerSelection.hide()
+		$LoadingText.hide()
 		get_resume_button().grab_focus()
 		get_start_button().hide()
 		#apb.hide()
@@ -122,17 +126,21 @@ func _on_OptionBackButton_button_up():
 
 
 func start_game():
+	$MainSelection/MainContainer.hide()
+	$PlayerSelection.hide()
 	#players[1] = {"name": "1", "vehicle": "racer"}
 	#players[2] = {"name": "2", "vehicle": "racer"}
 	#players[3] = {"name": "3", "vehicle": "racer"}
 	#players[4] = {"name": "4", "vehicle": "racer"}
 	# var next_level_resource = load("res://scenes/instructions.tscn")
-	var next_level_resource = load("res://scenes/town_scene.tscn")
+	var next_level_resource = load("res://scenes/main.tscn")
 	var next_level = next_level_resource.instance()
 	# next_level.players = players
 	StatePlayers.players = players
 	StatePlayers.configure_players()
 	print("players = "+str(players))
+	$LoadingText.show()
+	
 	get_tree().root.call_deferred("add_child", next_level)
 	queue_free()
 

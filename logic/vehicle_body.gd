@@ -51,43 +51,6 @@ var fwd_mps_0_1 = 0.0
 var explosion2_timer = 0.2
 var knock_back_firing_ballistic = false  # knock the vehicle backwards when firing a ballistic weapons
 
-var vehicle_types = {	"Tank":  {"scene": "res://scenes/vehicle_tank.tscn", 
-									"engine_force_value": 150,  # keep this at 1x mass
-									"mass_kg/100": 200.0, 
-									"suspension_stiffness": 100.0, 
-									"suspension_travel": 0.1,
-									"all_wheel_drive": true,
-									"wheel_friction_slip": 15.0,
-									"wheel_roll_influence": 0.9,
-									"brake": 40.0}, 
-						"Racer": {"scene": "res://scenes/vehicle_racer.tscn", 
-									"engine_force_value": 220,  # keep this at 3x mass
-									"mass_kg/100": 70.0, 
-									"suspension_stiffness": 75.0, 
-									"suspension_travel": 0.25,
-									"all_wheel_drive": false,
-									"wheel_friction_slip": 1.1,
-									"wheel_roll_influence": 0.9,
-									"brake": 10.0}, 
-						"Rally": {"scene": "res://scenes/vehicle_rally.tscn", 
-									"engine_force_value": 70,  # keep this at 3x mass
-									"mass_kg/100": 50.0, 
-									"suspension_stiffness": 40.0, 
-									"suspension_travel": 2.0,
-									"all_wheel_drive": true,
-									"wheel_friction_slip": 1.3,
-									"wheel_roll_influence": 0.9,
-									"brake": 5.0}, 
-						"Truck": {"scene": "res://scenes/vehicle_truck.tscn", 
-									"engine_force_value": 200,  # keep this at 1x mass
-									"mass_kg/100": 200.0, 
-									"suspension_stiffness": 90.0, 
-									"suspension_travel":0.2,
-									"all_wheel_drive": false,
-									"wheel_friction_slip":1.0,
-									"wheel_roll_influence": 0.9,
-									"brake": 40.0}}
-
 var vehicle_state = 'alive'  # 'alive', 'dying', 'dead'
 var set_pos = false
 var pos
@@ -144,7 +107,7 @@ func init(_pos=null, _player_number=null, _name=null):
 	if has_node("VehicleTypes"):
 		get_node("VehicleTypes").queue_free()
 	
-	if not StatePlayers.players[player_number]["vehicle"] in vehicle_types:
+	if not StatePlayers.players[player_number]["vehicle"] in ConfigVehicles.types:
 		print("vehicle_type "+str(StatePlayers.players[player_number]["vehicle"])+" not found")
 		return false
 		
@@ -224,9 +187,9 @@ func dying_visual_effects():
 
 func configure_vehicle_properties():
 	
-	engine_force_value = vehicle_types[StatePlayers.players[player_number]["vehicle"]]["engine_force_value"]
-	mass = vehicle_types[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"]
-	var vts = vehicle_types[StatePlayers.players[player_number]["vehicle"]]
+	engine_force_value = ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["engine_force_value"]
+	mass = ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"]
+	var vts = ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]
 	set_wheel_parameters(vts)
 
 
@@ -523,7 +486,7 @@ func _physics_process(delta):
 		if Input.is_action_pressed("reverse_player"+str(player_number)):
 			engine_force = -engine_force_value/2.0
 			if fwd_mps > speed_low_limit:
-				brake = vehicle_types[StatePlayers.players[player_number]["vehicle"]]["brake"] / 5.0
+				brake = ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["brake"] / 5.0
 		else:
 			brake = 0.0
 			
@@ -583,7 +546,7 @@ func check_for_clipping():
 					print("raycast "+raycast.name+" is colliding with "+str(raycast.get_collider().name))
 		if num_wheels_clipped > 0:
 			print("applying impulse - wheel(s) are clipped")
-			apply_impulse( Vector3(0, -10.0, 0), Vector3(0.0, 5*vehicle_types[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"], 0.0) )   # from underneath, upwards force
+			apply_impulse( Vector3(0, -10.0, 0), Vector3(0.0, 5*ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"], 0.0) )   # from underneath, upwards force
 			check_accel_damage_timer = 2.0  # disable damage for temporarily
 	
 

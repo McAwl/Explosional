@@ -33,6 +33,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
+ConfigVehicles="*res://logic/config_vehicles.gd"
 ConfigWeapons="*res://logic/config_weapons.gd"
 StatePlayers="*res://logic/state_players.gd"
 

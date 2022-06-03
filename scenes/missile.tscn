@@ -112,4 +112,11 @@ stream = ExtResource( 6 )
 [node name="FlyingSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 2 )
 
+[node name="ThrustLight" type="OmniLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.780041 )
+visible = false
+light_color = Color( 1, 0.305882, 0, 1 )
+light_energy = 4.0
+shadow_enabled = true
+
 [connection signal="body_entered" from="Body" to="." method="_on_Body_body_entered"]

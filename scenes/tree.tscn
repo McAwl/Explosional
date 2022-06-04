@@ -1,6 +1,5 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=18 format=2]
 
-[ext_resource path="res://scenes/grass.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/textures/bark_albedo.png" type="Texture" id=2]
 [ext_resource path="res://assets/textures/bark_normal.png" type="Texture" id=3]
 [ext_resource path="res://assets/textures/elm_leaf_normal.png" type="Texture" id=4]
@@ -102,39 +101,3 @@ shape = SubResource( 8 )
 [node name="CollisionShape2" type="CollisionShape" parent="."]
 transform = Transform( 3.14517, 0, 0, 0, 3.06397, 0, 0, 0, 2.93137, 0, 4.91601, 0 )
 shape = SubResource( 9 )
-
-[node name="Grass" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0150797, 0, 0 )
-
-[node name="Grass2" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.746919, 0, 0 )
-
-[node name="Grass3" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0150797, 0, 0.425024 )
-
-[node name="Grass4" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0150797, 0, -0.513508 )
-
-[node name="Grass5" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.360533, 0, 0.921861 )
-
-[node name="Grass6" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.721091, 0, -0.498267 )
-
-[node name="Grass7" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0150797, 0, -2.05432 )
-
-[node name="Grass8" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7508, 0, 1.14559 )
-
-[node name="Grass9" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.19941, 0, 1.14559 )
-
-[node name="Grass10" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.58759, 0, -0.595587 )
-
-[node name="Grass11" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.36598, 0, 0.0110056 )
-
-[node name="Grass12" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.694512, 0, 0.419166 )

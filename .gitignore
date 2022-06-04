@@ -22,3 +22,5 @@ export_presets.cfg
 *.dae
 *.obj
 *.mp3
+/export/explosional.exe
+/export/explosional.pck

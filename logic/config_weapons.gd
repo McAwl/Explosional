@@ -1,7 +1,7 @@
 extends Node
 
 
-const COOLDOWN_TIMER_DEFAULTS = {"mine": 1.0, "rocket": 1.0, "missile": 1.0, "nuke": 10.0, "ballistic": 1.0}
+const COOLDOWN_TIMER_DEFAULTS = {"mine": 5.0, "rocket": 5.0, "missile": 20.0, "nuke": 60.0, "ballistic": 10.0}
 const DAMAGE = {"mine": 2, "rocket": 5, "missile": 5, "nuke": 10, "ballistic": 5.0}
 const DAMAGE_INDIRECT = {"mine": 1, "rocket": 1, "missile": 1, "nuke": 10, "ballistic": 1}
 const SCENE = {"mine": "res://scenes/explosive.tscn", \

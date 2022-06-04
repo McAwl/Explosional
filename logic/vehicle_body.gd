@@ -614,7 +614,7 @@ func fire_mine_or_nuke():
 	elif weapon_select == 3:
 		# print("activating nuke")
 		weapon_instance.set_as_nuke()
-		weapon_instance.activate(get_node("/root/TownScene/Platforms/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
+		weapon_instance.activate(get_node("/root/Main/Platforms/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
 		if weapons[3].test_mode == false:
 			weapons[3]["enabled"] = false  # so powerup is needed again
 			cycle_weapon()  # de-select nuke, as it's not available any more

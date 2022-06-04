@@ -5,7 +5,9 @@ var timer_1_sec = 1.0
 var rng = RandomNumberGenerator.new()
 var is_game_paused = false
 var num_trees = 0
-var num_trees_total = 2000
+var num_trees_total = 100
+var num_grasses = 0
+var num_grasses_total = 1000
 
 export var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 export var start_clock_hrs = 12.0
@@ -135,22 +137,21 @@ func _process(delta):
 
 func _physics_process(_delta):
 	
-	if num_trees < num_trees_total and rng.randf() < 0.5:
+	if (num_trees < num_trees_total or num_grasses < num_grasses_total) and rng.randf() < 0.25:
 		var ray = load("res://scenes/raycast_procedural_veg.tscn").instance()
 		self.add_child(ray)
 		ray.translation = Vector3(rng.randf()*1000.0, 100.0, rng.randf()*1000.0)
 		ray.force_raycast_update()
-		print("ray translation="+str(ray.translation))
+		#print("ray translation="+str(ray.translation))
 		# ray.cast_to = Vector3(0, -1000, 0)
 		if ray.is_colliding():
 			print(" colliding with "+str(ray.get_collider().name))
 			if "terrain" in ray.get_collider().name.to_lower() and not "lava" in ray.get_collider().name.to_lower():
-				print("colliding with terrain..")
-				print("collision point = "+str(ray.get_collision_point()))
-				print("collision normal = "+str(ray.get_collision_normal()))
-				if ray.get_collision_normal().y > 0.9:
-					print("flat ground")
-					if rng.randf() < 0.05:
+				#print("colliding with terrain..")
+				#print("collision point = "+str(ray.get_collision_point()))
+				#print("collision normal = "+str(ray.get_collision_normal()))
+				if rng.randf() < 0.25: # tree
+					if ray.get_collision_normal().y > 0.8 and ray.get_collision_normal().y < 0.9:  # slightly sloping ground for trees
 						var tree = load("res://scenes/tree.tscn").instance()
 						#tree.global_transform.origin = ray.get_collision_point()
 						tree.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
@@ -158,15 +159,15 @@ func _physics_process(_delta):
 						tree.scale = Vector3(scale_tree, scale_tree, scale_tree)
 						self.add_child(tree)
 						num_trees += 1
-					else:
+				else:  # grass
+					if ray.get_collision_normal().y > 0.95:  # very flat groudn for grass
 						var grass = load("res://scenes/grass.tscn").instance()
 						#tree.global_transform.origin = ray.get_collision_point()
 						grass.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
 						self.add_child(grass)
-						num_trees += 1
-					$VC/CL/Label.text = "Veg: "+str(num_trees)
-				else:
-					print("bumpy ground")
+						num_grasses += 1
+				$VC/CL/Label.text = "Veg: "+str(num_trees+num_grasses)
+		
 		ray.queue_free()
 
 

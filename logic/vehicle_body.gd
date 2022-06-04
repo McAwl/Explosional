@@ -112,6 +112,7 @@ func init(_pos=null, _player_number=null, _name=null):
 		return false
 		
 	configure_vehicle_properties()
+	configure_weapons()
 	init_visual_effects()
 	init_audio_effects()
 	
@@ -119,6 +120,20 @@ func init(_pos=null, _player_number=null, _name=null):
 	check_accel_damage_timer = 4.0
 	init_camera(StatePlayers.num_players())
 	return true
+
+
+func configure_weapons():
+	for k in ConfigWeapons.weapon_types.keys():
+		print("checking weapon "+str(k))  # 0=mine, etc
+		var vt = StatePlayers.players[player_number]["vehicle"]
+		if vt in ConfigWeapons.weapon_types[k]["vehicles"]:
+			print("vt "+str(vt)+" has weapon "+str(k))
+			weapons[k]["enabled"] = true
+			weapon_select = k
+			set_icon()
+		else:
+			print("vt "+str(vt)+" doesnt have weapon "+str(k))
+			weapons[k]["enabled"] = false
 
 
 func init_audio_effects():
@@ -438,14 +453,18 @@ func cycle_weapon():
 			weapon_select += 1
 		if weapon_select > 4:
 			weapon_select = 0
-		get_player().get_hud().get_node("icon_mine").hide()
-		get_player().get_hud().get_node("icon_rocket").hide()
-		get_player().get_hud().get_node("icon_missile").hide()
-		get_player().get_hud().get_node("icon_ballistic").hide()
-		get_player().get_hud().get_node("icon_nuke").hide()
-		get_player().get_hud().get_node("icon_"+weapons[weapon_select].name).show()
+		set_icon()
 		get_player().set_label_player_name()
 		get_player().set_label_lives_left()
+
+
+func set_icon():
+	get_player().get_hud().get_node("icon_mine").hide()
+	get_player().get_hud().get_node("icon_rocket").hide()
+	get_player().get_hud().get_node("icon_missile").hide()
+	get_player().get_hud().get_node("icon_ballistic").hide()
+	get_player().get_hud().get_node("icon_nuke").hide()
+	get_player().get_hud().get_node("icon_"+weapons[weapon_select].name).show()
 
 
 func _physics_process(delta):

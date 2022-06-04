@@ -139,7 +139,7 @@ func _process(delta):
 	update_player_hud()
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	
 	if num_trees < num_trees_total and rng.randf() < 0.05:
 		var ray = load("res://scenes/raycast_procedural_veg.tscn").instance()
@@ -183,6 +183,7 @@ func check_slow_motion():
 		all_audio_pitch(0.1)
 
 
+# move this out of here, and prob use signals
 func update_player_hud():
 	for player_src in range(1, StatePlayers.num_players()+1):
 		for player_dst in range(1, StatePlayers.num_players()+1):

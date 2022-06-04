@@ -15,8 +15,9 @@ var timer_1s = 1.0
 var launched_by_player_number  # record which player number launched this explosive 
 var launched_by_player = null
 
+# TODO move to configweapons
 # explosion force = explosion_strength / (explosion_decrease*distance)+1.0 ^ explosion_exponent)
-var explosion_strength = {TYPES.NOT_SET: 0.0, TYPES.MINE: 5000.0, TYPES.BOMB: 5000.0, TYPES.NUKE: 10000.0}
+var explosion_strength = {TYPES.NOT_SET: 0.0, TYPES.MINE: 2500.0, TYPES.BOMB: 5000.0, TYPES.NUKE: 10000.0}
 var explosion_range = {TYPES.NOT_SET: 0.0, TYPES.MINE: 10.0, TYPES.BOMB: 10.0, TYPES.NUKE: 1000.0}
 var explosion_exponent = {TYPES.NOT_SET: 1.5, TYPES.MINE: 1.5, TYPES.BOMB: 1.5, TYPES.NUKE: 1.05}
 var explosion_decrease = {TYPES.NOT_SET: 1.0, TYPES.MINE: 1.0, TYPES.BOMB: 1.0, TYPES.NUKE: 0.05}

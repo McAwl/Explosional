@@ -5,7 +5,7 @@ var timer_1_sec = 1.0
 var rng = RandomNumberGenerator.new()
 var is_game_paused = false
 var num_trees = 0
-var num_trees_total = 1000
+var num_trees_total = 2000
 
 export var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 export var start_clock_hrs = 12.0
@@ -16,13 +16,7 @@ export var test_turn_off_airstrike = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	
-	# Procedurally place vegetation
-	#print("terrain extents = "+str($Terrain/Landscape008.get_aabb()))
-	#var mesh_volume = ch.get_aabb().get_area ()
-	#			var aabb_size = ch.get_aabb().size
-	#print("terrain position = "+str($Terrain/Landscape008.get_aabb().position))
-	#print("terrain end = "+str($Terrain/Landscape008.get_aabb().end))
-	
+	# $TimerSlowMotion.start()  # for Procedurally place vegetation
 
 	$VC/CL/MainMenu.set_visible(false)
 	$VC/CL/MainMenu.game_active = true
@@ -141,7 +135,7 @@ func _process(delta):
 
 func _physics_process(_delta):
 	
-	if num_trees < num_trees_total and rng.randf() < 0.05:
+	if num_trees < num_trees_total and rng.randf() < 0.5:
 		var ray = load("res://scenes/raycast_procedural_veg.tscn").instance()
 		self.add_child(ray)
 		ray.translation = Vector3(rng.randf()*1000.0, 100.0, rng.randf()*1000.0)
@@ -160,6 +154,8 @@ func _physics_process(_delta):
 						var tree = load("res://scenes/tree.tscn").instance()
 						#tree.global_transform.origin = ray.get_collision_point()
 						tree.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
+						var scale_tree = 0.5 + (0.5*rng.randf())
+						tree.scale = Vector3(scale_tree, scale_tree, scale_tree)
 						self.add_child(tree)
 						num_trees += 1
 					else:

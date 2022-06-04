@@ -29,6 +29,5 @@ shader_param/texture_wind_noise = SubResource( 13 )
 [node name="Grass" type="Spatial"]
 
 [node name="MeshInstance1" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.141686, 0.00958538, 0.697579 )
 mesh = ExtResource( 1 )
 material/0 = SubResource( 15 )

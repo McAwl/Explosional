@@ -372,7 +372,7 @@ local_coords = false
 [node name="Lights" type="Spatial" parent="VehicleTypes/Racer"]
 
 [node name="LightFrontLeft" parent="VehicleTypes/Racer/Lights" instance=ExtResource( 21 )]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.354164, 0.539314, 1.60262 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.354164, 0.435337, 1.52498 )
 
 [node name="LightFrontRight" parent="VehicleTypes/Racer/Lights" instance=ExtResource( 21 )]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.391251, 0.421856, 1.52646 )

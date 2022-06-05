@@ -4,12 +4,16 @@ var town = null
 var timer_1_sec = 1.0
 var rng = RandomNumberGenerator.new()
 var is_game_paused = false
+var trees = []
 var num_trees = 0
 var num_trees_total = 500
+var grasses = []
 var num_grasses = 0
 var num_grasses_total = 1000
 var ray = load("res://scenes/raycast_procedural_veg.tscn").instance()
-	
+var veg_check_raycast = false
+var last_veg = []
+
 export var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 export var start_clock_hrs = 12.0
 export var test_nuke = false
@@ -55,6 +59,17 @@ func _ready():
 	$DirectionalLightSun/DayNightAnimation.seek(anim_time)
 	$DirectionalLightMoon/DayNightAnimation.play("daynightcycle")
 	$DirectionalLightMoon/DayNightAnimation.seek(anim_time)
+
+	# Add veg instances, but place later in physics as we need raycasts
+	for _nt in range(0, num_trees_total):
+		var tree = load("res://scenes/tree.tscn").instance()
+		$Vegetation/Trees.add_child(tree)
+		trees.append(tree.get_instance_id())
+		
+	for _ng in range(0, num_grasses_total): 
+		var grass = load("res://scenes/grass.tscn").instance()
+		$Vegetation/Grass.add_child(grass)
+		grasses.append(grass.get_instance_id())
 
 
 func turn_airstrike_on():
@@ -138,36 +153,56 @@ func _process(delta):
 
 func _physics_process(_delta):
 	
-	if (num_trees < num_trees_total or num_grasses < num_grasses_total):  # and rng.randf()<0.25:
-		ray.translation = Vector3(rng.randf()*1000.0, 100.0, rng.randf()*1000.0)
-		ray.force_raycast_update()
-		#print("ray translation="+str(ray.translation))
-		# ray.cast_to = Vector3(0, -1000, 0)
-		if ray.is_colliding():
-			print(" colliding with "+str(ray.get_collider().name))
-			if "terrain" in ray.get_collider().name.to_lower() and not "lava" in ray.get_collider().name.to_lower():
-				#print("colliding with terrain..")
-				#print("collision point = "+str(ray.get_collision_point()))
-				
-				if rng.randf() < 0.25 and num_trees < num_trees_total: # tree
-					if ray.get_collision_normal().normalized().y > 0.98 and ray.get_collision_normal().normalized().y < 0.99:  # slightly sloping ground for trees
-						print("tree collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
-						var tree = load("res://scenes/tree.tscn").instance()
-						#tree.global_transform.origin = ray.get_collision_point()
-						tree.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
-						var scale_tree = 0.5 + (0.5*rng.randf())
-						tree.scale = Vector3(scale_tree, scale_tree, scale_tree)
-						self.add_child(tree)
-						num_trees += 1
-				elif num_grasses < num_grasses_total:  # grass
-					if ray.get_collision_normal().normalized().y > 0.9999:  # very flat ground for grass
-						print("grass collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
-						var grass = load("res://scenes/grass.tscn").instance()
-						#tree.global_transform.origin = ray.get_collision_point()
-						grass.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
-						self.add_child(grass)
-						num_grasses += 1
-				$VC/CL/Label.text = "Veg: "+str(num_trees)+" trees "+str(num_grasses)+" grass"
+	#if num_trees < num_trees_total or num_grasses < num_grasses_total:  # or len(trees)>0 or len(grasses)>0:  # and rng.randf()<0.25:
+	if len(trees)>0 or len(grasses)>0:  # and rng.randf()<0.25:
+		if veg_check_raycast == false:
+			veg_check_raycast = true  # check the raycast collision on the next physics process
+			if rng.randf() < 0.9 and len(last_veg)>0:
+				# reuse the last placement, randomise x/z nearby so veg is clustered together a bit
+				ray.translation = Vector3(-0.5+rng.randf()+last_veg[1].x, last_veg[1].y, -0.5+rng.randf()+last_veg[1].z)
+			else:
+				ray.translation = Vector3(rng.randf()*1000.0, 100.0, rng.randf()*1000.0)
+		else:
+			veg_check_raycast = false  # move the raycast on the next physics process
+			#ray.force_raycast_update()
+			#print("ray translation="+str(ray.translation))
+			# ray.cast_to = Vector3(0, -1000, 0)
+			if ray.is_colliding():
+				# print(" colliding with "+str(ray.get_collider().name))
+				if "terrain" in ray.get_collider().name.to_lower() and not "lava" in ray.get_collider().name.to_lower():
+					#print("colliding with terrain..")
+					#print("collision point = "+str(ray.get_collision_point()))
+					if rng.randf() < 0.5 and num_trees < num_trees_total:  # len(trees)>0: # tree
+						if ray.get_collision_normal().normalized().y > 0.98 and ray.get_collision_normal().normalized().y < 0.99:  # slightly sloping ground for trees
+							print("tree collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
+							# var tree = load("res://scenes/tree.tscn").instance()  #
+							var tree = instance_from_id(trees[0])
+							#$Vegetation/Trees.add_child(tree)
+							#tree.global_transform.origin = ray.get_collision_point()
+							tree.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
+							tree.translation = Vector3(ray.get_collision_point().x, ray.get_collision_point().y, ray.get_collision_point().z)
+							var scale_tree = 0.5 + (0.5*rng.randf())
+							tree.scale = Vector3(scale_tree, scale_tree, scale_tree)
+							num_trees += 1
+							trees.remove(0)
+							last_veg = ["tree", tree.translation]
+					elif num_grasses < num_grasses_total:  # len(grasses)>0:  # grass
+						if ray.get_collision_normal().normalized().y > 0.9999:  # very flat ground for grass
+							print("grass collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
+							#tree.global_transform.origin = ray.get_collision_point()
+							# var grass = load("res://scenes/grass.tscn").instance()  # 
+							var grass = instance_from_id(grasses[0])
+							#$Vegetation/Grass.add_child(grass)
+							grass.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
+							grass.translation = Vector3(ray.get_collision_point().x, ray.get_collision_point().y, ray.get_collision_point().z)
+							num_grasses += 1
+							grasses.remove(0)
+							last_veg = ["grass", grass.translation]
+					else:
+						last_veg = []
+					$VC/CL/Label.text = "Veg: "+str(num_trees)+" trees "+str(num_grasses)+" grass"
+			else:
+				last_veg = []
 
 
 func check_slow_motion():

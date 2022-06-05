@@ -9,13 +9,49 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "",
+"class": "GitAPI",
+"language": "NativeScript",
+"path": "res://addons/godot-git-plugin/git_api.gdns"
+}, {
 "base": "Resource",
 "class": "ImageDataReource",
 "language": "GDScript",
 "path": "res://addons/angelqba.image_to_scene/image_to_scene_resource.gd"
+}, {
+"base": "CPUParticles",
+"class": "LODCPUParticles",
+"language": "GDScript",
+"path": "res://addons/lod/lod_cpu_particles.gd"
+}, {
+"base": "OmniLight",
+"class": "LODOmniLight",
+"language": "GDScript",
+"path": "res://addons/lod/lod_omni_light.gd"
+}, {
+"base": "Particles",
+"class": "LODParticles",
+"language": "GDScript",
+"path": "res://addons/lod/lod_particles.gd"
+}, {
+"base": "Spatial",
+"class": "LODSpatial",
+"language": "GDScript",
+"path": "res://addons/lod/lod_spatial.gd"
+}, {
+"base": "SpotLight",
+"class": "LODSpotLight",
+"language": "GDScript",
+"path": "res://addons/lod/lod_spot_light.gd"
 } ]
 _global_script_class_icons={
-"ImageDataReource": ""
+"GitAPI": "",
+"ImageDataReource": "",
+"LODCPUParticles": "res://addons/lod/lod_cpu_particles.svg",
+"LODOmniLight": "res://addons/lod/lod_omni_light.svg",
+"LODParticles": "res://addons/lod/lod_particles.svg",
+"LODSpatial": "res://addons/lod/lod_spatial.svg",
+"LODSpotLight": "res://addons/lod/lod_spot_light.svg"
 }
 
 [application]
@@ -51,11 +87,11 @@ window/width=1280
 
 [editor_plugins]
 
-enabled=PoolStringArray(  )
+enabled=PoolStringArray( "res://addons/lod/plugin.cfg" )
 
 [gdnative]
 
-singletons=[  ]
+singletons=[ "res://addons/godot-git-plugin/git_api.gdnlib" ]
 
 [global]
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=19 format=2]
 
-[ext_resource path="res://scenes/tree.gd" type="Script" id=1]
+[ext_resource path="res://logic/tree.gd" type="Script" id=1]
 [ext_resource path="res://assets/textures/bark_albedo.png" type="Texture" id=2]
 [ext_resource path="res://assets/textures/bark_normal.png" type="Texture" id=3]
 [ext_resource path="res://assets/textures/elm_leaf_normal.png" type="Texture" id=4]
@@ -9,6 +9,7 @@
 [ext_resource path="res://assets/textures/3d_noise.png" type="Texture3D" id=7]
 [ext_resource path="res://assets/shaders/foliage_wind_tree_trunk.gdshader" type="Shader" id=8]
 [ext_resource path="res://assets/shaders/foliage_wind_tree_leaves.gdshader" type="Shader" id=9]
+
 
 [sub_resource type="SpatialMaterial" id=1]
 vertex_color_use_as_albedo = true

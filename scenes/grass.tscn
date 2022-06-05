@@ -4,7 +4,8 @@
 [ext_resource path="res://assets/textures/grass_normal.png" type="Texture" id=2]
 [ext_resource path="res://assets/textures/grass_albedo_greyish.png" type="Texture" id=3]
 [ext_resource path="res://assets/shaders/foliage_wind_grass.gdshader" type="Shader" id=4]
-[ext_resource path="res://scenes/grass.gd" type="Script" id=5]
+[ext_resource path="res://logic/grass.gd" type="Script" id=5]
+
 
 [sub_resource type="OpenSimplexNoise" id=14]
 

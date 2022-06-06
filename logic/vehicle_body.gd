@@ -847,6 +847,7 @@ func _on_CheckSkidTimer_timeout():
 	if skidding == true:
 		if $Effects/Audio/SkidSound.playing == false:
 			$Effects/Audio/SkidSound.playing = true
+			$Effects/Audio/SkidSound.pitch_scale = 0.5+(abs(fwd_mps)/100.0)
 			$Effects/Audio/SkidSound.play(8.21)
 		elif $Effects/Audio/SkidSound.playing == true:
 			if $Effects/Audio/SkidSound.get_playback_position() > 9.75:

@@ -2,12 +2,12 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/Super Game Music - Gnarly Adventures (Demo).mp3-7615caae0b8f9f104e96b870e2594cf9.mp3str"
+path="res://.import/Super Game Music - Gnarly Adventures (Demo).mp3-01405367932fd83f74aea3d4e4c6cca6.mp3str"
 
 [deps]
 
-source_file="res://assets/audio/music/background/Super Game Music - Gnarly Adventures (Demo).mp3"
-dest_files=[ "res://.import/Super Game Music - Gnarly Adventures (Demo).mp3-7615caae0b8f9f104e96b870e2594cf9.mp3str" ]
+source_file="res://assets/Audio/music/background/Super Game Music - Gnarly Adventures (Demo).mp3"
+dest_files=[ "res://.import/Super Game Music - Gnarly Adventures (Demo).mp3-01405367932fd83f74aea3d4e4c6cca6.mp3str" ]
 
 [params]
 

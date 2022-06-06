@@ -9,11 +9,6 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "",
-"class": "GitAPI",
-"language": "NativeScript",
-"path": "res://addons/godot-git-plugin/git_api.gdns"
-}, {
 "base": "Resource",
 "class": "ImageDataReource",
 "language": "GDScript",
@@ -45,7 +40,6 @@ _global_script_classes=[ {
 "path": "res://addons/lod/lod_spot_light.gd"
 } ]
 _global_script_class_icons={
-"GitAPI": "",
 "ImageDataReource": "",
 "LODCPUParticles": "res://addons/lod/lod_cpu_particles.svg",
 "LODOmniLight": "res://addons/lod/lod_omni_light.svg",
@@ -91,7 +85,7 @@ enabled=PoolStringArray( "res://addons/lod/plugin.cfg" )
 
 [gdnative]
 
-singletons=[ "res://addons/godot-git-plugin/git_api.gdnlib" ]
+singletons=[  ]
 
 [global]
 

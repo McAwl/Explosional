@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/181161__martian__motorbike-hornet-600-onboard-clip-0005-n3-f.wav-d62f6ed665d1cc43025af67830c7db0f.sample"
+path="res://.import/181161__martian__motorbike-hornet-600-onboard-clip-0005-n3-f.wav-49dad304be2428cd8cd5742dd1ab23d8.sample"
 
 [deps]
 
-source_file="res://assets/audio/sounds/181161__martian__motorbike-hornet-600-onboard-clip-0005-n3-f.wav"
-dest_files=[ "res://.import/181161__martian__motorbike-hornet-600-onboard-clip-0005-n3-f.wav-d62f6ed665d1cc43025af67830c7db0f.sample" ]
+source_file="res://assets/Audio/sounds/181161__martian__motorbike-hornet-600-onboard-clip-0005-n3-f.wav"
+dest_files=[ "res://.import/181161__martian__motorbike-hornet-600-onboard-clip-0005-n3-f.wav-49dad304be2428cd8cd5742dd1ab23d8.sample" ]
 
 [params]
 

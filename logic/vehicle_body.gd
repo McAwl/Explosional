@@ -813,3 +813,41 @@ func dying_finished():
 			print("vehicle_state == 'dying' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Effects/Damage/Explosion/AnimationPlayer.current_animation))
 			return true
 	return false
+
+
+# Dynamically adjust the grip depending on speed
+# This means vehicles can more easily climb walls, but not roll at higher speed
+func _on_DynamicGripTimer_timeout():
+	if ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["all_wheel_drive"] == true:
+		for wh in get_children():
+			if wh is VehicleWheel:
+				if abs(fwd_mps) < 1.0:
+					wh.wheel_friction_slip = 1000.0  # 0 is no grip, 1 is normal, any higher caused rolling at higher speeds
+				elif abs(fwd_mps) < 2.0:
+					wh.wheel_friction_slip = 100.0
+				elif abs(fwd_mps) < 5.0:
+					wh.wheel_friction_slip = 10.0
+				elif abs(fwd_mps) < 10.0:
+					wh.wheel_friction_slip = 5.0
+				else:
+					wh.wheel_friction_slip = 1.0
+
+
+func _on_CheckSkidTimer_timeout():
+	
+	if abs(fwd_mps) < 10.0:
+		return
+		
+	var skidding = false
+	for wh in get_children():
+		if wh is VehicleWheel: 
+			if wh.get_skidinfo() < 0.5:
+				skidding = true
+
+	if skidding == true:
+		if $Effects/Audio/SkidSound.playing == false:
+			$Effects/Audio/SkidSound.playing = true
+			$Effects/Audio/SkidSound.play(8.21)
+		elif $Effects/Audio/SkidSound.playing == true:
+			if $Effects/Audio/SkidSound.get_playback_position() > 9.75:
+				$Effects/Audio/SkidSound.play(8.21)

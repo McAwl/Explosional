@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=41 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://logic/vehicle_body.gd" type="Script" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://assets/audio/sounds/371041__morganpurkis__single-gunshot-3.wav" type="AudioStream" id=20]
 [ext_resource path="res://scenes/vehicle_headlight.tscn" type="PackedScene" id=21]
 [ext_resource path="res://scenes/vehicle_taillight.tscn" type="PackedScene" id=22]
+[ext_resource path="res://assets/Audio/sounds/71738__audible-edge__chrysler-lhs-tire-squeal-03-04-25-2009.wav" type="AudioStream" id=23]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
@@ -189,6 +190,9 @@ script = ExtResource( 19 )
 [node name="GunshotSound" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 20 )
 pitch_scale = 0.3
+
+[node name="SkidSound" type="AudioStreamPlayer" parent="Effects/Audio"]
+stream = ExtResource( 23 )
 
 [node name="Shield" type="Spatial" parent="Effects"]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -0.00169557, 0.222867, -0.0955184 )
@@ -1960,3 +1964,13 @@ outer_radius = 0.3
 sides = 16
 ring_sides = 12
 material = ExtResource( 14 )
+
+[node name="DynamicGripTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="CheckSkidTimer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[connection signal="timeout" from="DynamicGripTimer" to="." method="_on_DynamicGripTimer_timeout"]
+[connection signal="timeout" from="CheckSkidTimer" to="." method="_on_CheckSkidTimer_timeout"]

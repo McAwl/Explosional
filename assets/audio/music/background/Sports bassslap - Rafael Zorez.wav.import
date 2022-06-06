@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/Sports bassslap - Rafael Zorez.wav-c90efce591a528751e1fc6d66d3c784e.sample"
+path="res://.import/Sports bassslap - Rafael Zorez.wav-e6e34551c87edc9ac23daf1f41e61925.sample"
 
 [deps]
 
-source_file="res://assets/audio/music/background/Sports bassslap - Rafael Zorez.wav"
-dest_files=[ "res://.import/Sports bassslap - Rafael Zorez.wav-c90efce591a528751e1fc6d66d3c784e.sample" ]
+source_file="res://assets/Audio/music/background/Sports bassslap - Rafael Zorez.wav"
+dest_files=[ "res://.import/Sports bassslap - Rafael Zorez.wav-e6e34551c87edc9ac23daf1f41e61925.sample" ]
 
 [params]
 

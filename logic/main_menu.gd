@@ -12,6 +12,8 @@ var players = {}
 var max_line_length = 12
 var player_selection = -1
 var vehicle_selection = -1
+var next_level_resource
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -101,8 +103,6 @@ func _on_StartButton_button_down():
 	print("start button pressed")
 	$PlayerSelection.show()
 	start_game()
-	#resume()
-	#get_parent().get_parent().get_parent().reset_game()
 
 
 func _on_OptionsButton_button_up():
@@ -130,14 +130,9 @@ func start_game():
 	$LoadingText.show()
 	$MainSelection/MainContainer.hide()
 	$PlayerSelection.hide()
-	#players[1] = {"name": "1", "vehicle": "racer"}
-	#players[2] = {"name": "2", "vehicle": "racer"}
-	#players[3] = {"name": "3", "vehicle": "racer"}
-	#players[4] = {"name": "4", "vehicle": "racer"}
-	# var next_level_resource = load("res://scenes/instructions.tscn")
+	yield(get_tree().create_timer(1),"timeout")
 	var next_level_resource = load("res://scenes/main.tscn")
 	var next_level = next_level_resource.instance()
-	# next_level.players = players
 	StatePlayers.players = players
 	StatePlayers.configure_players()
 	print("players = "+str(players))

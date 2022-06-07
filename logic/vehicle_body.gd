@@ -596,9 +596,7 @@ func add_damage(amount):
 		$Effects/Damage/Flames3D.emitting = true
 	$Effects/Damage/ParticlesSmoke.amount *= 2  # increase engine smoke indicating damage
 	$Effects/Damage/Flames3D.visible = true
-	$Effects/Damage/Flames3D.amount *= 4
-	if $Effects/Damage/Flames3D.amount > 100:
-		$Effects/Damage/Flames3D.amount = 100
+	$Effects/Damage/Flames3D.amount = 1 + int(50*total_damage/max_damage)
 	$Effects/Damage/LightsOnFire/OnFireLight1.light_energy = total_damage/20.0
 	$Effects/Damage/LightsOnFire/OnFireLight2.light_energy = total_damage/20.0
 	$Effects/Damage/LightsOnFire/OnFireLight4.light_energy = total_damage/20.0

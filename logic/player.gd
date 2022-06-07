@@ -228,3 +228,11 @@ func set_label_lives_left():
 func set_global_transform_origin(o):
 	get_vehicle_body().global_transform.origin = o
 
+
+func _on_TimerUpdateSpeedometer_timeout():
+	if get_vehicle_body() == null:
+		return
+	# print("_on_TimerUpdateSpeedometer_timeout()")
+	# 3.6 kilometers per hour equal one meter per second
+	get_canvaslayer().get_node('GridContainer').get_node('Label1').text = "Speed: "+str(int(round(abs(get_vehicle_body().fwd_mps*3.6))))+" km/hr"
+

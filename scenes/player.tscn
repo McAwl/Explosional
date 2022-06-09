@@ -71,32 +71,30 @@ custom_constants/hseparation = 20
 columns = 4
 
 [node name="Label1" type="Label" parent="VC/V/CanvasLayer/GridContainer"]
-margin_right = 139.0
 margin_bottom = 37.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 8 )
-text = "Speed: ?"
 
 [node name="Label2" type="Label" parent="VC/V/CanvasLayer/GridContainer"]
-margin_left = 159.0
-margin_right = 159.0
+margin_left = 20.0
+margin_right = 20.0
 margin_bottom = 37.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 10 )
 
 [node name="Label3" type="Label" parent="VC/V/CanvasLayer/GridContainer"]
-margin_left = 179.0
-margin_right = 179.0
+margin_left = 40.0
+margin_right = 40.0
 margin_bottom = 37.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 10 )
 
 [node name="Label4" type="Label" parent="VC/V/CanvasLayer/GridContainer"]
-margin_left = 199.0
-margin_right = 199.0
+margin_left = 60.0
+margin_right = 60.0
 margin_bottom = 37.0
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 10 )

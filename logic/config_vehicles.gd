@@ -5,6 +5,8 @@ extends Node
 # var a = 2
 # var b = "text"
 
+enum VEHICLE_STATES {ALIVE=0, DYING=1, DEAD=2}
+
 var types = {
 	"Tank":		{"scene": "res://scenes/vehicle_tank.tscn", 
 				"engine_force_value": 100,  # keep this at 1x mass

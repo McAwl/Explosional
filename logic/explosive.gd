@@ -126,7 +126,7 @@ func _process(delta):
 			visible = false
 			# if explosive_proximity_timer_limit < 0.0:
 			#	print("explosive_proximity_timer_limit < 0.0")
-			# print("queue_free: "+str(name))
+			print("Explosive: destroyed using normal queue_free: "+str(name))
 			queue_free()
 
 	if timer_1s < 0.0:
@@ -137,9 +137,10 @@ func _process(delta):
 
 func no_animations_or_sound_playing():
 	# print("explosive_stage ==  "+str(explosive_stage))
-	if $ParticlesExplosion.emitting == true: 
-		# print("$ParticlesExplosion.emitting == true")
-		return false
+	if self.has_node("Explosion"):
+		if $Explosion.effects_finished() == false: 
+			# print("$ParticlesExplosion.emitting == true")
+			return false
 	if $ExplosionSoundMineBomb.playing == true: 
 		# print("$explosion_sound_mine_bomb.playing == true")
 		return false
@@ -148,7 +149,7 @@ func no_animations_or_sound_playing():
 		# print(str($ExplosionNuke/AnimationPlayer.current_animation_position))
 		return false
 	else:
-		# print("no_animations_or_sound_playing(): returned true")
+		print("no_animations_or_sound_playing(): returned true")
 		# print("$ExplosionNuke/AnimationPlayer.current_animation="+str($ExplosionNuke/AnimationPlayer.current_animation))
 		return true
 
@@ -177,14 +178,20 @@ func _physics_process(_delta):
 			$ExplosionNuke/AnimationPlayer.seek(0.0)
 			$ExplosionNuke/ExplosionNukeSound.playing = true
 		elif type == TYPES.MINE:
-			$ParticlesExplosion.global_transform.origin = global_transform.origin
+			var explosion = load("res://scenes/explosion.tscn").instance()
+			explosion.name = "Explosion"
+			self.add_child(explosion)
+			$Explosion.global_transform.origin = global_transform.origin
 			# print("type == TYPES.MINE setting $ParticlesExplosion.emitting = true")
-			$ParticlesExplosion.emitting = true
+			$Explosion.start_effects()
 			$ExplosionSoundMineBomb.playing = true
 		elif type == TYPES.BOMB:
+			var explosion = load("res://scenes/explosion.tscn").instance()
+			explosion.name = "Explosion"
+			self.add_child(explosion)
 			$ExplosionSoundMineBomb.playing = true
 			# print(" type == TYPES.BOMB setting $ParticlesExplosion.emitting = true")
-			$ParticlesExplosion.emitting = true
+			$Explosion.start_effects()
 		var targets = []
 		for target in get_players():  # i in range(1,5): # explosion toward all players
 			var target_body = target.get_vehicle_body()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
@@ -326,3 +333,4 @@ func nuke_meshes(_show):
 	$NukeMeshes/Body.visible = _show
 	$NukeMeshes/Fin1.visible = _show
 	$NukeMeshes/Fin2.visible = _show
+

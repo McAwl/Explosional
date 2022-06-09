@@ -12,12 +12,12 @@ const SCENE = {"mine": "res://scenes/explosive.tscn", \
 			   "ballistic": "res://scenes/missile.tscn"}
 const TARGET_SPEED = {"rocket": 10.0, "missile": 10.0, "ballistic": 20.0}
 const MUZZLE_SPEED = {"rocket": 10.0, "missile": 10.0, "ballistic": 20.0}
-
-var weapon_types = {0: {"name": "mine", "vehicles": ["Racer"]}, \
-					1: {"name": "rocket", "vehicles": ["Racer", "Rally", "Tank"]}, \
-					2: {"name": "missile", "vehicles": ["Rally", "Tank", "Truck"]}, \
-					3: {"name": "nuke", "vehicles": ["Racer", "Rally", "Tank", "Truck"]},
-					4: {"name": "ballistic", "vehicles": ["Tank", "Truck"]}}
+enum WEAPONS {MINE=0, ROCKET=1, MISSILE=2, NUKE=3, BALLISTIC=4}
+var weapon_types = {WEAPONS.MINE: {"name": "mine", "vehicles": ["Racer"]}, \
+					WEAPONS.ROCKET: {"name": "rocket", "vehicles": ["Racer", "Rally", "Tank"]}, \
+					WEAPONS.MISSILE: {"name": "missile", "vehicles": ["Rally", "Tank", "Truck"]}, \
+					WEAPONS.NUKE: {"name": "nuke", "vehicles": []},  # disabled initially, PowerUp enables it ."Racer", "Rally", "Tank", "Truck"]},
+					WEAPONS.BALLISTIC: {"name": "ballistic", "vehicles": ["Tank", "Truck"]}}
 
 
 # Called when the node enters the scene tree for the first time.

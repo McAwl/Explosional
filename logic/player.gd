@@ -38,7 +38,7 @@ func _process(delta):
 		# periodically check for a destroyed vehicle
 		if get_viewport().has_node("vehicle_body"):
 			var vb = get_viewport().get_node("vehicle_body")
-			if vb.vehicle_state == "dead":
+			if vb.vehicle_state == ConfigVehicles.VEHICLE_STATES.DEAD:
 				vb.queue_free()
 		else:
 			if StatePlayers.players[player_number]["lives_left"] > 0:
@@ -234,5 +234,5 @@ func _on_TimerUpdateSpeedometer_timeout():
 		return
 	# print("_on_TimerUpdateSpeedometer_timeout()")
 	# 3.6 kilometers per hour equal one meter per second
-	get_canvaslayer().get_node('GridContainer').get_node('Label1').text = "Speed: "+str(int(round(abs(get_vehicle_body().fwd_mps*3.6))))+" km/hr"
+	get_canvaslayer().get_node('GridContainer').get_node('Label1').text = "%03d km/hr" % int(round(abs(get_vehicle_body().fwd_mps*3.6)))  #+" km/hr"
 

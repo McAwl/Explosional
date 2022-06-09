@@ -6,10 +6,10 @@ var rng = RandomNumberGenerator.new()
 var is_game_paused = false
 var trees = []
 var num_trees = 0
-var num_trees_total = 100
+var num_trees_total = 0  #100
 var grasses = []
 var num_grasses = 0
-var num_grasses_total = 200
+var num_grasses_total = 0  #200
 var ray = load("res://scenes/raycast_procedural_veg.tscn").instance()
 var veg_check_raycast = false
 var last_veg = []
@@ -317,3 +317,21 @@ func air_strike_label():
 func start_timer_slow_motion():
 	
 	$TimerSlowMotion.start()
+
+
+func _on_TimerCheckPowerups_timeout():
+	# print("_on_TimerCheckPowerups_timeout")
+	if not $Platforms/NukeSpawnPoint.has_node("PowerUpNuke") and $Platforms/NukeSpawnPoint/TimerNukePowerUp.is_stopped():
+		# print("setting TimerNukePowerUp")
+		$Platforms/NukeSpawnPoint/TimerNukePowerUp.set_paused(false)
+		$Platforms/NukeSpawnPoint/TimerNukePowerUp.start(10.0)
+		# print("$Platforms/NukeSpawnPoint/TimerNukePowerUp is paused = "+str($Platforms/NukeSpawnPoint/TimerNukePowerUp.is_paused()))
+
+
+func _on_TimerNukePowerUp_timeout():
+	# print("_on_TimerNukePowerUp_timeout")
+	if $Platforms/NukeSpawnPoint/TimerNukePowerUp.is_stopped():
+		var new_nuke_powerup = load("res://scenes/power_up.tscn").instance()
+		new_nuke_powerup.name = "PowerUpNuke"
+		$Platforms/NukeSpawnPoint.add_child(new_nuke_powerup)
+		new_nuke_powerup.get_node("ActivationSound").play()

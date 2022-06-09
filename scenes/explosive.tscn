@@ -1,16 +1,26 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://logic/explosive.gd" type="Script" id=1]
 [ext_resource path="res://assets/audio/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=2]
 [ext_resource path="res://scenes/explosion_nuke.tscn" type="PackedScene" id=3]
 [ext_resource path="res://assets/materials/vehicles/car_blue_body.tres" type="Material" id=4]
 [ext_resource path="res://assets/materials/terrain/cement.tres" type="Material" id=5]
+[ext_resource path="res://scenes/nuke_mesh.tscn" type="PackedScene" id=6]
 
 [sub_resource type="PhysicsMaterial" id=1]
 bounce = 0.18
 
 [sub_resource type="CylinderShape" id=12]
 height = 1.08911
+
+[sub_resource type="CapsuleMesh" id=21]
+
+[sub_resource type="CubeMesh" id=22]
+
+[sub_resource type="CylinderMesh" id=11]
+height = 1.091
+
+[sub_resource type="CubeMesh" id=13]
 
 [sub_resource type="Gradient" id=9]
 offsets = PoolRealArray( 0, 0.477273, 1 )
@@ -39,27 +49,6 @@ vertex_color_use_as_albedo = true
 [sub_resource type="SphereMesh" id=8]
 material = SubResource( 20 )
 
-[sub_resource type="CapsuleMesh" id=21]
-
-[sub_resource type="SpatialMaterial" id=28]
-albedo_color = Color( 0.0431373, 0.368627, 0.109804, 1 )
-metallic = 0.21
-
-[sub_resource type="CubeMesh" id=22]
-
-[sub_resource type="SpatialMaterial" id=29]
-albedo_color = Color( 0.972549, 0.913725, 0.0196078, 1 )
-metallic = 0.4
-
-[sub_resource type="SpatialMaterial" id=30]
-albedo_color = Color( 0.972549, 0.913725, 0.0196078, 1 )
-metallic = 0.4
-
-[sub_resource type="CylinderMesh" id=11]
-height = 1.091
-
-[sub_resource type="CubeMesh" id=13]
-
 [node name="Explosive" type="RigidBody" groups=["bomb"]]
 mass = 20.0
 physics_material_override = SubResource( 1 )
@@ -71,16 +60,6 @@ script = ExtResource( 1 )
 transform = Transform( 0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0 )
 shape = SubResource( 12 )
 
-[node name="ParticlesExplosion" type="Particles" parent="."]
-emitting = false
-amount = 30
-lifetime = 0.26
-one_shot = true
-explosiveness = 0.54
-local_coords = false
-process_material = SubResource( 6 )
-draw_pass_1 = SubResource( 8 )
-
 [node name="ExplosionSoundMineBomb" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 2 )
 volume_db = -6.992
@@ -91,54 +70,31 @@ light_color = Color( 1, 0, 0, 1 )
 spot_range = 150.0
 spot_angle = 11.97
 
-[node name="NukeMeshes" type="Spatial" parent="."]
-
-[node name="Body" type="MeshInstance" parent="NukeMeshes"]
-transform = Transform( 1, 0, 0, 0, -0.0308028, -0.999525, 0, 0.999525, -0.0308028, 0, 1.34651, 0 )
-visible = false
-mesh = SubResource( 21 )
-skeleton = NodePath("../..")
-material/0 = SubResource( 28 )
-
-[node name="Fin1" type="MeshInstance" parent="NukeMeshes"]
-transform = Transform( 0.881522, 0, 0, 0, 0.950328, 0, 0, 0, 0.0227092, 0, 2.55986, 0 )
-visible = false
-mesh = SubResource( 22 )
-skeleton = NodePath("../..")
-material/0 = SubResource( 29 )
-
-[node name="Fin2" type="MeshInstance" parent="NukeMeshes"]
-transform = Transform( -3.85325e-08, 0, -0.0238011, 0, 0.950328, 0, 0.841083, 0, -9.92653e-10, 0, 2.54532, 0 )
-visible = false
-mesh = SubResource( 22 )
-skeleton = NodePath("../..")
-material/0 = SubResource( 30 )
+[node name="NukeMeshes" parent="." instance=ExtResource( 6 )]
 
 [node name="BombMeshes" type="Spatial" parent="."]
 
 [node name="Body" type="MeshInstance" parent="BombMeshes"]
 transform = Transform( 0.291023, 0, 0, 0, -0.00910172, -0.3325, 0, 0.295343, -0.00808462, 0, 0.341193, 0 )
-visible = false
 mesh = SubResource( 21 )
 skeleton = NodePath("../..")
 material/0 = ExtResource( 4 )
 
 [node name="Fin1" type="MeshInstance" parent="BombMeshes"]
 transform = Transform( 0.249905, 0, 0, 0, 0.257885, 0, 0, 0, 0.0271301, 0, 0.880656, 0 )
-visible = false
 mesh = SubResource( 22 )
 skeleton = NodePath("../..")
 material/0 = ExtResource( 4 )
 
 [node name="Fin2" type="MeshInstance" parent="BombMeshes"]
 transform = Transform( -1.09237e-08, 0, -0.0271301, 0, 0.257885, 0, 0.249905, 0, -1.18589e-09, 0, 0.866959, 0 )
-visible = false
 mesh = SubResource( 22 )
 skeleton = NodePath("../..")
 material/0 = ExtResource( 4 )
 
 [node name="MineMeshes" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0483567, 0 )
+visible = false
 
 [node name="Main" type="MeshInstance" parent="MineMeshes"]
 transform = Transform( 0.3, 0, 0, 0, 0.2, 0, 0, 0, 0.3, 0, 0, 0 )
@@ -160,5 +116,17 @@ visible = false
 light_color = Color( 1, 0, 0, 1 )
 
 [node name="ExplosionNuke" parent="." instance=ExtResource( 3 )]
+
+[node name="Node" type="Node" parent="."]
+
+[node name="ParticlesExplosion" type="Particles" parent="Node"]
+emitting = false
+amount = 30
+lifetime = 0.26
+one_shot = true
+explosiveness = 0.54
+local_coords = false
+process_material = SubResource( 6 )
+draw_pass_1 = SubResource( 8 )
 
 [connection signal="body_entered" from="." to="." method="_on_Bomb_body_entered"]

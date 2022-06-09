@@ -1,10 +1,9 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://logic/missile.gd" type="Script" id=1]
 [ext_resource path="res://assets/audio/sounds/591149__mrfossy__mulch-wind-3.wav" type="AudioStream" id=2]
 [ext_resource path="res://assets/materials/vehicles/car_grill.tres" type="Material" id=3]
 [ext_resource path="res://assets/textures/dot.png" type="Texture" id=4]
-[ext_resource path="res://scenes/explosion.tscn" type="PackedScene" id=5]
 [ext_resource path="res://assets/audio/sounds/151858__nhmwretched__missile-firing-fl.mp3" type="AudioStream" id=6]
 
 [sub_resource type="CapsuleShape" id=26]
@@ -103,8 +102,6 @@ cast_to = Vector3( 0, -10, 0 )
 transform = Transform( 0.993015, 0.117986, -0.000685739, 0, -0.00581194, -0.999983, -0.117988, 0.992998, -0.00577134, -0.157368, 0, -0.630978 )
 enabled = true
 cast_to = Vector3( 0, -10, 0 )
-
-[node name="Explosion" parent="." instance=ExtResource( 5 )]
 
 [node name="LaunchSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )

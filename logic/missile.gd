@@ -56,7 +56,10 @@ func _process(delta):
 	
 	if exploded == true or lifetime_seconds < 0.0:
 		
-		if $Explosion.effects_finished() == true:
+		if has_node("Explosion"):
+			if $Explosion.effects_finished() == true:
+				queue_free()
+		else:
 			queue_free()
 	
 	if lifetime_seconds < 0.0 and exploded == false:
@@ -198,6 +201,9 @@ func explode(body=null):  # null if lifetime has expired
 	$ParticlesThrust.visible = false
 	$LaunchSound.playing = false
 	$FlyingSound.playing = false
+	var explosion = load("res://scenes/explosion.tscn").instance()
+	explosion.name = "Explosion"
+	self.add_child(explosion)
 	$Explosion.start_effects()  # start the explosion visual and audio effects
 	$ThrustLight.hide()
 	

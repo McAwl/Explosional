@@ -17,7 +17,8 @@ var accel
 var speed
 var rng = RandomNumberGenerator.new()
 
-var state = 0  # 0=idle, 1=stable, 2=speeding up, 3=slowing down
+enum STATE {IDLE, STABLE, SPEEDING_UP, SLOWING_DOWN}
+var state = STATE.IDLE
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -32,6 +33,7 @@ func _process(delta):
 			timer_0_1s = 0.1
 			current_position_sec = self.get_playback_position()
 			speed = get_parent().get_parent().get_parent().fwd_mps_0_1_ewma
+			pitch_scale = 0.5 + (0.2*((10.0+speed)/10.0))
 			accel = get_parent().get_parent().get_parent().acceleration_fwd_0_1_ewma
 			if current_position_sec < idle[0]:
 				self.play(idle[0])
@@ -44,7 +46,7 @@ func _process(delta):
 							self.play(idle[1])
 						if state != 0:
 							slowly_increase_volume(0.25)
-					state = 0
+					state = STATE.IDLE
 				else:
 					if accel != null:
 						if accel >= 0.01:  # speeding up
@@ -55,28 +57,28 @@ func _process(delta):
 									self.play(increase_speed_2[0])
 								if state != 2:
 									slowly_increase_volume(0.5)
-								state = 2
+								state = STATE.SPEEDING_UP
 						elif accel < -0.01:  # slowing down
 							if current_position_sec < slowing_down[0] or current_position_sec > slowing_down[1]:
 								self.play(slowing_down[0])
 								if state != 3:
 									slowly_increase_volume(0.5)
-							state = 3
+							state = STATE.STABLE
 						else:  # stable speed
 							if current_position_sec < stable_speed[0] or current_position_sec > stable_speed[1]:
 								self.play(stable_speed[0])
 								if state != 1:
 									slowly_increase_volume(0.5)
-							state = 1
+							state = STATE.SLOWING_DOWN
 					else:  # stable speed
 						if current_position_sec < stable_speed[0] or current_position_sec > stable_speed[1]:
 							self.play(stable_speed[0])
 							if state != 1:
 								slowly_increase_volume(0.5)
-						state = 1
+						state = STATE.STABLE
 
 
 func slowly_increase_volume(duration_sec):
-	$Tween.interpolate_property(self, "volume_db", 0.0, 12.0, duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	$Tween.interpolate_property(self, "volume_db", 0.0, 6.0, duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	$Tween.start()
 	

@@ -1,10 +1,119 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://assets/textures/PNG/Black smoke/blackSmoke00.png" type="Texture" id=1]
 [ext_resource path="res://assets/materials/shockwave.tres" type="Material" id=2]
 [ext_resource path="res://assets/audio/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=3]
 [ext_resource path="res://assets/textures/PNG/Explosion/explosion00.png" type="Texture" id=4]
 [ext_resource path="res://logic/explosion.gd" type="Script" id=5]
+[ext_resource path="res://addons/mrminimal_flipbook_particles/assets/explosions/explosion_01/explosion_01.tscn" type="PackedScene" id=6]
+
+[sub_resource type="Gradient" id=76]
+offsets = PoolRealArray( 0, 0.218978, 0.49635, 0.781022, 1 )
+colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 0.792157, 1, 1, 1, 1, 1, 1, 1, 0.745098, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 76 )
+
+[sub_resource type="Curve" id=77]
+max_value = 100.0
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 97.2287 ), 3.5693, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=71]
+curve = SubResource( 77 )
+
+[sub_resource type="Curve" id=92]
+_data = [ Vector2( 0, 0.534091 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=93]
+curve = SubResource( 92 )
+
+[sub_resource type="ParticlesMaterial" id=78]
+lifetime_randomness = 0.21
+emission_shape = 5
+emission_ring_radius = 2.0
+emission_ring_inner_radius = 0.0
+emission_ring_height = 1.0
+emission_ring_axis = Vector3( 0, 0, 1 )
+direction = Vector3( 0, 0, 0 )
+spread = 180.0
+flatness = 1.0
+gravity = Vector3( 0, 1, 0 )
+initial_velocity = 3.0
+initial_velocity_random = 0.53
+angular_velocity = 50.0
+angular_velocity_random = 0.5
+radial_accel = 1.0
+damping = 2.0
+damping_random = 0.44
+damping_curve = SubResource( 71 )
+scale = 5.0
+scale_curve = SubResource( 93 )
+color = Color( 0.466667, 0.466667, 0.466667, 1 )
+color_ramp = SubResource( 2 )
+
+[sub_resource type="SpatialMaterial" id=4]
+flags_transparent = true
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+params_billboard_mode = 3
+params_billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+albedo_color = Color( 1, 1, 1, 0.490196 )
+albedo_texture = ExtResource( 1 )
+
+[sub_resource type="QuadMesh" id=79]
+material = SubResource( 4 )
+
+[sub_resource type="Gradient" id=94]
+offsets = PoolRealArray( 0, 0.189781, 0.992701, 1 )
+colors = PoolColorArray( 1, 0.938272, 0, 0.168627, 0.584314, 0.545098, 0.109804, 0.145098, 0, 0, 0, 0, 0.234375, 0.215807, 0.194092, 0 )
+
+[sub_resource type="GradientTexture" id=95]
+gradient = SubResource( 94 )
+
+[sub_resource type="Curve" id=99]
+_data = [ Vector2( 0, 0.768229 ), 0.0, 0.26829, 0, 0, Vector2( 0.9875, 0.983422 ), -0.121212, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=100]
+curve = SubResource( 99 )
+
+[sub_resource type="ParticlesMaterial" id=96]
+direction = Vector3( 0, 0, 0 )
+spread = 180.0
+flatness = 0.6
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 3.0
+initial_velocity_random = 0.26
+angular_velocity = 50.0
+damping = 5.0
+scale_curve = SubResource( 100 )
+color_ramp = SubResource( 95 )
+
+[sub_resource type="OpenSimplexNoise" id=101]
+
+[sub_resource type="NoiseTexture" id=102]
+noise = SubResource( 101 )
+
+[sub_resource type="SpatialMaterial" id=97]
+flags_transparent = true
+vertex_color_use_as_albedo = true
+params_blend_mode = 1
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+albedo_color = Color( 1, 1, 1, 0.0588235 )
+emission_enabled = true
+emission = Color( 0.968627, 1, 0, 1 )
+emission_energy = 16.0
+emission_operator = 0
+emission_on_uv2 = false
+emission_texture = SubResource( 102 )
+
+[sub_resource type="SphereMesh" id=98]
+material = SubResource( 97 )
 
 [sub_resource type="Animation" id=82]
 length = 0.001
@@ -33,7 +142,7 @@ tracks/1/keys = {
 "values": [ false ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("Shockwave:scale")
+tracks/2/path = NodePath("old/Shockwave:scale")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -45,7 +154,7 @@ tracks/2/keys = {
 "values": [ Vector3( 1, 1, 1 ) ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("Shockwave/ShockOuter:material:refraction_scale")
+tracks/3/path = NodePath("old/Shockwave/ShockOuter:material:refraction_scale")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/imported = false
@@ -57,7 +166,7 @@ tracks/3/keys = {
 "values": [ 0.05 ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("Shockwave/RisingDust:material:refraction_enabled")
+tracks/4/path = NodePath("old/Shockwave/RisingDust:material:refraction_enabled")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
@@ -69,7 +178,7 @@ tracks/4/keys = {
 "values": [ true ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("Shockwave/RisingDust:material:refraction_scale")
+tracks/5/path = NodePath("old/Shockwave/RisingDust:material:refraction_scale")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
@@ -81,7 +190,7 @@ tracks/5/keys = {
 "values": [ 0.01 ]
 }
 tracks/6/type = "value"
-tracks/6/path = NodePath("Shockwave/RisingDust:material:roughness")
+tracks/6/path = NodePath("old/Shockwave/RisingDust:material:roughness")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/imported = false
@@ -93,7 +202,7 @@ tracks/6/keys = {
 "values": [ 0.05 ]
 }
 tracks/7/type = "value"
-tracks/7/path = NodePath("Shockwave/RisingDust:inner_radius")
+tracks/7/path = NodePath("old/Shockwave/RisingDust:inner_radius")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/imported = false
@@ -105,7 +214,7 @@ tracks/7/keys = {
 "values": [ 2.0 ]
 }
 tracks/8/type = "value"
-tracks/8/path = NodePath("Shockwave/RisingDust:outer_radius")
+tracks/8/path = NodePath("old/Shockwave/RisingDust:outer_radius")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/imported = false
@@ -117,7 +226,7 @@ tracks/8/keys = {
 "values": [ 3.0 ]
 }
 tracks/9/type = "value"
-tracks/9/path = NodePath("Shockwave/ShockInner:scale")
+tracks/9/path = NodePath("old/Shockwave/ShockInner:scale")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
 tracks/9/imported = false
@@ -129,7 +238,7 @@ tracks/9/keys = {
 "values": [ Vector3( 1, 1, 1 ) ]
 }
 tracks/10/type = "value"
-tracks/10/path = NodePath("Shockwave/ShockInner:material:refraction_scale")
+tracks/10/path = NodePath("old/Shockwave/ShockInner:material:refraction_scale")
 tracks/10/interp = 1
 tracks/10/loop_wrap = true
 tracks/10/imported = false
@@ -153,7 +262,7 @@ tracks/11/keys = {
 "values": [ Color( 0.545098, 0.545098, 0.545098, 1 ) ]
 }
 tracks/12/type = "value"
-tracks/12/path = NodePath("Explosion:emitting")
+tracks/12/path = NodePath("old/Explosion:emitting")
 tracks/12/interp = 1
 tracks/12/loop_wrap = true
 tracks/12/imported = false
@@ -218,7 +327,7 @@ tracks/2/keys = {
 "values": [ true, false ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("Shockwave:scale")
+tracks/3/path = NodePath("old/Shockwave:scale")
 tracks/3/interp = 1
 tracks/3/loop_wrap = false
 tracks/3/imported = false
@@ -230,7 +339,7 @@ tracks/3/keys = {
 "values": [ Vector3( 0, 0, 0 ), Vector3( 20, 20, 20 ) ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("Shockwave/ShockOuter:material:refraction_scale")
+tracks/4/path = NodePath("old/Shockwave/ShockOuter:material:refraction_scale")
 tracks/4/interp = 1
 tracks/4/loop_wrap = false
 tracks/4/imported = false
@@ -242,7 +351,7 @@ tracks/4/keys = {
 "values": [ 0.5, 0.1, 0.03, 0.02, 0.014463, 0.0 ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("Shockwave/RisingDust:material:refraction_scale")
+tracks/5/path = NodePath("old/Shockwave/RisingDust:material:refraction_scale")
 tracks/5/interp = 1
 tracks/5/loop_wrap = false
 tracks/5/imported = false
@@ -266,7 +375,7 @@ tracks/6/keys = {
 "values": [ true, false ]
 }
 tracks/7/type = "value"
-tracks/7/path = NodePath("Shockwave/RisingDust:material:roughness")
+tracks/7/path = NodePath("old/Shockwave/RisingDust:material:roughness")
 tracks/7/interp = 1
 tracks/7/loop_wrap = false
 tracks/7/imported = false
@@ -278,7 +387,7 @@ tracks/7/keys = {
 "values": [ 0.5, 0.0 ]
 }
 tracks/8/type = "value"
-tracks/8/path = NodePath("Shockwave/RisingDust:inner_radius")
+tracks/8/path = NodePath("old/Shockwave/RisingDust:inner_radius")
 tracks/8/interp = 1
 tracks/8/loop_wrap = false
 tracks/8/imported = false
@@ -290,7 +399,7 @@ tracks/8/keys = {
 "values": [ 2.0, 3.0 ]
 }
 tracks/9/type = "value"
-tracks/9/path = NodePath("Shockwave/RisingDust:outer_radius")
+tracks/9/path = NodePath("old/Shockwave/RisingDust:outer_radius")
 tracks/9/interp = 1
 tracks/9/loop_wrap = false
 tracks/9/imported = false
@@ -302,7 +411,7 @@ tracks/9/keys = {
 "values": [ 3.0, 3.0 ]
 }
 tracks/10/type = "value"
-tracks/10/path = NodePath("Shockwave/ShockInner:scale")
+tracks/10/path = NodePath("old/Shockwave/ShockInner:scale")
 tracks/10/interp = 1
 tracks/10/loop_wrap = false
 tracks/10/imported = false
@@ -314,7 +423,7 @@ tracks/10/keys = {
 "values": [ Vector3( 0.5, 0.5, 0.5 ), Vector3( 1, 1, 1 ) ]
 }
 tracks/11/type = "value"
-tracks/11/path = NodePath("Shockwave/ShockInner:material:refraction_scale")
+tracks/11/path = NodePath("old/Shockwave/ShockInner:material:refraction_scale")
 tracks/11/interp = 1
 tracks/11/loop_wrap = true
 tracks/11/imported = false
@@ -338,7 +447,7 @@ tracks/12/keys = {
 "values": [ Color( 0.545098, 0.545098, 0.545098, 1 ), Color( 0.545098, 0.545098, 0.545098, 0 ), Color( 0.545098, 0.545098, 0.545098, 0.0926109 ) ]
 }
 tracks/13/type = "value"
-tracks/13/path = NodePath("Explosion:emitting")
+tracks/13/path = NodePath("old/Explosion:emitting")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/imported = false
@@ -374,7 +483,7 @@ tracks/15/keys = {
 "values": [ true, false ]
 }
 tracks/16/type = "value"
-tracks/16/path = NodePath("Shockwave:visible")
+tracks/16/path = NodePath("old/Shockwave:visible")
 tracks/16/interp = 1
 tracks/16/loop_wrap = true
 tracks/16/imported = false
@@ -385,65 +494,6 @@ tracks/16/keys = {
 "update": 1,
 "values": [ true, false ]
 }
-
-[sub_resource type="Gradient" id=76]
-offsets = PoolRealArray( 0, 0.218978, 0.49635, 0.781022, 1 )
-colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 0.792157, 1, 1, 1, 1, 1, 1, 1, 0.745098, 1, 1, 1, 0 )
-
-[sub_resource type="GradientTexture" id=2]
-gradient = SubResource( 76 )
-
-[sub_resource type="Curve" id=77]
-max_value = 100.0
-_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 97.2287 ), 3.5693, 0.0, 0, 0 ]
-
-[sub_resource type="CurveTexture" id=71]
-curve = SubResource( 77 )
-
-[sub_resource type="Curve" id=92]
-_data = [ Vector2( 0, 0.534091 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
-
-[sub_resource type="CurveTexture" id=93]
-curve = SubResource( 92 )
-
-[sub_resource type="ParticlesMaterial" id=78]
-lifetime_randomness = 0.21
-emission_shape = 5
-emission_ring_radius = 2.0
-emission_ring_inner_radius = 0.0
-emission_ring_height = 1.0
-emission_ring_axis = Vector3( 0, 0, 1 )
-direction = Vector3( 0, 0, 0 )
-spread = 180.0
-flatness = 1.0
-gravity = Vector3( 0, 1, 0 )
-initial_velocity = 3.0
-initial_velocity_random = 0.53
-angular_velocity = 50.0
-angular_velocity_random = 0.5
-radial_accel = 1.0
-damping = 2.0
-damping_random = 0.44
-damping_curve = SubResource( 71 )
-scale = 5.0
-scale_curve = SubResource( 93 )
-color = Color( 0.466667, 0.466667, 0.466667, 1 )
-color_ramp = SubResource( 2 )
-
-[sub_resource type="SpatialMaterial" id=4]
-flags_transparent = true
-flags_unshaded = true
-vertex_color_use_as_albedo = true
-params_billboard_mode = 3
-params_billboard_keep_scale = true
-particles_anim_h_frames = 1
-particles_anim_v_frames = 1
-particles_anim_loop = false
-albedo_color = Color( 1, 1, 1, 0.490196 )
-albedo_texture = ExtResource( 1 )
-
-[sub_resource type="QuadMesh" id=79]
-material = SubResource( 4 )
 
 [sub_resource type="ParticlesMaterial" id=80]
 direction = Vector3( 0, 1, 0 )
@@ -466,25 +516,6 @@ emission_on_uv2 = false
 
 [sub_resource type="SphereMesh" id=81]
 material = SubResource( 75 )
-
-[sub_resource type="OpenSimplexNoise" id=84]
-
-[sub_resource type="NoiseTexture" id=15]
-noise = SubResource( 84 )
-
-[sub_resource type="SpatialMaterial" id=85]
-flags_transparent = true
-vertex_color_use_as_albedo = true
-albedo_color = Color( 0.984314, 0.772549, 0.494118, 0.168627 )
-metallic_specular = 0.0
-roughness = 0.05
-roughness_texture = SubResource( 15 )
-clearcoat_enabled = true
-clearcoat = 1.0
-clearcoat_gloss = 0.5
-refraction_enabled = true
-refraction_scale = 0.01
-refraction_texture_channel = 0
 
 [sub_resource type="Gradient" id=86]
 offsets = PoolRealArray( 0, 0.477273, 1 )
@@ -525,61 +556,39 @@ albedo_texture = ExtResource( 4 )
 [sub_resource type="QuadMesh" id=91]
 material = SubResource( 90 )
 
-[sub_resource type="Gradient" id=94]
-offsets = PoolRealArray( 0, 0.189781, 0.992701, 1 )
-colors = PoolColorArray( 1, 0.938272, 0, 0.168627, 0.584314, 0.545098, 0.109804, 0.145098, 0, 0, 0, 0, 0.234375, 0.215807, 0.194092, 0 )
+[sub_resource type="OpenSimplexNoise" id=84]
 
-[sub_resource type="GradientTexture" id=95]
-gradient = SubResource( 94 )
+[sub_resource type="NoiseTexture" id=15]
+noise = SubResource( 84 )
 
-[sub_resource type="Curve" id=99]
-_data = [ Vector2( 0, 0.768229 ), 0.0, 0.26829, 0, 0, Vector2( 0.9875, 0.983422 ), -0.121212, 0.0, 0, 0 ]
-
-[sub_resource type="CurveTexture" id=100]
-curve = SubResource( 99 )
-
-[sub_resource type="ParticlesMaterial" id=96]
-direction = Vector3( 0, 0, 0 )
-spread = 180.0
-flatness = 0.6
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 3.0
-initial_velocity_random = 0.26
-angular_velocity = 50.0
-damping = 5.0
-scale_curve = SubResource( 100 )
-color_ramp = SubResource( 95 )
-
-[sub_resource type="OpenSimplexNoise" id=101]
-
-[sub_resource type="NoiseTexture" id=102]
-noise = SubResource( 101 )
-
-[sub_resource type="SpatialMaterial" id=97]
+[sub_resource type="SpatialMaterial" id=85]
 flags_transparent = true
 vertex_color_use_as_albedo = true
-params_blend_mode = 1
-params_billboard_mode = 3
-particles_anim_h_frames = 1
-particles_anim_v_frames = 1
-particles_anim_loop = false
-albedo_color = Color( 1, 1, 1, 0.0588235 )
-emission_enabled = true
-emission = Color( 0.968627, 1, 0, 1 )
-emission_energy = 16.0
-emission_operator = 0
-emission_on_uv2 = false
-emission_texture = SubResource( 102 )
-
-[sub_resource type="SphereMesh" id=98]
-material = SubResource( 97 )
+albedo_color = Color( 0.984314, 0.772549, 0.494118, 0.168627 )
+metallic_specular = 0.0
+roughness = 0.05
+roughness_texture = SubResource( 15 )
+clearcoat_enabled = true
+clearcoat = 1.0
+clearcoat_gloss = 0.5
+refraction_enabled = true
+refraction_scale = 0.01
+refraction_texture_channel = 0
 
 [node name="Explosion" type="Spatial"]
 script = ExtResource( 5 )
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/RESET = SubResource( 82 )
-anims/explosion = SubResource( 83 )
+[node name="LightBlast" type="OmniLight" parent="."]
+light_color = Color( 0.992157, 1, 0, 1 )
+light_energy = 10.0
+shadow_enabled = true
+omni_range = 22.871
+
+[node name="ExplosionSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+
+[node name="Explosion_01" parent="." instance=ExtResource( 6 )]
+transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 1.09287, 1.22751 )
 
 [node name="Smoke" type="Particles" parent="."]
 emitting = false
@@ -592,7 +601,24 @@ local_coords = false
 process_material = SubResource( 78 )
 draw_pass_1 = SubResource( 79 )
 
-[node name="Sparks" type="Particles" parent="."]
+[node name="old" type="Node" parent="."]
+
+[node name="ParticlesEmittingSpheres" type="Particles" parent="old"]
+emitting = false
+amount = 20
+one_shot = true
+explosiveness = 0.83
+randomness = 0.54
+local_coords = false
+process_material = SubResource( 96 )
+draw_pass_1 = SubResource( 98 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="old"]
+root_node = NodePath("../..")
+anims/RESET = SubResource( 82 )
+anims/explosion = SubResource( 83 )
+
+[node name="Sparks" type="Particles" parent="old"]
 transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0 )
 emitting = false
 amount = 50
@@ -604,35 +630,7 @@ local_coords = false
 process_material = SubResource( 80 )
 draw_pass_1 = SubResource( 81 )
 
-[node name="LightBlast" type="OmniLight" parent="."]
-light_color = Color( 0.992157, 1, 0, 1 )
-light_energy = 10.0
-shadow_enabled = true
-omni_range = 22.871
-
-[node name="Shockwave" type="Spatial" parent="."]
-transform = Transform( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 )
-visible = false
-
-[node name="ShockOuter" type="CSGSphere" parent="Shockwave"]
-visible = false
-radial_segments = 17
-material = ExtResource( 2 )
-
-[node name="ShockInner" type="CSGSphere" parent="Shockwave"]
-visible = false
-operation = 2
-radial_segments = 18
-material = ExtResource( 2 )
-
-[node name="RisingDust" type="CSGTorus" parent="Shockwave"]
-transform = Transform( 0.4, 0, 0, 0, 1, 0, 0, 0, 0.4, 0, -0.0305094, 0 )
-visible = false
-sides = 18
-ring_sides = 8
-material = SubResource( 85 )
-
-[node name="Explosion" type="Particles" parent="."]
+[node name="Explosion" type="Particles" parent="old"]
 emitting = false
 amount = 60
 lifetime = 0.58
@@ -642,15 +640,30 @@ local_coords = false
 process_material = SubResource( 89 )
 draw_pass_1 = SubResource( 91 )
 
-[node name="ExplosionSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 3 )
+[node name="Shockwave" type="Spatial" parent="old"]
+transform = Transform( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 )
 
-[node name="ParticlesEmittingSpheres" type="Particles" parent="."]
-emitting = false
-amount = 20
+[node name="ShockOuter" type="CSGSphere" parent="old/Shockwave"]
+visible = false
+radial_segments = 17
+material = ExtResource( 2 )
+
+[node name="ShockInner" type="CSGSphere" parent="old/Shockwave"]
+visible = false
+operation = 2
+radial_segments = 18
+material = ExtResource( 2 )
+
+[node name="RisingDust" type="CSGTorus" parent="old/Shockwave"]
+transform = Transform( 0.4, 0, 0, 0, 1, 0, 0, 0, 0.4, 0, -0.0305094, 0 )
+visible = false
+sides = 18
+ring_sides = 8
+material = SubResource( 85 )
+
+[node name="TimerFailsafeDestroy" type="Timer" parent="."]
+wait_time = 2.0
 one_shot = true
-explosiveness = 0.83
-randomness = 0.54
-local_coords = false
-process_material = SubResource( 96 )
-draw_pass_1 = SubResource( 98 )
+autostart = true
+
+[connection signal="timeout" from="TimerFailsafeDestroy" to="." method="_on_TimerFailsafeDestroy_timeout"]

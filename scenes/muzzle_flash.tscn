@@ -91,25 +91,30 @@ material/0 = SubResource( 26 )
 
 [node name="muzzle_mesh2" type="MeshInstance" parent="."]
 transform = Transform( 0.351598, 0.355498, 0, -0.355498, 0.351598, 0, 0, 0, 0.5, 0.0705296, -0.0146319, 0 )
+visible = false
 mesh = ExtResource( 4 )
 material/0 = SubResource( 26 )
 
 [node name="muzzle_mesh3" type="MeshInstance" parent="."]
 transform = Transform( -0.282015, 0.412877, 0, -0.412877, -0.282015, 0, 0, 0, 0.5, 0.0506733, -0.0394653, 0 )
+visible = false
 mesh = ExtResource( 4 )
 material/0 = SubResource( 26 )
 
 [node name="muzzle_mesh4" type="MeshInstance" parent="."]
 transform = Transform( -0.0290173, 0.402011, -0.29588, -0.499157, -0.02337, 0.0172003, 2.79397e-09, 0.296379, 0.40269, 0.0705296, -0.0146319, 0.0519256 )
+visible = false
 mesh = ExtResource( 4 )
 material/0 = SubResource( 26 )
 
 [node name="muzzle_mesh5" type="MeshInstance" parent="."]
 transform = Transform( -0.0128222, 0.443515, 0.230499, -0.499157, -0.02337, 0.0172003, 0.0260307, -0.229669, 0.443367, 0.0705296, -0.0146319, -0.0743624 )
+visible = false
 mesh = ExtResource( 4 )
 material/0 = SubResource( 26 )
 
 [node name="muzzle_core" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.262779, 0, 0 )
+visible = false
 mesh = SubResource( 22 )
 material/0 = SubResource( 23 )

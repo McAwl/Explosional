@@ -12,7 +12,6 @@ var players = {}
 var max_line_length = 12
 var player_selection = -1
 var vehicle_selection = -1
-var next_level_resource
 
 
 # Called when the node enters the scene tree for the first time.

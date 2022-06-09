@@ -1,22 +1,18 @@
-[gd_resource type="SpatialMaterial" load_steps=5 format=2]
+[gd_resource type="SpatialMaterial" load_steps=3 format=2]
 
 [sub_resource type="OpenSimplexNoise" id=1]
 
 [sub_resource type="NoiseTexture" id=2]
+seamless = true
 noise = SubResource( 1 )
-
-[sub_resource type="OpenSimplexNoise" id=3]
-
-[sub_resource type="NoiseTexture" id=4]
-noise = SubResource( 3 )
 
 [resource]
 flags_transparent = true
 vertex_color_use_as_albedo = true
-albedo_color = Color( 0.482353, 0.647059, 0.407843, 0.415686 )
-roughness = 0.06
-roughness_texture = SubResource( 4 )
-refraction_enabled = true
-refraction_scale = 0.03
-refraction_texture = SubResource( 2 )
-refraction_texture_channel = 0
+albedo_color = Color( 0.980392, 1, 0, 0.00392157 )
+albedo_texture = SubResource( 2 )
+emission_enabled = true
+emission = Color( 1, 1, 0, 1 )
+emission_energy = 16.0
+emission_operator = 0
+emission_on_uv2 = false

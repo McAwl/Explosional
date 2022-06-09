@@ -1,10 +1,13 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://logic/power_up.gd" type="Script" id=1]
 [ext_resource path="res://scenes/nuke_mesh.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/Audio/sounds/220173__gameaudio__spacey-1up-power-up.wav" type="AudioStream" id=3]
+[ext_resource path="res://assets/Materials/shield.tres" type="Material" id=4]
 
 [sub_resource type="SphereShape" id=3]
+
+[sub_resource type="SphereMesh" id=4]
 
 [node name="PowerUp" type="Spatial"]
 script = ExtResource( 1 )
@@ -23,6 +26,11 @@ transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, -0.155961, 0 )
 [node name="CollisionShape" type="CollisionShape" parent="Meshes/Nuke/Area"]
 transform = Transform( 0.715003, 0, 0, 0, 0.479803, 0, 0, 0, 0.682142, 0, 0.445711, 0 )
 shape = SubResource( 3 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Meshes/Nuke/Area"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.369303, 0 )
+mesh = SubResource( 4 )
+material/0 = ExtResource( 4 )
 
 [node name="Lights" type="Spatial" parent="."]
 

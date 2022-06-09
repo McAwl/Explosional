@@ -735,7 +735,8 @@ func start_vehicle_dying():
 			ch.playing = false
 		
 		$Effects/Audio/CrashSound.playing = true
-		$Effects/Damage/Explosion.start_effects()  # /AnimationPlayer.play("explosion")
+		if $Effects/Damage.has_node("Explosion"):
+			$Effects/Damage/Explosion.start_effects()  # /AnimationPlayer.play("explosion")
 		
 		remove_nodes_for_dying()
 		

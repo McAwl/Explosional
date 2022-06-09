@@ -315,7 +315,6 @@ func air_strike_label():
 
 
 func start_timer_slow_motion():
-	
 	$TimerSlowMotion.start()
 
 

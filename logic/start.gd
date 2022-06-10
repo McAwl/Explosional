@@ -1,7 +1,7 @@
 extends Node
 
-var players = {}
-var max_line_length = 12
+var players: Dictionary = {}
+var max_line_length: int = 12
 
 
 # Called when the node enters the scene tree for the first time.
@@ -9,7 +9,7 @@ func _ready():
 	pass
 
 
-func enable_name_textedit(player_num, player_linedit):
+func enable_name_textedit(player_num, player_linedit) -> void:
 	get_node("Player"+str(player_num)+"Name").editable = true
 	player_linedit.grab_focus()
 	# print("Player "+str(player_linedit.name)+": is_virtual_keyboard_enabled()="+str($player_linedit.is_virtual_keyboard_enabled()))

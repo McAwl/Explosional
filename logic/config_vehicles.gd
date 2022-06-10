@@ -7,7 +7,7 @@ extends Node
 
 enum VEHICLE_STATES {ALIVE=0, DYING=1, DEAD=2}
 
-var types = {
+var types: Dictionary = {
 	"Tank":		{"scene": "res://scenes/vehicle_tank.tscn", 
 				"engine_force_value": 100,  # keep this at 1x mass
 				"mass_kg/100": 100.0, 

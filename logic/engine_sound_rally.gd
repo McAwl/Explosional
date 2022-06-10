@@ -1,21 +1,21 @@
 extends AudioStreamPlayer
 
-var timer_0_1s = 0.1
+var timer_0_1s: float = 0.1
 
 # Define periods in the audio where specific events happen
-export var gear_change_1 = [15.03, 15.46]
-export var gear_change_2 = [45.6, 47.3]
-export var increase_speed_1 = [16.1, 17.9]
-export var increase_speed_2 = [10.8, 18.4]
-export var slowing_down = [28.0, 36.0]
-export var stable_speed = [87.0, 89.0]
-export var idle = [4.5, 6.9, 10.0]  # min / [medium spots] / max
+export var gear_change_1: Array = [15.03, 15.46]
+export var gear_change_2: Array = [45.6, 47.3]
+export var increase_speed_1: Array = [16.1, 17.9]
+export var increase_speed_2: Array = [10.8, 18.4]
+export var slowing_down: Array = [28.0, 36.0]
+export var stable_speed: Array = [87.0, 89.0]
+export var idle: Array = [4.5, 6.9, 10.0]  # min / [medium spots] / max
 
 var current_position_sec
 
-var accel
-var speed
-var rng = RandomNumberGenerator.new()
+var accel: float
+var speed: float
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 enum STATE {IDLE, STABLE, SPEEDING_UP, SLOWING_DOWN}
 var state = STATE.IDLE
@@ -78,7 +78,7 @@ func _process(delta):
 						state = STATE.STABLE
 
 
-func slowly_increase_volume(duration_sec):
+func slowly_increase_volume(duration_sec) -> void:
 	$Tween.interpolate_property(self, "volume_db", 0.0, 6.0, duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	$Tween.start()
 	

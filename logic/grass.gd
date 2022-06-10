@@ -1,5 +1,5 @@
 extends Spatial
-
+class_name AnimatedGrass
 
 # Declare member variables here. Examples:
 var placed = false

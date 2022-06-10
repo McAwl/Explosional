@@ -6,7 +6,7 @@ extends Node
 # {2: "name": "2", "vehicle": "rally"}, 
 # {3: "name": "3", "vehicle": "tank"}, 
 # {4: "name": "4", "vehicle": "racer"}]
-var players  #  
+var players: Dictionary  #  
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -17,13 +17,13 @@ func _ready():
 #func _process(delta):
 #	pass
 
-func configure_players():
-	print("players="+str(players))
+func configure_players() -> void:
+	# print("players="+str(players))
 	for p in players.keys():
-		print("p="+str(p))
+		# print("p="+str(p))
 		players[p]["lives_left"] = 3
 
 
-func num_players():
+func num_players() -> int:
 	return len(players)
 

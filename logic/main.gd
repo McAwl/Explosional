@@ -1,24 +1,25 @@
 extends Spatial
+class_name MainScene
 
 var town = null
-var timer_1_sec = 1.0
-var rng = RandomNumberGenerator.new()
-var is_game_paused = false
-var trees = []
-var num_trees = 0
-var num_trees_total = 0  #100
-var grasses = []
-var num_grasses = 0
-var num_grasses_total = 0  #200
-var ray = load("res://scenes/raycast_procedural_veg.tscn").instance()
-var veg_check_raycast = false
-var last_veg = []
+var timer_1_sec: float = 1.0
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var is_game_paused: bool = false
+var trees: Array = []
+var num_trees: int = 0
+var num_trees_total: int = 0  #100
+var grasses: Array = []
+var num_grasses: int = 0
+var num_grasses_total: int = 0  #200
+var ray: RayCastProceduralVegetation = load("res://scenes/raycast_procedural_veg.tscn").instance()
+var veg_check_raycast: bool = false
+var last_veg: Array = []
 
-export var air_strike = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
-export var start_clock_hrs = 12.0
-export var test_nuke = false
-export var fake_sun_omni_light = false
-export var test_turn_off_airstrike = false
+export var air_strike: Dictionary = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
+export var start_clock_hrs: float = 12.0
+export var test_nuke: bool = false
+export var fake_sun_omni_light: bool = false
+export var test_turn_off_airstrike: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -43,16 +44,16 @@ func _ready():
 		$DirectionalLightSun.visible = true
 		$Moons/OmniLight.visible = false
 		$DirectionalLightMoon.visible = true
-	var spawn_points = get_spawn_points()
+	var spawn_points: Array = get_spawn_points()
 	for player_number in range(1, StatePlayers.num_players()+1):
-		var player_instance = load("res://scenes/player.tscn").instance()
+		var player_instance: Player = load("res://scenes/player.tscn").instance()
 		add_child(player_instance)
 		player_instance.name = "Player"+StatePlayers.players[player_number]["name"]
-		var pos = spawn_points[player_number-1].global_transform.origin
+		var pos: Vector3 = spawn_points[player_number-1].global_transform.origin
 		player_instance.init(player_number, pos)
 		player_instance.get_vehicle_body().weapons[3].enabled = test_nuke
 		player_instance.get_vehicle_body().weapons[3].test_mode = test_nuke
-	var anim_time = start_clock_hrs + 12.0
+	var anim_time: float = start_clock_hrs + 12.0
 	if anim_time > 24.0:
 		anim_time -= 12.0
 	$DirectionalLightSun/DayNightAnimation.play("daynightcycle")
@@ -62,17 +63,17 @@ func _ready():
 
 	# Add veg instances, but place later in physics as we need raycasts
 	for _nt in range(0, num_trees_total):
-		var tree = load("res://scenes/tree.tscn").instance()
+		var tree: AnimatedTree = load("res://scenes/tree.tscn").instance()
 		$Vegetation/Trees.add_child(tree)
 		trees.append(tree.get_instance_id())
 		
 	for _ng in range(0, num_grasses_total): 
-		var grass = load("res://scenes/grass.tscn").instance()
+		var grass: AnimatedGrass = load("res://scenes/grass.tscn").instance()
 		$Vegetation/Grass.add_child(grass)
 		grasses.append(grass.get_instance_id())
 
 
-func turn_airstrike_on():
+func turn_airstrike_on() -> void:
 	air_strike["on"] = true
 	air_strike["interval_so_far_sec"] = 0.0
 	air_strike["duration_so_far_sec"] = 0.0
@@ -84,7 +85,7 @@ func turn_airstrike_on():
 	$Effects/Siren.playing = true
 
 
-func turn_airstrike_off():
+func turn_airstrike_off() -> void:
 	air_strike["on"] = false
 	air_strike["interval_so_far_sec"] = 0.0
 	air_strike["duration_so_far_sec"] = 0.0
@@ -205,7 +206,7 @@ func _physics_process(_delta):
 				last_veg = []
 
 
-func check_slow_motion():
+func check_slow_motion() -> void:
 	if $TimerSlowMotion.is_stopped():
 		Engine.time_scale = 1.0
 		all_audio_pitch(1.0)
@@ -215,7 +216,7 @@ func check_slow_motion():
 
 
 # move this out of here, and prob use signals
-func update_player_hud():
+func update_player_hud() -> void:
 	for player_src in range(1, StatePlayers.num_players()+1):
 		for player_dst in range(1, StatePlayers.num_players()+1):
 			if player_src != player_dst:
@@ -253,17 +254,17 @@ func update_player_hud():
 				label.visible = false  # don't show own label
 
 
-func check_game_over():
-	var dead_cars = 0
-	var num_cars = 0
+func check_game_over() -> void:
+	var dead_cars: int = 0
+	var num_cars: int = 0
 	for player_number in range(1, StatePlayers.num_players()+1):
 		num_cars += 1
 		if StatePlayers.players[player_number]["lives_left"] < 0:
 			dead_cars += 1
 	if dead_cars >= (num_cars-1) and num_cars>1:
-		var next_level_resource = load("res://scenes/final_score.tscn")
-		var next_level = next_level_resource.instance()
-		var winner_name = ""
+		var next_level_resource: Resource = load("res://scenes/final_score.tscn")
+		var next_level: FinalScore = next_level_resource.instance()
+		var winner_name: String = ""
 		for player_number in range(1, StatePlayers.num_players()+1):
 			if StatePlayers.players[player_number]["lives_left"] >= 0:
 				winner_name = StatePlayers.players[player_number]["name"]  #get_player(player_number).player_name
@@ -271,21 +272,21 @@ func check_game_over():
 		get_tree().root.call_deferred("add_child", next_level)
 
 
-func all_audio_pitch(pitch):
+func all_audio_pitch(pitch) -> void:
 	$Effects/BackgroundMusic.pitch_scale = pitch
 	$Effects/Siren.pitch_scale = pitch
 
 
-func get_spawn_points():
+func get_spawn_points() -> Array:
 	return get_node("SpawnPoints").get_children()
 
 
-func get_random_spawn_point():
+func get_random_spawn_point() -> Spatial:
 	var spawn_points = get_spawn_points()
 	return spawn_points[randi() % spawn_points.size()].global_transform.origin
 	
 	
-func get_players(ignore_player_number=false):
+func get_players(ignore_player_number=false) -> Array:
 	var players_all = get_tree().get_nodes_in_group("player")  # 
 	var players2 = []
 	for player in players_all:  # range(1, num_players+1):
@@ -305,7 +306,7 @@ func get_bombs():
 	return get_tree().get_nodes_in_group("bomb")
 	
 
-func reset_game():
+func reset_game() -> void:
 	queue_free()
 	var _ret_val = get_tree().change_scene("res://scenes/start.tscn")  #get_tree().reload_current_scene()
 
@@ -314,7 +315,7 @@ func air_strike_label():
 	return $VC.get_node("CL/LabelAirStrike")
 
 
-func start_timer_slow_motion():
+func start_timer_slow_motion() -> void:
 	$TimerSlowMotion.start()
 
 

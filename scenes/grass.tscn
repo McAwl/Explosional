@@ -6,7 +6,6 @@
 [ext_resource path="res://assets/shaders/foliage_wind_grass.gdshader" type="Shader" id=4]
 [ext_resource path="res://logic/grass.gd" type="Script" id=5]
 
-
 [sub_resource type="OpenSimplexNoise" id=14]
 
 [sub_resource type="NoiseTexture" id=13]
@@ -28,7 +27,7 @@ shader_param/texture_albedo = ExtResource( 3 )
 shader_param/texture_normal = ExtResource( 2 )
 shader_param/texture_wind_noise = SubResource( 13 )
 
-[node name="Grass" type="Spatial"]
+[node name="AnimatedGrass" type="Spatial"]
 script = ExtResource( 5 )
 
 [node name="MeshInstance1" type="MeshInstance" parent="."]

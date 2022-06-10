@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://logic/vehicle_body.gd" type="Script" id=2]
@@ -56,39 +56,6 @@ albedo_texture = ExtResource( 4 )
 
 [sub_resource type="QuadMesh" id=37]
 material = SubResource( 47 )
-
-[sub_resource type="Gradient" id=39]
-offsets = PoolRealArray( 0.00621118, 0.111801, 0.571429, 1 )
-colors = PoolColorArray( 0.941176, 0.854902, 0.0627451, 0.564706, 0.941176, 0.854902, 0.0627451, 1, 0.933333, 0.858824, 0.0666667, 0, 0.923637, 0.861156, 0.0685512, 0 )
-
-[sub_resource type="GradientTexture" id=48]
-gradient = SubResource( 39 )
-
-[sub_resource type="Curve" id=41]
-_data = [ Vector2( 0, 0 ), 0.0, 0.114502, 0, 0, Vector2( 0.206522, 0.834091 ), 0.69697, 0.69697, 0, 0, Vector2( 0.983696, 0.963636 ), 0.163993, 0.0, 0, 0 ]
-
-[sub_resource type="CurveTexture" id=49]
-curve = SubResource( 41 )
-
-[sub_resource type="ParticlesMaterial" id=43]
-lifetime_randomness = 0.42
-spread = 180.0
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 2.0
-damping = 5.0
-scale = 2.0
-scale_random = 0.67
-scale_curve = SubResource( 49 )
-color = Color( 0.94902, 0.886275, 0.054902, 0.505882 )
-color_ramp = SubResource( 48 )
-
-[sub_resource type="SpatialMaterial" id=50]
-flags_transparent = true
-flags_unshaded = true
-vertex_color_use_as_albedo = true
-
-[sub_resource type="SphereMesh" id=45]
-material = SubResource( 50 )
 
 [sub_resource type="SphereMesh" id=29]
 
@@ -151,23 +118,6 @@ draw_pass_1 = SubResource( 37 )
 
 [node name="Explosion" parent="Effects/Damage" instance=ExtResource( 11 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
-
-[node name="Explosion2" type="Particles" parent="Effects/Damage"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
-emitting = false
-amount = 20
-one_shot = true
-explosiveness = 0.55
-local_coords = false
-process_material = SubResource( 43 )
-draw_pass_1 = SubResource( 45 )
-
-[node name="Explosion2Light" type="OmniLight" parent="Effects/Damage"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
-visible = false
-light_color = Color( 0.937255, 0.819608, 0.0470588, 1 )
-light_energy = 10.0
-omni_range = 50.0
 
 [node name="Audio" type="Spatial" parent="Effects"]
 

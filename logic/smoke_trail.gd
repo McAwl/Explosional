@@ -1,4 +1,5 @@
 extends Particles
+class_name SmokeTrail
 
 
 # Declare member variables here. Examples:

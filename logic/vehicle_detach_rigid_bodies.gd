@@ -2,13 +2,13 @@ extends Spatial
 
 # This script gets attached to an instance of a vehicle mesh instance scene
 
-var apply_forces = false
-var force = 0.1
-var total_mass = 40.0
-var linear_velocity
-var max_lifetime_sec = 60  # sec
-var rng = RandomNumberGenerator.new()
-var global_transform_origin_parent
+var apply_forces: bool = false
+var force: float = 0.1
+var total_mass: float = 40.0
+var linear_velocity: Vector3
+var max_lifetime_sec: float = 60.0  # sec
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var global_transform_origin_parent: Vector3
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -23,11 +23,11 @@ func _process(delta):
 		queue_free()
 
 
-func av_lifetime(_av_lifetime_sec):
+func av_lifetime(_av_lifetime_sec) -> void:
 	pass  # av_lifetime_sec
 
 
-func detach_rigid_bodies(force_, total_mass_, _linear_velocity, _global_transform_origin_parent):
+func detach_rigid_bodies(force_, total_mass_, _linear_velocity, _global_transform_origin_parent) -> void:
 	force = force_
 	total_mass = total_mass_
 	linear_velocity = _linear_velocity
@@ -42,10 +42,10 @@ func _physics_process(_delta):
 		print("_physics_process: apply_forces = true")
 		print("force = "+str(force))
 		# var num_meshes = 0
-		var total_volume = 0
+		var total_volume: float = 0
 		for ch in get_children():
 			if ch is MeshInstance:
-				var mesh_volume = ch.get_aabb().get_area ()
+				var mesh_volume: float = ch.get_aabb().get_area ()
 				total_volume += mesh_volume
 				# print("ch.get_aabb()= "+str(ch.get_aabb())+" mesh_volume = "+str(ch.name)+"="+str(mesh_volume))
 		#print("total_volume="+str(total_volume))
@@ -55,14 +55,14 @@ func _physics_process(_delta):
 				ch.visible = true  # some meshes start off invisible
 				ch.translation = Vector3(0.0, 0.0, 0.0)  # start them all at 0,0,0?
 				# ch.scale = scale*ch.scale  # mesh_instances is scaled, as are some meshes within - so need to apply both
-				var mesh_volume = ch.get_aabb().get_area ()
-				var aabb_size = ch.get_aabb().size
-				var aabb_position = ch.get_aabb().position
-				var aabb_end = ch.get_aabb().end
+				var mesh_volume: float = ch.get_aabb().get_area ()
+				var aabb_size: Vector3 = ch.get_aabb().size
+				var aabb_position: Vector3 = ch.get_aabb().position
+				var aabb_end: Vector3 = ch.get_aabb().end
 				# print("type of mesh piece "+str(ch.type))
 				# var new_exploded_vehicle_part = load("res://scenes/car_rigid_body_part.tscn").instance()
 				# var new_exploded_vehicle_part = RigidBody.new()
-				var new_exploded_vehicle_part = load("res://scenes/exploded_vehicle_part.tscn").instance()
+				var new_exploded_vehicle_part: ExplodedVehiclePart = load("res://scenes/exploded_vehicle_part.tscn").instance()
 				new_exploded_vehicle_part.set_lifetime(max_lifetime_sec)
 				new_exploded_vehicle_part.get_node("SmokeTrail").emitting = true
 				#new_exploded_vehicle_part.get_node("CollisionShape").translation = self.get_node("mesh_instances").translation
@@ -72,7 +72,7 @@ func _physics_process(_delta):
 				self.add_child(new_exploded_vehicle_part)
 				new_exploded_vehicle_part.name = "RigidBody_"+ch.name
 				# var mesh_centre = (aabb_position + aabb_size) / 2.0
-				var mesh_centre = (aabb_position + aabb_end) / 2.0
+				var mesh_centre: Vector3 = (aabb_position + aabb_end) / 2.0
 				
 				# new_exploded_vehicle_part.get_node("CollisionShape").translation = aabb_end
 				new_exploded_vehicle_part.get_node("CollisionShape").scale = ch.scale * aabb_size  # 

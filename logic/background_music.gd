@@ -1,8 +1,8 @@
 extends AudioStreamPlayer
 
-var tracks = []
-var timer_0_5s = 1.0
-var current_track_num
+var tracks: Array = []
+var timer_0_5s: float = 1.0
+var current_track_num: int
 var background_music_folder = "res://assets/audio/music/background"
 
 func _ready():
@@ -48,9 +48,9 @@ func _process(delta):
 			load_new_track()
 
 
-func load_new_track():
+func load_new_track() -> void:
 	if len(tracks) > 0:
-		var old_track_num = current_track_num
+		var old_track_num: int = current_track_num
 		if len(tracks) > 1:  # Randomise the next track
 			for i in [1,2,3,4,5]:  # 5 attempts to change to a different track
 				if current_track_num == old_track_num:

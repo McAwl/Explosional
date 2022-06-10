@@ -22,7 +22,7 @@ func _on_Timer_timeout():
 	change_scene()
 
 
-func change_scene():
+func change_scene() -> void:
 	var next_level_resource = load("res://scenes/main_menu.tscn")
 	var next_level = next_level_resource.instance()
 	next_level.game_active = false

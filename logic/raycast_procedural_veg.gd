@@ -1,8 +1,9 @@
-extends StaticBody
-class_name AnimatedTree
+extends RayCast
+class_name RayCastProceduralVegetation
 
 # Declare member variables here. Examples:
-var placed = false
+# var a = 2
+# var b = "text"
 
 
 # Called when the node enters the scene tree for the first time.

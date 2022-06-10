@@ -5,7 +5,7 @@
 
 [resource]
 shader = ExtResource( 2 )
-shader_param/progress = 0.999
+shader_param/progress = 0.0
 shader_param/frames_per_second = 25.0
 shader_param/rows = 5
 shader_param/columns = 5

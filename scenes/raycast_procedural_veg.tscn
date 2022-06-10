@@ -1,5 +1,8 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://logic/raycast_procedural_veg.gd" type="Script" id=1]
 
 [node name="RayCast" type="RayCast"]
 enabled = true
 cast_to = Vector3( 0, -200, 0 )
+script = ExtResource( 1 )

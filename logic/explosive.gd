@@ -1,4 +1,5 @@
 extends RigidBody
+class_name Explosive
 
 # A class to represent differnet kinds of explosives:
 # 1. A Mine, which explodes when in proximity to a vehicle
@@ -8,39 +9,39 @@ extends RigidBody
 enum TYPES {NOT_SET, MINE, BOMB, NUKE}
 var type = TYPES.NOT_SET
 
-var take_damage = false
-var timer = 1.0
+var take_damage: bool = false
+var timer: float = 1.0
 var explosive_stage = 0  # 0=turned on, 1=inactive waiting for timer to count to 0, 2=active, 3=triggered (car proximity), 4=explode, 5=animation and sound
-var timer_1s = 1.0
-var launched_by_player_number  # record which player number launched this explosive 
+var timer_1s: float = 1.0
+var launched_by_player_number: int  # record which player number launched this explosive 
 var launched_by_player = null
 
 # TODO move to configweapons
 # explosion force = explosion_strength / (explosion_decrease*distance)+1.0 ^ explosion_exponent)
-var explosion_strength = {TYPES.NOT_SET: 0.0, TYPES.MINE: 2500.0, TYPES.BOMB: 5000.0, TYPES.NUKE: 10000.0}
-var explosion_range = {TYPES.NOT_SET: 0.0, TYPES.MINE: 10.0, TYPES.BOMB: 10.0, TYPES.NUKE: 1000.0}
-var explosion_exponent = {TYPES.NOT_SET: 1.5, TYPES.MINE: 1.5, TYPES.BOMB: 1.5, TYPES.NUKE: 1.05}
-var explosion_decrease = {TYPES.NOT_SET: 1.0, TYPES.MINE: 1.0, TYPES.BOMB: 1.0, TYPES.NUKE: 0.05}
+var explosion_strength: Dictionary = {TYPES.NOT_SET: 0.0, TYPES.MINE: 2500.0, TYPES.BOMB: 5000.0, TYPES.NUKE: 10000.0}
+var explosion_range: Dictionary = {TYPES.NOT_SET: 0.0, TYPES.MINE: 10.0, TYPES.BOMB: 10.0, TYPES.NUKE: 1000.0}
+var explosion_exponent: Dictionary = {TYPES.NOT_SET: 1.5, TYPES.MINE: 1.5, TYPES.BOMB: 1.5, TYPES.NUKE: 1.05}
+var explosion_decrease: Dictionary = {TYPES.NOT_SET: 1.0, TYPES.MINE: 1.0, TYPES.BOMB: 1.0, TYPES.NUKE: 0.05}
 
-const EXPLOSIVE_START_WAIT = 3.0  # wait time when first turned on to activation
-const EXPLOSIVE_ACTIVE_WAIT = 1.0
-const EXPLOSIVE_PROXIMITY_DISTANCE = 5.0
-const FLASH_TIMER_WAIT = 0.25
+const EXPLOSIVE_START_WAIT: float = 3.0  # wait time when first turned on to activation
+const EXPLOSIVE_ACTIVE_WAIT: float = 1.0
+const EXPLOSIVE_PROXIMITY_DISTANCE: float = 5.0
+const FLASH_TIMER_WAIT: float = 0.25
 
 var rng = RandomNumberGenerator.new()
 
-var explosive_proximity_check_timer = 1.0
-var explosive_proximity_timer_limit = 20
-var explosive_inactive_timer = 1.0
+var explosive_proximity_check_timer: float = 1.0
+var explosive_proximity_timer_limit: float = 20
+var explosive_inactive_timer: float = 1.0
 
-var material_green
-var material_red
-var material_orange
-var material_black
+var material_green: Material
+var material_red: Material
+var material_orange: Material
+var material_black: Material
 
-var explosive_flash_state = 0
-var flash_timer = 0.25
-var hit_on_contact = false
+var explosive_flash_state: float = 0
+var flash_timer: float = 0.25
+var hit_on_contact: bool = false
 
 
 # Called when the node enters the scene tree for the first time.
@@ -76,7 +77,7 @@ func _process(delta):
 		
 	if explosive_stage == 2:  # active waiting for proximity to car 
 		if explosive_proximity_check_timer <= 0:  # check proximity regularly, not too often
-			for player in get_node("/root/Main").get_players():  # i in range(1, 5):
+			for player in get_node("/root/MainScene").get_players():  # i in range(1, 5):
 				# explosion toward all players
 				var get_vehicle_body = player.get_vehicle_body()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
 				if get_vehicle_body != null:
@@ -135,15 +136,12 @@ func _process(delta):
 			$MineMeshes/OmniLight.visible = !$MineMeshes/OmniLight.visible
 
 
-func no_animations_or_sound_playing():
+func no_animations_or_sound_playing() -> bool:
 	# print("explosive_stage ==  "+str(explosive_stage))
 	if self.has_node("Explosion"):
 		if $Explosion.effects_finished() == false: 
 			# print("$ParticlesExplosion.emitting == true")
 			return false
-	if $ExplosionSoundMineBomb.playing == true: 
-		# print("$explosion_sound_mine_bomb.playing == true")
-		return false
 	if $ExplosionNuke/AnimationPlayer.current_animation == "nuke":
 		# print("$ExplosionNuke/AnimationPlayer.current_animation == nuke")
 		# print(str($ExplosionNuke/AnimationPlayer.current_animation_position))
@@ -155,11 +153,11 @@ func no_animations_or_sound_playing():
 
 
 func get_players():
-	return get_node("/root/Main").get_players()
+	return get_node("/root/MainScene").get_players()
 
 
 func get_bombs():
-	return get_node("/root/Main").get_players()
+	return get_node("/root/MainScene").get_players()
 
 
 func _physics_process(_delta):
@@ -178,18 +176,16 @@ func _physics_process(_delta):
 			$ExplosionNuke/AnimationPlayer.seek(0.0)
 			$ExplosionNuke/ExplosionNukeSound.playing = true
 		elif type == TYPES.MINE:
-			var explosion = load("res://scenes/explosion.tscn").instance()
+			var explosion: Explosion = load("res://scenes/explosion.tscn").instance()
 			explosion.name = "Explosion"
 			self.add_child(explosion)
 			$Explosion.global_transform.origin = global_transform.origin
 			# print("type == TYPES.MINE setting $ParticlesExplosion.emitting = true")
 			$Explosion.start_effects()
-			$ExplosionSoundMineBomb.playing = true
 		elif type == TYPES.BOMB:
-			var explosion = load("res://scenes/explosion.tscn").instance()
+			var explosion: Explosion = load("res://scenes/explosion.tscn").instance()
 			explosion.name = "Explosion"
 			self.add_child(explosion)
-			$ExplosionSoundMineBomb.playing = true
 			# print(" type == TYPES.BOMB setting $ParticlesExplosion.emitting = true")
 			$Explosion.start_effects()
 		var targets = []
@@ -203,7 +199,7 @@ func _physics_process(_delta):
 		for target in targets:
 			var distance = global_transform.origin.distance_to(target.global_transform.origin)
 			#print("target.name="+str(target.name))
-			if distance < explosion_range[type] and "vehicle_body" in target.name:
+			if distance < explosion_range[type] and target is VehicleBody:
 				var direction = target.transform.origin - transform.origin  
 				# direction[2]+=5.0  # slight upward force as well - isn't [1] up/down?
 				# remove downwards force - as vehicles can be blown through the terrain
@@ -219,7 +215,7 @@ func _physics_process(_delta):
 				target.angular_velocity  = Vector3(5.0*randf(),5.0*randf(),5.0*randf())
 				#if target.take_damage == true:
 				#	if type == TYPES.NUKE:
-				#		if target.player_number != launched_by_player_number:
+				#		if target.player_number != var _number:
 				#			target.damage(10)
 				#			# print("target took nuke damage launched_by_player_number "+str(launched_by_player_number))
 				#		# else don't take damage from player that launched it
@@ -239,12 +235,12 @@ func _physics_process(_delta):
 		rotation_degrees = Vector3(0.0, 0.0, 0.0)
 
 
-func material_override(material):
+func material_override(material) -> void:
 	$MineMeshes/Main.material_override = material
 	$MineMeshes/Top.material_override = material
 
 
-func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player_number, _launched_by_player=null):
+func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player_number, _launched_by_player=null) -> void:
 	visible = true
 	global_transform.origin = pos
 	explosive_stage = stage
@@ -258,7 +254,7 @@ func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player
 		angular_velocity = Vector3(0.0, 0.0, 0.0)
 		rotation_degrees = Vector3(0.0, 0.0, 0.0)
 	launched_by_player_number = _launched_by_player_number
-	var player_str = ""
+	var player_str: String = ""
 	if _launched_by_player != null:
 		launched_by_player = _launched_by_player
 		player_str = " (player "+str(launched_by_player.get_player_name())+")"
@@ -273,7 +269,7 @@ func _on_Bomb_body_entered(_body):
 		explosive_stage = 4
 
 
-func set_as_mine():
+func set_as_mine() -> void:
 	# print("set_as_mine()")
 	hit_on_contact = false
 	mine_meshes(true)
@@ -283,7 +279,7 @@ func set_as_mine():
 	$SpotLight.hide()
 
 
-func set_as_bomb():
+func set_as_bomb() -> void:
 	# print("set_as_bomb()")
 	hit_on_contact = true
 	mine_meshes(false)
@@ -294,7 +290,7 @@ func set_as_bomb():
 	$SpotLight.spot_range = 150
 
 
-func set_as_nuke():
+func set_as_nuke() -> void:
 	# print("set_as_nuke()")
 	hit_on_contact = true
 	mine_meshes(false)
@@ -306,29 +302,28 @@ func set_as_nuke():
 	$ExplosionNuke/AnimationPlayer.stop(true)
 
 
-
-func hide_meshinstances():
+func hide_meshinstances() -> void:
 	# print("Hiding all meshinstances in object mine[/bomb/nuke/etc?]")
 	mine_meshes(false)
 	bomb_meshes(false)
 	nuke_meshes(false)
 
 
-func mine_meshes(_show):
+func mine_meshes(_show) -> void:
 	# print("Setting mine meshinstances to "+str(_show))
 	$MineMeshes/Main.visible = _show
 	$MineMeshes/Top.visible = _show
 	$MineMeshes/OmniLight.visible = _show
 
 
-func bomb_meshes(_show):
+func bomb_meshes(_show) -> void:
 	# print("Setting bomb meshinstances to "+str(_show))
 	$BombMeshes/Body.visible = _show
 	$BombMeshes/Fin1.visible = _show
 	$BombMeshes/Fin2.visible = _show
 
 
-func nuke_meshes(_show):
+func nuke_meshes(_show) -> void:
 	# print("Setting nuke meshinstances to "+str(_show))
 	$NukeMeshes/Body.visible = _show
 	$NukeMeshes/Fin1.visible = _show

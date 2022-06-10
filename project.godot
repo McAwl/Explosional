@@ -9,6 +9,36 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Spatial",
+"class": "AnimatedGrass",
+"language": "GDScript",
+"path": "res://logic/grass.gd"
+}, {
+"base": "StaticBody",
+"class": "AnimatedTree",
+"language": "GDScript",
+"path": "res://logic/tree.gd"
+}, {
+"base": "RigidBody",
+"class": "ExplodedVehiclePart",
+"language": "GDScript",
+"path": "res://logic/exploded_vehicle_part.gd"
+}, {
+"base": "Spatial",
+"class": "Explosion",
+"language": "GDScript",
+"path": "res://logic/explosion.gd"
+}, {
+"base": "RigidBody",
+"class": "Explosive",
+"language": "GDScript",
+"path": "res://logic/explosive.gd"
+}, {
+"base": "Node2D",
+"class": "FinalScore",
+"language": "GDScript",
+"path": "res://logic/final_score.gd"
+}, {
 "base": "Resource",
 "class": "ImageDataReource",
 "language": "GDScript",
@@ -38,14 +68,50 @@ _global_script_classes=[ {
 "class": "LODSpotLight",
 "language": "GDScript",
 "path": "res://addons/lod/lod_spot_light.gd"
+}, {
+"base": "Spatial",
+"class": "MainScene",
+"language": "GDScript",
+"path": "res://logic/main.gd"
+}, {
+"base": "Spatial",
+"class": "Player",
+"language": "GDScript",
+"path": "res://logic/player.gd"
+}, {
+"base": "RayCast",
+"class": "RayCastProceduralVegetation",
+"language": "GDScript",
+"path": "res://logic/raycast_procedural_veg.gd"
+}, {
+"base": "Spatial",
+"class": "Shield",
+"language": "GDScript",
+"path": "res://logic/shield.gd"
+}, {
+"base": "Particles",
+"class": "SmokeTrail",
+"language": "GDScript",
+"path": "res://logic/smoke_trail.gd"
 } ]
 _global_script_class_icons={
+"AnimatedGrass": "",
+"AnimatedTree": "",
+"ExplodedVehiclePart": "",
+"Explosion": "",
+"Explosive": "",
+"FinalScore": "",
 "ImageDataReource": "",
 "LODCPUParticles": "res://addons/lod/lod_cpu_particles.svg",
 "LODOmniLight": "res://addons/lod/lod_omni_light.svg",
 "LODParticles": "res://addons/lod/lod_particles.svg",
 "LODSpatial": "res://addons/lod/lod_spatial.svg",
-"LODSpotLight": "res://addons/lod/lod_spot_light.svg"
+"LODSpotLight": "res://addons/lod/lod_spot_light.svg",
+"MainScene": "",
+"Player": "",
+"RayCastProceduralVegetation": "",
+"Shield": "",
+"SmokeTrail": ""
 }
 
 [application]
@@ -66,6 +132,10 @@ config/icon="res://icon.png"
 ConfigVehicles="*res://logic/config_vehicles.gd"
 ConfigWeapons="*res://logic/config_weapons.gd"
 StatePlayers="*res://logic/state_players.gd"
+
+[debug]
+
+gdscript/warnings/treat_warnings_as_errors=true
 
 [display]
 

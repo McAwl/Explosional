@@ -1,27 +1,27 @@
 extends Node
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-var version
-var active = false
-var timer = 0.5
-var game_active = false
-var players = {}
-var max_line_length = 12
-var player_selection = -1
-var vehicle_selection = -1
+var next_level_resource
+
+var version: String
+var active: bool = false
+var timer: float = 0.5
+var game_active: bool = false
+var players: Dictionary = {}
+var max_line_length: int = 12
+var player_selection: int = -1
+var vehicle_selection: String
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	next_level_resource = load("res://scenes/main.tscn")
 	$LoadingText.hide()
 	$OptionMenu.hide()
 	$VersionText.show()
 	var output = []
 	var _os_execute = OS.execute("git", PoolStringArray(["rev-list", "--count", "HEAD"]), true, output)
-	print(str(output))
+	# print(str(output))
 	if output.empty() or output[0].empty():
 		push_error("Failed to fetch version. Make sure you have git installed and project is inside valid git directory.")
 	else:
@@ -34,7 +34,7 @@ func configure():
 	#var apb = $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/AddPlayerButton
 	var qmmb = $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToMainMenuButton
 	$VehicleSelection.hide()
-	print("game_active="+str(game_active))
+	# print("game_active="+str(game_active))
 	if game_active:
 		get_resume_button().show()
 		qmmb.show()
@@ -81,9 +81,9 @@ func resume():
 func _input(event):
 	if active == true and timer <= 0.0:
 		if event is InputEventKey and not event.pressed:  # not pressed=released
-			print("event.scancode="+str(event.scancode))
+			# print("event.scancode="+str(event.scancode))
 			if event.scancode == KEY_ESCAPE or event.scancode == KEY_P:  # if Input.is_action_just_released("pause") or Input.is_action_pressed("back"):
-				print("resuming..")
+				# print("resuming..")
 				resume()
 
 
@@ -130,12 +130,10 @@ func start_game():
 	$MainSelection/MainContainer.hide()
 	$PlayerSelection.hide()
 	yield(get_tree().create_timer(1),"timeout")
-	var next_level_resource = load("res://scenes/main.tscn")
 	var next_level = next_level_resource.instance()
 	StatePlayers.players = players
 	StatePlayers.configure_players()
-	print("players = "+str(players))
-	
+	# print("players = "+str(players))
 	get_tree().root.call_deferred("add_child", next_level)
 	queue_free()
 

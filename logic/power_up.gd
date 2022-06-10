@@ -1,21 +1,20 @@
 extends Spatial
 
-signal power_up
-var activated = false
+var activated: bool = false
 
 func _ready():
 	pass # Replace with function body.
 
 
-func disable():
-	print("disabling NukePowerUp")
+func disable() -> void:
+	# print("disabling NukePowerUp")
 	visible = false
 	$Timer.start()
 	transform.origin.x += 20.0
 
 
 func _on_Timer_timeout():
-	print("Setting NukePowerUp")
+	# print("Setting NukePowerUp")
 	visible = true
 	transform.origin.x -= 20.0
 
@@ -28,7 +27,7 @@ func _process(delta):
 
 
 func _on_Area_body_entered(body):
-	print("_on_Area_body_entered")
+	# print("_on_Area_body_entered")
 	if body is VehicleBody:
 		body.power_up("nuke")
 		activated = true

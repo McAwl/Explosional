@@ -1,25 +1,25 @@
 extends Spatial
 
-var velocity = Vector3.ZERO
-onready var lifetime_seconds = 10.0
-var homing = true
-var homing_check_target_timer = 0.1
-var homing_force = 1.0  # 1.0  # 
-var homing_start_timer = 0.5
-var parent_player_number
-var closest_target
-var closest_target_distance
-var closest_target_direction
-var closest_target_direction_normalised
-var print_timer = 0.1
-var speed_up_down_rate = 0.5  # 1.0
-var explosion_range = 10.0
-var fwd_speed
-var rng = RandomNumberGenerator.new()
-var exploded = false
-var weapon_type  
-var weapon_type_name  
-var flicker_thrust_timer = 0.1
+var velocity: Vector3 = Vector3.ZERO
+onready var lifetime_seconds: float = 10.0
+var homing: bool = true
+var homing_check_target_timer: float = 0.1
+var homing_force: float = 1.0  # 1.0  # 
+var homing_start_timer: float = 0.5
+var parent_player_number: int
+var closest_target: VehicleBody
+var closest_target_distance: float
+var closest_target_direction: Vector3
+var closest_target_direction_normalised: Vector3
+var print_timer: float = 0.1
+var speed_up_down_rate: float = 0.5  # 1.0
+var explosion_range: float = 10.0
+var fwd_speed: float
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var exploded: bool = false
+var weapon_type: int  
+var weapon_type_name: String  
+var flicker_thrust_timer: float = 0.1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -27,7 +27,7 @@ func _ready():
 	$Body/MeshInstance.visible = true
 
 
-func muzzle_speed():
+func muzzle_speed() -> float:
 	return ConfigWeapons.MUZZLE_SPEED[weapon_type_name]
 
 
@@ -85,7 +85,7 @@ func _physics_process(delta):
 				# redirect the missile towards the target
 				# velocity = velocity.linear_interpolate(closest_target_direction, delta*homing_force)
 				# Vary the homing strength by distance
-				var homing_force_adjusted
+				var homing_force_adjusted: float = homing_force
 				if closest_target_distance > 200.0:
 					 homing_force_adjusted = homing_force/10.0
 					 speed_up_down_rate = 0.5
@@ -158,7 +158,7 @@ func _physics_process(delta):
 				for player in get_node("/root/Main").get_players():  # in range(1, 5): # explosion toward all players
 					#if i != parent_player_number:
 					if player.player_number != parent_player_number:
-						var target = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+						var target: VehicleBody = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 						#var target = get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 						if target != null:  # it might have exploded already, leaving no body
 							var distance = global_transform.origin.distance_to(target.global_transform.origin)
@@ -169,7 +169,7 @@ func _physics_process(delta):
 								closest_target_direction_normalised = closest_target_direction.normalized()
 
 
-func add_random_movement(strength):
+func add_random_movement(strength) -> void:
 	# steer left/right a bit
 	velocity += transform.basis.x * rng.randfn(0.0, strength)
 	
@@ -178,7 +178,7 @@ func add_random_movement(strength):
 		velocity += transform.basis.y * rng.randfn(0.0, strength)
 
 
-func activate(_parent_player_number, _homing):
+func activate(_parent_player_number, _homing) -> void:
 	homing = _homing
 	parent_player_number = _parent_player_number
 	if weapon_type == 1 or weapon_type == 2:  # rocket or missile
@@ -194,14 +194,14 @@ func _on_Body_body_entered(body):
 		explode(body)
 
 
-func explode(body=null):  # null if lifetime has expired
+func explode(body=null) -> void:  # null if lifetime has expired
 	print("Missile hit something...")
 	exploded = true
 	$Body.queue_free()  # remove the body - it's destroyed
 	$ParticlesThrust.visible = false
 	$LaunchSound.playing = false
 	$FlyingSound.playing = false
-	var explosion = load("res://scenes/explosion.tscn").instance()
+	var explosion: Explosion = load("res://scenes/explosion.tscn").instance()
 	explosion.name = "Explosion"
 	self.add_child(explosion)
 	$Explosion.start_effects()  # start the explosion visual and audio effects
@@ -218,11 +218,11 @@ func explode(body=null):  # null if lifetime has expired
 			body.hit_by_missile["direct_hit"] = true
 
 	# regardless of what it hit, calc indirect damage to vehicle nearby, except for the one hit directly
-	for player in get_node("/root/Main").get_players():  # in range(1, 5): # explosion toward all players
-		var target = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+	for player in get_node("/root/MainScene").get_players():  # in range(1, 5): # explosion toward all players
+		var target: VehicleBody = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 		#var target = get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
-		var direction = global_transform.origin - target.global_transform.origin
-		var distance = global_transform.origin.distance_to(target.global_transform.origin)
+		var direction: Vector3 = global_transform.origin - target.global_transform.origin
+		var distance: float = global_transform.origin.distance_to(target.global_transform.origin)
 		if distance < explosion_range and target != body:
 			# print("Missile hit "+str(body.name))
 			target.hit_by_missile["active"] = true
@@ -233,16 +233,16 @@ func explode(body=null):  # null if lifetime has expired
 			target.hit_by_missile["distance"] = distance
 
 
-func set_linear_velocity(_linear_velocity):
+func set_linear_velocity(_linear_velocity) -> void:
 	$Body.linear_velocity = _linear_velocity
 
 
-func set_angular_velocity(_angular_velocity):
+func set_angular_velocity(_angular_velocity) -> void:
 	$Body.angular_velocity = _angular_velocity
 
 
-func flicker_thrust_light():
-	var rn = rng.randf()
+func flicker_thrust_light() -> void:
+	var rn: float = rng.randf()
 	if exploded == false:
 		# change tint to various kinds of orange
 		if rn < 0.33:

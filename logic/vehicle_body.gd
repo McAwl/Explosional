@@ -1,67 +1,67 @@
 extends VehicleBody
 
 
-const STEER_SPEED = 1.5
-const STEER_LIMIT = 0.6 #0.4
-const EXPLOSION_STRENGTH = 50.0
-const ENGINE_FORCE_VALUE_DEFAULT = 80
-const script_vehicle_detach_rigid_bodies = preload("res://logic/vehicle_detach_rigid_bodies.gd")
+const STEER_SPEED: float = 1.5
+const STEER_LIMIT: float = 0.6 #0.4
+const EXPLOSION_STRENGTH: float = 50.0
+const ENGINE_FORCE_VALUE_DEFAULT: int = 80
+const SCRIPT_VEHICLE_DETACH_RIGID_BODIES = preload("res://logic/vehicle_detach_rigid_bodies.gd")
 
-var steer_target = 0
+var steer_target: float = 0
 
-var print_timer = 0.0
+var print_timer: float = 0.0
 
 export var engine_force_value = ENGINE_FORCE_VALUE_DEFAULT  #40
-var engine_force_ewma
-var player_number
-var camera
-export var speed = 0.0
-var speed_low_limit = 5
-var rng = RandomNumberGenerator.new()
+var engine_force_ewma: float
+var player_number: int
+var camera: Camera
+export var speed: float = 0.0
+var speed_low_limit: float = 5.0
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
-var cooldown_timer = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["mine"]
-var timer_0_1_sec = 0.1
-var timer_1_sec = 1.0  # timer to eg: check if car needs to turn light on 
-var timer_1_sec_physics = 1.0  # to check and correct clipping, etc
-var lifetime_so_far_sec = 0.0  # to eg disable air strikes for a bit after re-spawn
-var hit_by_missile = {"active": false, "homing": null, "origin": null, "velocity": null, "direct_hit": null, "distance": null}
-var max_damage = 10.0
-var total_damage = 0.0
-var take_damage = true
-var wheel_positions = []
-var wheels = []
+var cooldown_timer: float = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["mine"]
+var timer_0_1_sec: float = 0.1
+var timer_1_sec: float = 1.0  # timer to eg: check if car needs to turn light on 
+var timer_1_sec_physics: float = 1.0  # to check and correct clipping, etc
+var lifetime_so_far_sec: float = 0.0  # to eg disable air strikes for a bit after re-spawn
+var hit_by_missile: Dictionary = {"active": false, "homing": null, "origin": null, "velocity": null, "direct_hit": null, "distance": null}
+var max_damage: float = 10.0
+var total_damage: float = 0.0
+var take_damage: bool = true
+var wheel_positions: Array = []
+var wheels: Array = []
 # this is changingstate info, see config_weapons.gd for constants
-var weapons = {ConfigWeapons.WEAPONS.MINE: {"name": "mine", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["mine"], "enabled": true}, \
+var weapons: Dictionary = {ConfigWeapons.WEAPONS.MINE: {"name": "mine", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["mine"], "enabled": true}, \
 			   ConfigWeapons.WEAPONS.ROCKET: {"name": "rocket", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["rocket"], "enabled": true}, \
 			   ConfigWeapons.WEAPONS.MISSILE: {"name": "missile", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["missile"], "enabled": true}, \
 			   ConfigWeapons.WEAPONS.NUKE: {"name": "nuke", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["nuke"], "enabled": false, "test_mode": false},
 			   ConfigWeapons.WEAPONS.BALLISTIC: {"name": "ballistic", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["ballistic"], "enabled": true}}
-var weapon_select = ConfigWeapons.WEAPONS.MINE
-var lights_disabled = false
-var acceleration_calc_for_damage = 0.0
-var acceleration_fwd_0_1_ewma = 0.0
-var acceleration_fwd_0_1 = 0.0
-var vel_max = 0.0
-var check_accel_damage_timer = 3.0
-var accel_damage_threshold = 50.0
-var fwd_mps = 0.0
-var old_fwd_mps_0_1 = 0.0
-var fwd_mps_0_1_ewma = 0.0
-var fwd_mps_0_1 = 0.0
-var explosion2_timer = 0.2
-var knock_back_firing_ballistic = false  # knock the vehicle backwards when firing a ballistic weapons
-var vehicle_state = ConfigVehicles.VEHICLE_STATES.ALIVE 
-var set_pos = false
-var pos
+var weapon_select: int = ConfigWeapons.WEAPONS.MINE
+var lights_disabled: bool = false
+var acceleration_calc_for_damage: float = 0.0
+var acceleration_fwd_0_1_ewma: float = 0.0
+var acceleration_fwd_0_1: float = 0.0
+var vel_max: float = 0.0
+var check_accel_damage_timer: float = 3.0
+var accel_damage_threshold: float = 50.0
+var fwd_mps: float = 0.0
+var old_fwd_mps_0_1: float = 0.0
+var fwd_mps_0_1_ewma: float = 0.0
+var fwd_mps_0_1: float = 0.0
+var explosion2_timer: float = 0.2
+var knock_back_firing_ballistic: bool = false  # knock the vehicle backwards when firing a ballistic weapons
+var vehicle_state: int = ConfigVehicles.VEHICLE_STATES.ALIVE 
+var set_pos: bool = false
+var pos: Vector3
 
 
 func _ready():
 	pass
 
 
-func init(_pos=null, _player_number=null, _name=null):
+func init(_pos=null, _player_number=null, _name=null) -> bool:
 	
-	print("VehicleBody:init()")
+	#print("VehicleBody:init()")
 	
 	lifetime_so_far_sec = 0.0
 	vehicle_state = ConfigVehicles.VEHICLE_STATES.ALIVE
@@ -74,9 +74,9 @@ func init(_pos=null, _player_number=null, _name=null):
 		name = _name
 	
 	pos = _pos
-	print("VehicleBody() init: StatePlayers.num_players()="+str(StatePlayers.num_players()))
+	#print("VehicleBody() init: StatePlayers.num_players()="+str(StatePlayers.num_players()))
 	
-	print("vehicle="+str(StatePlayers.players[player_number]["vehicle"]))
+	#print("vehicle="+str(StatePlayers.players[player_number]["vehicle"]))
 	# Depending on vehicle type, we look for its nodes
 	var vehicle_type_node = $VehicleTypes.get_node(str(StatePlayers.players[player_number]["vehicle"]))
 	if vehicle_type_node == null:
@@ -88,7 +88,7 @@ func init(_pos=null, _player_number=null, _name=null):
 			vehicle_type_node.remove_child(ch)
 			if ch.name == "CameraBasesTargets":
 				# print("ctm="+str(ctm))
-				print("ch="+str(ch))
+				#print("ch="+str(ch))
 				$CameraBase.add_child(ch)
 			else:
 				add_child(ch)
@@ -107,7 +107,7 @@ func init(_pos=null, _player_number=null, _name=null):
 		get_node("VehicleTypes").queue_free()
 	
 	if not StatePlayers.players[player_number]["vehicle"] in ConfigVehicles.types:
-		print("vehicle_type "+str(StatePlayers.players[player_number]["vehicle"])+" not found")
+		#print("vehicle_type "+str(StatePlayers.players[player_number]["vehicle"])+" not found")
 		return false
 		
 	configure_vehicle_properties()
@@ -121,25 +121,25 @@ func init(_pos=null, _player_number=null, _name=null):
 	return true
 
 
-func configure_weapons():
+func configure_weapons() -> void:
 	for k in ConfigWeapons.weapon_types.keys():
-		print("checking weapon "+str(k))  # 0=mine, etc
+		#print("checking weapon "+str(k))  # 0=mine, etc
 		var vt = StatePlayers.players[player_number]["vehicle"]
 		if vt in ConfigWeapons.weapon_types[k]["vehicles"]:
-			print("vt "+str(vt)+" has weapon "+str(k))
+			#print("vt "+str(vt)+" has weapon "+str(k))
 			weapons[k]["enabled"] = true
 			weapon_select = k
 			set_icon()
 		else:
-			print("vt "+str(vt)+" doesnt have weapon "+str(k))
+			#print("vt "+str(vt)+" doesnt have weapon "+str(k))
 			weapons[k]["enabled"] = false
 
 
-func init_audio_effects():
+func init_audio_effects() -> void:
 	engine_sound_on()
 
 
-func engine_sound_on():
+func engine_sound_on() -> void:
 	match StatePlayers.players[player_number]["vehicle"]:
 		"Racer":
 			$Effects/Audio/EngineSound.playing = false
@@ -158,16 +158,16 @@ func engine_sound_on():
 			$Effects/Audio/EngineSoundRally.playing = true
 
 
-func engine_sound_off():
+func engine_sound_off() -> void:
 	$Effects/Audio/EngineSound.playing = false
 	$Effects/Audio/EngineSoundRally.playing = false
 
 
-func init_camera(_num_players):
+func init_camera(_num_players) -> void:
 	$CameraBase/Camera.number_of_players = StatePlayers.num_players()
 
 
-func init_visual_effects():
+func init_visual_effects() -> void:
 	
 	lights_disabled = false
 	
@@ -181,10 +181,6 @@ func init_visual_effects():
 	$Effects/Damage/LightsOnFire/OnFireLight4.light_energy = 0.0
 	$Effects/Damage/LightsOnFire/OnFireLight5.light_energy = 0.0
 	
-	$Effects/Damage/Explosion2Light.visible = false
-	
-	$Effects/Damage/Explosion.visible = false
-	
 	$Effects/Damage/Flames3D.emitting = false
 	$Effects/Damage/Flames3D.amount = 1
 	$Effects/Damage/Flames3D.visible = false
@@ -194,12 +190,11 @@ func init_visual_effects():
 	$Effects/Shield.visible = false
 
 
-func dying_visual_effects():
+func dying_visual_effects() -> void:
 	init_visual_effects()
-	$Effects/Damage/Explosion2Light.visible = true # exept this one
 
 
-func configure_vehicle_properties():
+func configure_vehicle_properties() -> void:
 	
 	engine_force_value = ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["engine_force_value"]
 	mass = ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"]
@@ -207,7 +202,7 @@ func configure_vehicle_properties():
 	set_wheel_parameters(vts)
 
 
-func set_wheel_parameters(_vts):
+func set_wheel_parameters(_vts) -> void:
 	
 	for wh in get_children():
 		if wh is VehicleWheel:
@@ -238,7 +233,7 @@ func set_wheel_parameters(_vts):
 			get_wheel(4).use_as_traction = false  # rear
 	 
 
-func re_parent_to_main_scene(child):
+func re_parent_to_main_scene(child) -> void:
 	remove_child(child)
 	get_main_scene().call_deferred("add_child", child)
 	print("reparented "+str(child.name))
@@ -248,7 +243,7 @@ func get_main_scene():
 	return get_player().get_parent()
 
 
-func check_lights():
+func check_lights() -> void:
 	if get_main_scene().get_node("DirectionalLightSun").light_energy < 0.3: 
 		# print("turning lights on")
 		lights_on()
@@ -257,7 +252,7 @@ func check_lights():
 		lights_off()
 
 
-func flicker_lights():
+func flicker_lights() -> void:
 	# damaged lights, and also the lights due to damage
 	# small chance of turning off when damaged. slightly bigger chance of turing back on (should flicker)
 	
@@ -282,15 +277,15 @@ func flicker_lights():
 		$Lights/LightFrontRight.spot_range = 100.0
 
 
-func get_raycast(wheel_num):
-	var gw = get_wheel(wheel_num)
+func get_raycast(wheel_num) -> RayCast:
+	var gw: VehicleWheel = get_wheel(wheel_num)
 	if gw != null:
-		return $Raycasts.get_node("RayCastWheel"+str(wheel_num))
+		return $Raycasts.get_node("RayCastWheel"+str(wheel_num)) as RayCast
 	else:
 		return null
 
 
-func check_ongoing_damage():
+func check_ongoing_damage() -> int:
 	if total_damage < max_damage:
 		for raycast in [get_raycast(1), get_raycast(2), get_raycast(3), get_raycast(4), $Raycasts/RayCastCentreDown, $Raycasts/RayCastBonnetUp, $Raycasts/RayCastForward, $Raycasts/RayCastBackward, $Raycasts/RayCastLeft, $Raycasts/RayCastRight]:
 			if check_raycast("lava", raycast) == true:
@@ -301,7 +296,7 @@ func check_ongoing_damage():
 	return 0
 
 
-func check_raycast(substring_in_hit_name, raycast):
+func check_raycast(substring_in_hit_name, raycast) -> bool:
 	if raycast != null:
 		if raycast.is_colliding():
 			if substring_in_hit_name.to_lower() in raycast.get_collider().name.to_lower():
@@ -324,7 +319,6 @@ func _process(delta):
 	if vehicle_state == ConfigVehicles.VEHICLE_STATES.DYING:
 		explosion2_timer -= delta
 		if explosion2_timer <= 0.0:
-			$Effects/Damage/Explosion2Light.visible = false
 			explosion2_timer = 0.2
 		if dying_finished():
 			vehicle_state = ConfigVehicles.VEHICLE_STATES.DEAD
@@ -338,7 +332,7 @@ func _process(delta):
 	if timer_1_sec <= 0.0:
 		timer_1_sec = 1.0
 		check_lights()
-		var ongoing_damage = check_ongoing_damage()
+		var ongoing_damage: float = check_ongoing_damage()
 		if ongoing_damage > 0:
 			add_damage(ongoing_damage)
 
@@ -406,31 +400,31 @@ func _process(delta):
 		cooldown_timer = 0.0
 
 
-func check_accel_damage(delta):
+func check_accel_damage(delta) -> void:
 	if check_accel_damage_timer <= 0.0:
 		# print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
 		# print("accel_damage_threshold="+str(accel_damage_threshold))
 		if acceleration_calc_for_damage > accel_damage_threshold:
-			var rammed_another_car = false
+			var rammed_another_car: bool = false
 			$Effects/Audio/CrashSound.playing = true
 			$Effects/Audio/CrashSound.volume_db = 0.0
 			if $Raycasts/RayCastFrontRamDamage1.is_colliding():
-				var collider_name = $Raycasts/RayCastFrontRamDamage1.get_collider().name
+				var collider_name: String = $Raycasts/RayCastFrontRamDamage1.get_collider().name
 				if "car" in collider_name.to_lower():
 					print("player "+str(player_number)+" rammed "+str(collider_name))
 					rammed_another_car = true
 			if $Raycasts/RayCastFrontRamDamage2.is_colliding():
-				var collider_name = $Raycasts/RayCastFrontRamDamage2.get_collider().name
+				var collider_name: String = $Raycasts/RayCastFrontRamDamage2.get_collider().name
 				if "car" in collider_name.to_lower():
 					print("player "+str(player_number)+" rammed "+str(collider_name))
 					rammed_another_car = true
 			if $Raycasts/RayCastFrontRamDamage3.is_colliding():
-				var collider_name = $Raycasts/RayCastFrontRamDamage3.get_collider().name
+				var collider_name: String = $Raycasts/RayCastFrontRamDamage3.get_collider().name
 				if "car" in collider_name.to_lower():
 					print("player "+str(player_number)+" rammed "+str(collider_name))
 					rammed_another_car = true
 			if rammed_another_car == false:
-				var damage = round(acceleration_calc_for_damage / accel_damage_threshold)
+				var damage: float = round(acceleration_calc_for_damage / accel_damage_threshold)
 				print("damage="+str(damage))
 				add_damage(damage)
 			# else don't take any damage
@@ -444,7 +438,7 @@ func check_accel_damage(delta):
 		check_accel_damage_timer -=delta
 
 
-func cycle_weapon(keep=false):
+func cycle_weapon(keep=false) -> void:
 	if keep == false:
 		weapon_select += 1
 		if weapon_select > len(weapons)-1:
@@ -458,7 +452,7 @@ func cycle_weapon(keep=false):
 	get_player().set_label_lives_left()
 
 
-func set_icon():
+func set_icon() -> void:
 	get_player().get_hud().get_node("icon_mine").hide()
 	get_player().get_hud().get_node("icon_rocket").hide()
 	get_player().get_hud().get_node("icon_missile").hide()
@@ -479,8 +473,8 @@ func _physics_process(delta):
 	#apply one gravity "impulse" per process interval
 	#apply_impulse(local_cog,  gravity)
 	
-	var new_vel = get_linear_velocity()
-	var new_vel_max = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
+	var new_vel: Vector3 = get_linear_velocity()
+	var new_vel_max: float = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
 	fwd_mps = transform.basis.xform_inv(linear_velocity).z  # global velocity rotated to our forward (z) direction
 	# Smooth out the accel calc by using a 50/50 exponentially-weighted moving average
 	acceleration_calc_for_damage = (0.5*acceleration_calc_for_damage) + (0.5*abs(new_vel_max - vel_max)/delta)
@@ -491,7 +485,7 @@ func _physics_process(delta):
 		steer_target = Input.get_action_strength("turn_left_player"+str(player_number)) - Input.get_action_strength("turn_right_player"+str(player_number))
 		steer_target *= STEER_LIMIT
 
-		var old_engine_force = engine_force
+		var old_engine_force: float = engine_force
 	
 		if Input.is_action_pressed("accelerate_player"+str(player_number)):
 			# Increase engine force at low speeds to make the initial acceleration faster.
@@ -518,12 +512,12 @@ func _physics_process(delta):
 	if hit_by_missile["active"] == true:
 		# print("Player "+str(player_number)+ " hit by missile!")
 		#var direction = hit_by_missile_origin - $Body.transform.origin  
-		var direction = hit_by_missile["direction_for_explosion"]  # $Body.transform.origin - hit_by_missile_origin 
+		var direction: Vector3 = hit_by_missile["direction_for_explosion"]  # $Body.transform.origin - hit_by_missile_origin 
 		direction[1] += 5.0
 		# remove downwards force - as vehicles can be blown through the terrain
 		if direction[1] < 0:
 			direction[1] = 0
-		var explosion_force = 200  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
+		var explosion_force: float = 200.0  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
 		if hit_by_missile["direct_hit"] == true:
 			apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 			# if hit_by_missile["homing"]:
@@ -531,7 +525,7 @@ func _physics_process(delta):
 			# else:
 			#	damage(weapons[1].damage)
 		else:
-			var indirect_explosion_force = explosion_force/hit_by_missile["distance"]
+			var indirect_explosion_force: float = explosion_force/hit_by_missile["distance"]
 			
 			apply_impulse( Vector3(0,0,0), indirect_explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 			# damage(1)
@@ -552,10 +546,10 @@ func _physics_process(delta):
 		check_for_clipping()
 
 
-func check_for_clipping():
+func check_for_clipping() -> void:
 	if abs(fwd_mps_0_1) < 0.1:  # stationary
 		# print("Checking for clipping")
-		var num_wheels_clipped = 0
+		var num_wheels_clipped: int = 0
 		for raycast in $Raycasts.get_children():
 			if "Wheel" in raycast.name:
 				if not raycast.is_colliding():
@@ -569,27 +563,27 @@ func check_for_clipping():
 			check_accel_damage_timer = 2.0  # disable damage for temporarily
 	
 
-func update_speed():
+func update_speed() -> void:
 	speed = linear_velocity.length()
 
 
-func get_speed():
+func get_speed() -> float:
 	update_speed()
 	return speed
 
 
-func get_speed2():
+func get_speed2() -> float:
 	return transform.basis.xform_inv(linear_velocity).z
 
 
-func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z):
-	var global_pos = global_transform.origin
+func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z) -> Vector3:
+	var global_pos: Vector3 = global_transform.origin
 	global_pos -= (offset_z*mult_z)*Vector3.FORWARD
 	global_pos += (offset_y*mult_y)*Vector3.UP
 	return global_pos
 
 
-func add_damage(amount):
+func add_damage(amount) -> void:
 	total_damage += amount
 	if $Effects/Damage/ParticlesSmoke.emitting == false:
 		$Effects/Damage/ParticlesSmoke.emitting = true
@@ -608,18 +602,18 @@ func add_damage(amount):
 		start_vehicle_dying()
 
 
-func get_player():
-	return get_parent().get_parent().get_parent()
+func get_player() -> Player:
+	return get_parent().get_parent().get_parent() as Player
 	
 
-func get_wheel(num):
+func get_wheel(num) -> VehicleWheel:
 	if has_node("Wheel"+str(num)):
-		return get_node("Wheel"+str(num))
-	else:
-		return null
+		if get_node("Wheel"+str(num)) is VehicleWheel:
+			return get_node("Wheel"+str(num)) as VehicleWheel
+	return null
 
 
-func fire_mine_or_nuke():
+func fire_mine_or_nuke() -> void:
 	# print("Firing weapon="+str(weapon_select))
 	var weapon_instance = load(ConfigWeapons.SCENE[weapons[weapon_select]["name"]]).instance()
 	add_child(weapon_instance) 
@@ -641,7 +635,7 @@ func fire_mine_or_nuke():
 	weapon_instance.set_as_toplevel(true)
 
 
-func fire_missile_or_rocket():
+func fire_missile_or_rocket() -> void:
 	
 	var weapon_instance = load(ConfigWeapons.SCENE[weapons[weapon_select]["name"]]).instance()
 	weapons[weapon_select]["instance"] = weapon_instance
@@ -672,15 +666,15 @@ func fire_missile_or_rocket():
 	# weapons[weapon_select]["active"] = true
 	
 
-func lights_on():
+func lights_on() -> void:
 	set_all_lights(true)
 
 
-func lights_off():
+func lights_off() -> void:
 	set_all_lights(false)
 
 
-func set_all_lights(state):
+func set_all_lights(state) -> void:
 	$Lights/LightFrontLeft.visible = state
 	$Lights/LightFrontRight.visible = state
 	$Lights/LightBackLeft.visible = state
@@ -692,7 +686,7 @@ func set_all_lights(state):
 	$Lights/LightUnder5.visible = state
 
 
-func set_global_transform_origin():
+func set_global_transform_origin() -> void:
 	if is_inside_tree() and set_pos == false:
 		global_transform.origin = pos
 		set_pos = true
@@ -707,22 +701,22 @@ func _on_CarBody_body_entered(body):
 		add_damage(max_damage)
 
 
-func power_up(power_up_name):
+func power_up(power_up_name) -> void:
 	print("power_up: power_up_name = "+str(power_up_name))
 	weapons[ConfigWeapons.WEAPONS.NUKE].enabled = true
 	weapon_select = ConfigWeapons.WEAPONS.NUKE
 	cycle_weapon(true)
 
 
-func get_camera():
-	return $CameraBase/Camera
+func get_camera() -> Camera:
+	return $CameraBase/Camera as Camera
 
 
-func set_label(new_label):
+func set_label(new_label) -> void:
 	get_node( "../../CanvasLayer/Label").text = new_label
 
 
-func start_vehicle_dying():
+func start_vehicle_dying() -> void:
 	
 	if vehicle_state == ConfigVehicles.VEHICLE_STATES.ALIVE:
 		print("start_vehicle_dying(): vehicle_state = "+str(vehicle_state))
@@ -735,8 +729,13 @@ func start_vehicle_dying():
 			ch.playing = false
 		
 		$Effects/Audio/CrashSound.playing = true
-		if $Effects/Damage.has_node("Explosion"):
-			$Effects/Damage/Explosion.start_effects()  # /AnimationPlayer.play("explosion")
+		
+		var explosion: Explosion = load("res://scenes/explosion.tscn").instance()
+		explosion.name = "Explosion"
+		$Effects/Damage.add_child(explosion)
+		$Effects/Damage/Explosion.global_transform.origin = global_transform.origin
+			
+		$Effects/Damage/Explosion.start_effects()  # /AnimationPlayer.play("explosion")
 		
 		remove_nodes_for_dying()
 		
@@ -752,53 +751,52 @@ func start_vehicle_dying():
 		print("start_vehicle_dying(): error, shouldn't be here. vehicle_state="+str(vehicle_state))
 
 
-func remove_nodes_for_dying():
+func remove_nodes_for_dying() -> void:
 	remove_wheels()
 	remove_raycasts()
 	# remove_weapon_positions()
 
 
-func remove_wheels():
+func remove_wheels() -> void:
 	#remove the wheels: we'll then make the wheel meshes from the mesh import visible
 	for vw in get_children():
 		if vw is VehicleWheel:
 			vw.queue_free()
 
 
-func remove_raycasts():
+func remove_raycasts() -> void:
 	#remove the raycasts
 	for rc in get_children():
 		if rc is RayCast:
 			rc.queue_free()
 
 
-func remove_main_collision_shapes():
+func remove_main_collision_shapes() -> void:
 	# remove the existing CollisionShape(s) based on the car structure
 	for cs in get_children():
 		if cs is CollisionShape: 
 			cs.queue_free()  
 	# Add a small CollisionShape so we don't fall through the ground
-	var new_rigid_body = load("res://scenes/exploded_vehicle_part.tscn").instance()
-	var cs = new_rigid_body.get_node("CollisionShape")
+	var new_rigid_body: ExplodedVehiclePart = load("res://scenes/exploded_vehicle_part.tscn").instance()
+	var cs: CollisionShape = new_rigid_body.get_node("CollisionShape")
 	new_rigid_body.remove_child(cs)
 	add_child(cs)
 	new_rigid_body.queue_free()
 
 
-func explode_vehicle_meshes():
+func explode_vehicle_meshes() -> void:
 	# 
 	if self.has_node("MeshInstances"):
-		var vm = get_node("MeshInstances")
+		var vm: Spatial = get_node("MeshInstances")
 		print("Found node MeshInstances: destroying...")
 		print("explode_vehicle_meshes(): self.has_node('MeshInstances')")
 		print("self.translation="+str(self.translation))
-		vm.set_script(script_vehicle_detach_rigid_bodies)
+		vm.set_script(SCRIPT_VEHICLE_DETACH_RIGID_BODIES)
 		vm.set_process(true)
 		vm.set_physics_process(true)
 		vm.detach_rigid_bodies(0.001, self.mass, self.linear_velocity, self.global_transform.origin)
 		# self.remove_child(ch)
 		# ch.set_as_toplevel(true)
-		$Effects/Damage/Explosion2.emitting = true
 		# move the exploded mesh to the player, as the VehicleBody will be deleted after the explosion
 		remove_child(vm)
 		get_player().add_child(vm)
@@ -810,10 +808,14 @@ func explode_vehicle_meshes():
 		$CameraBase/CameraBasesTargets/CamTargetReverse_UD.translation = Vector3(0.0, 0.0, 0.0)
 
 
-func dying_finished():
+func dying_finished() -> bool:
 	if vehicle_state == ConfigVehicles.VEHICLE_STATES.DYING:
-		if $Effects/Damage/Explosion.effects_finished():
-			print("vehicle_state == DYING' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Effects/Damage/Explosion/AnimationPlayer.current_animation))
+		if $Effects/Damage.has_node("Explosion"):
+			if $Effects/Damage/Explosion.effects_finished():
+				print("vehicle_state == DYING' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Effects/Damage/Explosion/AnimationPlayer.current_animation))
+				return true
+			return false
+		else:
 			return true
 	return false
 
@@ -841,7 +843,7 @@ func _on_CheckSkidTimer_timeout():
 	if abs(fwd_mps) < 10.0:
 		return
 		
-	var skidding = false
+	var skidding: bool = false
 	for wh in get_children():
 		if wh is VehicleWheel: 
 			if wh.get_skidinfo() < 0.5:

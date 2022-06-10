@@ -1,68 +1,32 @@
 extends Spatial
+class_name Explosion
 
-
-# Declare member variables here. Examples:
-var timer = 0.0
-# var b = "text"
-
+# This explosion scene is meant to be instanced when the explosion is needed,
+# not stored in any scenes
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	for ch in get_children():
-		if ch is Particles:
-			ch.emitting = false
-		if ch is OmniLight:
-			ch.visible = false
-		if ch is AudioStreamPlayer:
-			ch.playing = false
-		if 'Explosion_' in ch.name and ch is MeshInstance:
-			ch.hide()
 	pass
 
 
 # start all the effects
-func start_effects():
-	for ch in get_children():
-		if ch is Particles:
-			ch.emitting = true
-		if ch is OmniLight:
-			ch.visible = true
-		if ch is AudioStreamPlayer:
-			# print("Found")
-			ch.playing = true
-		if 'Explosion_' in ch.name and ch is MeshInstance:
-			ch.show()
-			var ch2 = ch.get_node('AnimationPlayer')
-			ch2.seek(0.0)
-			ch2.play("Explode")
+func start_effects() -> void:
+	$Visual/Smoke.emitting = true
+	$Visual/Light.visible = true
+	$Visual/AnimationPlayer.play("Explode")
+	$Audio/ExplosionSound.playing = true
 
 
-func effects_finished():
-	for ch in get_children():
-		if ch is Particles:
-			if ch.emitting == true:
-				return false
-		if ch is AudioStreamPlayer:
-			if ch.playing == true:
-				return false
-		if ch is MeshInstance:
-			for ch2 in ch.get_children():
-				if ch2 is AnimationPlayer:
-					if ch2.is_playing():
-						return false
+func effects_finished() -> bool:
+	if $Visual/Smoke.emitting == true:
+		return false
+	if $Visual/AnimationPlayer.is_playing():
+		return false
+	if $Audio/ExplosionSound.playing == true:
+		return false
 	return true
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	timer += delta
-	if timer > 0.2:
-		$LightBlast.visible = false
-
-
-
 func _on_TimerFailsafeDestroy_timeout():
-	print("Warning: used TimerFailsafeDestroy for node "+self.name)
+	print("Warning: used TimerFailsafeDestroy for node "+self.name+" parent="+str(get_parent().name))
 	queue_free()
-
-

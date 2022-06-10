@@ -1,16 +1,17 @@
 extends RigidBody
+class_name ExplodedVehiclePart
 
-var timer_1_sec = 1.0
-var timer_lifetime = 60.0
-var max_lifetime = 60.0
-var rng = RandomNumberGenerator.new()
+var timer_1_sec: float = 1.0
+var timer_lifetime: float = 60.0
+var max_lifetime: float = 60.0
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
 
-func set_lifetime(_max_lifetime):
+func set_lifetime(_max_lifetime) -> void:
 	timer_lifetime = _max_lifetime
 	max_lifetime = _max_lifetime
 	

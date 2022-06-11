@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://logic/vehicle_body.gd" type="Script" id=2]
@@ -10,7 +10,7 @@
 [ext_resource path="res://logic/shield.gd" type="Script" id=8]
 [ext_resource path="res://logic/follow_camera.gd" type="Script" id=9]
 [ext_resource path="res://scenes/flames.tscn" type="PackedScene" id=10]
-[ext_resource path="res://scenes/explosion.tscn" type="PackedScene" id=11]
+[ext_resource path="res://assets/Materials/vehicles/car_wheel_dust.tres" type="Material" id=11]
 [ext_resource path="res://scenes/vehicle_racer_mesh_import.tscn" type="PackedScene" id=12]
 [ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=13]
 [ext_resource path="res://assets/materials/vehicles/tyre2.tres" type="Material" id=14]
@@ -23,6 +23,7 @@
 [ext_resource path="res://scenes/vehicle_headlight.tscn" type="PackedScene" id=21]
 [ext_resource path="res://scenes/vehicle_taillight.tscn" type="PackedScene" id=22]
 [ext_resource path="res://assets/Audio/sounds/71738__audible-edge__chrysler-lhs-tire-squeal-03-04-25-2009.wav" type="AudioStream" id=23]
+[ext_resource path="res://assets/Materials/vehicles/car_wheel_dust_particles.tres" type="Material" id=24]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
@@ -53,9 +54,14 @@ params_billboard_mode = 1
 params_billboard_keep_scale = true
 albedo_color = Color( 0, 0, 0, 0.658824 )
 albedo_texture = ExtResource( 4 )
+proximity_fade_enable = true
+proximity_fade_distance = 1.0
 
 [sub_resource type="QuadMesh" id=37]
 material = SubResource( 47 )
+
+[sub_resource type="QuadMesh" id=58]
+material = ExtResource( 11 )
 
 [sub_resource type="SphereMesh" id=29]
 
@@ -116,9 +122,6 @@ local_coords = false
 process_material = SubResource( 35 )
 draw_pass_1 = SubResource( 37 )
 
-[node name="Explosion" parent="Effects/Damage" instance=ExtResource( 11 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
-
 [node name="Audio" type="Spatial" parent="Effects"]
 
 [node name="EngineSound" type="AudioStreamPlayer" parent="Effects/Audio"]
@@ -158,6 +161,30 @@ material = ExtResource( 5 )
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
 radial_segments = 24
 material = ExtResource( 6 )
+
+[node name="WheelSkidDust" type="Particles" parent="Effects"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000409719, -0.057138, 0.0959512 )
+emitting = false
+amount = 200
+lifetime = 30.0
+explosiveness = 0.2
+randomness = 1.0
+visibility_aabb = AABB( -4, -3.8623, -4, 8, 8, 8 )
+local_coords = false
+process_material = ExtResource( 24 )
+draw_pass_1 = SubResource( 58 )
+
+[node name="WheelSpeedDust" type="Particles" parent="Effects"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0284296, -0.100342, 0 )
+emitting = false
+amount = 200
+lifetime = 30.0
+explosiveness = 0.2
+randomness = 1.0
+visibility_aabb = AABB( -4, -3.66797, -4, 8, 8, 8 )
+local_coords = false
+process_material = ExtResource( 24 )
+draw_pass_1 = SubResource( 58 )
 
 [node name="VehicleTypes" type="Node" parent="."]
 
@@ -1922,5 +1949,10 @@ autostart = true
 wait_time = 0.5
 autostart = true
 
+[node name="CheckWheelSpeedDustTimer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
 [connection signal="timeout" from="DynamicGripTimer" to="." method="_on_DynamicGripTimer_timeout"]
 [connection signal="timeout" from="CheckSkidTimer" to="." method="_on_CheckSkidTimer_timeout"]
+[connection signal="timeout" from="CheckWheelSpeedDustTimer" to="." method="_on_CheckWheelSpeedDustTimer_timeout"]

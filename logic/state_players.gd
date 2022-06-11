@@ -2,10 +2,10 @@ extends Node
 
 
 # Array of dict, in format:
-# {1: {"name": "1", "vehicle": "racer", "lives_left" 2}, 
-# {2: "name": "2", "vehicle": "rally"}, 
-# {3: "name": "3", "vehicle": "tank"}, 
-# {4: "name": "4", "vehicle": "racer"}]
+# {1: {"name": "1", "vehicle": ConfigVehicles.Type.RACER, "lives_left" 2}, 
+# {2: "name": "2", "vehicle": ConfigVehicles.Type.RALLY}, 
+# {3: "name": "3", "vehicle": ConfigVehicles.Type.TANK}, 
+# {4: "name": "4", "vehicle": ConfigVehicles.Type.TRUCK}]
 var players: Dictionary  #  
 
 # Called when the node enters the scene tree for the first time.

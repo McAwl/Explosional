@@ -10,7 +10,7 @@ var game_active: bool = false
 var players: Dictionary = {}
 var max_line_length: int = 12
 var player_selection: int = -1
-var vehicle_selection: String
+var vehicle_selection: int = -1 # ConfigVehicles.Type
 
 
 # Called when the node enters the scene tree for the first time.
@@ -44,8 +44,8 @@ func configure():
 		get_start_button().hide()
 		#apb.hide()
 	else:
-		$PlayerSelection/GridContainer/Player1SelectButton.text = "Player 1 Racer"
-		players[1] = {"name": "1", "vehicle": "Racer"}
+		$PlayerSelection/GridContainer/Player1SelectButton.text = "Player 1 "+ConfigVehicles.nice_name[ConfigVehicles.Type.RACER]
+		players[1] = {"name": "1", "vehicle": ConfigVehicles.Type.RACER}
 		get_start_button().show()
 		#apb.show()
 		$PlayerSelection.show()
@@ -55,12 +55,12 @@ func configure():
 		get_resume_button().hide()
 
 
-func set_visible(_visibile):
+func set_visible(_visibile) -> void:
 	$MainSelection.visible = _visibile
 	$VersionText.visible = _visibile
 
 
-func pause():
+func pause() -> void:
 	active = true
 	set_visible(true)
 	timer = 0.5
@@ -69,7 +69,7 @@ func pause():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 
-func resume():
+func resume() -> void:
 	# hide the mouse
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	active = false
@@ -112,7 +112,6 @@ func _on_OptionsButton_button_up():
 	$MainSelection/MainContainer/ButtonsContainer.hide()
 
 
-
 func _on_OptionBackButton_button_up():
 	$OptionMenu.hide()
 	$MainSelection/MainContainer/ButtonsContainer.show()
@@ -124,7 +123,7 @@ func _on_OptionBackButton_button_up():
 		$PlayerSelection.show()
 
 
-func start_game():
+func start_game() -> void:
 	
 	$LoadingText.show()
 	$MainSelection/MainContainer.hide()
@@ -133,7 +132,7 @@ func start_game():
 	var next_level = next_level_resource.instance()
 	StatePlayers.players = players
 	StatePlayers.configure_players()
-	# print("players = "+str(players))
+	print("players = "+str(players))
 	get_tree().root.call_deferred("add_child", next_level)
 	queue_free()
 
@@ -151,8 +150,8 @@ func _on_QuitToMainMenuButton_button_up():
 	pass # Replace with function body.
 
 
-func get_racer():
-	return $VehicleSelection/GridContainer/RacerButton
+func get_racer() -> Button:
+	return $VehicleSelection/GridContainer/RacerButton as Button
 
 
 func _on_Player1SelectButton_button_up():
@@ -174,22 +173,22 @@ func _on_Player4SelectButton_button_up():
 
 
 func _on_RacerButton_button_up():
-	hide_vehicle_selection("Racer")
+	hide_vehicle_selection(ConfigVehicles.Type.RACER)
 
 
 func _on_RallyButton_button_up():
-	hide_vehicle_selection("Rally")
+	hide_vehicle_selection(ConfigVehicles.Type.RALLY)
 
 
 func _on_TankButton_button_up():
-	hide_vehicle_selection("Tank")
+	hide_vehicle_selection(ConfigVehicles.Type.TANK)
 
 
 func _on_TruckButton_button_up():
-	hide_vehicle_selection("Truck")
+	hide_vehicle_selection(ConfigVehicles.Type.TRUCK)
 	
 
-func hide_vehicle_selection(_vehicle_selection):
+func hide_vehicle_selection(_vehicle_selection: int) -> void:
 	vehicle_selection = _vehicle_selection
 	$MainSelection/MainContainer.show()
 	$PlayerSelection.show()
@@ -199,7 +198,7 @@ func hide_vehicle_selection(_vehicle_selection):
 	$PlayerSelection/GridContainer.get_node("Player"+str(player_selection)+"SelectButton").grab_focus()
 
 
-func show_vehicle_selection(_player_selection):
+func show_vehicle_selection(_player_selection: int) -> void:
 	player_selection = _player_selection
 	$MainSelection/MainContainer.hide()
 	$PlayerSelection.hide()
@@ -207,9 +206,9 @@ func show_vehicle_selection(_player_selection):
 	get_racer().grab_focus()
 
 
-func get_resume_button():
-	return $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/ResumeButton
+func get_resume_button() -> Button:
+	return $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/ResumeButton as Button
 
 
-func get_start_button():
-	return $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/StartButton
+func get_start_button() -> Button:
+	return $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/StartButton as Button

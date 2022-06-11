@@ -1,17 +1,12 @@
 extends VehicleBody
 
-
-const STEER_SPEED: float = 1.5
-const STEER_LIMIT: float = 0.6 #0.4
-const EXPLOSION_STRENGTH: float = 50.0
-const ENGINE_FORCE_VALUE_DEFAULT: int = 80
 const SCRIPT_VEHICLE_DETACH_RIGID_BODIES = preload("res://logic/vehicle_detach_rigid_bodies.gd")
 
 var steer_target: float = 0
 
 var print_timer: float = 0.0
 
-export var engine_force_value = ENGINE_FORCE_VALUE_DEFAULT  #40
+export var engine_force_value: float = ConfigVehicles.ENGINE_FORCE_VALUE_DEFAULT  #40
 var engine_force_ewma: float
 var player_number: int
 var camera: Camera
@@ -19,7 +14,7 @@ export var speed: float = 0.0
 var speed_low_limit: float = 5.0
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
-var cooldown_timer: float = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["mine"]
+var cooldown_timer: float = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.MINE]
 var timer_0_1_sec: float = 0.1
 var timer_1_sec: float = 1.0  # timer to eg: check if car needs to turn light on 
 var timer_1_sec_physics: float = 1.0  # to check and correct clipping, etc
@@ -30,13 +25,18 @@ var total_damage: float = 0.0
 var take_damage: bool = true
 var wheel_positions: Array = []
 var wheels: Array = []
+
 # this is changingstate info, see config_weapons.gd for constants
-var weapons: Dictionary = {ConfigWeapons.WEAPONS.MINE: {"name": "mine", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["mine"], "enabled": true}, \
-			   ConfigWeapons.WEAPONS.ROCKET: {"name": "rocket", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["rocket"], "enabled": true}, \
-			   ConfigWeapons.WEAPONS.MISSILE: {"name": "missile", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["missile"], "enabled": true}, \
-			   ConfigWeapons.WEAPONS.NUKE: {"name": "nuke", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["nuke"], "enabled": false, "test_mode": false},
-			   ConfigWeapons.WEAPONS.BALLISTIC: {"name": "ballistic", "active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS["ballistic"], "enabled": true}}
-var weapon_select: int = ConfigWeapons.WEAPONS.MINE
+var weapons_state: Dictionary = {
+	ConfigWeapons.Type.MINE: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.MINE], "enabled": true}, \
+	ConfigWeapons.Type.ROCKET: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.ROCKET], "enabled": true}, \
+	ConfigWeapons.Type.MISSILE: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.MISSILE], "enabled": true}, \
+	ConfigWeapons.Type.NUKE: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.NUKE], "enabled": false, "test_mode": false},
+	ConfigWeapons.Type.BALLISTIC: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.BALLISTIC], "enabled": true},
+	ConfigWeapons.Type.BOMB: {"active": false, "enabled": false, "test_mode": false},
+	}
+
+var weapon_select: int = ConfigWeapons.Type.MINE
 var lights_disabled: bool = false
 var acceleration_calc_for_damage: float = 0.0
 var acceleration_fwd_0_1_ewma: float = 0.0
@@ -50,7 +50,7 @@ var fwd_mps_0_1_ewma: float = 0.0
 var fwd_mps_0_1: float = 0.0
 var explosion2_timer: float = 0.2
 var knock_back_firing_ballistic: bool = false  # knock the vehicle backwards when firing a ballistic weapons
-var vehicle_state: int = ConfigVehicles.VEHICLE_STATES.ALIVE 
+var vehicle_state: int = ConfigVehicles.AliveState.ALIVE 
 var set_pos: bool = false
 var pos: Vector3
 
@@ -64,8 +64,8 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	#print("VehicleBody:init()")
 	
 	lifetime_so_far_sec = 0.0
-	vehicle_state = ConfigVehicles.VEHICLE_STATES.ALIVE
-	cooldown_timer = weapons[weapon_select]["cooldown_timer"]
+	vehicle_state = ConfigVehicles.AliveState.ALIVE
+	cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
 	
 	if _player_number != null:
 		player_number = _player_number
@@ -78,7 +78,7 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	
 	#print("vehicle="+str(StatePlayers.players[player_number]["vehicle"]))
 	# Depending on vehicle type, we look for its nodes
-	var vehicle_type_node = $VehicleTypes.get_node(str(StatePlayers.players[player_number]["vehicle"]))
+	var vehicle_type_node: Spatial = $VehicleTypes.get_node(ConfigVehicles.nice_name[StatePlayers.players[player_number]["vehicle"]]) as Spatial
 	if vehicle_type_node == null:
 		return false
 	# move all the vehicle type nodes to the correct location
@@ -106,8 +106,9 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	if has_node("VehicleTypes"):
 		get_node("VehicleTypes").queue_free()
 	
-	if not StatePlayers.players[player_number]["vehicle"] in ConfigVehicles.types:
-		#print("vehicle_type "+str(StatePlayers.players[player_number]["vehicle"])+" not found")
+	print("StatePlayers.players[player_number]['vehicle']="+str(StatePlayers.players[player_number]["vehicle"]))
+	if StatePlayers.players[player_number]["vehicle"] < 0:  # in ConfigVehicles.Type:
+		print("vehicle_type "+str(StatePlayers.players[player_number]["vehicle"])+" not found in ConfigVehicles.Type="+str(ConfigVehicles.Type))
 		return false
 		
 	configure_vehicle_properties()
@@ -122,17 +123,18 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 
 
 func configure_weapons() -> void:
-	for k in ConfigWeapons.weapon_types.keys():
-		#print("checking weapon "+str(k))  # 0=mine, etc
+	for k in ConfigWeapons.Type.values():  # .keys():
+		print("checking weapon "+str(k))  # 0=mine, etc
 		var vt = StatePlayers.players[player_number]["vehicle"]
-		if vt in ConfigWeapons.weapon_types[k]["vehicles"]:
+		print("vt="+str(vt))
+		if vt in ConfigWeapons.vehicle_weapons[k]:
 			#print("vt "+str(vt)+" has weapon "+str(k))
-			weapons[k]["enabled"] = true
+			weapons_state[k]["enabled"] = true
 			weapon_select = k
 			set_icon()
 		else:
 			#print("vt "+str(vt)+" doesnt have weapon "+str(k))
-			weapons[k]["enabled"] = false
+			weapons_state[k]["enabled"] = false
 
 
 func init_audio_effects() -> void:
@@ -195,10 +197,10 @@ func dying_visual_effects() -> void:
 
 
 func configure_vehicle_properties() -> void:
-	
-	engine_force_value = ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["engine_force_value"]
-	mass = ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"]
-	var vts = ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]
+	var vts: int = StatePlayers.players[player_number]["vehicle"]
+	print("vts="+str(vts))
+	engine_force_value = ConfigVehicles.config[vts]["engine_force_value"]
+	mass = ConfigVehicles.config[vts]["mass_kg/100"]
 	set_wheel_parameters(vts)
 
 
@@ -207,21 +209,21 @@ func set_wheel_parameters(_vts) -> void:
 	for wh in get_children():
 		if wh is VehicleWheel:
 			wh.visible = true
-			wh.suspension_stiffness = _vts["suspension_stiffness"]
-			wh.suspension_travel = _vts["suspension_travel"]
-			wh.wheel_friction_slip = _vts["wheel_friction_slip"]
-			wh.wheel_roll_influence = _vts["wheel_roll_influence"]
+			wh.suspension_stiffness = ConfigVehicles.config[_vts]["suspension_stiffness"]
+			wh.suspension_travel = ConfigVehicles.config[_vts]["suspension_travel"]
+			wh.wheel_friction_slip = ConfigVehicles.config[_vts]["wheel_friction_slip"]
+			wh.wheel_roll_influence = ConfigVehicles.config[_vts]["wheel_roll_influence"]
 			for ch2 in wh.get_children():
 				if ch2 is MeshInstance:
 					ch2.visible = false
-				if ch2 is CSGTorus and StatePlayers.players[player_number]["vehicle"] != "tank":
+				if ch2 is CSGTorus and StatePlayers.players[player_number]["vehicle"] != ConfigVehicles.Type.TANK:
 					ch2.visible = true
 	
-	if StatePlayers.players[player_number]["vehicle"] == "tank":
+	if StatePlayers.players[player_number]["vehicle"] == ConfigVehicles.Type.TANK:
 		get_wheel(5).use_as_traction = true  # middle
 		get_wheel(6).use_as_traction = true  # middle
 	else:
-		if _vts["all_wheel_drive"] == true:
+		if ConfigVehicles.config[_vts]["all_wheel_drive"] == true:
 			get_wheel(1).use_as_traction = true  # front
 			get_wheel(3).use_as_traction = true  # front
 			get_wheel(2).use_as_traction = true  # rear
@@ -314,14 +316,14 @@ func _process(delta):
 	print_timer += delta
 		
 	if global_transform.origin.y < -50.0:
-		vehicle_state = ConfigVehicles.VEHICLE_STATES.DEAD
+		vehicle_state = ConfigVehicles.AliveState.DEAD
 	
-	if vehicle_state == ConfigVehicles.VEHICLE_STATES.DYING:
+	if vehicle_state == ConfigVehicles.AliveState.DYING:
 		explosion2_timer -= delta
 		if explosion2_timer <= 0.0:
 			explosion2_timer = 0.2
 		if dying_finished():
-			vehicle_state = ConfigVehicles.VEHICLE_STATES.DEAD
+			vehicle_state = ConfigVehicles.AliveState.DEAD
 
 	if total_damage >= max_damage:
 		return
@@ -341,23 +343,23 @@ func _process(delta):
 		# print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
 		flicker_lights()
 		timer_0_1_sec = 0.1
-		if not ("instance" in weapons[weapon_select]):
+		if not ("instance" in weapons_state[weapon_select]):
 			#print(str(weapons[weapon_select]["name"])+" not in dict")
-			weapons[weapon_select]["active"] = false
-			cooldown_timer = weapons[weapon_select]["cooldown_timer"]
-		elif weapons[weapon_select]["instance"] == null:
+			weapons_state[weapon_select]["active"] = false
+			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
+		elif weapons_state[weapon_select]["instance"] == null:
 			#print(str(weapons[weapon_select]["name"])+" is null")
-			weapons[weapon_select]["active"] = false
-			cooldown_timer = weapons[weapon_select]["cooldown_timer"]
-		elif not is_instance_valid(weapons[weapon_select]["instance"]):
+			weapons_state[weapon_select]["active"] = false
+			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
+		elif not is_instance_valid(weapons_state[weapon_select]["instance"]):
 			#print(str(weapons[weapon_select]["name"])+" is invalid instance")
-			weapons[weapon_select]["active"] = false
-			cooldown_timer = weapons[weapon_select]["cooldown_timer"]
+			weapons_state[weapon_select]["active"] = false
+			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
 		#else:
 		#	print(str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
-		get_player().set_label_player_name()  # , total_damage, weapons[weapon_select].damage)
+		get_player().set_label_player_name()  # , total_damage, weapons_state[weapon_select].damage)
 		get_player().set_label_lives_left()
-		get_player().get_hud().get_node("cooldown").max_value = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select]["name"]]
+		get_player().get_hud().get_node("cooldown").max_value = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
 		get_player().get_hud().get_node("cooldown").value = cooldown_timer
 		
 		# Update all the 0.1 sec physical calculations
@@ -375,26 +377,26 @@ func _process(delta):
 	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
 		cycle_weapon()
 	
-	if Input.is_action_just_released("fire_player"+str(player_number)) and weapons[weapon_select]["active"] == false and weapons[weapon_select]["cooldown_timer"] <= 0.0 and weapons[weapon_select]["enabled"] == true:
+	if Input.is_action_just_released("fire_player"+str(player_number)) and weapons_state[weapon_select]["active"] == false and weapons_state[weapon_select]["cooldown_timer"] <= 0.0 and weapons_state[weapon_select]["enabled"] == true:
 		# print("Player pressed fire")
-		weapons[weapon_select]["cooldown_timer"] = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapons[weapon_select].name]
+		weapons_state[weapon_select]["cooldown_timer"] = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
 		get_player().set_label_player_name()
 		get_player().set_label_lives_left()
-		if weapon_select == 0 or weapon_select == 3:  # mine or nuke
+		if weapon_select == ConfigWeapons.Type.MINE or weapon_select == ConfigWeapons.Type.NUKE:  # mine or nuke
 			fire_mine_or_nuke()
-		elif weapon_select == 1:
+		elif weapon_select == ConfigWeapons.Type.ROCKET:
 			fire_missile_or_rocket()
-		elif weapon_select == 2:
+		elif weapon_select == ConfigWeapons.Type.MISSILE:
 			fire_missile_or_rocket()
-		elif weapon_select == 4:
+		elif weapon_select == ConfigWeapons.Type.BALLISTIC:
 			fire_missile_or_rocket()
 
-	if weapons[weapon_select]["active"] == false:
-		if weapons[weapon_select]["cooldown_timer"] > 0.0:
-			weapons[weapon_select]["cooldown_timer"] -= delta
-			if weapons[weapon_select]["cooldown_timer"] < 0.0:
-				weapons[weapon_select]["cooldown_timer"]  = 0.0
-		cooldown_timer = weapons[weapon_select]["cooldown_timer"]
+	if weapons_state[weapon_select]["active"] == false:
+		if weapons_state[weapon_select]["cooldown_timer"] > 0.0:
+			weapons_state[weapon_select]["cooldown_timer"] -= delta
+			if weapons_state[weapon_select]["cooldown_timer"] < 0.0:
+				weapons_state[weapon_select]["cooldown_timer"]  = 0.0
+		cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
 	
 	if cooldown_timer < 0.0:
 		cooldown_timer = 0.0
@@ -402,8 +404,8 @@ func _process(delta):
 
 func check_accel_damage(delta) -> void:
 	if check_accel_damage_timer <= 0.0:
-		# print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
-		# print("accel_damage_threshold="+str(accel_damage_threshold))
+		#print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
+		#print("accel_damage_threshold="+str(accel_damage_threshold))
 		if acceleration_calc_for_damage > accel_damage_threshold:
 			var rammed_another_car: bool = false
 			$Effects/Audio/CrashSound.playing = true
@@ -441,12 +443,12 @@ func check_accel_damage(delta) -> void:
 func cycle_weapon(keep=false) -> void:
 	if keep == false:
 		weapon_select += 1
-		if weapon_select > len(weapons)-1:
-			weapon_select = 0
-		while weapons[weapon_select].enabled == false:
+		if weapon_select > len(weapons_state)-1:
+			weapon_select = 0  # leave this as in int, in case the weapon design is changed
+		while weapons_state[weapon_select].enabled == false:
 			weapon_select += 1
-			if weapon_select > len(weapons)-1:
-				weapon_select = 0
+			if weapon_select > len(weapons_state)-1:
+				weapon_select = 0  # leave this as in int, in case the weapon design is changed
 	set_icon()
 	get_player().set_label_player_name()
 	get_player().set_label_lives_left()
@@ -457,8 +459,8 @@ func set_icon() -> void:
 	get_player().get_hud().get_node("icon_rocket").hide()
 	get_player().get_hud().get_node("icon_missile").hide()
 	get_player().get_hud().get_node("icon_ballistic").hide()
-	get_player().get_hud().get_node("icon_nuke").hide()
-	get_player().get_hud().get_node("icon_"+weapons[weapon_select].name).show()
+	get_player().get_hud().get_node("icon_nuke").hide()  #ENUM_NAME.keys()[enum_val]
+	get_player().get_hud().get_node("icon_"+ConfigWeapons.Type.keys()[weapon_select].to_lower()).show()
 
 
 func _physics_process(delta):
@@ -483,7 +485,7 @@ func _physics_process(delta):
 	if total_damage < max_damage:
 		
 		steer_target = Input.get_action_strength("turn_left_player"+str(player_number)) - Input.get_action_strength("turn_right_player"+str(player_number))
-		steer_target *= STEER_LIMIT
+		steer_target *= ConfigVehicles.STEER_LIMIT
 
 		var old_engine_force: float = engine_force
 	
@@ -499,7 +501,7 @@ func _physics_process(delta):
 		if Input.is_action_pressed("reverse_player"+str(player_number)):
 			engine_force = -engine_force_value/2.0
 			if fwd_mps > speed_low_limit:
-				brake = ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["brake"] / 5.0
+				brake = ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["brake"] / 5.0
 		else:
 			brake = 0.0
 			
@@ -507,7 +509,7 @@ func _physics_process(delta):
 			engine_force_ewma = (delta*engine_force) + ((1.0-delta)*old_engine_force)
 	
 
-		steering = move_toward(steering, steer_target, STEER_SPEED * delta)
+		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta)
 	
 	if hit_by_missile["active"] == true:
 		# print("Player "+str(player_number)+ " hit by missile!")
@@ -559,7 +561,7 @@ func check_for_clipping() -> void:
 				#	print("raycast "+raycast.name+" is colliding with "+str(raycast.get_collider().name))
 		if num_wheels_clipped > 0:
 			#print("applying impulse - wheel(s) are clipped")
-			apply_impulse( Vector3(0, -10.0, 0), Vector3(0.0, 5*ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"], 0.0) )   # from underneath, upwards force
+			apply_impulse( Vector3(0, -10.0, 0), Vector3(0.0, 5*ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"], 0.0) )   # from underneath, upwards force
 			check_accel_damage_timer = 2.0  # disable damage for temporarily
 	
 
@@ -597,7 +599,7 @@ func add_damage(amount) -> void:
 	$Effects/Damage/LightsOnFire/OnFireLight5.light_energy = total_damage/20.0
 	engine_force_value *= 0.75  # decrease engine power to indicate damage
 
-	if total_damage >= max_damage and vehicle_state != ConfigVehicles.VEHICLE_STATES.DYING:
+	if total_damage >= max_damage and vehicle_state != ConfigVehicles.AliveState.DYING:
 		print("damage: total_damage >= max_damage")
 		start_vehicle_dying()
 
@@ -615,46 +617,49 @@ func get_wheel(num) -> VehicleWheel:
 
 func fire_mine_or_nuke() -> void:
 	# print("Firing weapon="+str(weapon_select))
-	var weapon_instance = load(ConfigWeapons.SCENE[weapons[weapon_select]["name"]]).instance()
+	var weapon_instance = load(ConfigWeapons.SCENE[weapon_select]).instance()
 	add_child(weapon_instance) 
 	weapon_instance.rotation_degrees = rotation_degrees
-	# weapons[weapon_select]["active"] = true
-	if weapon_select == 0:
+	# weapons_state[weapon_select]["active"] = true
+	if weapon_select == ConfigWeapons.Type.MINE:
 		weapon_instance.set_as_mine()
 		weapon_instance.activate($Positions/Weapons/BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
-	elif weapon_select == 3:
+	elif weapon_select == ConfigWeapons.Type.NUKE:
 		# print("activating nuke")
 		weapon_instance.set_as_nuke()
-		weapon_instance.activate(get_node("/root/Main/Platforms/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
-		if weapons[3].test_mode == false:
-			weapons[3]["enabled"] = false  # so powerup is needed again
+		#weapon_instance.activate(get_node("/root/MainScene/Platforms/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
+		var nuke_spawn_point = global_transform.origin
+		nuke_spawn_point.y += 100.0
+		weapon_instance.activate(nuke_spawn_point, 0.0, 0.0, 1, player_number, get_player())
+		if weapons_state[3].test_mode == false:
+			weapons_state[3]["enabled"] = false  # so powerup is needed again
 			cycle_weapon()  # de-select nuke, as it's not available any more
 	else:
 		print("fire_mine_or_nuke(): Error! Shouldn't be here")
-	# print("weapons[weapon_select]="+str(weapons[weapon_select]))
+	# print("weapons_state[weapon_select]="+str(weapons_state[weapon_select]))
 	weapon_instance.set_as_toplevel(true)
 
 
 func fire_missile_or_rocket() -> void:
 	
-	var weapon_instance = load(ConfigWeapons.SCENE[weapons[weapon_select]["name"]]).instance()
-	weapons[weapon_select]["instance"] = weapon_instance
+	var weapon_instance = load(ConfigWeapons.SCENE[weapon_select]).instance()
+	weapons_state[weapon_select]["instance"] = weapon_instance
 	add_child(weapon_instance)
 	# Shoot out fast (current speed + muzzle speed), it will then slow/speed to approach weapon_instance.target_speed	
 	weapon_instance.weapon_type = weapon_select
-	weapon_instance.weapon_type_name = ConfigWeapons.weapon_types[weapon_select]["name"]
+	weapon_instance.name = ConfigWeapons.Type.keys()[weapon_select]
 	weapon_instance.velocity = (transform.basis.z.normalized()) * (weapon_instance.muzzle_speed() + abs(transform.basis.xform_inv(linear_velocity).z))  
 	weapon_instance.set_linear_velocity(linear_velocity)  # initial only, this is not used, "velocity" is used to change it's position
 	weapon_instance.set_angular_velocity(angular_velocity)
-	if weapon_select == 2:
+	if weapon_select == ConfigWeapons.Type.MISSILE:
 		weapon_instance.velocity[1] += 1.0   # angle it up a bit
 		weapon_instance.global_transform.origin = $Positions/Weapons/MissilePosition.global_transform.origin
 	else:
 		weapon_instance.global_transform.origin = $Positions/Weapons/RocketPosition.global_transform.origin
 		weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
-	if weapon_select == 1:
+	if weapon_select == ConfigWeapons.Type.ROCKET:
 		weapon_instance.activate(player_number, false)  # homing = false
-	elif weapon_select == 4:
+	elif weapon_select == ConfigWeapons.Type.BALLISTIC:
 		knock_back_firing_ballistic = true
 		weapon_instance.activate(player_number, false)  # homing = false
 		weapon_instance.get_node("ParticlesThrust").visible = false
@@ -663,7 +668,7 @@ func fire_missile_or_rocket() -> void:
 	else:
 		weapon_instance.activate(player_number, true)  # homing = true
 	weapon_instance.set_as_toplevel(true)
-	# weapons[weapon_select]["active"] = true
+	# weapons_state[weapon_select]["active"] = true
 	
 
 func lights_on() -> void:
@@ -703,8 +708,8 @@ func _on_CarBody_body_entered(body):
 
 func power_up(power_up_name) -> void:
 	print("power_up: power_up_name = "+str(power_up_name))
-	weapons[ConfigWeapons.WEAPONS.NUKE].enabled = true
-	weapon_select = ConfigWeapons.WEAPONS.NUKE
+	weapons_state[ConfigWeapons.Type.NUKE].enabled = true
+	weapon_select = ConfigWeapons.Type.NUKE
 	cycle_weapon(true)
 
 
@@ -718,9 +723,9 @@ func set_label(new_label) -> void:
 
 func start_vehicle_dying() -> void:
 	
-	if vehicle_state == ConfigVehicles.VEHICLE_STATES.ALIVE:
+	if vehicle_state == ConfigVehicles.AliveState.ALIVE:
 		print("start_vehicle_dying(): vehicle_state = "+str(vehicle_state))
-		vehicle_state = ConfigVehicles.VEHICLE_STATES.DYING
+		vehicle_state = ConfigVehicles.AliveState.DYING
 		# print("reset_car()")
 		print("start_vehicle_dying(): total_damage >= max_damage")
 		total_damage = max_damage
@@ -734,7 +739,6 @@ func start_vehicle_dying() -> void:
 		explosion.name = "Explosion"
 		$Effects/Damage.add_child(explosion)
 		$Effects/Damage/Explosion.global_transform.origin = global_transform.origin
-			
 		$Effects/Damage/Explosion.start_effects()  # /AnimationPlayer.play("explosion")
 		
 		remove_nodes_for_dying()
@@ -809,7 +813,7 @@ func explode_vehicle_meshes() -> void:
 
 
 func dying_finished() -> bool:
-	if vehicle_state == ConfigVehicles.VEHICLE_STATES.DYING:
+	if vehicle_state == ConfigVehicles.AliveState.DYING:
 		if $Effects/Damage.has_node("Explosion"):
 			if $Effects/Damage/Explosion.effects_finished():
 				print("vehicle_state == DYING' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Effects/Damage/Explosion/AnimationPlayer.current_animation))
@@ -823,7 +827,7 @@ func dying_finished() -> bool:
 # Dynamically adjust the grip depending on speed
 # This means vehicles can more easily climb walls, but not roll at higher speed
 func _on_DynamicGripTimer_timeout():
-	if ConfigVehicles.types[StatePlayers.players[player_number]["vehicle"]]["all_wheel_drive"] == true:
+	if ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["all_wheel_drive"] == true:
 		for wh in get_children():
 			if wh is VehicleWheel:
 				if abs(fwd_mps) < 1.0:
@@ -841,15 +845,20 @@ func _on_DynamicGripTimer_timeout():
 func _on_CheckSkidTimer_timeout():
 	
 	if abs(fwd_mps) < 10.0:
+		#$Effects/WheelSkidDust.emitting = false
 		return
 		
 	var skidding: bool = false
+	randomly_emit($Effects/WheelSkidDust, 0.0)
+	
 	for wh in get_children():
 		if wh is VehicleWheel: 
 			if wh.get_skidinfo() < 0.5:
 				skidding = true
 
 	if skidding == true:
+		print("WheelSkidDust emitting..")
+		randomly_emit($Effects/WheelSkidDust, 0.5)
 		if $Effects/Audio/SkidSound.playing == false:
 			$Effects/Audio/SkidSound.playing = true
 			$Effects/Audio/SkidSound.pitch_scale = 0.5+(abs(fwd_mps)/100.0)
@@ -857,3 +866,15 @@ func _on_CheckSkidTimer_timeout():
 		elif $Effects/Audio/SkidSound.playing == true:
 			if $Effects/Audio/SkidSound.get_playback_position() > 9.75:
 				$Effects/Audio/SkidSound.play(8.21)
+
+
+func _on_CheckWheelSpeedDustTimer_timeout():
+	randomly_emit($Effects/WheelSpeedDust, 1.0 - (10.0/(10.0+abs(fwd_mps))))
+	# $Effects/WheelSpeedDust.amount = num_particles  # changing this resets the particle system. Great!
+
+
+func randomly_emit(node, prob):
+	if rng.randf() < prob:
+		node.emitting = true
+	else:
+		node.emitting = false

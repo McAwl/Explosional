@@ -18,7 +18,6 @@ var fwd_speed: float
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var exploded: bool = false
 var weapon_type: int  
-var weapon_type_name: String  
 var flicker_thrust_timer: float = 0.1
 
 # Called when the node enters the scene tree for the first time.
@@ -28,7 +27,7 @@ func _ready():
 
 
 func muzzle_speed() -> float:
-	return ConfigWeapons.MUZZLE_SPEED[weapon_type_name]
+	return ConfigWeapons.MUZZLE_SPEED[weapon_type]
 
 
 func _process(delta):
@@ -147,7 +146,7 @@ func _physics_process(delta):
 			add_random_movement(0.1)
 		
 		# interpolate to the target speed
-		velocity = velocity.linear_interpolate((velocity.normalized())*ConfigWeapons.TARGET_SPEED[weapon_type_name], delta*speed_up_down_rate) 
+		velocity = velocity.linear_interpolate((velocity.normalized())*ConfigWeapons.TARGET_SPEED[weapon_type], delta*speed_up_down_rate) 
 		
 		transform.origin += velocity * delta  # move the missile
 		look_at(transform.origin + velocity.normalized(), Vector3.UP)  # point the missile in the direction it's moving
@@ -155,7 +154,7 @@ func _physics_process(delta):
 		if homing:
 			if homing_check_target_timer < 0.0:
 				homing_check_target_timer = 0.1
-				for player in get_node("/root/Main").get_players():  # in range(1, 5): # explosion toward all players
+				for player in get_node("/root/MainScene").get_players():  # in range(1, 5): # explosion toward all players
 					#if i != parent_player_number:
 					if player.player_number != parent_player_number:
 						var target: VehicleBody = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")

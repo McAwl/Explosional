@@ -1,4 +1,5 @@
 extends Camera
+class_name FollowCamera
 
 export var min_distance: float = 2.0
 export var max_distance: float = 4.0
@@ -7,13 +8,13 @@ export var angle_v_adjust: float = 0.0
 var collision_exception: Array = []
 export var height: float = 1.5
 
-var FOLLOW_SPEED: float = 2.0  # set 0-1: 0.1=slow follow 0.9=fast follow
+const FOLLOW_SPEED: float = 2.0  # set 0-1: 0.1=slow follow 0.9=fast follow
 var lerp_val: float = 0.5
 var target
 var timer_0_5s: float = 0.5
 var number_of_players: int
-enum VIEWS {THIRD_PERSON=0, FIRST_PERSON=1}
-var view: int = VIEWS.THIRD_PERSON
+enum View {THIRD_PERSON=0, FIRST_PERSON=1}
+var view: int = View.THIRD_PERSON
 var raycast_cam_to_vehicle: RayCast
 var raycast_vehicle_to_cam: RayCast
 	
@@ -87,7 +88,7 @@ func _physics_process(delta):
 		target = target.interpolate_with(target_reverse_third_person, modify_by_num_players * delta * FOLLOW_SPEED * follow_speed_multiplier)
 		
 	if timer_0_5s < 0:
-		if get_carbody().vehicle_state == ConfigVehicles.VEHICLE_STATES.ALIVE:  # else if the car has started exploding leave it at 3rd person for now TODO fix later? 
+		if get_carbody().vehicle_state == ConfigVehicles.AliveState.ALIVE:  # else if the car has started exploding leave it at 3rd person for now TODO fix later? 
 			var iray
 			# check the camera can see the vehicle
 			if fwd_mps >= -2.0:

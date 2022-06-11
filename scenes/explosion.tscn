@@ -1,6 +1,6 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=41 format=2]
 
-[ext_resource path="res://assets/textures/PNG/Black smoke/blackSmoke00.png" type="Texture" id=1]
+[ext_resource path="res://assets/Materials/smoke.tres" type="Material" id=1]
 [ext_resource path="res://assets/materials/shockwave.tres" type="Material" id=2]
 [ext_resource path="res://assets/audio/sounds/587193__derplayer__explosion-big-02.ogg" type="AudioStream" id=3]
 [ext_resource path="res://assets/textures/PNG/Explosion/explosion00.png" type="Texture" id=4]
@@ -28,7 +28,7 @@ _data = [ Vector2( 0, 0.534091 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 
 curve = SubResource( 92 )
 
 [sub_resource type="ParticlesMaterial" id=78]
-lifetime_randomness = 0.21
+lifetime_randomness = 0.28
 emission_shape = 5
 emission_ring_radius = 2.0
 emission_ring_inner_radius = 0.0
@@ -38,33 +38,25 @@ direction = Vector3( 0, 0, 0 )
 spread = 180.0
 flatness = 1.0
 gravity = Vector3( 0, 1, 0 )
-initial_velocity = 3.0
+initial_velocity = 1.0
 initial_velocity_random = 0.53
 angular_velocity = 50.0
 angular_velocity_random = 0.5
 radial_accel = 1.0
+radial_accel_random = 0.45
+tangential_accel = 4.32
+tangential_accel_random = 0.54
 damping = 2.0
-damping_random = 0.44
+damping_random = 0.2
 damping_curve = SubResource( 71 )
 scale = 5.0
+scale_random = 0.39
 scale_curve = SubResource( 93 )
 color = Color( 0.466667, 0.466667, 0.466667, 1 )
 color_ramp = SubResource( 2 )
 
-[sub_resource type="SpatialMaterial" id=4]
-flags_transparent = true
-flags_unshaded = true
-vertex_color_use_as_albedo = true
-params_billboard_mode = 3
-params_billboard_keep_scale = true
-particles_anim_h_frames = 1
-particles_anim_v_frames = 1
-particles_anim_loop = false
-albedo_color = Color( 1, 1, 1, 0.490196 )
-albedo_texture = ExtResource( 1 )
-
 [sub_resource type="QuadMesh" id=79]
-material = SubResource( 4 )
+material = ExtResource( 1 )
 
 [sub_resource type="QuadMesh" id=103]
 
@@ -604,7 +596,7 @@ stream = ExtResource( 3 )
 [node name="Smoke" type="Particles" parent="Visual"]
 emitting = false
 amount = 10
-lifetime = 5.0
+lifetime = 20.0
 one_shot = true
 explosiveness = 1.0
 randomness = 0.53
@@ -613,8 +605,8 @@ process_material = SubResource( 78 )
 draw_pass_1 = SubResource( 79 )
 
 [node name="Light" type="OmniLight" parent="Visual"]
-light_color = Color( 0.996078, 0.776471, 0.580392, 1 )
-light_energy = 20.0
+light_color = Color( 0.67451, 0.382745, 0.112941, 1 )
+light_energy = 25.7143
 light_specular = 1.0
 shadow_enabled = true
 omni_range = 3.0
@@ -622,6 +614,7 @@ omni_attenuation = 3.13834
 
 [node name="Main" type="MeshInstance" parent="Visual"]
 transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0 )
+visible = false
 mesh = SubResource( 103 )
 skeleton = NodePath("../..")
 material/0 = ExtResource( 6 )

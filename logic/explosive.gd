@@ -6,27 +6,15 @@ class_name Explosive
 # 2. A Bomb, which falls and detonates on contact with anything
 # 3. A Nuke, a heavy Bomb
 
-enum TYPES {NOT_SET, MINE, BOMB, NUKE}
-var type = TYPES.NOT_SET
+
+var type: int = -1
 
 var take_damage: bool = false
 var timer: float = 1.0
-var explosive_stage = 0  # 0=turned on, 1=inactive waiting for timer to count to 0, 2=active, 3=triggered (car proximity), 4=explode, 5=animation and sound
+var explosive_stage = ConfigWeapons.ExplosiveStage.TURNED_ON
 var timer_1s: float = 1.0
 var launched_by_player_number: int  # record which player number launched this explosive 
 var launched_by_player = null
-
-# TODO move to configweapons
-# explosion force = explosion_strength / (explosion_decrease*distance)+1.0 ^ explosion_exponent)
-var explosion_strength: Dictionary = {TYPES.NOT_SET: 0.0, TYPES.MINE: 2500.0, TYPES.BOMB: 5000.0, TYPES.NUKE: 10000.0}
-var explosion_range: Dictionary = {TYPES.NOT_SET: 0.0, TYPES.MINE: 10.0, TYPES.BOMB: 10.0, TYPES.NUKE: 1000.0}
-var explosion_exponent: Dictionary = {TYPES.NOT_SET: 1.5, TYPES.MINE: 1.5, TYPES.BOMB: 1.5, TYPES.NUKE: 1.05}
-var explosion_decrease: Dictionary = {TYPES.NOT_SET: 1.0, TYPES.MINE: 1.0, TYPES.BOMB: 1.0, TYPES.NUKE: 0.05}
-
-const EXPLOSIVE_START_WAIT: float = 3.0  # wait time when first turned on to activation
-const EXPLOSIVE_ACTIVE_WAIT: float = 1.0
-const EXPLOSIVE_PROXIMITY_DISTANCE: float = 5.0
-const FLASH_TIMER_WAIT: float = 0.25
 
 var rng = RandomNumberGenerator.new()
 
@@ -67,51 +55,51 @@ func _process(delta):
 	explosive_proximity_timer_limit -= delta
 	
 	# Most of the states can be handled here (state 4: explosion handled in physics method)
-	if explosive_stage == 1:
+	if explosive_stage == ConfigWeapons.ExplosiveStage.INACTIVE:
 		explosive_inactive_timer -= delta
 		if explosive_inactive_timer <= 0.0:
-			explosive_inactive_timer = EXPLOSIVE_START_WAIT  # rest for next time
+			explosive_inactive_timer = ConfigWeapons.EXPLOSIVE_START_WAIT  # rest for next time
 			explosive_stage = 2
 			explosive_proximity_timer_limit = 20  # to ensure we don't wait forever, e.g. if the bomb is stuck somewhere it can't be activated
 			material_override(material_orange)
 		
-	if explosive_stage == 2:  # active waiting for proximity to car 
+	if explosive_stage == ConfigWeapons.ExplosiveStage.ACTIVE:  # active waiting for proximity to car 
 		if explosive_proximity_check_timer <= 0:  # check proximity regularly, not too often
 			for player in get_node("/root/MainScene").get_players():  # i in range(1, 5):
 				# explosion toward all players
 				var get_vehicle_body = player.get_vehicle_body()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
 				if get_vehicle_body != null:
 					var distance = global_transform.origin.distance_to(get_vehicle_body.global_transform.origin)
-					if distance < EXPLOSIVE_PROXIMITY_DISTANCE or explosive_proximity_timer_limit <= 0:
-						explosive_stage = 3  # trigged by proximity to car
+					if distance < ConfigWeapons.EXPLOSIVE_PROXIMITY_DISTANCE or explosive_proximity_timer_limit <= 0:
+						explosive_stage = ConfigWeapons.ExplosiveStage.TRIGGERED  # trigged by proximity to car
 						material_override(material_red)
-						timer = EXPLOSIVE_ACTIVE_WAIT
-			explosive_proximity_check_timer = EXPLOSIVE_ACTIVE_WAIT/4.0
+						timer = ConfigWeapons.EXPLOSIVE_ACTIVE_WAIT
+			explosive_proximity_check_timer = ConfigWeapons.EXPLOSIVE_ACTIVE_WAIT/4.0
 
-	if explosive_stage == 3:  # triggered by car proximity
+	if explosive_stage == ConfigWeapons.ExplosiveStage.TRIGGERED:  # triggered by car proximity
 		timer -= delta
 		if timer <= 0.0:
-			timer = EXPLOSIVE_ACTIVE_WAIT
+			timer = ConfigWeapons.EXPLOSIVE_ACTIVE_WAIT
 			visible = false
 			#	print("  real bomb Body.visible = "+str($Body.visible))'''
-			explosive_stage = 4
-			if type == TYPES.MINE:
+			explosive_stage = ConfigWeapons.ExplosiveStage.EXPLODE
+			if type == ConfigWeapons.Type.MINE:
 				material_override(material_green)
 					
-		if timer < EXPLOSIVE_ACTIVE_WAIT/2.0:
+		if timer < ConfigWeapons.EXPLOSIVE_ACTIVE_WAIT/2.0:
 			if flash_timer <= 0.0:
-				flash_timer = EXPLOSIVE_ACTIVE_WAIT/4.0
+				flash_timer = ConfigWeapons.EXPLOSIVE_ACTIVE_WAIT/4.0
 				if explosive_flash_state == 0:
-					if type == TYPES.MINE:
+					if type == ConfigWeapons.Type.MINE:
 						material_override(material_red)
 					explosive_flash_state = 1
 				else:
-					if type == TYPES.MINE:
+					if type == ConfigWeapons.Type.MINE:
 						material_override(material_black)
 					explosive_flash_state = 0
 	
-	if explosive_stage == 5:
-		if type != TYPES.MINE:
+	if explosive_stage == ConfigWeapons.ExplosiveStage.EFFECTS:
+		if type != ConfigWeapons.Type.MINE:
 			axis_lock_angular_x = true
 			axis_lock_angular_y = true
 			axis_lock_angular_z = true
@@ -120,9 +108,9 @@ func _process(delta):
 			axis_lock_linear_z = true
 			
 		$SpotLight.hide()
-		if no_animations_or_sound_playing() or (type == TYPES.MINE and explosive_proximity_timer_limit < 0.0):
+		if no_animations_or_sound_playing() or (type == ConfigWeapons.Type.MINE and explosive_proximity_timer_limit < 0.0):
 			# explosion particles have finished, explosion sound has finished, so disable the bomb
-			# print("explosive_stage == 5 no_animations_or_sound_playing() or (type == TYPES.MINE and explosive_proximity_timer_limit < 0.0) or or (type == TYPES.BOMB and explosive_proximity_timer_limit < 0.0)")
+			# print("explosive_stage == ConfigWeapons.ExplosiveStage.5 no_animations_or_sound_playing() or (type == Type.MINE and explosive_proximity_timer_limit < 0.0) or or (type == Type.BOMB and explosive_proximity_timer_limit < 0.0)")
 			#explosive_stage = 0
 			visible = false
 			# if explosive_proximity_timer_limit < 0.0:
@@ -162,11 +150,11 @@ func get_bombs():
 
 func _physics_process(_delta):
 	
-	if explosive_stage == 4:
+	if explosive_stage == ConfigWeapons.ExplosiveStage.EXPLODE:
 		# print("explosive_stage == 4")
 		hide_meshinstances()
-		if type == TYPES.NUKE:
-			# print("_physics_process(): explosive_stage == 4 type == TYPES.NUKE")
+		if type == ConfigWeapons.Type.NUKE:
+			# print("_physics_process(): explosive_stage == 4 type == ConfigWeapons.Type.NUKE")
 			linear_velocity = Vector3(0.0, 0.0, 0.0)
 			angular_velocity = Vector3(0.0, 0.0, 0.0)
 			rotation_degrees = Vector3(0.0, 0.0, 0.0)
@@ -175,46 +163,49 @@ func _physics_process(_delta):
 			$ExplosionNuke/AnimationPlayer.play("nuke")
 			$ExplosionNuke/AnimationPlayer.seek(0.0)
 			$ExplosionNuke/ExplosionNukeSound.playing = true
-		elif type == TYPES.MINE:
+		elif type == ConfigWeapons.Type.MINE:
 			var explosion: Explosion = load("res://scenes/explosion.tscn").instance()
 			explosion.name = "Explosion"
 			self.add_child(explosion)
 			$Explosion.global_transform.origin = global_transform.origin
-			# print("type == TYPES.MINE setting $ParticlesExplosion.emitting = true")
+			# print("type == ConfigWeapons.ConfigWeapons.Type.MINE setting $ParticlesExplosion.emitting = true")
 			$Explosion.start_effects()
-		elif type == TYPES.BOMB:
+			reparent(self, $Explosion)
+		elif type == ConfigWeapons.Type.BOMB:
 			var explosion: Explosion = load("res://scenes/explosion.tscn").instance()
 			explosion.name = "Explosion"
 			self.add_child(explosion)
-			# print(" type == TYPES.BOMB setting $ParticlesExplosion.emitting = true")
+			# print(" type == ConfigWeapons.Type.BOMB setting $ParticlesExplosion.emitting = true")
 			$Explosion.start_effects()
+			reparent(self, $Explosion)
 		var targets = []
 		for target in get_players():  # i in range(1,5): # explosion toward all players
 			var target_body = target.get_vehicle_body()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
 			targets.append(target_body)
-		for bomb in get_bombs():  # i in range(1,5):  # explosion toward all bombs
-			# if i != player_number:
-			var target = bomb  # get_node("../Bomb"+str(i)+"/Body")
-			targets.append(target)
+		#for bomb in get_bombs():  # i in range(1,5):  # explosion toward all bombs
+		#	# if i != player_number:
+		#	var target = bomb  # get_node("../Bomb"+str(i)+"/Body")
+		#	targets.append(target)
 		for target in targets:
 			var distance = global_transform.origin.distance_to(target.global_transform.origin)
-			#print("target.name="+str(target.name))
-			if distance < explosion_range[type] and target is VehicleBody:
+			print("target.name="+str(target.name))
+			if distance < ConfigWeapons.explosion_range[type] and target is VehicleBody:
 				var direction = target.transform.origin - transform.origin  
 				# direction[2]+=5.0  # slight upward force as well - isn't [1] up/down?
 				# remove downwards force - as vehicles can be blown through the terrain
 				if direction[1] < 0:
 					direction[1] = 0
-				var explosion_force = explosion_strength[type]/pow((explosion_decrease[type]*distance)+1.0, explosion_exponent[type])  # inverse square of distance
-				if type == TYPES.NUKE:
+				var explosion_force = ConfigWeapons.explosion_strength[type]/pow((ConfigWeapons.explosion_decrease[type]*distance)+1.0, ConfigWeapons.explosion_exponent[type])  # inverse square of distance
+				if type == ConfigWeapons.Type.NUKE:
 					if target.player_number == launched_by_player_number:
 						explosion_force = 0.0  # no damage from player which launched the nuke
 					else:
 						distance = 50.0  # ensure a specific force is experiences by all other players
 				target.apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 				target.angular_velocity  = Vector3(5.0*randf(),5.0*randf(),5.0*randf())
+				
 				#if target.take_damage == true:
-				#	if type == TYPES.NUKE:
+				#	if type == Type.NUKE:
 				#		if target.player_number != var _number:
 				#			target.damage(10)
 				#			# print("target took nuke damage launched_by_player_number "+str(launched_by_player_number))
@@ -226,10 +217,10 @@ func _physics_process(_delta):
 				
 
 		# print("setting explosive_stage = 5")
-		explosive_stage = 5
-		explosive_proximity_check_timer = EXPLOSIVE_ACTIVE_WAIT *4  # to ensure we don't wait forever
+		explosive_stage = ConfigWeapons.ExplosiveStage.EFFECTS
+		explosive_proximity_check_timer = ConfigWeapons.EXPLOSIVE_ACTIVE_WAIT * 4  # to ensure we don't wait forever
 
-	if explosive_stage == 5:  # stop rotation of bombs/nukes after they hit, otherwise animations rotation/move/etc weirddly
+	if explosive_stage == ConfigWeapons.ExplosiveStage.EFFECTS:  # stop rotation of bombs/nukes after they hit, otherwise animations rotation/move/etc weirddly
 		# linear_velocity = Vector3(0.0, 0.0, 0.0)
 		# angular_velocity = Vector3(0.0, 0.0, 0.0)
 		rotation_degrees = Vector3(0.0, 0.0, 0.0)
@@ -244,8 +235,8 @@ func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player
 	visible = true
 	global_transform.origin = pos
 	explosive_stage = stage
-	timer = EXPLOSIVE_START_WAIT
-	if type == TYPES.MINE:
+	timer = ConfigWeapons.EXPLOSIVE_START_WAIT
+	if type == ConfigWeapons.Type.MINE:
 		material_override(material_green)
 		linear_velocity = linear_velocity
 		angular_velocity = angular_velocity
@@ -258,15 +249,15 @@ func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player
 	if _launched_by_player != null:
 		launched_by_player = _launched_by_player
 		player_str = " (player "+str(launched_by_player.get_player_name())+")"
-	print("weapon of type "+str(TYPES.keys()[type]) + " launched by player_number "+str(launched_by_player_number)+player_str)
+	print("weapon of type "+str(ConfigWeapons.Type.keys()[type]) + " launched by player_number "+str(launched_by_player_number)+player_str)
 
 
 func _on_Bomb_body_entered(_body):
-	if hit_on_contact == true and explosive_stage < 4:
-		timer = EXPLOSIVE_ACTIVE_WAIT
+	if hit_on_contact == true and explosive_stage < ConfigWeapons.ExplosiveStage.EXPLODE:
+		timer = ConfigWeapons.EXPLOSIVE_ACTIVE_WAIT
 		# print("mine: _on_Bomb_body_entered(_body):")
 		# print("body.name="+str(_body.name))
-		explosive_stage = 4
+		explosive_stage = ConfigWeapons.ExplosiveStage.EXPLODE
 
 
 func set_as_mine() -> void:
@@ -275,7 +266,7 @@ func set_as_mine() -> void:
 	mine_meshes(true)
 	bomb_meshes(false)
 	nuke_meshes(false)
-	type = TYPES.MINE
+	type = ConfigWeapons.Type.MINE
 	$SpotLight.hide()
 
 
@@ -285,7 +276,7 @@ func set_as_bomb() -> void:
 	mine_meshes(false)
 	bomb_meshes(true)
 	nuke_meshes(false)
-	type = TYPES.BOMB
+	type = ConfigWeapons.Type.BOMB
 	$SpotLight.show()
 	$SpotLight.spot_range = 150
 
@@ -296,7 +287,7 @@ func set_as_nuke() -> void:
 	mine_meshes(false)
 	bomb_meshes(false)
 	nuke_meshes(true)
-	type = TYPES.NUKE
+	type = ConfigWeapons.Type.NUKE
 	$SpotLight.show()
 	$SpotLight.spot_range = 150.0
 	$ExplosionNuke/AnimationPlayer.stop(true)
@@ -328,4 +319,13 @@ func nuke_meshes(_show) -> void:
 	$NukeMeshes/Body.visible = _show
 	$NukeMeshes/Fin1.visible = _show
 	$NukeMeshes/Fin2.visible = _show
+
+
+# Reparent the explosion so the explosive can be deleted
+func reparent(parent: Node, child: Node) -> void:
+	var old_global_transform_origin = child.global_transform.origin
+	parent.remove_child(child)
+	get_tree().root.get_node("MainScene").add_child(child)
+	child.set_as_toplevel(true)
+	child.global_transform.origin = old_global_transform_origin
 

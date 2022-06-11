@@ -11,14 +11,14 @@ export var slowing_down: Array = [28.0, 36.0]
 export var stable_speed: Array = [87.0, 89.0]
 export var idle: Array = [4.5, 6.9, 10.0]  # min / [medium spots] / max
 
-var current_position_sec
+var current_position_sec: float
 
 var accel: float
 var speed: float
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
-enum STATE {IDLE, STABLE, SPEEDING_UP, SLOWING_DOWN}
-var state = STATE.IDLE
+
+var state = ConfigVehicles.SpeedState.IDLE
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -46,7 +46,7 @@ func _process(delta):
 							self.play(idle[1])
 						if state != 0:
 							slowly_increase_volume(0.25)
-					state = STATE.IDLE
+					state = ConfigVehicles.SpeedState.IDLE
 				else:
 					if accel != null:
 						if accel >= 0.01:  # speeding up
@@ -57,25 +57,25 @@ func _process(delta):
 									self.play(increase_speed_2[0])
 								if state != 2:
 									slowly_increase_volume(0.5)
-								state = STATE.SPEEDING_UP
+								state = ConfigVehicles.SpeedState.SPEEDING_UP
 						elif accel < -0.01:  # slowing down
 							if current_position_sec < slowing_down[0] or current_position_sec > slowing_down[1]:
 								self.play(slowing_down[0])
 								if state != 3:
 									slowly_increase_volume(0.5)
-							state = STATE.STABLE
+							state = ConfigVehicles.SpeedState.STABLE
 						else:  # stable speed
 							if current_position_sec < stable_speed[0] or current_position_sec > stable_speed[1]:
 								self.play(stable_speed[0])
 								if state != 1:
 									slowly_increase_volume(0.5)
-							state = STATE.SLOWING_DOWN
+							state = ConfigVehicles.SpeedState.SLOWING_DOWN
 					else:  # stable speed
 						if current_position_sec < stable_speed[0] or current_position_sec > stable_speed[1]:
 							self.play(stable_speed[0])
 							if state != 1:
 								slowly_increase_volume(0.5)
-						state = STATE.STABLE
+						state = ConfigVehicles.SpeedState.STABLE
 
 
 func slowly_increase_volume(duration_sec) -> void:

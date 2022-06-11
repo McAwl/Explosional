@@ -51,8 +51,8 @@ func _ready():
 		player_instance.name = "Player"+StatePlayers.players[player_number]["name"]
 		var pos: Vector3 = spawn_points[player_number-1].global_transform.origin
 		player_instance.init(player_number, pos)
-		player_instance.get_vehicle_body().weapons[3].enabled = test_nuke
-		player_instance.get_vehicle_body().weapons[3].test_mode = test_nuke
+		player_instance.get_vehicle_body().weapons_state[3].enabled = test_nuke
+		player_instance.get_vehicle_body().weapons_state[3].test_mode = test_nuke
 	var anim_time: float = start_clock_hrs + 12.0
 	if anim_time > 24.0:
 		anim_time -= 12.0
@@ -298,8 +298,8 @@ func get_players(ignore_player_number=false) -> Array:
 	return players2
 
 
-func get_player(player_number):
-	return get_node("Player"+str(player_number))
+func get_player(player_number) -> Player:
+	return get_node("Player"+str(player_number)) as Player
 	
 
 func get_bombs():
@@ -311,8 +311,8 @@ func reset_game() -> void:
 	var _ret_val = get_tree().change_scene("res://scenes/start.tscn")  #get_tree().reload_current_scene()
 
 
-func air_strike_label():
-	return $VC.get_node("CL/LabelAirStrike")
+func air_strike_label() -> Label:
+	return $VC.get_node("CL/LabelAirStrike") as Label
 
 
 func start_timer_slow_motion() -> void:

@@ -39,7 +39,7 @@ func _process(delta):
 		# periodically check for a destroyed vehicle
 		if get_viewport().has_node("vehicle_body"):
 			var vb: VehicleBody = get_viewport().get_node("vehicle_body")
-			if vb.vehicle_state == ConfigVehicles.VEHICLE_STATES.DEAD:
+			if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
 				vb.queue_free()
 		else:
 			if StatePlayers.players[player_number]["lives_left"] > 0:
@@ -67,6 +67,7 @@ func init(_player_number, pos=null) -> void:
 	player_number = _player_number
 	# print("player init(): StatePlayers.num_players()="+str(StatePlayers.num_players()))
 	
+	
 	# Add a vehicle to the player
 	init_vehicle_body(pos)
 	
@@ -90,10 +91,10 @@ func init(_player_number, pos=null) -> void:
 func init_vehicle_body(pos) -> void:
 	var vehicle_body: VehicleBody = load("res://scenes/vehicle_body.tscn").instance()
 	get_viewport().add_child(vehicle_body)
-	# vehicle_body = load("res://scenes/trailer_truck.tscn").instance()
 	var retval: bool = vehicle_body.init(pos, player_number, "vehicle_body")
 	if retval == false:
 		print("Error: couldn't initialise vehicle body")
+		get_tree().quit()
 	
 
 func set_viewport_container_one(_player_number) -> void:

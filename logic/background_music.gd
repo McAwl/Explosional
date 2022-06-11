@@ -1,12 +1,15 @@
 extends AudioStreamPlayer
+class_name BackgroundMusic
 
 var tracks: Array = []
 var timer_0_5s: float = 1.0
 var current_track_num: int
-var background_music_folder = "res://assets/audio/music/background"
+var background_music_folder: String = "res://assets/audio/music/background"
+export var start_paused: bool = true
+
 
 func _ready():
-	stream_paused = false  # true
+	stream_paused = start_paused
 	randomize()
 	
 	# Search for music files 

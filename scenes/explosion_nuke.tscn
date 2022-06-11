@@ -27,6 +27,8 @@ params_billboard_mode = 1
 params_billboard_keep_scale = true
 albedo_color = Color( 0.529412, 0.529412, 0.529412, 0.517647 )
 albedo_texture = ExtResource( 1 )
+proximity_fade_enable = true
+proximity_fade_distance = 1.0
 
 [sub_resource type="QuadMesh" id=7]
 material = SubResource( 6 )
@@ -61,6 +63,8 @@ params_billboard_mode = 1
 params_billboard_keep_scale = true
 albedo_color = Color( 0.568627, 0.556863, 0.415686, 0.533333 )
 albedo_texture = ExtResource( 1 )
+proximity_fade_enable = true
+proximity_fade_distance = 1.0
 
 [sub_resource type="QuadMesh" id=12]
 material = SubResource( 11 )
@@ -94,6 +98,8 @@ params_billboard_mode = 1
 params_billboard_keep_scale = true
 albedo_color = Color( 0.54902, 0.501961, 0.34902, 1 )
 albedo_texture = ExtResource( 1 )
+proximity_fade_enable = true
+proximity_fade_distance = 1.0
 
 [sub_resource type="QuadMesh" id=17]
 material = SubResource( 16 )
@@ -580,6 +586,8 @@ params_billboard_mode = 1
 params_billboard_keep_scale = true
 albedo_color = Color( 0.498039, 0.498039, 0.498039, 0.545098 )
 albedo_texture = ExtResource( 1 )
+proximity_fade_enable = true
+proximity_fade_distance = 1.0
 
 [sub_resource type="QuadMesh" id=22]
 material = SubResource( 21 )

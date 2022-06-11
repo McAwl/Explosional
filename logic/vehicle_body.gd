@@ -739,7 +739,7 @@ func start_vehicle_dying() -> void:
 		explosion.name = "Explosion"
 		$Effects/Damage.add_child(explosion)
 		$Effects/Damage/Explosion.global_transform.origin = global_transform.origin
-		$Effects/Damage/Explosion.start_effects()  # /AnimationPlayer.play("explosion")
+		$Effects/Damage/Explosion.start_effects($Effects/Damage)  # /AnimationPlayer.play("explosion")
 		
 		remove_nodes_for_dying()
 		
@@ -857,7 +857,6 @@ func _on_CheckSkidTimer_timeout():
 				skidding = true
 
 	if skidding == true:
-		print("WheelSkidDust emitting..")
 		randomly_emit($Effects/WheelSkidDust, 0.5)
 		if $Effects/Audio/SkidSound.playing == false:
 			$Effects/Audio/SkidSound.playing = true

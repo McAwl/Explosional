@@ -159,7 +159,7 @@ func _physics_process(_delta):
 			angular_velocity = Vector3(0.0, 0.0, 0.0)
 			rotation_degrees = Vector3(0.0, 0.0, 0.0)
 			# print("type == "+str(type))
-			$ExplosionNuke/AnimationPlayer.seek(0.0)
+			# $ExplosionNuke/AnimationPlayer.seek(0.0)
 			$ExplosionNuke/AnimationPlayer.play("nuke")
 			$ExplosionNuke/AnimationPlayer.seek(0.0)
 			$ExplosionNuke/ExplosionNukeSound.playing = true
@@ -169,15 +169,13 @@ func _physics_process(_delta):
 			self.add_child(explosion)
 			$Explosion.global_transform.origin = global_transform.origin
 			# print("type == ConfigWeapons.ConfigWeapons.Type.MINE setting $ParticlesExplosion.emitting = true")
-			$Explosion.start_effects()
-			reparent(self, $Explosion)
+			$Explosion.start_effects(self)
 		elif type == ConfigWeapons.Type.BOMB:
 			var explosion: Explosion = load("res://scenes/explosion.tscn").instance()
 			explosion.name = "Explosion"
 			self.add_child(explosion)
 			# print(" type == ConfigWeapons.Type.BOMB setting $ParticlesExplosion.emitting = true")
-			$Explosion.start_effects()
-			reparent(self, $Explosion)
+			$Explosion.start_effects(self)
 		var targets = []
 		for target in get_players():  # i in range(1,5): # explosion toward all players
 			var target_body = target.get_vehicle_body()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
@@ -320,12 +318,4 @@ func nuke_meshes(_show) -> void:
 	$NukeMeshes/Fin1.visible = _show
 	$NukeMeshes/Fin2.visible = _show
 
-
-# Reparent the explosion so the explosive can be deleted
-func reparent(parent: Node, child: Node) -> void:
-	var old_global_transform_origin = child.global_transform.origin
-	parent.remove_child(child)
-	get_tree().root.get_node("MainScene").add_child(child)
-	child.set_as_toplevel(true)
-	child.global_transform.origin = old_global_transform_origin
 

@@ -203,7 +203,7 @@ func explode(body=null) -> void:  # null if lifetime has expired
 	var explosion: Explosion = load("res://scenes/explosion.tscn").instance()
 	explosion.name = "Explosion"
 	self.add_child(explosion)
-	$Explosion.start_effects()  # start the explosion visual and audio effects
+	$Explosion.start_effects(self)  # start the explosion visual and audio effects
 	$ThrustLight.hide()
 	
 	# TODO this shouldbe replaced by signals
@@ -250,3 +250,4 @@ func flicker_thrust_light() -> void:
 			$ThrustLight.light_color = Color(1, 0.6, 0) 
 		else: 
 			$ThrustLight.light_color = Color(1, 0.2, 0)
+

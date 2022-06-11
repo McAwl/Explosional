@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://assets/Materials/smoke.tres" type="Material" id=1]
 [ext_resource path="res://assets/materials/shockwave.tres" type="Material" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://assets/textures/PNG/Explosion/explosion00.png" type="Texture" id=4]
 [ext_resource path="res://logic/explosion.gd" type="Script" id=5]
 [ext_resource path="res://addons/mrminimal_flipbook_particles/assets/explosions/explosion_01/materials/explosion_01_material.tres" type="Material" id=6]
+[ext_resource path="res://scenes/Smoke.gd" type="Script" id=7]
 
 [sub_resource type="Gradient" id=76]
 offsets = PoolRealArray( 0, 0.218978, 0.49635, 0.781022, 1 )
@@ -603,10 +604,11 @@ randomness = 0.53
 local_coords = false
 process_material = SubResource( 78 )
 draw_pass_1 = SubResource( 79 )
+script = ExtResource( 7 )
 
 [node name="Light" type="OmniLight" parent="Visual"]
-light_color = Color( 0.67451, 0.382745, 0.112941, 1 )
-light_energy = 25.7143
+light_color = Color( 0.996078, 0.776471, 0.580392, 1 )
+light_energy = 20.0
 light_specular = 1.0
 shadow_enabled = true
 omni_range = 3.0
@@ -614,7 +616,6 @@ omni_attenuation = 3.13834
 
 [node name="Main" type="MeshInstance" parent="Visual"]
 transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0 )
-visible = false
 mesh = SubResource( 103 )
 skeleton = NodePath("../..")
 material/0 = ExtResource( 6 )
@@ -625,7 +626,7 @@ autoplay = "Explode"
 anims/Explode = SubResource( 104 )
 
 [node name="TimerFailsafeDestroy" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 5.0
 one_shot = true
 autostart = true
 

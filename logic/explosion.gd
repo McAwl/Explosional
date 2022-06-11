@@ -6,25 +6,31 @@ class_name Explosion
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	$Visual/Main.show()
+	$Visual/Smoke.show()
+	$Visual/Light.show()
 	pass
 
 
 # start all the effects
-func start_effects() -> void:
+func start_effects(from_parent) -> void:
+	reparent(from_parent)  
 	$Visual/Smoke.emitting = true
-	reparent($Visual, $Visual/Smoke)
+	$Visual/Smoke.reparent($Visual)
 	$Visual/Light.visible = true
 	$Visual/AnimationPlayer.play("Explode")
 	$Audio/ExplosionSound.playing = true
 
 
-# Reparent the smoke so the explosion can be deleted
-func reparent(parent: Node, child: Node) -> void:
-	var old_global_transform_origin = child.global_transform.origin
-	parent.remove_child(child)
-	get_tree().root.get_node("MainScene").add_child(child)
-	child.set_as_toplevel(true)
-	child.global_transform.origin = old_global_transform_origin
+# We reparent the explosion so the parent weapon can destroy itself
+# without worrying it will stop any effects
+func reparent(from_parent: Node):
+	var old_global_transform_origin = global_transform.origin
+	var new_parent = get_tree().root.get_node("MainScene")
+	from_parent.remove_child(self)
+	new_parent.add_child(self)
+	set_as_toplevel(true)
+	global_transform.origin = old_global_transform_origin
 
 
 func effects_finished() -> bool:

@@ -1950,7 +1950,7 @@ wait_time = 0.5
 autostart = true
 
 [node name="CheckWheelSpeedDustTimer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.25
 autostart = true
 
 [connection signal="timeout" from="DynamicGripTimer" to="." method="_on_DynamicGripTimer_timeout"]

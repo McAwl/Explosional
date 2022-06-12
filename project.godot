@@ -12,42 +12,42 @@ _global_script_classes=[ {
 "base": "Spatial",
 "class": "AnimatedGrass",
 "language": "GDScript",
-"path": "res://logic/grass.gd"
+"path": "res://terrain/grass.gd"
 }, {
 "base": "StaticBody",
 "class": "AnimatedTree",
 "language": "GDScript",
-"path": "res://logic/tree.gd"
+"path": "res://terrain/tree.gd"
 }, {
 "base": "AudioStreamPlayer",
 "class": "BackgroundMusic",
 "language": "GDScript",
-"path": "res://logic/background_music.gd"
+"path": "res://effects/audio/background_music.gd"
 }, {
 "base": "RigidBody",
 "class": "ExplodedVehiclePart",
 "language": "GDScript",
-"path": "res://logic/exploded_vehicle_part.gd"
+"path": "res://vehicles/exploded_vehicle_part.gd"
 }, {
 "base": "Spatial",
 "class": "Explosion",
 "language": "GDScript",
-"path": "res://logic/explosion.gd"
+"path": "res://effects/visual/explosion.gd"
 }, {
 "base": "RigidBody",
 "class": "Explosive",
 "language": "GDScript",
-"path": "res://logic/explosive.gd"
+"path": "res://weapons/explosive/explosive.gd"
 }, {
 "base": "Node2D",
 "class": "FinalScore",
 "language": "GDScript",
-"path": "res://logic/final_score.gd"
+"path": "res://scenes/final_score/final_score.gd"
 }, {
 "base": "Camera",
 "class": "FollowCamera",
 "language": "GDScript",
-"path": "res://logic/follow_camera.gd"
+"path": "res://vehicles/follow_camera.gd"
 }, {
 "base": "Resource",
 "class": "ImageDataReource",
@@ -82,27 +82,27 @@ _global_script_classes=[ {
 "base": "Spatial",
 "class": "MainScene",
 "language": "GDScript",
-"path": "res://logic/main.gd"
+"path": "res://scenes/main/main.gd"
 }, {
 "base": "Spatial",
 "class": "Player",
 "language": "GDScript",
-"path": "res://logic/player.gd"
+"path": "res://player/player.gd"
 }, {
 "base": "RayCast",
 "class": "RayCastProceduralVegetation",
 "language": "GDScript",
-"path": "res://logic/raycast_procedural_veg.gd"
+"path": "res://terrain/raycast_procedural_veg.gd"
 }, {
 "base": "Spatial",
 "class": "Shield",
 "language": "GDScript",
-"path": "res://logic/shield.gd"
+"path": "res://effects/visual/shield.gd"
 }, {
 "base": "Particles",
 "class": "SmokeTrail",
 "language": "GDScript",
-"path": "res://logic/smoke_trail.gd"
+"path": "res://effects/visual/smoke_trail.gd"
 } ]
 _global_script_class_icons={
 "AnimatedGrass": "",
@@ -135,15 +135,16 @@ varying complexity using vehicle physics.
 Do not be surprised if everything is bouncy and glitchy,
 Godot's physics system is not polished and will likely be
 reworked in the future."
-run/main_scene="res://scenes/logo.tscn"
+run/main_scene="res://scenes/logo/logo.tscn"
 boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://icon.png"
 
 [autoload]
 
-ConfigVehicles="*res://logic/config_vehicles.gd"
-ConfigWeapons="*res://logic/config_weapons.gd"
-StatePlayers="*res://logic/state_players.gd"
+Global="*res://scenes/global.gd"
+ConfigVehicles="*res://vehicles/config_vehicles.gd"
+ConfigWeapons="*res://weapons/config_weapons.gd"
+StatePlayers="*res://player/state_players.gd"
 
 [display]
 

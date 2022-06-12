@@ -1,0 +1,215 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://scenes/start/start.gd" type="Script" id=1]
+[ext_resource path="res://assets/display/fonts/Square.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://assets/display/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=3]
+
+
+[sub_resource type="DynamicFont" id=6]
+size = 24
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=11]
+bg_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=12]
+bg_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="DynamicFont" id=7]
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=13]
+bg_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=14]
+bg_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="DynamicFont" id=8]
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=15]
+bg_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=16]
+bg_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="DynamicFont" id=9]
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=17]
+bg_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=18]
+bg_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="DynamicFont" id=10]
+size = 40
+font_data = ExtResource( 3 )
+
+[node name="Spatial" type="Node"]
+script = ExtResource( 1 )
+
+[node name="StartButton" type="Button" parent="."]
+margin_left = 940.88
+margin_top = 959.462
+margin_right = 1067.89
+margin_bottom = 1005.46
+custom_fonts/font = SubResource( 6 )
+disabled = true
+text = "start"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player1Name" type="LineEdit" parent="."]
+margin_left = 349.445
+margin_top = 254.452
+margin_right = 517.445
+margin_bottom = 302.452
+focus_neighbour_left = NodePath(".")
+focus_neighbour_top = NodePath(".")
+focus_neighbour_right = NodePath("../Player4Name")
+focus_neighbour_bottom = NodePath("../Player4Name")
+focus_next = NodePath("../Player2Name")
+focus_previous = NodePath("../Player3Name")
+custom_fonts/font = SubResource( 1 )
+custom_styles/read_only = SubResource( 11 )
+custom_styles/normal = SubResource( 12 )
+max_length = 12
+editable = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player2Name" type="LineEdit" parent="."]
+margin_left = 353.74
+margin_top = 435.524
+margin_right = 525.16
+margin_bottom = 483.524
+custom_fonts/font = SubResource( 7 )
+custom_styles/read_only = SubResource( 13 )
+custom_styles/normal = SubResource( 14 )
+editable = false
+
+[node name="Player3Name" type="LineEdit" parent="."]
+margin_left = 354.359
+margin_top = 622.943
+margin_right = 523.859
+margin_bottom = 670.943
+custom_fonts/font = SubResource( 8 )
+custom_styles/read_only = SubResource( 15 )
+custom_styles/normal = SubResource( 16 )
+editable = false
+
+[node name="Player4Name" type="LineEdit" parent="."]
+margin_left = 353.854
+margin_top = 821.667
+margin_right = 523.934
+margin_bottom = 869.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/read_only = SubResource( 17 )
+custom_styles/normal = SubResource( 18 )
+editable = false
+
+[node name="LabelAddPlayers" type="Label" parent="."]
+margin_left = 818.394
+margin_top = 89.2087
+margin_right = 1155.4
+margin_bottom = 132.209
+custom_fonts/font = SubResource( 10 )
+text = "Add Players"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player1" type="Label" parent="."]
+margin_left = 29.0578
+margin_top = 627.311
+margin_right = 366.064
+margin_bottom = 670.312
+custom_fonts/font = SubResource( 10 )
+text = "Player 3"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player2" type="Label" parent="."]
+margin_left = 36.1849
+margin_top = 434.877
+margin_right = 373.191
+margin_bottom = 477.878
+custom_fonts/font = SubResource( 10 )
+text = "Player 2"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player3" type="Label" parent="."]
+margin_left = 29.0578
+margin_top = 254.916
+margin_right = 366.064
+margin_bottom = 297.916
+custom_fonts/font = SubResource( 10 )
+text = "Player 1"
+align = 1
+
+[node name="Player4" type="Label" parent="."]
+margin_left = 29.0577
+margin_top = 825.091
+margin_right = 366.064
+margin_bottom = 868.091
+custom_fonts/font = SubResource( 10 )
+text = "Player 4"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InstructionPlayer1" type="Label" parent="."]
+margin_left = 567.683
+margin_top = 255.454
+margin_right = 1015.68
+margin_bottom = 305.454
+custom_fonts/font = SubResource( 10 )
+text = "Press E/Left Trigger to select"
+
+[node name="InstructionPlayer2" type="Label" parent="."]
+margin_left = 565.901
+margin_top = 442.543
+margin_right = 1185.9
+margin_bottom = 492.543
+custom_fonts/font = SubResource( 10 )
+text = "Press Shift/Left Trigger to select"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InstructionPlayer3" type="Label" parent="."]
+margin_left = 565.901
+margin_top = 622.504
+margin_right = 1185.9
+margin_bottom = 672.504
+custom_fonts/font = SubResource( 10 )
+text = "Press Y to select"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InstructionPlayer4" type="Label" parent="."]
+margin_left = 555.21
+margin_top = 822.066
+margin_right = 1175.21
+margin_bottom = 872.066
+custom_fonts/font = SubResource( 10 )
+text = "Press O to select"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="StartButton" to="." method="_on_Button_pressed"]

@@ -1,0 +1,346 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://scenes/main_menu/main_menu.gd" type="Script" id=1]
+[ext_resource path="res://assets/display/capture1 - blurred.png" type="Texture" id=2]
+[ext_resource path="res://assets/display/fonts/font_theme_title.tres" type="DynamicFont" id=3]
+[ext_resource path="res://assets/display/fonts/font_theme_tiny.tres" type="DynamicFont" id=4]
+[ext_resource path="res://vehicles/vehicle_racer_mesh_import.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/main_menu/viewport.gd" type="Script" id=6]
+
+[node name="MainMenu" type="Node"]
+pause_mode = 2
+script = ExtResource( 1 )
+
+[node name="ViewportContainer" type="ViewportContainer" parent="."]
+visible = false
+margin_left = 888.0
+margin_top = 80.0
+margin_right = 1088.0
+margin_bottom = 280.0
+
+[node name="Viewport" type="Viewport" parent="ViewportContainer"]
+size = Vector2( 200, 200 )
+handle_input_locally = false
+render_target_update_mode = 0
+script = ExtResource( 6 )
+
+[node name="vehicle" parent="ViewportContainer/Viewport" instance=ExtResource( 5 )]
+transform = Transform( 0.14, 0, 0, 0, 0.14, 0, 0, 0, 0.14, -170.317, 0, 0 )
+
+[node name="MainSelection" type="Control" parent="."]
+pause_mode = 2
+anchor_right = 0.5
+anchor_bottom = 0.6
+margin_left = 120.0
+margin_top = 80.0
+margin_right = -120.0
+margin_bottom = -80.0
+mouse_filter = 2
+
+[node name="BackgroundImage" type="TextureRect" parent="MainSelection"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -120.0
+margin_top = -80.0
+margin_right = 1080.0
+margin_bottom = 512.0
+texture = ExtResource( 2 )
+stretch_mode = 1
+
+[node name="MainContainer" type="VBoxContainer" parent="MainSelection"]
+anchor_bottom = 1.0
+custom_constants/separation = 30
+
+[node name="TitleContainer" type="VBoxContainer" parent="MainSelection/MainContainer"]
+margin_right = 519.0
+margin_bottom = 101.0
+
+[node name="TitleText" type="Label" parent="MainSelection/MainContainer/TitleContainer"]
+margin_right = 519.0
+margin_bottom = 101.0
+custom_fonts/font = ExtResource( 3 )
+text = "Explosional!"
+align = 1
+valign = 1
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="MainSelection/MainContainer"]
+margin_top = 131.0
+margin_right = 519.0
+margin_bottom = 353.0
+
+[node name="HBoxContainer2" type="VBoxContainer" parent="MainSelection/MainContainer/ButtonsContainer"]
+margin_right = 163.0
+margin_bottom = 222.0
+custom_constants/separation = 23
+
+[node name="ResumeButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
+margin_right = 163.0
+margin_bottom = 26.0
+custom_fonts/font = ExtResource( 4 )
+text = "Resume"
+
+[node name="StartButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
+margin_top = 49.0
+margin_right = 163.0
+margin_bottom = 75.0
+focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
+custom_fonts/font = ExtResource( 4 )
+text = "Start"
+
+[node name="AddPlayerButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
+visible = false
+margin_top = 98.0
+margin_right = 163.0
+margin_bottom = 124.0
+custom_fonts/font = ExtResource( 4 )
+text = "Add Player"
+
+[node name="OptionsButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
+margin_top = 98.0
+margin_right = 163.0
+margin_bottom = 124.0
+focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
+custom_fonts/font = ExtResource( 4 )
+text = "Options"
+
+[node name="QuitToMainMenuButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
+margin_top = 147.0
+margin_right = 163.0
+margin_bottom = 173.0
+custom_fonts/font = ExtResource( 4 )
+disabled = true
+text = "Quit to Main Menu"
+
+[node name="QuitToDesktop" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
+margin_top = 196.0
+margin_right = 163.0
+margin_bottom = 222.0
+focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
+custom_fonts/font = ExtResource( 4 )
+text = "Quit to Desktop"
+
+[node name="PlayerSelection" type="Control" parent="."]
+anchor_left = 0.4
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 92.0
+margin_top = 212.0
+margin_right = -172.0
+margin_bottom = -186.0
+
+[node name="GridContainer" type="GridContainer" parent="PlayerSelection"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 362.0
+margin_bottom = 314.36
+rect_scale = Vector2( 0.7, 0.7 )
+custom_constants/vseparation = 20
+custom_constants/hseparation = 20
+columns = 2
+
+[node name="Player1SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
+margin_right = 615.0
+margin_bottom = 488.0
+focus_neighbour_left = NodePath("../../../MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToDesktop")
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/hseparation = 0
+custom_fonts/font = ExtResource( 3 )
+text = "Player 1"
+
+[node name="Player2SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
+margin_left = 635.0
+margin_right = 1250.0
+margin_bottom = 488.0
+focus_neighbour_left = NodePath("../Player1SelectButton")
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
+text = "Player 2"
+
+[node name="Player3SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
+margin_top = 508.0
+margin_right = 615.0
+margin_bottom = 996.0
+focus_neighbour_left = NodePath("../Player2SelectButton")
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
+disabled = true
+text = "Player 3"
+
+[node name="Player4SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
+margin_left = 635.0
+margin_top = 508.0
+margin_right = 1250.0
+margin_bottom = 996.0
+focus_neighbour_left = NodePath("../Player3SelectButton")
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
+disabled = true
+text = "Player 4"
+
+[node name="VehicleSelection" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 200.0
+margin_top = 300.0
+margin_right = -200.0
+margin_bottom = -300.0
+
+[node name="GridContainer" type="GridContainer" parent="VehicleSelection"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/hseparation = 30
+columns = 4
+
+[node name="RacerButton" type="Button" parent="VehicleSelection/GridContainer"]
+margin_right = 357.0
+margin_bottom = 480.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
+text = "Racer"
+
+[node name="RallyButton" type="Button" parent="VehicleSelection/GridContainer"]
+margin_left = 387.0
+margin_right = 744.0
+margin_bottom = 480.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
+text = "Rally"
+
+[node name="TankButton" type="Button" parent="VehicleSelection/GridContainer"]
+margin_left = 774.0
+margin_right = 1131.0
+margin_bottom = 480.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
+text = "Tank"
+
+[node name="TruckButton" type="Button" parent="VehicleSelection/GridContainer"]
+margin_left = 1161.0
+margin_right = 1518.0
+margin_bottom = 480.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 3 )
+text = "Truck"
+
+[node name="OptionMenu" type="Control" parent="."]
+visible = false
+anchor_left = 0.124
+anchor_top = 0.116
+anchor_right = 0.349
+anchor_bottom = 0.527
+margin_left = 120.0
+margin_top = 80.0
+margin_right = -120.0
+margin_bottom = -80.0
+
+[node name="GridContainer" type="GridContainer" parent="OptionMenu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/vseparation = 30
+custom_constants/hseparation = 30
+
+[node name="Option1Button" type="Button" parent="OptionMenu/GridContainer"]
+margin_right = 192.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+disabled = true
+text = "Option1"
+
+[node name="Option2Button" type="Button" parent="OptionMenu/GridContainer"]
+margin_top = 62.0
+margin_right = 192.0
+margin_bottom = 94.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+disabled = true
+text = "Option 2"
+
+[node name="Option3Button" type="Button" parent="OptionMenu/GridContainer"]
+margin_top = 124.0
+margin_right = 192.0
+margin_bottom = 156.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+disabled = true
+text = "Option 3"
+
+[node name="Option4Button" type="Button" parent="OptionMenu/GridContainer"]
+margin_top = 186.0
+margin_right = 192.0
+margin_bottom = 218.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+disabled = true
+text = "Option 4"
+
+[node name="OptionBackButton" type="Button" parent="OptionMenu/GridContainer"]
+margin_top = 248.0
+margin_right = 192.0
+margin_bottom = 280.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+text = "[Back]"
+
+[node name="VersionText" type="Control" parent="."]
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 120.0
+margin_top = 80.0
+margin_right = -120.0
+margin_bottom = -80.0
+mouse_filter = 2
+
+[node name="VersionContainer" type="VBoxContainer" parent="VersionText"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+
+[node name="VersionText" type="Label" parent="VersionText/VersionContainer"]
+margin_right = 375.0
+margin_bottom = 20.0
+custom_fonts/font = ExtResource( 4 )
+text = "Explosional BETA v0.0.1 Build x 2022 McAwl"
+valign = 1
+
+[node name="LoadingText" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = ExtResource( 3 )
+text = "Loading terrain..."
+align = 1
+valign = 1
+
+[connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/ResumeButton" to="." method="_on_ResumeButton_button_up"]
+[connection signal="button_down" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/StartButton" to="." method="_on_StartButton_button_down"]
+[connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/AddPlayerButton" to="." method="_on_AddPlayerButton_button_up"]
+[connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/OptionsButton" to="." method="_on_OptionsButton_button_up"]
+[connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToMainMenuButton" to="." method="_on_QuitToMainMenuButton_button_up"]
+[connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToDesktop" to="." method="_on_QuitToDesktop_button_up"]
+[connection signal="button_up" from="PlayerSelection/GridContainer/Player1SelectButton" to="." method="_on_Player1SelectButton_button_up"]
+[connection signal="button_up" from="PlayerSelection/GridContainer/Player2SelectButton" to="." method="_on_Player2SelectButton_button_up"]
+[connection signal="button_up" from="PlayerSelection/GridContainer/Player3SelectButton" to="." method="_on_Player3SelectButton_button_up"]
+[connection signal="button_up" from="PlayerSelection/GridContainer/Player4SelectButton" to="." method="_on_Player4SelectButton_button_up"]
+[connection signal="button_up" from="VehicleSelection/GridContainer/RacerButton" to="." method="_on_RacerButton_button_up"]
+[connection signal="button_up" from="VehicleSelection/GridContainer/RallyButton" to="." method="_on_RallyButton_button_up"]
+[connection signal="button_up" from="VehicleSelection/GridContainer/TankButton" to="." method="_on_TankButton_button_up"]
+[connection signal="button_up" from="VehicleSelection/GridContainer/TruckButton" to="." method="_on_TruckButton_button_up"]
+[connection signal="button_up" from="OptionMenu/GridContainer/OptionBackButton" to="." method="_on_OptionBackButton_button_up"]

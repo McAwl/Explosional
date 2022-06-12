@@ -5,6 +5,7 @@
 [resource]
 flags_transparent = true
 flags_unshaded = true
+flags_do_not_receive_shadows = true
 vertex_color_use_as_albedo = true
 params_billboard_mode = 3
 params_billboard_keep_scale = true

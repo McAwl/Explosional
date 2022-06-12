@@ -79,6 +79,6 @@ func _process(delta):
 
 
 func slowly_increase_volume(duration_sec) -> void:
-	$Tween.interpolate_property(self, "volume_db", 0.0, 6.0, duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	$Tween.interpolate_property(self, "volume_db", Global.vehicle_sound_volume_db, Global.vehicle_sound_volume_db+6.0, duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	$Tween.start()
 	

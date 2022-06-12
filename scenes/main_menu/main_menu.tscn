@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/main_menu/main_menu.gd" type="Script" id=1]
 [ext_resource path="res://assets/display/capture1 - blurred.png" type="Texture" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://assets/display/fonts/font_theme_tiny.tres" type="DynamicFont" id=4]
 [ext_resource path="res://vehicles/vehicle_racer_mesh_import.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/main_menu/viewport.gd" type="Script" id=6]
+[ext_resource path="res://scenes/main_menu/music_volume.gd" type="Script" id=7]
+[ext_resource path="res://scenes/main_menu/vehicle_volume.gd" type="Script" id=8]
 
 [node name="MainMenu" type="Node"]
 pause_mode = 2
@@ -232,25 +234,78 @@ custom_fonts/font = ExtResource( 3 )
 text = "Truck"
 
 [node name="OptionMenu" type="Control" parent="."]
-visible = false
 anchor_left = 0.124
 anchor_top = 0.116
 anchor_right = 0.349
 anchor_bottom = 0.527
-margin_left = 120.0
-margin_top = 80.0
-margin_right = -120.0
-margin_bottom = -80.0
+margin_left = 119.92
+margin_top = 79.72
+margin_right = 22.92
+margin_bottom = -80.16
 
 [node name="GridContainer" type="GridContainer" parent="OptionMenu"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_bottom = -191.88
 custom_constants/vseparation = 30
 custom_constants/hseparation = 30
 
+[node name="MusicVolume" type="GridContainer" parent="OptionMenu/GridContainer"]
+margin_right = 335.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 2
+
+[node name="MusicVolumeText" type="Label" parent="OptionMenu/GridContainer/MusicVolume"]
+margin_right = 165.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+text = "Music Volume"
+valign = 1
+
+[node name="MusicVolume" type="HSlider" parent="OptionMenu/GridContainer/MusicVolume"]
+margin_left = 169.0
+margin_right = 334.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -24.0
+max_value = 0.0
+script = ExtResource( 7 )
+
+[node name="VehicleVolume" type="GridContainer" parent="OptionMenu/GridContainer"]
+margin_top = 50.0
+margin_right = 335.0
+margin_bottom = 70.0
+columns = 2
+
+[node name="VehicleVolumeText" type="Label" parent="OptionMenu/GridContainer/VehicleVolume"]
+margin_right = 165.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+text = "Vehicle  Volume"
+valign = 1
+
+[node name="VehicleVolume" type="HSlider" parent="OptionMenu/GridContainer/VehicleVolume"]
+margin_left = 169.0
+margin_right = 334.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -24.0
+max_value = 0.0
+script = ExtResource( 8 )
+
 [node name="Option1Button" type="Button" parent="OptionMenu/GridContainer"]
+visible = false
+margin_top = 50.0
 margin_right = 192.0
-margin_bottom = 32.0
+margin_bottom = 76.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 4 )
@@ -258,9 +313,10 @@ disabled = true
 text = "Option1"
 
 [node name="Option2Button" type="Button" parent="OptionMenu/GridContainer"]
-margin_top = 62.0
+visible = false
+margin_top = 50.0
 margin_right = 192.0
-margin_bottom = 94.0
+margin_bottom = 78.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 4 )
@@ -268,9 +324,10 @@ disabled = true
 text = "Option 2"
 
 [node name="Option3Button" type="Button" parent="OptionMenu/GridContainer"]
-margin_top = 124.0
+visible = false
+margin_top = 50.0
 margin_right = 192.0
-margin_bottom = 156.0
+margin_bottom = 87.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 4 )
@@ -278,9 +335,10 @@ disabled = true
 text = "Option 3"
 
 [node name="Option4Button" type="Button" parent="OptionMenu/GridContainer"]
-margin_top = 186.0
+visible = false
+margin_top = 50.0
 margin_right = 192.0
-margin_bottom = 218.0
+margin_bottom = 106.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 4 )
@@ -288,11 +346,11 @@ disabled = true
 text = "Option 4"
 
 [node name="OptionBackButton" type="Button" parent="OptionMenu/GridContainer"]
-margin_top = 248.0
-margin_right = 192.0
-margin_bottom = 280.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+margin_top = 100.0
+margin_right = 68.0
+margin_bottom = 126.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
 custom_fonts/font = ExtResource( 4 )
 text = "[Back]"
 
@@ -342,4 +400,6 @@ valign = 1
 [connection signal="button_up" from="VehicleSelection/GridContainer/RallyButton" to="." method="_on_RallyButton_button_up"]
 [connection signal="button_up" from="VehicleSelection/GridContainer/TankButton" to="." method="_on_TankButton_button_up"]
 [connection signal="button_up" from="VehicleSelection/GridContainer/TruckButton" to="." method="_on_TruckButton_button_up"]
+[connection signal="value_changed" from="OptionMenu/GridContainer/MusicVolume/MusicVolume" to="." method="_on_MusicVolume_value_changed"]
+[connection signal="value_changed" from="OptionMenu/GridContainer/VehicleVolume/VehicleVolume" to="." method="_on_VehicleVolume_value_changed"]
 [connection signal="button_up" from="OptionMenu/GridContainer/OptionBackButton" to="." method="_on_OptionBackButton_button_up"]

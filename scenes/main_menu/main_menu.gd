@@ -213,3 +213,10 @@ func get_resume_button() -> Button:
 func get_start_button() -> Button:
 	return $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/StartButton as Button
 
+
+func _on_MusicVolume_value_changed(value):
+	Global.background_music_volume_db = value
+
+
+func _on_VehicleVolume_value_changed(value):
+	Global.vehicle_sound_volume_db = value

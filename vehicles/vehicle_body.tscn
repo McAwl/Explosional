@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=2]
+[gd_scene load_steps=37 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://vehicles/vehicle_body.gd" type="Script" id=2]
@@ -24,6 +24,7 @@
 [ext_resource path="res://vehicles/vehicle_taillight.tscn" type="PackedScene" id=22]
 [ext_resource path="res://assets/audio/sounds/71738__audible-edge__chrysler-lhs-tire-squeal-03-04-25-2009.wav" type="AudioStream" id=23]
 [ext_resource path="res://assets/materials/vehicles/car_wheel_dust_particles.tres" type="Material" id=24]
+[ext_resource path="res://vehicles/Audio.gd" type="Script" id=25]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5
@@ -123,6 +124,7 @@ process_material = SubResource( 35 )
 draw_pass_1 = SubResource( 37 )
 
 [node name="Audio" type="Spatial" parent="Effects"]
+script = ExtResource( 25 )
 
 [node name="EngineSound" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 3 )
@@ -146,6 +148,9 @@ pitch_scale = 0.3
 
 [node name="SkidSound" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 23 )
+
+[node name="TimerCheckSoundVolume" type="Timer" parent="Effects/Audio"]
+autostart = true
 
 [node name="Shield" type="Spatial" parent="Effects"]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -0.00169557, 0.222867, -0.0955184 )
@@ -1953,6 +1958,7 @@ autostart = true
 wait_time = 0.25
 autostart = true
 
+[connection signal="timeout" from="Effects/Audio/TimerCheckSoundVolume" to="Effects/Audio" method="_on_TimerCheckSoundVolume_timeout"]
 [connection signal="timeout" from="DynamicGripTimer" to="." method="_on_DynamicGripTimer_timeout"]
 [connection signal="timeout" from="CheckSkidTimer" to="." method="_on_CheckSkidTimer_timeout"]
 [connection signal="timeout" from="CheckWheelSpeedDustTimer" to="." method="_on_CheckWheelSpeedDustTimer_timeout"]

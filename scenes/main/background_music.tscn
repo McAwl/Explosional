@@ -4,3 +4,8 @@
 
 [node name="BackgroundMusic" type="AudioStreamPlayer"]
 script = ExtResource( 1 )
+
+[node name="TimerCheckVolume" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="TimerCheckVolume" to="." method="_on_TimerCheckVolume_timeout"]

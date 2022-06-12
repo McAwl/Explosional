@@ -63,3 +63,6 @@ func load_new_track() -> void:
 		print("Error: no music tracks")
 
 
+func _on_TimerCheckVolume_timeout():
+	volume_db = Global.background_music_volume_db
+

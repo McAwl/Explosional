@@ -62,7 +62,7 @@ func _physics_process(_delta):
 				# print("type of mesh piece "+str(ch.type))
 				# var new_exploded_vehicle_part = load("res://scenes/car_rigid_body_part.tscn").instance()
 				# var new_exploded_vehicle_part = RigidBody.new()
-				var new_exploded_vehicle_part: ExplodedVehiclePart = load("res://scenes/exploded_vehicle_part.tscn").instance()
+				var new_exploded_vehicle_part: ExplodedVehiclePart = load(Global.exploded_vehicle_part_folder).instance()
 				new_exploded_vehicle_part.set_lifetime(max_lifetime_sec)
 				new_exploded_vehicle_part.get_node("SmokeTrail").emitting = true
 				#new_exploded_vehicle_part.get_node("CollisionShape").translation = self.get_node("mesh_instances").translation

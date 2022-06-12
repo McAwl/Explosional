@@ -70,19 +70,19 @@ margin_right = 519.0
 margin_bottom = 353.0
 
 [node name="HBoxContainer2" type="VBoxContainer" parent="MainSelection/MainContainer/ButtonsContainer"]
-margin_right = 163.0
+margin_right = 141.0
 margin_bottom = 222.0
 custom_constants/separation = 23
 
 [node name="ResumeButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
-margin_right = 163.0
+margin_right = 141.0
 margin_bottom = 26.0
 custom_fonts/font = ExtResource( 4 )
 text = "Resume"
 
 [node name="StartButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
 margin_top = 49.0
-margin_right = 163.0
+margin_right = 141.0
 margin_bottom = 75.0
 focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
 custom_fonts/font = ExtResource( 4 )
@@ -98,23 +98,22 @@ text = "Add Player"
 
 [node name="OptionsButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
 margin_top = 98.0
-margin_right = 163.0
+margin_right = 141.0
 margin_bottom = 124.0
 focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
 custom_fonts/font = ExtResource( 4 )
 text = "Options"
 
-[node name="QuitToMainMenuButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
+[node name="ResetGameButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
 margin_top = 147.0
-margin_right = 163.0
+margin_right = 141.0
 margin_bottom = 173.0
 custom_fonts/font = ExtResource( 4 )
-disabled = true
-text = "Quit to Main Menu"
+text = "Reset Game"
 
 [node name="QuitToDesktop" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
 margin_top = 196.0
-margin_right = 163.0
+margin_right = 141.0
 margin_bottom = 222.0
 focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
 custom_fonts/font = ExtResource( 4 )
@@ -333,7 +332,7 @@ valign = 1
 [connection signal="button_down" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/StartButton" to="." method="_on_StartButton_button_down"]
 [connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/AddPlayerButton" to="." method="_on_AddPlayerButton_button_up"]
 [connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/OptionsButton" to="." method="_on_OptionsButton_button_up"]
-[connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToMainMenuButton" to="." method="_on_QuitToMainMenuButton_button_up"]
+[connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/ResetGameButton" to="." method="_on_ResetGameButton_button_up"]
 [connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToDesktop" to="." method="_on_QuitToDesktop_button_up"]
 [connection signal="button_up" from="PlayerSelection/GridContainer/Player1SelectButton" to="." method="_on_Player1SelectButton_button_up"]
 [connection signal="button_up" from="PlayerSelection/GridContainer/Player2SelectButton" to="." method="_on_Player2SelectButton_button_up"]

@@ -307,8 +307,12 @@ func get_bombs():
 	
 
 func reset_game() -> void:
+	StatePlayers.players = {}
+	var next_level_resource = load(Global.logo_scene_folder)
+	var next_level = next_level_resource.instance() as LogoScene
+	get_tree().root.call_deferred("add_child", next_level)
+	get_tree().paused = false
 	queue_free()
-	var _ret_val = get_tree().change_scene(Global.start_scene)  #get_tree().reload_current_scene()
 
 
 func air_strike_label() -> Label:

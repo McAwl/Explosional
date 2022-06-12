@@ -8,7 +8,7 @@ colors = PoolColorArray( 0, 0, 0, 0, 0.897319, 0.864773, 0.785154, 0.486275, 1, 
 gradient = SubResource( 61 )
 
 [sub_resource type="Curve" id=59]
-_data = [ Vector2( 0, 0 ), 0.0, 0.071944, 0, 0, Vector2( 0.853282, 1 ), -0.0320346, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 0.196591 ), 0.0, 0.071944, 0, 0, Vector2( 0.853282, 1 ), -0.0320346, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=60]
 curve = SubResource( 59 )

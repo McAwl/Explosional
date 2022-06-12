@@ -857,7 +857,7 @@ func _on_CheckSkidTimer_timeout():
 				skidding = true
 
 	if skidding == true:
-		randomly_emit($Effects/WheelSkidDust, 0.5)
+		randomly_emit($Effects/WheelSkidDust, 0.25)
 		if $Effects/Audio/SkidSound.playing == false:
 			$Effects/Audio/SkidSound.playing = true
 			$Effects/Audio/SkidSound.pitch_scale = 0.5+(abs(fwd_mps)/100.0)
@@ -868,7 +868,7 @@ func _on_CheckSkidTimer_timeout():
 
 
 func _on_CheckWheelSpeedDustTimer_timeout():
-	randomly_emit($Effects/WheelSpeedDust, 1.0 - (10.0/(10.0+abs(fwd_mps))))
+	randomly_emit($Effects/WheelSpeedDust, 1.0 - (20.0/(20.0+abs(fwd_mps))))
 	# $Effects/WheelSpeedDust.amount = num_particles  # changing this resets the particle system. Great!
 
 

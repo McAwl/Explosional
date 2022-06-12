@@ -163,7 +163,7 @@ radial_segments = 24
 material = ExtResource( 6 )
 
 [node name="WheelSkidDust" type="Particles" parent="Effects"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000409719, -0.057138, 0.0959512 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000409719, 0.372261, 0.0959512 )
 emitting = false
 amount = 200
 lifetime = 30.0
@@ -175,7 +175,7 @@ process_material = ExtResource( 24 )
 draw_pass_1 = SubResource( 58 )
 
 [node name="WheelSpeedDust" type="Particles" parent="Effects"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0284296, -0.100342, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0284296, 0.220074, 0 )
 emitting = false
 amount = 200
 lifetime = 30.0

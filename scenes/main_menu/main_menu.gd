@@ -32,7 +32,7 @@ func _ready():
 
 func configure():
 	#var apb = $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/AddPlayerButton
-	var qmmb = $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToMainMenuButton
+	var qmmb = $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/ResetGameButton
 	$VehicleSelection.hide()
 	# print("game_active="+str(game_active))
 	if game_active:
@@ -146,8 +146,8 @@ func _on_QuitToDesktop_button_up():
 	get_tree().quit()
 
 
-func _on_QuitToMainMenuButton_button_up():
-	pass # Replace with function body.
+func _on_ResetGameButton_button_up():
+	get_tree().root.get_node("MainScene").reset_game()
 
 
 func get_racer() -> Button:
@@ -193,7 +193,7 @@ func hide_vehicle_selection(_vehicle_selection: int) -> void:
 	$MainSelection/MainContainer.show()
 	$PlayerSelection.show()
 	$VehicleSelection.hide()
-	$PlayerSelection/GridContainer.get_node("Player"+str(player_selection)+"SelectButton").text = "Player "+str(player_selection)+" "+str(vehicle_selection)
+	$PlayerSelection/GridContainer.get_node("Player"+str(player_selection)+"SelectButton").text = "Player "+str(player_selection)+" "+str(ConfigVehicles.nice_name[vehicle_selection])
 	players[player_selection] = {"name": str(player_selection), "vehicle": vehicle_selection}
 	$PlayerSelection/GridContainer.get_node("Player"+str(player_selection)+"SelectButton").grab_focus()
 
@@ -212,3 +212,4 @@ func get_resume_button() -> Button:
 
 func get_start_button() -> Button:
 	return $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/StartButton as Button
+

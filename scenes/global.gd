@@ -2,6 +2,7 @@ extends Node
 
 
 # main scene (level) folders
+var logo_scene_folder: String = "res://scenes/logo/logo.tscn"
 var title_screen_folder: String = "res://scenes/title_screen/title_screen.tscn"
 var start_scene: String = "res://scenes/start/start.tscn"
 var main_scene: String = "res://scenes/main/main.tscn"
@@ -16,6 +17,7 @@ var explosion_folder: String = "res://effects/visual/explosion.tscn"
 # vehicles
 var vehicle_body_folder: String = "res://vehicles/vehicle_body.tscn"
 const vehicle_detach_rigid_bodies_folder: String = "res://vehicles/vehicle_detach_rigid_bodies.gd"
+var exploded_vehicle_part_folder: String = "res://vehicles/exploded_vehicle_part.tscn"
 
 # player
 var player_folder: String = "res://player/player.tscn"
@@ -29,7 +31,7 @@ var raycast_procedural_veg_folder: String = "res://terrain/raycast_procedural_ve
 var explosive_folder: String = "res://weapons/explosive/explosive.tscn"
 
 # powerups
-var power_up_folder: String = "res://scenes/power_ups/power_up.tscn"
+var power_up_folder: String = "res://power_ups/power_up.tscn"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

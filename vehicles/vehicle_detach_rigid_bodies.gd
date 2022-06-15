@@ -9,6 +9,8 @@ var linear_velocity: Vector3
 var max_lifetime_sec: float = 60.0  # sec
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var global_transform_origin_parent: Vector3
+var proportion_meshes_to_explode: float = 0.1  # destroy the rest 0.1=10% of meshes
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -51,7 +53,7 @@ func _physics_process(_delta):
 		#print("total_volume="+str(total_volume))
 		#print("num_meshes="+str(num_meshes))
 		for ch in get_children():
-			if ch is MeshInstance:
+			if ch is MeshInstance and rng.randf() < proportion_meshes_to_explode:
 				ch.visible = true  # some meshes start off invisible
 				ch.translation = Vector3(0.0, 0.0, 0.0)  # start them all at 0,0,0?
 				# ch.scale = scale*ch.scale  # mesh_instances is scaled, as are some meshes within - so need to apply both
@@ -90,16 +92,14 @@ func _physics_process(_delta):
 				new_exploded_vehicle_part.global_transform.origin = global_transform_origin_parent  # ch.global_transform.origin
 				# new_exploded_vehicle_part.global_transform.origin.y += 1.0
 				new_exploded_vehicle_part.linear_velocity = linear_velocity/2.0  # slow down the exploded meshes
-				if ch.name == "chrome003":
-					print("before new_exploded_vehicle_part.linear_velocity="+str(new_exploded_vehicle_part.linear_velocity))
+				print("before new_exploded_vehicle_part.linear_velocity="+str(new_exploded_vehicle_part.linear_velocity))
 				# any rigid body moving downwards, replace with upwards movement
 				if new_exploded_vehicle_part.linear_velocity.y < 1.0:
 					if new_exploded_vehicle_part.linear_velocity.y < 0.0:
 						new_exploded_vehicle_part.linear_velocity.y = -new_exploded_vehicle_part.linear_velocity.y
 					else:
 						new_exploded_vehicle_part.linear_velocity.y = 1.0
-				if ch.name == "chrome003":
-					print("after new_exploded_vehicle_part.linear_velocity="+str(new_exploded_vehicle_part.linear_velocity))
+				print("after new_exploded_vehicle_part.linear_velocity="+str(new_exploded_vehicle_part.linear_velocity))
 				# var collision = ch.get_node("CollisionShape")
 				#$var shape = BoxShape.new()
 				#var ch_aabb_size = ch.get_aabb().size

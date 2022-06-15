@@ -24,7 +24,7 @@
 [ext_resource path="res://vehicles/vehicle_taillight.tscn" type="PackedScene" id=22]
 [ext_resource path="res://assets/audio/sounds/71738__audible-edge__chrysler-lhs-tire-squeal-03-04-25-2009.wav" type="AudioStream" id=23]
 [ext_resource path="res://assets/materials/vehicles/car_wheel_dust_particles.tres" type="Material" id=24]
-[ext_resource path="res://vehicles/Audio.gd" type="Script" id=25]
+[ext_resource path="res://vehicles/audio.gd" type="Script" id=25]
 
 [sub_resource type="PhysicsMaterial" id=1]
 friction = 0.5

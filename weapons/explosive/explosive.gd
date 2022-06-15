@@ -164,14 +164,14 @@ func _physics_process(_delta):
 			$ExplosionNuke/AnimationPlayer.seek(0.0)
 			$ExplosionNuke/ExplosionNukeSound.playing = true
 		elif type == ConfigWeapons.Type.MINE:
-			var explosion: Explosion = load("res://scenes/explosion.tscn").instance()
+			var explosion: Explosion = load(Global.explosion_folder).instance()
 			explosion.name = "Explosion"
 			self.add_child(explosion)
 			$Explosion.global_transform.origin = global_transform.origin
 			# print("type == ConfigWeapons.ConfigWeapons.Type.MINE setting $ParticlesExplosion.emitting = true")
 			$Explosion.start_effects(self)
 		elif type == ConfigWeapons.Type.BOMB:
-			var explosion: Explosion = load("res://scenes/explosion.tscn").instance()
+			var explosion: Explosion = load(Global.explosion_folder).instance()
 			explosion.name = "Explosion"
 			self.add_child(explosion)
 			# print(" type == ConfigWeapons.Type.BOMB setting $ParticlesExplosion.emitting = true")
@@ -199,6 +199,7 @@ func _physics_process(_delta):
 						explosion_force = 0.0  # no damage from player which launched the nuke
 					else:
 						distance = 50.0  # ensure a specific force is experiences by all other players
+				print("applying force "+str(explosion_force)+" to target "+str(target.name)+" from weapon type "+str(type))
 				target.apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 				target.angular_velocity  = Vector3(5.0*randf(),5.0*randf(),5.0*randf())
 				

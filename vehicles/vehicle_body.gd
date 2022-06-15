@@ -39,11 +39,13 @@ var weapons_state: Dictionary = {
 var weapon_select: int = ConfigWeapons.Type.MINE
 var lights_disabled: bool = false
 var acceleration_calc_for_damage: float = 0.0
+var acceleration_calc_for_damage2: float = 0.0
 var acceleration_fwd_0_1_ewma: float = 0.0
 var acceleration_fwd_0_1: float = 0.0
 var vel_max: float = 0.0
-var check_accel_damage_timer: float = 3.0
-var accel_damage_threshold: float = 50.0
+const ACCEL_DAMAGE_THRESHOLD: float = 50.0
+const CHECK_ACCEL_DAMAGE_INTERVAL: float = 0.5
+var check_accel_damage_timer: float = CHECK_ACCEL_DAMAGE_INTERVAL*8.0
 var fwd_mps: float = 0.0
 var old_fwd_mps_0_1: float = 0.0
 var fwd_mps_0_1_ewma: float = 0.0
@@ -117,7 +119,7 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	init_audio_effects()
 	
 	total_damage = 0.0
-	check_accel_damage_timer = 4.0
+	check_accel_damage_timer = CHECK_ACCEL_DAMAGE_INTERVAL*8.0  # so the vehicle doesn't take damage with initial spawn fall
 	init_camera(StatePlayers.num_players())
 	return true
 
@@ -311,6 +313,7 @@ func check_raycast(substring_in_hit_name, raycast) -> bool:
 func _process(delta):
 	
 	if set_pos == false:
+		print("Exiting _process: set_pos == false")
 		set_global_transform_origin()
 
 	print_timer += delta
@@ -326,9 +329,8 @@ func _process(delta):
 			vehicle_state = ConfigVehicles.AliveState.DEAD
 
 	if total_damage >= max_damage:
+		print("Exiting _process: total_damage >= max_damage")
 		return
-
-	check_accel_damage(delta)
 
 	timer_1_sec -= delta
 	if timer_1_sec <= 0.0:
@@ -340,7 +342,6 @@ func _process(delta):
 
 	timer_0_1_sec -= delta
 	if timer_0_1_sec <= 0.0:
-		# print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
 		flicker_lights()
 		timer_0_1_sec = 0.1
 		if not ("instance" in weapons_state[weapon_select]):
@@ -370,7 +371,6 @@ func _process(delta):
 		# accel
 		acceleration_fwd_0_1 = 0.1 * (fwd_mps_0_1-old_fwd_mps_0_1)  # calc fwd accel every 0.1s
 		acceleration_fwd_0_1_ewma = (0.9*acceleration_fwd_0_1_ewma) + (0.1*acceleration_fwd_0_1)  # smooth it out over 1 sec
-
 
 	lifetime_so_far_sec += delta
 		
@@ -403,41 +403,44 @@ func _process(delta):
 
 
 func check_accel_damage(delta) -> void:
-	if check_accel_damage_timer <= 0.0:
-		#print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
-		#print("accel_damage_threshold="+str(accel_damage_threshold))
-		if acceleration_calc_for_damage > accel_damage_threshold:
-			var rammed_another_car: bool = false
-			$Effects/Audio/CrashSound.playing = true
-			$Effects/Audio/CrashSound.volume_db = 0.0
-			if $Raycasts/RayCastFrontRamDamage1.is_colliding():
-				var collider_name: String = $Raycasts/RayCastFrontRamDamage1.get_collider().name
-				if "car" in collider_name.to_lower():
-					print("player "+str(player_number)+" rammed "+str(collider_name))
-					rammed_another_car = true
-			if $Raycasts/RayCastFrontRamDamage2.is_colliding():
-				var collider_name: String = $Raycasts/RayCastFrontRamDamage2.get_collider().name
-				if "car" in collider_name.to_lower():
-					print("player "+str(player_number)+" rammed "+str(collider_name))
-					rammed_another_car = true
-			if $Raycasts/RayCastFrontRamDamage3.is_colliding():
-				var collider_name: String = $Raycasts/RayCastFrontRamDamage3.get_collider().name
-				if "car" in collider_name.to_lower():
-					print("player "+str(player_number)+" rammed "+str(collider_name))
-					rammed_another_car = true
-			if rammed_another_car == false:
-				var damage: float = round(acceleration_calc_for_damage / accel_damage_threshold)
-				print("damage="+str(damage))
-				add_damage(damage)
-			# else don't take any damage
-				
-			check_accel_damage_timer = 0.5
-		elif acceleration_calc_for_damage > accel_damage_threshold/2.0:
-			$Effects/Audio/CrashSound.playing = true
-			$Effects/Audio/CrashSound.volume_db = -18.0
-			
-	else:
-		check_accel_damage_timer -=delta
+		
+	check_accel_damage_timer -= delta
+	
+	if check_accel_damage_timer > 0.0:
+		return  # makes sure we don't check again soon after we add damage below
+		
+	#print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
+	#print("accel_damage_threshold="+str(accel_damage_threshold))
+	if acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD:
+		print("acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD()")
+		var rammed_another_car: bool = false
+		$Effects/Audio/CrashSound.playing = true
+		$Effects/Audio/CrashSound.volume_db = 0.0
+		if $Raycasts/RayCastFrontRamDamage1.is_colliding():
+			var collider_name: String = $Raycasts/RayCastFrontRamDamage1.get_collider().name
+			if "car" in collider_name.to_lower():
+				print("player "+str(player_number)+" rammed "+str(collider_name))
+				rammed_another_car = true
+		if $Raycasts/RayCastFrontRamDamage2.is_colliding():
+			var collider_name: String = $Raycasts/RayCastFrontRamDamage2.get_collider().name
+			if "car" in collider_name.to_lower():
+				print("player "+str(player_number)+" rammed "+str(collider_name))
+				rammed_another_car = true
+		if $Raycasts/RayCastFrontRamDamage3.is_colliding():
+			var collider_name: String = $Raycasts/RayCastFrontRamDamage3.get_collider().name
+			if "car" in collider_name.to_lower():
+				print("player "+str(player_number)+" rammed "+str(collider_name))
+				rammed_another_car = true
+		if rammed_another_car == false:
+			var damage: float = round(acceleration_calc_for_damage / ACCEL_DAMAGE_THRESHOLD)
+			print("damage="+str(damage))
+			add_damage(damage)
+			check_accel_damage_timer = CHECK_ACCEL_DAMAGE_INTERVAL  # make sure we don't check again for a small duration
+		# else don't take any damage
+	elif acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD/2.0:
+		$Effects/Audio/CrashSound.playing = true
+		$Effects/Audio/CrashSound.volume_db = -18.0
+	
 
 
 func cycle_weapon(keep=false) -> void:
@@ -479,8 +482,22 @@ func _physics_process(delta):
 	var new_vel_max: float = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
 	fwd_mps = transform.basis.xform_inv(linear_velocity).z  # global velocity rotated to our forward (z) direction
 	# Smooth out the accel calc by using a 50/50 exponentially-weighted moving average
-	acceleration_calc_for_damage = (0.5*acceleration_calc_for_damage) + (0.5*abs(new_vel_max - vel_max)/delta)
+	var old_acceleration_calc_for_damage = acceleration_calc_for_damage
+	var new_acceleration = abs(new_vel_max - vel_max)/delta
+	acceleration_calc_for_damage = (0.9*acceleration_calc_for_damage) + (0.1*new_acceleration)
 	vel_max = new_vel_max
+	
+	acceleration_calc_for_damage2 = (abs(new_vel_max) - vel_max)/delta  # should be in m/s/s now, so 9.8 would be 1g
+
+	if abs(old_acceleration_calc_for_damage) > 0.0 and abs(acceleration_calc_for_damage) > 0.0:
+		if abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) > 2.0 or abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) < 0.5:
+			print("old_acceleration_calc_for_damage="+str(old_acceleration_calc_for_damage))
+			print("  new acceleration_calc_for_damage (smoothed)="+str(acceleration_calc_for_damage))
+			print("  new_acceleration="+str(new_acceleration))
+			print("  check_accel_damage_timer="+str(check_accel_damage_timer))
+			print("  lifetime_so_far_sec="+str(lifetime_so_far_sec))
+	
+	check_accel_damage(delta)
 
 	if total_damage < max_damage:
 		
@@ -561,7 +578,7 @@ func check_for_clipping() -> void:
 				#	print("raycast "+raycast.name+" is colliding with "+str(raycast.get_collider().name))
 		if num_wheels_clipped > 0:
 			#print("applying impulse - wheel(s) are clipped")
-			apply_impulse( Vector3(0, -10.0, 0), Vector3(0.0, 5*ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"], 0.0) )   # from underneath, upwards force
+			apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.1, rng.randf()*5.0*ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"], rng.randf()*0.1) )   # from underneath, upwards force
 			check_accel_damage_timer = 2.0  # disable damage for temporarily
 	
 
@@ -731,7 +748,8 @@ func start_vehicle_dying() -> void:
 		total_damage = max_damage
 		
 		for ch in $Effects/Audio.get_children():  # turn off engine sounds
-			ch.playing = false
+			if ch is AudioStreamPlayer:
+				ch.playing = false
 		
 		$Effects/Audio/CrashSound.playing = true
 		

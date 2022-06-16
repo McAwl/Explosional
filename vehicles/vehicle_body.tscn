@@ -1958,7 +1958,12 @@ autostart = true
 wait_time = 0.25
 autostart = true
 
+[node name="CheckAccelDamage" type="Timer" parent="."]
+wait_time = 4.0
+autostart = true
+
 [connection signal="timeout" from="Effects/Audio/TimerCheckSoundVolume" to="Effects/Audio" method="_on_TimerCheckSoundVolume_timeout"]
 [connection signal="timeout" from="DynamicGripTimer" to="." method="_on_DynamicGripTimer_timeout"]
 [connection signal="timeout" from="CheckSkidTimer" to="." method="_on_CheckSkidTimer_timeout"]
 [connection signal="timeout" from="CheckWheelSpeedDustTimer" to="." method="_on_CheckWheelSpeedDustTimer_timeout"]
+[connection signal="timeout" from="CheckAccelDamage" to="." method="_on_CheckAccelDamage_timeout"]

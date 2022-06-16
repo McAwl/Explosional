@@ -42,10 +42,10 @@ var acceleration_calc_for_damage: float = 0.0
 var acceleration_calc_for_damage2: float = 0.0
 var acceleration_fwd_0_1_ewma: float = 0.0
 var acceleration_fwd_0_1: float = 0.0
-var vel_max: float = 0.0
+var vel: Vector3
 const ACCEL_DAMAGE_THRESHOLD: float = 50.0
 const CHECK_ACCEL_DAMAGE_INTERVAL: float = 0.5
-var check_accel_damage_timer: float = CHECK_ACCEL_DAMAGE_INTERVAL*8.0
+var accel_damage_enabled: bool = false
 var fwd_mps: float = 0.0
 var old_fwd_mps_0_1: float = 0.0
 var fwd_mps_0_1_ewma: float = 0.0
@@ -119,7 +119,9 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	init_audio_effects()
 	
 	total_damage = 0.0
-	check_accel_damage_timer = CHECK_ACCEL_DAMAGE_INTERVAL*8.0  # so the vehicle doesn't take damage with initial spawn fall
+	#$CheckAccelDamage.wait_time = CHECK_ACCEL_DAMAGE_INTERVAL*8.0  # so the vehicle doesn't take damage with initial spawn fall
+	$CheckAccelDamage.start(4.0)
+	
 	init_camera(StatePlayers.num_players())
 	return true
 
@@ -404,9 +406,7 @@ func _process(delta):
 
 func check_accel_damage(delta) -> void:
 		
-	check_accel_damage_timer -= delta
-	
-	if check_accel_damage_timer > 0.0:
+	if not accel_damage_enabled:
 		return  # makes sure we don't check again soon after we add damage below
 		
 	#print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
@@ -435,12 +435,10 @@ func check_accel_damage(delta) -> void:
 			var damage: float = round(acceleration_calc_for_damage / ACCEL_DAMAGE_THRESHOLD)
 			print("damage="+str(damage))
 			add_damage(damage)
-			check_accel_damage_timer = CHECK_ACCEL_DAMAGE_INTERVAL  # make sure we don't check again for a small duration
 		# else don't take any damage
 	elif acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD/2.0:
 		$Effects/Audio/CrashSound.playing = true
 		$Effects/Audio/CrashSound.volume_db = -18.0
-	
 
 
 func cycle_weapon(keep=false) -> void:
@@ -479,22 +477,21 @@ func _physics_process(delta):
 	#apply_impulse(local_cog,  gravity)
 	
 	var new_vel: Vector3 = get_linear_velocity()
-	var new_vel_max: float = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
+	#var new_vel_max: float = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
 	fwd_mps = transform.basis.xform_inv(linear_velocity).z  # global velocity rotated to our forward (z) direction
 	# Smooth out the accel calc by using a 50/50 exponentially-weighted moving average
 	var old_acceleration_calc_for_damage = acceleration_calc_for_damage
-	var new_acceleration = abs(new_vel_max - vel_max)/delta
-	acceleration_calc_for_damage = (0.9*acceleration_calc_for_damage) + (0.1*new_acceleration)
-	vel_max = new_vel_max
+	# accel is sqrt(dx^2 + dy^2 + dz^2)
+	var new_acceleration = sqrt(pow(new_vel.x - vel.x, 2)+pow(new_vel.y - vel.y, 2)+pow(new_vel.z - vel.z, 2))/delta  # now this should be in m/s/s, so 1g=9.6
+	acceleration_calc_for_damage = (0.8*acceleration_calc_for_damage) + (0.2*new_acceleration)
+	vel = new_vel
 	
-	acceleration_calc_for_damage2 = (abs(new_vel_max) - vel_max)/delta  # should be in m/s/s now, so 9.8 would be 1g
-
 	if abs(old_acceleration_calc_for_damage) > 0.0 and abs(acceleration_calc_for_damage) > 0.0:
 		if abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) > 2.0 or abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) < 0.5:
 			print("old_acceleration_calc_for_damage="+str(old_acceleration_calc_for_damage))
 			print("  new acceleration_calc_for_damage (smoothed)="+str(acceleration_calc_for_damage))
 			print("  new_acceleration="+str(new_acceleration))
-			print("  check_accel_damage_timer="+str(check_accel_damage_timer))
+			#print("  CheckAccelDamage="+str($CheckAccelDamage.))
 			print("  lifetime_so_far_sec="+str(lifetime_so_far_sec))
 	
 	check_accel_damage(delta)
@@ -579,7 +576,7 @@ func check_for_clipping() -> void:
 		if num_wheels_clipped > 0:
 			#print("applying impulse - wheel(s) are clipped")
 			apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.1, rng.randf()*5.0*ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"], rng.randf()*0.1) )   # from underneath, upwards force
-			check_accel_damage_timer = 2.0  # disable damage for temporarily
+			$CheckAccelDamage.start(2.0)  # disable damage for temporarily
 	
 
 func update_speed() -> void:
@@ -604,6 +601,8 @@ func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z) -> Vector3:
 
 func add_damage(amount) -> void:
 	total_damage += amount
+	$CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
+	accel_damage_enabled = false
 	if $Effects/Damage/ParticlesSmoke.emitting == false:
 		$Effects/Damage/ParticlesSmoke.emitting = true
 		$Effects/Damage/Flames3D.emitting = true
@@ -895,3 +894,7 @@ func randomly_emit(node, prob):
 		node.emitting = true
 	else:
 		node.emitting = false
+
+
+func _on_CheckAccelDamage_timeout():
+	accel_damage_enabled = true 

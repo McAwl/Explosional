@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://assets/display/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://player/player.gd" type="Script" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://assets/display/fonts/font_theme_tiny.tres" type="DynamicFont" id=10]
 [ext_resource path="res://assets/display/icons/heart.png" type="Texture" id=11]
 [ext_resource path="res://assets/display/fonts/font_theme_large.tres" type="DynamicFont" id=12]
+[ext_resource path="res://assets/display/icons/ballistic_missile.png" type="Texture" id=13]
 
 [sub_resource type="DynamicFontData" id=7]
 font_path = "res://assets/display/fonts/Xolonium-Regular.ttf"
@@ -128,6 +129,7 @@ __meta__ = {
 }
 
 [node name="icon_mine" type="TextureRect" parent="VC/V/CanvasLayer/HeadUpDisplay"]
+visible = false
 margin_left = 121.0
 margin_top = 21.0
 margin_right = 843.0
@@ -160,6 +162,19 @@ margin_right = 842.0
 margin_bottom = 743.0
 rect_scale = Vector2( 0.105, 0.105 )
 texture = ExtResource( 8 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon_ballistic_missile" type="TextureRect" parent="VC/V/CanvasLayer/HeadUpDisplay"]
+visible = false
+margin_left = 120.0
+margin_top = 20.0
+margin_right = 842.0
+margin_bottom = 743.0
+rect_scale = Vector2( 0.105, 0.105 )
+texture = ExtResource( 13 )
 stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false

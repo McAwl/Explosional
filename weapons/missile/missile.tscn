@@ -65,6 +65,11 @@ mesh = SubResource( 25 )
 skeleton = NodePath("../..")
 material/0 = ExtResource( 3 )
 
+[node name="OmniLight" type="OmniLight" parent="Body"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.147831, 0 )
+visible = false
+light_color = Color( 1, 0, 0, 1 )
+
 [node name="ParticlesThrust" type="Particles" parent="."]
 transform = Transform( 0.999999, 0, 0, 0, 1, 0, 0, 0, 0.999999, 0, 0, 0.533099 )
 amount = 50
@@ -116,4 +121,8 @@ light_color = Color( 1, 0.305882, 0, 1 )
 light_energy = 4.0
 shadow_enabled = true
 
+[node name="TimerCheckActiveLight" type="Timer" parent="."]
+autostart = true
+
 [connection signal="body_entered" from="Body" to="." method="_on_Body_body_entered"]
+[connection signal="timeout" from="TimerCheckActiveLight" to="." method="_on_TimerCheckActiveLight_timeout"]

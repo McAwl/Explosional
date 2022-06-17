@@ -1053,7 +1053,6 @@ material = ExtResource( 14 )
 
 [node name="Tank" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.516244, 0 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Tank"]
 
@@ -1273,6 +1272,9 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.1106
 
 [node name="MissilePosition" type="Position3D" parent="VehicleTypes/Tank/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.860642, 2.71406 )
+
+[node name="BallisticMissilePosition" type="Position3D" parent="VehicleTypes/Tank/Positions/Weapons"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0350624, 1.61343, -0.0130368 )
 
 [node name="RocketPosition" type="Position3D" parent="VehicleTypes/Tank/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.876156, 2.57317 )
@@ -1535,6 +1537,7 @@ material = ExtResource( 14 )
 
 [node name="Truck" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.476245, 0 )
+visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Truck"]
 

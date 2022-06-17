@@ -6,46 +6,75 @@ enum Type {
 	MISSILE=2, 
 	NUKE=3, 
 	BALLISTIC=4,
-	BOMB=5  # used for air-raids only
+	BOMB=5,  # used for air-raids only
+	BALLISTIC_MISSILE=6,
 	}
 
 const COOLDOWN_TIMER_DEFAULTS: Dictionary = {
 	Type.MINE: 5.0, 
 	Type.ROCKET: 5.0, 
-	Type.MISSILE: 20.0, 
+	Type.MISSILE: 2.0, 
 	Type.NUKE: 6.0, 
-	Type.BALLISTIC: 10.0}
+	Type.BALLISTIC: 10.0,
+	Type.BALLISTIC_MISSILE: 10.0}
 
+# TODO remove this, if we want to completely move to damage due to force (acceleration)
 const DAMAGE: Dictionary = {
 	Type.MINE: 1, 
 	Type.ROCKET: 5, 
 	Type.MISSILE: 5, 
 	Type.NUKE: 10,
-	Type.BALLISTIC: 5.0}
-	
+	Type.BALLISTIC: 5.0,
+	Type.BALLISTIC_MISSILE: 10.0}
+
+# TODO remove this, if we want to completely move to damage due to force (acceleration)
 const DAMAGE_INDIRECT: Dictionary = {
 	Type.MINE: {"damage": 1, "range": 10.0}, 
 	Type.ROCKET: {"damage": 1, "range": 10.0}, 
 	Type.MISSILE: {"damage": 1, "range": 10.0}, 
 	Type.NUKE: {"damage": 5.0, "range": 10.0}, 
-	Type.BALLISTIC: {"damage": 1, "range": 10.0}}
+	Type.BALLISTIC: {"damage": 1, "range": 10.0},
+	Type.BALLISTIC_MISSILE: {"damage": 1, "range": 10.0},
+	}
 	
 const SCENE: Dictionary = {
 	Type.MINE: "res://weapons/explosive/explosive.tscn", \
 	Type.ROCKET: "res://weapons/missile/missile.tscn", \
 	Type.MISSILE: "res://weapons/missile/missile.tscn", \
 	Type.NUKE: "res://weapons/explosive/explosive.tscn",
-	Type.BALLISTIC: "res://weapons/missile/missile.tscn"}
+	Type.BALLISTIC: "res://weapons/missile/missile.tscn",
+	Type.BALLISTIC_MISSILE: "res://weapons/missile/missile.tscn"}
+	
+const ICON: Dictionary = {
+	Type.MINE: "icon_mine", \
+	Type.ROCKET: "icon_rocket", \
+	Type.MISSILE: "icon_missile", \
+	Type.NUKE: "icon_nuke",
+	Type.BALLISTIC: "icon_ballistic",
+	Type.BALLISTIC_MISSILE: "icon_ballistic_missile"}
 	
 const TARGET_SPEED: Dictionary = {
 	Type.ROCKET: 10.0, 
 	Type.MISSILE: 10.0, 
-	Type.BALLISTIC: 20.0}
+	Type.BALLISTIC: 20.0,
+	Type.BALLISTIC_MISSILE: 20.0}
 
 const MUZZLE_SPEED: Dictionary = {
 	Type.ROCKET: 10.0, 
 	Type.MISSILE: 10.0, 
-	Type.BALLISTIC: 20.0}
+	Type.BALLISTIC: 20.0,
+	Type.BALLISTIC_MISSILE: 0.0}
+
+const HOMING_DELAY: Dictionary = {
+	Type.MISSILE: 0.5,
+	Type.BALLISTIC_MISSILE: 2.0,
+}
+
+const LIFETIME_SECONDS: Dictionary = {
+	Type.ROCKET: 10.0, 
+	Type.MISSILE: 10.0,
+	Type.BALLISTIC_MISSILE: 20.0,
+}
 
 # TODO move to vehicle config
 var vehicle_weapons: Dictionary = {
@@ -54,17 +83,27 @@ var vehicle_weapons: Dictionary = {
 	Type.MISSILE: [ConfigVehicles.Type.RALLY, ConfigVehicles.Type.TANK, ConfigVehicles.Type.TRUCK],
 	Type.NUKE: [],  # disabled initially, PowerUp enables it ."Racer", "Rally", "Tank", "Truck"]},
 	Type.BALLISTIC: [ConfigVehicles.Type.TANK, ConfigVehicles.Type.TRUCK],
-	Type.BOMB: []}
+	Type.BOMB: [],
+	Type.BALLISTIC_MISSILE: [ConfigVehicles.Type.TANK],
+	}
 
+# TODO combine with indirect damage above
 # explosion force = explosion_strength / (explosion_decrease*distance)+1.0 ^ explosion_exponent)
-var explosion_strength: Dictionary = {
+const EXPLOSION_STRENGTH: Dictionary = {
 	Type.MINE: 2500.0, 
 	Type.BOMB: 5000.0, 
-	Type.NUKE: 10000.0}
+	Type.ROCKET: 500.0,
+	Type.MISSILE: 1000.0,
+	Type.BALLISTIC_MISSILE: 1000.0,
+	Type.NUKE: 10000.0,
+	}
 
 var explosion_range: Dictionary = {
 	Type.MINE: 10.0, 
 	Type.BOMB: 10.0, 
+	Type.MISSILE: 10.0,
+	Type.ROCKET: 10.0, 
+	Type.BALLISTIC_MISSILE: 20.0,
 	Type.NUKE: 1000.0}
 
 var explosion_exponent: Dictionary = {

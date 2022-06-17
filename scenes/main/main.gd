@@ -288,6 +288,7 @@ func get_random_spawn_point() -> Spatial:
 	
 func get_players(ignore_player_number=false) -> Array:
 	var players_all = get_tree().get_nodes_in_group("player")  # 
+	print("players_all="+str(players_all))
 	var players2 = []
 	for player in players_all:  # range(1, num_players+1):
 		if ignore_player_number == false:

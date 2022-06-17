@@ -34,6 +34,7 @@ var weapons_state: Dictionary = {
 	ConfigWeapons.Type.NUKE: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.NUKE], "enabled": false, "test_mode": false},
 	ConfigWeapons.Type.BALLISTIC: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.BALLISTIC], "enabled": true},
 	ConfigWeapons.Type.BOMB: {"active": false, "enabled": false, "test_mode": false},
+	ConfigWeapons.Type.BALLISTIC_MISSILE: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.BALLISTIC_MISSILE], "enabled": true},
 	}
 
 var weapon_select: int = ConfigWeapons.Type.MINE
@@ -128,9 +129,9 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 
 func configure_weapons() -> void:
 	for k in ConfigWeapons.Type.values():  # .keys():
-		print("checking weapon "+str(k))  # 0=mine, etc
+		#print("checking weapon "+str(k))  # 0=mine, etc
 		var vt = StatePlayers.players[player_number]["vehicle"]
-		print("vt="+str(vt))
+		#print("vt="+str(vt))
 		if vt in ConfigWeapons.vehicle_weapons[k]:
 			#print("vt "+str(vt)+" has weapon "+str(k))
 			weapons_state[k]["enabled"] = true
@@ -146,20 +147,22 @@ func init_audio_effects() -> void:
 
 
 func engine_sound_on() -> void:
+	print("engine_sound_on(): "+str(StatePlayers.players[player_number]["vehicle"]))
 	match StatePlayers.players[player_number]["vehicle"]:
-		"Racer":
+		ConfigVehicles.Type.RACER:
 			$Effects/Audio/EngineSound.playing = false
 			$Effects/Audio/EngineSoundRally.playing = true
-		"Rally":
+		ConfigVehicles.Type.RALLY:
 			$Effects/Audio/EngineSound.playing = false
 			$Effects/Audio/EngineSoundRally.playing = true
-		"Tank":
+		ConfigVehicles.Type.TANK:
 			$Effects/Audio/EngineSound.playing = true
-			$Effects/Audio/EngineSoundRally.playing = false
-		"Truck":
+			$Effects/Audio/EngineSound.playing = false
+		ConfigVehicles.Type.TRUCK:
 			$Effects/Audio/EngineSound.playing = true
 			$Effects/Audio/EngineSound.playing = false
 		_:
+			print("Warning: using defain engine sound")
 			$Effects/Audio/EngineSound.playing = false
 			$Effects/Audio/EngineSoundRally.playing = true
 
@@ -202,7 +205,7 @@ func dying_visual_effects() -> void:
 
 func configure_vehicle_properties() -> void:
 	var vts: int = StatePlayers.players[player_number]["vehicle"]
-	print("vts="+str(vts))
+	#print("vts="+str(vts))
 	engine_force_value = ConfigVehicles.config[vts]["engine_force_value"]
 	mass = ConfigVehicles.config[vts]["mass_kg/100"]
 	set_wheel_parameters(vts)
@@ -392,6 +395,8 @@ func _process(delta):
 			fire_missile_or_rocket()
 		elif weapon_select == ConfigWeapons.Type.BALLISTIC:
 			fire_missile_or_rocket()
+		elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
+			fire_missile_or_rocket()
 
 	if weapons_state[weapon_select]["active"] == false:
 		if weapons_state[weapon_select]["cooldown_timer"] > 0.0:
@@ -404,7 +409,7 @@ func _process(delta):
 		cooldown_timer = 0.0
 
 
-func check_accel_damage(delta) -> void:
+func check_accel_damage() -> void:
 		
 	if not accel_damage_enabled:
 		return  # makes sure we don't check again soon after we add damage below
@@ -412,7 +417,7 @@ func check_accel_damage(delta) -> void:
 	#print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
 	#print("accel_damage_threshold="+str(accel_damage_threshold))
 	if acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD:
-		print("acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD()")
+		#print("acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD()")
 		var rammed_another_car: bool = false
 		$Effects/Audio/CrashSound.playing = true
 		$Effects/Audio/CrashSound.volume_db = 0.0
@@ -456,11 +461,16 @@ func cycle_weapon(keep=false) -> void:
 
 
 func set_icon() -> void:
-	get_player().get_hud().get_node("icon_mine").hide()
-	get_player().get_hud().get_node("icon_rocket").hide()
-	get_player().get_hud().get_node("icon_missile").hide()
-	get_player().get_hud().get_node("icon_ballistic").hide()
-	get_player().get_hud().get_node("icon_nuke").hide()  #ENUM_NAME.keys()[enum_val]
+	#print("set_icon()")
+	#print("ConfigWeapons.ICON.keys()="+str(ConfigWeapons.ICON.keys()))
+	for wk in ConfigWeapons.Type.keys():
+		#print("wk="+str(wk))
+		if ConfigWeapons.Type[wk] in ConfigWeapons.ICON.keys():
+			var icon_str: String = ConfigWeapons.ICON[ConfigWeapons.Type[wk]]
+			#print("icon_str="+str(icon_str))
+			get_player().get_hud().get_node(icon_str).hide()
+		#else:
+		#	print("ConfigWeapons.Type[wk] not in ConfigWeapons.ICON.keys() for ConfigWeapons.Type[wk]="+str(ConfigWeapons.Type[wk]))
 	get_player().get_hud().get_node("icon_"+ConfigWeapons.Type.keys()[weapon_select].to_lower()).show()
 
 
@@ -480,21 +490,21 @@ func _physics_process(delta):
 	#var new_vel_max: float = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
 	fwd_mps = transform.basis.xform_inv(linear_velocity).z  # global velocity rotated to our forward (z) direction
 	# Smooth out the accel calc by using a 50/50 exponentially-weighted moving average
-	var old_acceleration_calc_for_damage = acceleration_calc_for_damage
+	#var old_acceleration_calc_for_damage = acceleration_calc_for_damage
 	# accel is sqrt(dx^2 + dy^2 + dz^2)
 	var new_acceleration = sqrt(pow(new_vel.x - vel.x, 2)+pow(new_vel.y - vel.y, 2)+pow(new_vel.z - vel.z, 2))/delta  # now this should be in m/s/s, so 1g=9.6
 	acceleration_calc_for_damage = (0.8*acceleration_calc_for_damage) + (0.2*new_acceleration)
 	vel = new_vel
 	
-	if abs(old_acceleration_calc_for_damage) > 0.0 and abs(acceleration_calc_for_damage) > 0.0:
-		if abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) > 2.0 or abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) < 0.5:
-			print("old_acceleration_calc_for_damage="+str(old_acceleration_calc_for_damage))
-			print("  new acceleration_calc_for_damage (smoothed)="+str(acceleration_calc_for_damage))
-			print("  new_acceleration="+str(new_acceleration))
-			#print("  CheckAccelDamage="+str($CheckAccelDamage.))
-			print("  lifetime_so_far_sec="+str(lifetime_so_far_sec))
+	#if abs(old_acceleration_calc_for_damage) > 0.0 and abs(acceleration_calc_for_damage) > 0.0:
+	#	if abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) > 2.0 or abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) < 0.5:
+	#		print("old_acceleration_calc_for_damage="+str(old_acceleration_calc_for_damage))
+	#		print("  new acceleration_calc_for_damage (smoothed)="+str(acceleration_calc_for_damage))
+	#		print("  new_acceleration="+str(new_acceleration))
+	#		#print("  CheckAccelDamage="+str($CheckAccelDamage.))
+	#		print("  lifetime_so_far_sec="+str(lifetime_so_far_sec))
 	
-	check_accel_damage(delta)
+	check_accel_damage()
 
 	if total_damage < max_damage:
 		
@@ -526,23 +536,23 @@ func _physics_process(delta):
 		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta)
 	
 	if hit_by_missile["active"] == true:
-		# print("Player "+str(player_number)+ " hit by missile!")
+		print("Player "+str(player_number)+ " hit by missile!")
 		#var direction = hit_by_missile_origin - $Body.transform.origin  
 		var direction: Vector3 = hit_by_missile["direction_for_explosion"]  # $Body.transform.origin - hit_by_missile_origin 
 		direction[1] += 5.0
-		# remove downwards force - as vehicles can be blown through the terrain
 		if direction[1] < 0:
-			direction[1] = 0
-		var explosion_force: float = 200.0  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
+			direction[1] = 0  # remove downwards force - as vehicles can be blown through the terrain
+		#var explosion_force: float = 200.0  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
 		if hit_by_missile["direct_hit"] == true:
-			apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
+			print("(direct hit) explosion_force="+str(hit_by_missile["force"]))
+			apply_impulse( Vector3(0,0,0), hit_by_missile["force"]*direction.normalized() )   # offset, impulse(=direction*force)
 			# if hit_by_missile["homing"]:
 			# 	damage(weapons[2].damage)
 			# else:
 			#	damage(weapons[1].damage)
 		else:
-			var indirect_explosion_force: float = explosion_force/hit_by_missile["distance"]
-			
+			var indirect_explosion_force: float = hit_by_missile["force"]/hit_by_missile["distance"]
+			print("force="+str(hit_by_missile["force"])+" at distance="+str(hit_by_missile["distance"])+" -> indirect_explosion_force="+str(indirect_explosion_force))
 			apply_impulse( Vector3(0,0,0), indirect_explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 			# damage(1)
 		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
@@ -660,9 +670,9 @@ func fire_missile_or_rocket() -> void:
 	
 	var weapon_instance = load(ConfigWeapons.SCENE[weapon_select]).instance()
 	weapons_state[weapon_select]["instance"] = weapon_instance
-	add_child(weapon_instance)
 	# Shoot out fast (current speed + muzzle speed), it will then slow/speed to approach weapon_instance.target_speed	
 	weapon_instance.weapon_type = weapon_select
+	add_child(weapon_instance)
 	weapon_instance.name = ConfigWeapons.Type.keys()[weapon_select]
 	weapon_instance.velocity = (transform.basis.z.normalized()) * (weapon_instance.muzzle_speed() + abs(transform.basis.xform_inv(linear_velocity).z))  
 	weapon_instance.set_linear_velocity(linear_velocity)  # initial only, this is not used, "velocity" is used to change it's position
@@ -670,9 +680,13 @@ func fire_missile_or_rocket() -> void:
 	if weapon_select == ConfigWeapons.Type.MISSILE:
 		weapon_instance.velocity[1] += 1.0   # angle it up a bit
 		weapon_instance.global_transform.origin = $Positions/Weapons/MissilePosition.global_transform.origin
+	elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
+		weapon_instance.velocity[1] += 10.0   # angle it up a lot
+		weapon_instance.global_transform.origin = $Positions/Weapons/BallisticMissilePosition.global_transform.origin
 	else:
 		weapon_instance.global_transform.origin = $Positions/Weapons/RocketPosition.global_transform.origin
 		weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
+	# print("weapon velocity="+str(weapon_instance.velocity))
 	if weapon_select == ConfigWeapons.Type.ROCKET:
 		weapon_instance.activate(player_number, false)  # homing = false
 	elif weapon_select == ConfigWeapons.Type.BALLISTIC:

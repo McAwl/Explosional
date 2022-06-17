@@ -193,7 +193,7 @@ func _physics_process(_delta):
 				# remove downwards force - as vehicles can be blown through the terrain
 				if direction[1] < 0:
 					direction[1] = 0
-				var explosion_force = ConfigWeapons.explosion_strength[type]/pow((ConfigWeapons.explosion_decrease[type]*distance)+1.0, ConfigWeapons.explosion_exponent[type])  # inverse square of distance
+				var explosion_force = ConfigWeapons.EXPLOSION_STRENGTH[type]/pow((ConfigWeapons.explosion_decrease[type]*distance)+1.0, ConfigWeapons.explosion_exponent[type])  # inverse square of distance
 				if type == ConfigWeapons.Type.NUKE:
 					if target.player_number == launched_by_player_number:
 						explosion_force = 0.0  # no damage from player which launched the nuke

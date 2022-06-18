@@ -2,7 +2,6 @@ extends Spatial
 class_name Player
 
 var player_number: int
-var timer_0_1_s: float = 0.1
 var last_spawn_point: Vector3
 
 # Called when the node enters the scene tree for the first time.
@@ -31,33 +30,7 @@ func toggle_hud() -> void:
 
 
 func _process(delta):
-	
-	timer_0_1_s -= delta
-	if timer_0_1_s <= 0.0:
-		timer_0_1_s = 0.1
-		
-		# periodically check for a destroyed vehicle
-		if get_viewport().has_node("vehicle_body"):
-			var vb: VehicleBody = get_viewport().get_node("vehicle_body")
-			if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
-				vb.queue_free()
-		else:
-			if StatePlayers.players[player_number]["lives_left"] > 0:
-				# print("player:_process() "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...")
-				init_vehicle_body(last_spawn_point)
-		
-		# periodically update player display
-		set_label_player_name()
-		set_label_lives_left()
-		var health_display: TextureProgress = get_hud().get_node("health")
-		if get_vehicle_body() != null:
-			health_display.value = get_vehicle_body().max_damage-get_vehicle_body().total_damage
-			if get_vehicle_body().max_damage-get_vehicle_body().total_damage >= 7.0:
-				health_display.tint_progress = "#7e00ff00"  # green
-			elif get_vehicle_body().max_damage-get_vehicle_body().total_damage <= 3.0:
-				health_display.tint_progress = "#7eff0000"  # red
-			else:
-				health_display.tint_progress = "#7eff6c00"  # orange
+	 update_other_player_label()  # need to do this on every screen refresh
 
 
 func init(_player_number, pos=null) -> void:
@@ -138,17 +111,6 @@ func set_viewport_container_four(_player_number) -> void:
 
 
 func set_viewport_container(_left, _right, _bottom, _top, size_x, size_y) -> void:
-	$VC.margin_left = _left
-	$VC.margin_right = _right
-	$VC.margin_bottom = _bottom
-	$VC.margin_top = _top
-	$VC.rect_size.x = size_x
-	$VC.rect_size.y = size_y
-	get_viewport().size.x = size_x
-	get_viewport().size.y = size_y
-	# label stuff is relative to the container, not window...
-	# get_label().margin_left = _left
-	get_label_player_name().margin_right = 0
 	"""
 	# get_label_lives_left().margin_right = 0
 	# get_label().margin_bottom = 0
@@ -162,6 +124,17 @@ func set_viewport_container(_left, _right, _bottom, _top, size_x, size_y) -> voi
 	# print("label rect_size="+str(get_label().rect_size))
 	# print("label align="+str(get_label().align))
 	# print("label LRBT="+str([get_label().margin_left, get_label().margin_right, get_label().margin_bottom, get_label().margin_top]))"""
+	$VC.margin_left = _left
+	$VC.margin_right = _right
+	$VC.margin_bottom = _bottom
+	$VC.margin_top = _top
+	$VC.rect_size.x = size_x
+	$VC.rect_size.y = size_y
+	get_viewport().size.x = size_x
+	get_viewport().size.y = size_y
+	# label stuff is relative to the container, not window...
+	# get_label().margin_left = _left
+	get_label_player_name().margin_right = 0
 
 
 func get_viewport_container() -> ViewportContainer:
@@ -238,3 +211,65 @@ func _on_TimerUpdateSpeedometer_timeout():
 	# 3.6 kilometers per hour equal one meter per second
 	get_canvaslayer().get_node('GridContainer').get_node('Label1').text = "%03d km/hr" % int(round(abs(get_vehicle_body().fwd_mps*3.6)))  #+" km/hr"
 
+
+func _on_TimerUpdateHUD_timeout():
+	# periodically update player display
+	set_label_player_name()
+	set_label_lives_left()
+	var health_display: TextureProgress = get_hud().get_node("health")
+	if get_vehicle_body() != null:
+		health_display.value = get_vehicle_body().max_damage-get_vehicle_body().total_damage
+		if get_vehicle_body().max_damage-get_vehicle_body().total_damage >= 7.0:
+			health_display.tint_progress = "#7e00ff00"  # green
+		elif get_vehicle_body().max_damage-get_vehicle_body().total_damage <= 3.0:
+			health_display.tint_progress = "#7eff0000"  # red
+		else:
+			health_display.tint_progress = "#7eff6c00"  # orange
+
+
+func update_other_player_label():
+	for player_num in StatePlayers.players.keys():  #get_parent().get_players():
+		print("player_num="+str(player_num))
+		var player_dst = get_parent().get_player(player_num)
+		if self != player_dst:
+			if get_vehicle_body() != null:  # eg if player has no lives left, not in the game any more
+				var player_dst_vehicle_body = player_dst.get_vehicle_body()
+				if player_dst_vehicle_body != null:
+					var player_dst_hud_pos_loc = player_dst_vehicle_body.get_node("Positions").get_node("HUDPositionLocation")
+					var distance = get_vehicle_body().get_global_transform().origin.distance_to(player_dst_hud_pos_loc.global_transform.origin)
+					var player_dst_viewport_pos = get_vehicle_body().get_camera().unproject_position ( player_dst_hud_pos_loc.get_global_transform().origin ) 
+					var label = get_hud().get_node("label_player_"+str(player_num)+"_pos")
+					
+					var font_size = 10
+					if distance < 25.0:
+						font_size = 60
+					elif distance < 50.0:
+						font_size = 40
+					elif distance < 100.0:
+						font_size = 30
+					elif distance < 200.0:
+						font_size = 20
+					label.get("custom_fonts/font").set_size(font_size)
+					
+					if get_vehicle_body().get_camera().is_position_behind (player_dst_hud_pos_loc.get_global_transform().origin ):
+						label.visible = false
+					else:
+						label.visible = true
+						label.rect_position = player_dst_viewport_pos
+						label.rect_position.x -= font_size/2
+						label.rect_position.y -= 20 + (font_size/2)
+			else:
+				var label = get_hud().get_node("label_player_"+str(player_number)+"_pos")
+				label.visible = false  # don't show own label
+
+
+func _on_TimerCheckDestroyedVehicle_timeout():
+	# periodically check for a destroyed vehicle
+	if get_viewport().has_node("vehicle_body"):
+		var vb: VehicleBody = get_viewport().get_node("vehicle_body")
+		if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
+			vb.queue_free()
+	else:
+		if StatePlayers.players[player_number]["lives_left"] > 0:
+			# print("player:_process() "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...")
+			init_vehicle_body(last_spawn_point)

@@ -390,7 +390,7 @@ func _process(delta):
 		cooldown_timer = 0.0
 
 
-func _input(event):
+func _input(_event):
 	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
 		cycle_weapon()
 	elif Input.is_action_just_released("fire_player"+str(player_number)) and weapons_state[weapon_select]["active"] == false and weapons_state[weapon_select]["cooldown_timer"] <= 0.0 and weapons_state[weapon_select]["enabled"] == true:

@@ -297,4 +297,13 @@ valign = 1
 [node name="TimerUpdateSpeedometer" type="Timer" parent="."]
 autostart = true
 
+[node name="TimerUpdateHUD" type="Timer" parent="."]
+autostart = true
+
+[node name="TimerCheckDestroyedVehicle" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
 [connection signal="timeout" from="TimerUpdateSpeedometer" to="." method="_on_TimerUpdateSpeedometer_timeout"]
+[connection signal="timeout" from="TimerUpdateHUD" to="." method="_on_TimerUpdateHUD_timeout"]
+[connection signal="timeout" from="TimerCheckDestroyedVehicle" to="." method="_on_TimerCheckDestroyedVehicle_timeout"]

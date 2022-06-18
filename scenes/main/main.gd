@@ -149,7 +149,7 @@ func _process(delta):
 		check_slow_motion()
 		timer_1_sec = 1.0
 	
-	update_player_hud()
+	#update_player_hud()
 
 
 func _physics_process(_delta):
@@ -213,45 +213,6 @@ func check_slow_motion() -> void:
 	else:
 		Engine.time_scale = 0.1
 		all_audio_pitch(0.1)
-
-
-# move this out of here, and prob use signals
-func update_player_hud() -> void:
-	for player_src in range(1, StatePlayers.num_players()+1):
-		for player_dst in range(1, StatePlayers.num_players()+1):
-			if player_src != player_dst:
-				var player_src_vehicle_body = get_player(player_src).get_vehicle_body()
-				if player_src_vehicle_body != null:  # eg if player has no lives left, not in the game any more
-					var player_src_camera = player_src_vehicle_body.get_camera()
-					var player_dst_vehicle_body = get_player(player_dst).get_vehicle_body()
-					if player_dst_vehicle_body != null:
-						var player_dst_hud_pos_loc = player_dst_vehicle_body.get_node("Positions").get_node("HUDPositionLocation")
-						var distance = player_src_vehicle_body.get_global_transform().origin.distance_to(player_dst_hud_pos_loc.global_transform.origin)
-						var player_dst_viewport_pos = player_src_camera.unproject_position ( player_dst_hud_pos_loc.get_global_transform().origin ) 
-						var label = get_player(player_src).get_hud().get_node("label_player_"+str(player_dst)+"_pos")
-						
-						var font_size = 10
-						if distance < 25.0:
-							font_size = 60
-						elif distance < 50.0:
-							font_size = 40
-						elif distance < 100.0:
-							font_size = 30
-						elif distance < 200.0:
-							font_size = 20
-						label.get("custom_fonts/font").set_size(font_size)
-						
-						
-						if player_src_camera.is_position_behind (player_dst_hud_pos_loc.get_global_transform().origin ):
-							label.visible = false
-						else:
-							label.visible = true
-							label.rect_position = player_dst_viewport_pos
-							label.rect_position.x -= font_size/2
-							label.rect_position.y -= 20 + (font_size/2)
-			else:
-				var label = get_player(player_src).get_hud().get_node("label_player_"+str(player_src)+"_pos")
-				label.visible = false  # don't show own label
 
 
 func check_game_over() -> void:

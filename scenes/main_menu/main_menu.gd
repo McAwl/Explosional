@@ -3,6 +3,7 @@ extends Node
 
 var next_level_resource
 
+var build: String
 var version: String
 var active: bool = false
 var timer: float = 0.5
@@ -19,14 +20,28 @@ func _ready():
 	$LoadingText.hide()
 	$OptionMenu.hide()
 	$VersionText.show()
-	var output = []
-	var _os_execute = OS.execute("git", PoolStringArray(["rev-list", "--count", "HEAD"]), true, output)
-	# print(str(output))
-	if output.empty() or output[0].empty():
+	var output_build = []
+	var output_version = []
+	var _os_execute_build = OS.execute("git", PoolStringArray(["rev-list", "--count", "HEAD"]), true, output_build)
+	var _os_execute_version = OS.execute("git", PoolStringArray(["describe", "--long", "--tags"]), true, output_version)
+	print("output_build='"+str(output_build)+"'")
+	print(str(len(output_build)))
+	print(str(output_version))
+	if output_build.empty() or output_build[0].empty():
 		push_error("Failed to fetch version. Make sure you have git installed and project is inside valid git directory.")
 	else:
-		version = output[0].trim_suffix("\n")
-		$VersionText/VersionContainer/VersionText.text = "Explosional! BETA v0.0.116 Build "+ version + " 2022 McAwl"
+		build = output_build[0].trim_suffix("\n")
+	
+	if output_version.empty() or output_version[0].empty():
+		push_error("Failed to fetch tag. Make sure you have git installed and project is inside valid git directory.")
+	else:
+		version = output_version[0].trim_suffix("\n")
+	
+	if build == null or version == null:
+		$VersionText/VersionContainer/VersionText.text = "Explosional! BETA 2022 McAwl"
+	else:
+		$VersionText/VersionContainer/VersionText.text = "Explosional! "+ version + " Build "+build+" 2022 McAwl"
+	
 	configure().resume()
 
 

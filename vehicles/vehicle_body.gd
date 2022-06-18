@@ -515,10 +515,17 @@ func _physics_process(delta):
 	
 		if Input.is_action_pressed("accelerate_player"+str(player_number)):
 			# Increase engine force at low speeds to make the initial acceleration faster.
-			if fwd_mps < speed_low_limit and speed != 0:
-				engine_force = clamp(engine_force_value * speed_low_limit / fwd_mps, 0, 100)
+			var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["max_speed_km_hr"]
+			if fwd_mps < speed_low_limit and speed != 0 and fwd_mps != 0.0:
+				engine_force = clamp(engine_force_value * speed_low_limit / abs(fwd_mps), 0, engine_force_value)
+				print("clamped engine_force="+str(engine_force))
+			elif fwd_mps > max_speed_limit_mps and speed != 0 and fwd_mps != 0.0:
+				var speed_over_limit_mps = max_speed_limit_mps - abs(fwd_mps)  # how far over limit in metres/sec
+				engine_force = clamp(engine_force_value * (abs(fwd_mps)/(10.0*speed_over_limit_mps)), 0, engine_force_value)  # once over speed limit, severely reduce engine force
+				print("clamped engine_force="+str(engine_force))
 			else:
 				engine_force = engine_force_value
+				print("engine_force="+str(engine_force))
 		else:
 			engine_force = 0
 			
@@ -531,7 +538,6 @@ func _physics_process(delta):
 			
 		if delta < 1.0:
 			engine_force_ewma = (delta*engine_force) + ((1.0-delta)*old_engine_force)
-	
 
 		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta)
 	

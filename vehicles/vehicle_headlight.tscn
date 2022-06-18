@@ -6,5 +6,5 @@ light_energy = 5.0
 shadow_enabled = true
 shadow_bias = 0.0
 shadow_reverse_cull_face = true
-spot_range = 30.0
+spot_range = 20.0
 spot_angle = 20.0

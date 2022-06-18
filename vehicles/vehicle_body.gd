@@ -378,11 +378,22 @@ func _process(delta):
 		acceleration_fwd_0_1_ewma = (0.9*acceleration_fwd_0_1_ewma) + (0.1*acceleration_fwd_0_1)  # smooth it out over 1 sec
 
 	lifetime_so_far_sec += delta
-		
+
+	if weapons_state[weapon_select]["active"] == false:
+		if weapons_state[weapon_select]["cooldown_timer"] > 0.0:
+			weapons_state[weapon_select]["cooldown_timer"] -= delta
+			if weapons_state[weapon_select]["cooldown_timer"] < 0.0:
+				weapons_state[weapon_select]["cooldown_timer"]  = 0.0
+		cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
+	
+	if cooldown_timer < 0.0:
+		cooldown_timer = 0.0
+
+
+func _input(event):
 	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
 		cycle_weapon()
-	
-	if Input.is_action_just_released("fire_player"+str(player_number)) and weapons_state[weapon_select]["active"] == false and weapons_state[weapon_select]["cooldown_timer"] <= 0.0 and weapons_state[weapon_select]["enabled"] == true:
+	elif Input.is_action_just_released("fire_player"+str(player_number)) and weapons_state[weapon_select]["active"] == false and weapons_state[weapon_select]["cooldown_timer"] <= 0.0 and weapons_state[weapon_select]["enabled"] == true:
 		# print("Player pressed fire")
 		weapons_state[weapon_select]["cooldown_timer"] = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
 		get_player().set_label_player_name()
@@ -397,16 +408,6 @@ func _process(delta):
 			fire_missile_or_rocket()
 		elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
 			fire_missile_or_rocket()
-
-	if weapons_state[weapon_select]["active"] == false:
-		if weapons_state[weapon_select]["cooldown_timer"] > 0.0:
-			weapons_state[weapon_select]["cooldown_timer"] -= delta
-			if weapons_state[weapon_select]["cooldown_timer"] < 0.0:
-				weapons_state[weapon_select]["cooldown_timer"]  = 0.0
-		cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
-	
-	if cooldown_timer < 0.0:
-		cooldown_timer = 0.0
 
 
 func check_accel_damage() -> void:
@@ -475,6 +476,7 @@ func set_icon() -> void:
 
 
 func _physics_process(delta):
+	# Keep polling continuous Input related to movement here: e.g. accelerate and move. All others move to e.g. _input()
 	
 	# test adding constant downwards force so a vehicle can climb walls
 	#change this vector according to your needs. "* delta" scales it to the time-interval of fixed_process

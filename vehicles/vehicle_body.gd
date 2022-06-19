@@ -59,7 +59,7 @@ var pos: Vector3
 
 
 func _ready():
-	pass
+	vehicle_state = ConfigVehicles.AliveState.ALIVE
 
 
 func init(_pos=null, _player_number=null, _name=null) -> bool:
@@ -67,7 +67,6 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	#print("VehicleBody:init()")
 	
 	lifetime_so_far_sec = 0.0
-	vehicle_state = ConfigVehicles.AliveState.ALIVE
 	cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
 	
 	if _player_number != null:
@@ -116,7 +115,7 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 		
 	configure_vehicle_properties()
 	configure_weapons()
-	init_visual_effects()
+	init_visual_effects(true)
 	init_audio_effects()
 	
 	total_damage = 0.0
@@ -147,7 +146,7 @@ func init_audio_effects() -> void:
 
 
 func engine_sound_on() -> void:
-	print("engine_sound_on(): "+str(StatePlayers.players[player_number]["vehicle"]))
+	#print("engine_sound_on(): "+str(StatePlayers.players[player_number]["vehicle"]))
 	match StatePlayers.players[player_number]["vehicle"]:
 		ConfigVehicles.Type.RACER:
 			$Effects/Audio/EngineSound.playing = false
@@ -176,7 +175,7 @@ func init_camera(_num_players) -> void:
 	$CameraBase/Camera.number_of_players = StatePlayers.num_players()
 
 
-func init_visual_effects() -> void:
+func init_visual_effects(start) -> void:
 	
 	lights_disabled = false
 	
@@ -197,10 +196,13 @@ func init_visual_effects() -> void:
 	lights_off()
 	
 	$Effects/Shield.visible = false
+	
+	if start == false:
+		engine_sound_off()
 
 
 func dying_visual_effects() -> void:
-	init_visual_effects()
+	init_visual_effects(false)
 
 
 func configure_vehicle_properties() -> void:
@@ -272,17 +274,17 @@ func flicker_lights() -> void:
 			$Effects/Damage/LightsOnFire.get_node("OnFireLight"+str(l)).light_energy = total_damage/10.0
 
 	if rng.randf() < 0.1*total_damage/max_damage:
-		# print("damaged LightFrontLeft flickering off")
+		#print("damaged LightFrontLeft flickering off")
 		$Lights/LightFrontLeft.spot_range = 10  #100.0*(max_damage-total_damage)
 	elif rng.randf() < 0.5*total_damage/max_damage:
-		# print("damaged LightFrontLeft flickering on")
+		#print("damaged LightFrontLeft flickering on")
 		$Lights/LightFrontLeft.spot_range = 100.0
 
 	if rng.randf() < 0.1*total_damage/max_damage:
-		# print("damaged LightFrontRight flickering off")
+		#print("damaged LightFrontRight flickering off")
 		$Lights/LightFrontRight.spot_range = 10  # 100.0*(max_damage-total_damage)
 	elif rng.randf() < 0.5*total_damage/max_damage:
-		# print("damaged LightFrontRight flickering on")
+		#print("damaged LightFrontRight flickering on")
 		$Lights/LightFrontRight.spot_range = 100.0
 
 
@@ -298,7 +300,7 @@ func check_ongoing_damage() -> int:
 	if total_damage < max_damage:
 		for raycast in [get_raycast(1), get_raycast(2), get_raycast(3), get_raycast(4), $Raycasts/RayCastCentreDown, $Raycasts/RayCastBonnetUp, $Raycasts/RayCastForward, $Raycasts/RayCastBackward, $Raycasts/RayCastLeft, $Raycasts/RayCastRight]:
 			if check_raycast("lava", raycast) == true:
-				# print("Player taking damage 1")
+				#print("Player taking damage 1")
 				return 1
 		$Effects/Damage/LavaLight1.visible = false
 		return 0
@@ -309,7 +311,7 @@ func check_raycast(substring_in_hit_name, raycast) -> bool:
 	if raycast != null:
 		if raycast.is_colliding():
 			if substring_in_hit_name.to_lower() in raycast.get_collider().name.to_lower():
-				# print("Vehicle raycast "+str(raycast.name)+": collision matches substring: "+str(substring_in_hit_name))
+				#print("Vehicle raycast "+str(raycast.name)+": collision matches substring: "+str(substring_in_hit_name))
 				$Effects/Damage/LavaLight1.visible = true
 				return true
 	return false
@@ -317,6 +319,9 @@ func check_raycast(substring_in_hit_name, raycast) -> bool:
 
 func _process(delta):
 	
+	if vehicle_state == ConfigVehicles.AliveState.DEAD:
+		return
+
 	if set_pos == false:
 		print("Exiting _process: set_pos == false")
 		set_global_transform_origin()
@@ -324,6 +329,7 @@ func _process(delta):
 	print_timer += delta
 		
 	if global_transform.origin.y < -50.0:
+		print("global_transform.origin.y < -50.0 -> AliveState.DEAD")
 		vehicle_state = ConfigVehicles.AliveState.DEAD
 	
 	if vehicle_state == ConfigVehicles.AliveState.DYING:
@@ -331,6 +337,7 @@ func _process(delta):
 		if explosion2_timer <= 0.0:
 			explosion2_timer = 0.2
 		if dying_finished():
+			print("dying_finished() -> AliveState.DEAD")
 			vehicle_state = ConfigVehicles.AliveState.DEAD
 
 	if total_damage >= max_damage:
@@ -394,7 +401,7 @@ func _input(_event):
 	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
 		cycle_weapon()
 	elif Input.is_action_just_released("fire_player"+str(player_number)) and weapons_state[weapon_select]["active"] == false and weapons_state[weapon_select]["cooldown_timer"] <= 0.0 and weapons_state[weapon_select]["enabled"] == true:
-		# print("Player pressed fire")
+		#print("Player pressed fire")
 		weapons_state[weapon_select]["cooldown_timer"] = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
 		get_player().set_label_player_name()
 		get_player().set_label_lives_left()
@@ -408,6 +415,9 @@ func _input(_event):
 			fire_missile_or_rocket()
 		elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
 			fire_missile_or_rocket()
+	elif Input.is_action_just_released("kill_player1"):
+		if player_number == 1:
+			add_damage(10.0)
 
 
 func check_accel_damage() -> void:
@@ -520,14 +530,14 @@ func _physics_process(delta):
 			var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["max_speed_km_hr"]
 			if fwd_mps < speed_low_limit and speed != 0 and fwd_mps != 0.0:
 				engine_force = clamp(engine_force_value * speed_low_limit / abs(fwd_mps), 0, engine_force_value)
-				print("clamped engine_force="+str(engine_force))
+				#print("clamped engine_force="+str(engine_force))
 			elif fwd_mps > max_speed_limit_mps and speed != 0 and fwd_mps != 0.0:
 				var speed_over_limit_mps = max_speed_limit_mps - abs(fwd_mps)  # how far over limit in metres/sec
 				engine_force = clamp(engine_force_value * (abs(fwd_mps)/(10.0*speed_over_limit_mps)), 0, engine_force_value)  # once over speed limit, severely reduce engine force
-				print("clamped engine_force="+str(engine_force))
+				#print("clamped engine_force="+str(engine_force))
 			else:
 				engine_force = engine_force_value
-				print("engine_force="+str(engine_force))
+				#print("engine_force="+str(engine_force))
 		else:
 			engine_force = 0
 			
@@ -582,7 +592,7 @@ func _physics_process(delta):
 
 func check_for_clipping() -> void:
 	if abs(fwd_mps_0_1) < 0.1:  # stationary
-		# print("Checking for clipping")
+		#print("Checking for clipping")
 		var num_wheels_clipped: int = 0
 		for raycast in $Raycasts.get_children():
 			if "Wheel" in raycast.name:
@@ -650,7 +660,7 @@ func get_wheel(num) -> VehicleWheel:
 
 
 func fire_mine_or_nuke() -> void:
-	# print("Firing weapon="+str(weapon_select))
+	#print("Firing weapon="+str(weapon_select))
 	var weapon_instance = load(ConfigWeapons.SCENE[weapon_select]).instance()
 	add_child(weapon_instance) 
 	weapon_instance.rotation_degrees = rotation_degrees
@@ -659,7 +669,7 @@ func fire_mine_or_nuke() -> void:
 		weapon_instance.set_as_mine()
 		weapon_instance.activate($Positions/Weapons/BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
 	elif weapon_select == ConfigWeapons.Type.NUKE:
-		# print("activating nuke")
+		#print("activating nuke")
 		weapon_instance.set_as_nuke()
 		#weapon_instance.activate(get_node("/root/MainScene/Platforms/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
 		var nuke_spawn_point = global_transform.origin
@@ -670,7 +680,7 @@ func fire_mine_or_nuke() -> void:
 			cycle_weapon()  # de-select nuke, as it's not available any more
 	else:
 		print("fire_mine_or_nuke(): Error! Shouldn't be here")
-	# print("weapons_state[weapon_select]="+str(weapons_state[weapon_select]))
+	#print("weapons_state[weapon_select]="+str(weapons_state[weapon_select]))
 	weapon_instance.set_as_toplevel(true)
 
 
@@ -694,7 +704,7 @@ func fire_missile_or_rocket() -> void:
 	else:
 		weapon_instance.global_transform.origin = $Positions/Weapons/RocketPosition.global_transform.origin
 		weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
-	# print("weapon velocity="+str(weapon_instance.velocity))
+	#print("weapon velocity="+str(weapon_instance.velocity))
 	if weapon_select == ConfigWeapons.Type.ROCKET:
 		weapon_instance.activate(player_number, false)  # homing = false
 	elif weapon_select == ConfigWeapons.Type.BALLISTIC:
@@ -740,7 +750,7 @@ func set_global_transform_origin() -> void:
 func _on_CarBody_body_entered(body):
 
 	if "Lava" in body.name:
-		# print("Taking max_damage damage")
+		#print("Taking max_damage damage")
 		add_damage(max_damage)
 
 
@@ -752,7 +762,8 @@ func power_up(power_up_name) -> void:
 
 
 func get_camera() -> Camera:
-	return $CameraBase/Camera as Camera
+	return get_player().get_camera() as Camera
+	#return $CameraBase/Camera as Camera
 
 
 func set_label(new_label) -> void:
@@ -764,7 +775,7 @@ func start_vehicle_dying() -> void:
 	if vehicle_state == ConfigVehicles.AliveState.ALIVE:
 		print("start_vehicle_dying(): vehicle_state = "+str(vehicle_state))
 		vehicle_state = ConfigVehicles.AliveState.DYING
-		# print("reset_car()")
+		#print("reset_car()")
 		print("start_vehicle_dying(): total_damage >= max_damage")
 		total_damage = max_damage
 		
@@ -777,8 +788,10 @@ func start_vehicle_dying() -> void:
 		var explosion: Explosion = load(Global.explosion_folder).instance()
 		explosion.name = "Explosion"
 		$Effects/Damage.add_child(explosion)
-		$Effects/Damage/Explosion.global_transform.origin = global_transform.origin
-		$Effects/Damage/Explosion.start_effects($Effects/Damage)  # /AnimationPlayer.play("explosion")
+		explosion.global_transform.origin = global_transform.origin
+		# the billboard explosion looks awful in slow motion, as it uses animation frames.
+		# so use the explosion smoke/sound/light/etc but turn off the main billboard animation
+		explosion.start_effects($Effects/Damage, true)
 		
 		remove_nodes_for_dying()
 		
@@ -786,6 +799,7 @@ func start_vehicle_dying() -> void:
 		
 		explosion2_timer = 0.25
 		
+		print("vehicle_body: Starting slow_motion_timer")
 		get_main_scene().start_timer_slow_motion()
 		remove_main_collision_shapes()
 		explode_vehicle_meshes()
@@ -837,7 +851,7 @@ func explode_vehicle_meshes() -> void:
 		vm.set_script(SCRIPT_VEHICLE_DETACH_RIGID_BODIES)
 		vm.set_process(true)
 		vm.set_physics_process(true)
-		vm.detach_rigid_bodies(0.001, self.mass, self.linear_velocity, self.global_transform.origin)
+		vm.detach_rigid_bodies(0.00, self.mass, self.linear_velocity, self.global_transform.origin)
 		# self.remove_child(ch)
 		# ch.set_as_toplevel(true)
 		# move the exploded mesh to the player, as the VehicleBody will be deleted after the explosion
@@ -855,10 +869,11 @@ func dying_finished() -> bool:
 	if vehicle_state == ConfigVehicles.AliveState.DYING:
 		if $Effects/Damage.has_node("Explosion"):
 			if $Effects/Damage/Explosion.effects_finished():
-				print("vehicle_state == DYING' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Effects/Damage/Explosion/AnimationPlayer.current_animation))
+				print("dying_finished(): vehicle_state == DYING' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Effects/Damage/Explosion/AnimationPlayer.current_animation))
 				return true
 			return false
 		else:
+			print("dying_finished(): no $Effects/Damage.has_node('Explosion')")
 			return true
 	return false
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://vehicles/vehicle_body.gd" type="Script" id=2]
@@ -70,9 +70,98 @@ material = ExtResource( 11 )
 radius = 0.308364
 height = 1.43153
 
+[sub_resource type="Gradient" id=3]
+offsets = PoolRealArray( 0, 0.245327, 0.714953, 1 )
+colors = PoolColorArray( 0.110145, 0.110145, 0.110145, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
+
+[sub_resource type="Curve" id=5]
+_data = [ Vector2( 0, 0.791667 ), 0.0, 1.40052, 0, 0, Vector2( 1, 0.206871 ), -1.31274, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=6]
+curve = SubResource( 5 )
+
+[sub_resource type="ParticlesMaterial" id=59]
+resource_local_to_scene = true
+lifetime_randomness = 0.5
+emission_shape = 2
+emission_box_extents = Vector3( 3, 0.1, 0.1 )
+direction = Vector3( 0, 1, 0 )
+spread = 13.89
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 0.5
+linear_accel = 1.0
+linear_accel_random = 0.4
+scale = 2.0
+scale_random = 0.83
+scale_curve = SubResource( 6 )
+color_ramp = SubResource( 4 )
+anim_speed = 0.2
+anim_offset = 1.0
+anim_offset_random = 1.0
+
 [sub_resource type="SphereMesh" id=53]
 
 [sub_resource type="CylinderMesh" id=52]
+
+[sub_resource type="ParticlesMaterial" id=60]
+resource_local_to_scene = true
+lifetime_randomness = 0.5
+emission_shape = 2
+emission_box_extents = Vector3( 3, 0.1, 0.1 )
+direction = Vector3( 0, 1, 0 )
+spread = 13.89
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 0.5
+linear_accel = 1.0
+linear_accel_random = 0.4
+scale = 2.0
+scale_random = 0.83
+scale_curve = SubResource( 6 )
+color_ramp = SubResource( 4 )
+anim_speed = 0.2
+anim_offset = 1.0
+anim_offset_random = 1.0
+
+[sub_resource type="ParticlesMaterial" id=61]
+resource_local_to_scene = true
+lifetime_randomness = 0.5
+emission_shape = 2
+emission_box_extents = Vector3( 3, 0.1, 0.1 )
+direction = Vector3( 0, 1, 0 )
+spread = 13.89
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 0.5
+linear_accel = 1.0
+linear_accel_random = 0.4
+scale = 2.0
+scale_random = 0.83
+scale_curve = SubResource( 6 )
+color_ramp = SubResource( 4 )
+anim_speed = 0.2
+anim_offset = 1.0
+anim_offset_random = 1.0
+
+[sub_resource type="ParticlesMaterial" id=62]
+resource_local_to_scene = true
+lifetime_randomness = 0.5
+emission_shape = 2
+emission_box_extents = Vector3( 3, 0.1, 0.1 )
+direction = Vector3( 0, 1, 0 )
+spread = 13.89
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 0.5
+linear_accel = 1.0
+linear_accel_random = 0.4
+scale = 2.0
+scale_random = 0.83
+scale_curve = SubResource( 6 )
+color_ramp = SubResource( 4 )
+anim_speed = 0.2
+anim_offset = 1.0
+anim_offset_random = 1.0
 
 [node name="VehicleBody" type="VehicleBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
@@ -93,8 +182,6 @@ fov = 74.0
 near = 0.1
 far = 200.0
 script = ExtResource( 9 )
-min_distance = 3.0
-height = 1.25
 
 [node name="CameraFPFront" type="Camera" parent="CameraBase"]
 transform = Transform( -0.998921, 0.00220149, 0.0463805, -2.11161e-08, 0.998875, -0.047413, -0.0464328, -0.0473618, -0.997798, -0.124779, -1.27877, 2.63899 )
@@ -354,6 +441,7 @@ transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.01
 amount = 1
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
 local_coords = false
+process_material = SubResource( 59 )
 
 [node name="Lights" type="Spatial" parent="VehicleTypes/Racer"]
 
@@ -795,6 +883,7 @@ omni_range = 7.0
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.00169557, 0.222867, -0.0955184 )
 emitting = false
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
+process_material = SubResource( 60 )
 
 [node name="Lights" type="Spatial" parent="VehicleTypes/Rally"]
 
@@ -1208,6 +1297,7 @@ omni_range = 7.0
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.00169557, 0.747907, -0.0955184 )
 amount = 1
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
+process_material = SubResource( 61 )
 
 [node name="Lights" type="Spatial" parent="VehicleTypes/Tank"]
 
@@ -1693,6 +1783,7 @@ omni_range = 7.0
 transform = Transform( 0.0338704, 0, -0.999426, 0, 1.24665, 0, 0.395754, 0, 0.013412, -0.0220416, 1.46262, -0.333249 )
 emitting = false
 visibility_aabb = AABB( -4, -1.01557, -0.825609, 8, 2.03114, 1.65122 )
+process_material = SubResource( 62 )
 
 [node name="Lights" type="Spatial" parent="VehicleTypes/Truck"]
 

@@ -24,9 +24,9 @@ func _ready():
 	var output_version = []
 	var _os_execute_build = OS.execute("git", PoolStringArray(["rev-list", "--count", "HEAD"]), true, output_build)
 	var _os_execute_version = OS.execute("git", PoolStringArray(["describe", "--long", "--tags"]), true, output_version)
-	print("output_build='"+str(output_build)+"'")
-	print(str(len(output_build)))
-	print(str(output_version))
+	#print("output_build='"+str(output_build)+"'")
+	#print(str(len(output_build)))
+	#print(str(output_version))
 	if output_build.empty() or output_build[0].empty():
 		push_error("Failed to fetch version. Make sure you have git installed and project is inside valid git directory.")
 	else:

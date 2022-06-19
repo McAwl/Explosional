@@ -8,7 +8,8 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	# make the flames come from a small volume
+	$Flames3D.emission_box_extents(Vector3(0.2, 0.2, 0.2))
 
 
 func set_lifetime(_max_lifetime) -> void:

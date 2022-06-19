@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://assets/textures/fire_shape.png" type="Texture" id=1]
 [ext_resource path="res://assets/textures/fire_grain.png" type="Texture" id=2]
 [ext_resource path="res://assets/textures/fire_pattern.png" type="Texture" id=3]
+[ext_resource path="res://effects/visual/flames.gd" type="Script" id=4]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type spatial;
@@ -99,3 +100,4 @@ visibility_aabb = AABB( -4, -4, -0.43513, 8, 8, 0.870259 )
 draw_order = 2
 process_material = SubResource( 7 )
 draw_pass_1 = SubResource( 8 )
+script = ExtResource( 4 )

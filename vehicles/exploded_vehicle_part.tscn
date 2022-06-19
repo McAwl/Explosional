@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://vehicles/exploded_vehicle_part.gd" type="Script" id=1]
 [ext_resource path="res://effects/visual/smoke_trail.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/textures/dot.png" type="Texture" id=3]
+[ext_resource path="res://effects/visual/flames.tscn" type="PackedScene" id=4]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 0.211825, 0.199617, 0.202137 )
@@ -30,3 +31,8 @@ shape = SubResource( 1 )
 [node name="SmokeTrail" parent="." instance=ExtResource( 2 )]
 draw_pass_1 = SubResource( 37 )
 script = null
+
+[node name="Flames3D" parent="." instance=ExtResource( 4 )]
+amount = 10
+visibility_aabb = AABB( -0.27122, -0.265728, -0.0894033, 0.542441, 0.531456, 0.178806 )
+local_coords = false

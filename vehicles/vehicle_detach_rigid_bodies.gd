@@ -9,12 +9,14 @@ var linear_velocity: Vector3
 var max_lifetime_sec: float = 60.0  # sec
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var global_transform_origin_parent: Vector3
-var proportion_meshes_to_explode: float = 0.1  # destroy the rest 0.1=10% of meshes
+var limit_meshes_to_explode: int = 10  # 
+var num_meshes_exploded: int = 0
+var new_exploded_vehicle_part: Resource = load(Global.exploded_vehicle_part_folder)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	print("limit_meshes_to_explode="+str(limit_meshes_to_explode))
 
 
 func _process(delta):
@@ -43,17 +45,21 @@ func _physics_process(_delta):
 	if apply_forces == true:
 		print("_physics_process: apply_forces = true")
 		print("force = "+str(force))
-		# var num_meshes = 0
+		var num_meshes:int = 0
 		var total_volume: float = 0
 		for ch in get_children():
 			if ch is MeshInstance:
-				var mesh_volume: float = ch.get_aabb().get_area ()
+				var mesh_volume: float = ch.get_aabb().get_area()
 				total_volume += mesh_volume
+				num_meshes += 1
 				# print("ch.get_aabb()= "+str(ch.get_aabb())+" mesh_volume = "+str(ch.name)+"="+str(mesh_volume))
 		#print("total_volume="+str(total_volume))
-		#print("num_meshes="+str(num_meshes))
+		print("num_meshes="+str(num_meshes))
+		var prob_exploded: float = float(limit_meshes_to_explode) / float(num_meshes)
+		print("prob_exploded="+str(prob_exploded))
 		for ch in get_children():
-			if ch is MeshInstance and rng.randf() < proportion_meshes_to_explode:
+			if ch is MeshInstance and (rng.randf() < prob_exploded or num_meshes_exploded==0):  # make sure we always explode at least 1
+				num_meshes_exploded += 1
 				ch.visible = true  # some meshes start off invisible
 				ch.translation = Vector3(0.0, 0.0, 0.0)  # start them all at 0,0,0?
 				# ch.scale = scale*ch.scale  # mesh_instances is scaled, as are some meshes within - so need to apply both
@@ -62,44 +68,44 @@ func _physics_process(_delta):
 				var aabb_position: Vector3 = ch.get_aabb().position
 				var aabb_end: Vector3 = ch.get_aabb().end
 				# print("type of mesh piece "+str(ch.type))
-				# var new_exploded_vehicle_part = load("res://scenes/car_rigid_body_part.tscn").instance()
-				# var new_exploded_vehicle_part = RigidBody.new()
-				var new_exploded_vehicle_part: ExplodedVehiclePart = load(Global.exploded_vehicle_part_folder).instance()
-				new_exploded_vehicle_part.set_lifetime(max_lifetime_sec)
-				new_exploded_vehicle_part.get_node("SmokeTrail").emitting = true
-				#new_exploded_vehicle_part.get_node("CollisionShape").translation = self.get_node("mesh_instances").translation
-				#new_exploded_vehicle_part.translation = self.get_node("mesh_instances").translation
-				# new_exploded_vehicle_part.translation = ch.translation
-				# new_exploded_vehicle_part.get_node("CollisionShape").scale = self.get_node("mesh_instances").scale
-				self.add_child(new_exploded_vehicle_part)
-				new_exploded_vehicle_part.name = "RigidBody_"+ch.name
+				# var new_exploded_vehicle_part_instance = load("res://scenes/car_rigid_body_part.tscn").instance()
+				# var new_exploded_vehicle_part_instance = RigidBody.new()
+				var new_exploded_vehicle_part_instance: ExplodedVehiclePart = new_exploded_vehicle_part.instance()
+				new_exploded_vehicle_part_instance.set_lifetime(max_lifetime_sec)
+				new_exploded_vehicle_part_instance.get_node("SmokeTrail").emitting = true
+				#new_exploded_vehicle_part_instance.get_node("CollisionShape").translation = self.get_node("mesh_instances").translation
+				#new_exploded_vehicle_part_instance.translation = self.get_node("mesh_instances").translation
+				# new_exploded_vehicle_part_instance.translation = ch.translation
+				# new_exploded_vehicle_part_instance.get_node("CollisionShape").scale = self.get_node("mesh_instances").scale
+				self.add_child(new_exploded_vehicle_part_instance)
+				new_exploded_vehicle_part_instance.name = "RigidBody_"+ch.name
 				# var mesh_centre = (aabb_position + aabb_size) / 2.0
 				var mesh_centre: Vector3 = (aabb_position + aabb_end) / 2.0
 				
-				# new_exploded_vehicle_part.get_node("CollisionShape").translation = aabb_end
-				new_exploded_vehicle_part.get_node("CollisionShape").scale = ch.scale * aabb_size  # 
+				# new_exploded_vehicle_part_instance.get_node("CollisionShape").translation = aabb_end
+				new_exploded_vehicle_part_instance.get_node("CollisionShape").scale = ch.scale * aabb_size  # 
 				# do in this order? some meshinstance are -1,-1,-1 scale for some reason. Think it's a Blender invert normals thing
-				new_exploded_vehicle_part.get_node("CollisionShape").translation = mesh_centre  # add a rigid body at the centre of the mesh
+				new_exploded_vehicle_part_instance.get_node("CollisionShape").translation = mesh_centre  # add a rigid body at the centre of the mesh
 				  
 				if mesh_volume <= 0.0 or total_mass <= 0.0:
-					new_exploded_vehicle_part.mass = 1.0
+					new_exploded_vehicle_part_instance.mass = 1.0
 				else:
-					new_exploded_vehicle_part.mass = total_mass * (mesh_volume/total_volume)  # mass_per_piece
-				#print("new_exploded_vehicle_part.mass="+str(new_exploded_vehicle_part.mass))
+					new_exploded_vehicle_part_instance.mass = total_mass * (mesh_volume/total_volume)  # mass_per_piece
+				#print("new_exploded_vehicle_part_instance.mass="+str(new_exploded_vehicle_part_instance.mass))
 				remove_child(ch)
-				new_exploded_vehicle_part.add_child(ch)
-				new_exploded_vehicle_part.set_as_toplevel(true)
-				new_exploded_vehicle_part.global_transform.origin = global_transform_origin_parent  # ch.global_transform.origin
-				# new_exploded_vehicle_part.global_transform.origin.y += 1.0
-				new_exploded_vehicle_part.linear_velocity = linear_velocity/2.0  # slow down the exploded meshes
-				print("before new_exploded_vehicle_part.linear_velocity="+str(new_exploded_vehicle_part.linear_velocity))
+				new_exploded_vehicle_part_instance.add_child(ch)
+				new_exploded_vehicle_part_instance.set_as_toplevel(true)
+				new_exploded_vehicle_part_instance.global_transform.origin = global_transform_origin_parent  # ch.global_transform.origin
+				# new_exploded_vehicle_part_instance.global_transform.origin.y += 1.0
+				new_exploded_vehicle_part_instance.linear_velocity = linear_velocity/2.0  # slow down the exploded meshes
+				print("before new_exploded_vehicle_part_instance.linear_velocity="+str(new_exploded_vehicle_part_instance.linear_velocity))
 				# any rigid body moving downwards, replace with upwards movement
-				if new_exploded_vehicle_part.linear_velocity.y < 1.0:
-					if new_exploded_vehicle_part.linear_velocity.y < 0.0:
-						new_exploded_vehicle_part.linear_velocity.y = -new_exploded_vehicle_part.linear_velocity.y
+				if new_exploded_vehicle_part_instance.linear_velocity.y < 1.0:
+					if new_exploded_vehicle_part_instance.linear_velocity.y < 0.0:
+						new_exploded_vehicle_part_instance.linear_velocity.y = -new_exploded_vehicle_part_instance.linear_velocity.y
 					else:
-						new_exploded_vehicle_part.linear_velocity.y = 1.0
-				print("after new_exploded_vehicle_part.linear_velocity="+str(new_exploded_vehicle_part.linear_velocity))
+						new_exploded_vehicle_part_instance.linear_velocity.y = 1.0
+				print("  after new_exploded_vehicle_part_instance.linear_velocity="+str(new_exploded_vehicle_part_instance.linear_velocity))
 				# var collision = ch.get_node("CollisionShape")
 				#$var shape = BoxShape.new()
 				#var ch_aabb_size = ch.get_aabb().size
@@ -108,7 +114,7 @@ func _physics_process(_delta):
 				#collision_shape.set_shape(shape)
 				# collision.disabled = false
 				# ch.remove_child(collision)
-				# new_exploded_vehicle_part.add_child(collision_shape)
+				# new_exploded_vehicle_part_instance.add_child(collision_shape)
 				#ch.create_convex_collision ( )  # "creates a StaticBody child node with a ConvexPolygonShape collision shape calculated from the mesh geometry" 
 				# ch.create_trimesh_collision ( ) # TODO 
 				#var collision = null
@@ -124,7 +130,7 @@ func _physics_process(_delta):
 				#	#			
 				#if collision != null and staticbody != null:
 				#	staticbody.remove_child(collision)
-				#	new_exploded_vehicle_part.add_child(collision)
+				#	new_exploded_vehicle_part_instance.add_child(collision)
 				#else:
 				#	print("Error: collision null or staticbody null")
 					
@@ -132,7 +138,7 @@ func _physics_process(_delta):
 				#var direction = Vector3(rng.randf_range(-0.1, 0.1), rng.randf_range(-1, -2), rng.randf_range(-0.1, 0.1))
 				# var direction = Vector3(rng.randf_range(-0.1, 0.1), rng.randf_range(0.0, 0.2), rng.randf_range(-0.1, 0.1))  # Vector3(0.0, 1.0, 0.0)=up
 				# var force_origin = Vector3(0, -20.0, 0)
-				# new_exploded_vehicle_part.apply_impulse( force_origin, force*(direction.normalized()) )
+				# new_exploded_vehicle_part_instance.apply_impulse( force_origin, force*(direction.normalized()) )
 			else:
 				ch.queue_free()  # if not a MeshInstance, delete everything but meshes
 		apply_forces = false

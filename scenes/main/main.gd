@@ -14,6 +14,7 @@ var num_grasses_total: int = 0  #200
 var ray: RayCastProceduralVegetation = load(Global.raycast_procedural_veg_folder).instance()
 var veg_check_raycast: bool = false
 var last_veg: Array = []
+var in_slow_motion: bool = false
 
 export var air_strike: Dictionary = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
 export var start_clock_hrs: float = 12.0
@@ -23,7 +24,7 @@ export var test_turn_off_airstrike: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
+	randomize()
 	# $TimerSlowMotion.start()  # for Procedurally place vegetation
 	self.add_child(ray)
 	$VC/CL/MainMenu.set_visible(false)
@@ -146,10 +147,8 @@ func _process(delta):
 	
 	if timer_1_sec < 0.0:
 		check_game_over()
-		check_slow_motion()
+		check_and_enforce_slow_motion()
 		timer_1_sec = 1.0
-	
-	#update_player_hud()
 
 
 func _physics_process(_delta):
@@ -206,13 +205,23 @@ func _physics_process(_delta):
 				last_veg = []
 
 
-func check_slow_motion() -> void:
+func check_and_enforce_slow_motion() -> void:
 	if $TimerSlowMotion.is_stopped():
 		Engine.time_scale = 1.0
 		all_audio_pitch(1.0)
+		in_slow_motion = false
 	else:
 		Engine.time_scale = 0.1
 		all_audio_pitch(0.1)
+		in_slow_motion = true
+
+
+func is_in_slow_motion():
+	print("Engine.time_scale="+str(Engine.time_scale))
+	if Engine.time_scale < 1.0:
+		return true
+	else:
+		return false
 
 
 func check_game_over() -> void:
@@ -283,6 +292,7 @@ func air_strike_label() -> Label:
 
 func start_timer_slow_motion() -> void:
 	$TimerSlowMotion.start()
+	check_and_enforce_slow_motion()
 
 
 func _on_TimerCheckPowerups_timeout():

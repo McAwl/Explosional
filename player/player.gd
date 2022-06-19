@@ -29,7 +29,7 @@ func toggle_hud() -> void:
 		get_hud().visible = true
 
 
-func _process(delta):
+func _process(_delta):
 	 update_other_player_label()  # need to do this on every screen refresh
 
 
@@ -171,12 +171,9 @@ func get_viewport() -> Viewport:
 
 	
 func get_vehicle_body() -> VehicleBody:
-	if get_viewport().has_node("vehicle_body"):
-		var vehicle_body: VehicleBody = get_viewport().get_node("vehicle_body")
-		# if vehicle_body == null:
-		#	print("Warning: vehicle_body="+str(vehicle_body)+", print_tree: ")
-		#	print_tree()
-		return vehicle_body
+	for ch in get_viewport().get_children():
+		if ch is VehicleBody:
+			return ch
 	return null
 
 
@@ -229,7 +226,7 @@ func _on_TimerUpdateHUD_timeout():
 
 func update_other_player_label():
 	for player_num in StatePlayers.players.keys():  #get_parent().get_players():
-		print("player_num="+str(player_num))
+		#print("player_num="+str(player_num))
 		var player_dst = get_parent().get_player(player_num)
 		if self != player_dst:
 			if get_vehicle_body() != null:  # eg if player has no lives left, not in the game any more
@@ -265,11 +262,54 @@ func update_other_player_label():
 
 func _on_TimerCheckDestroyedVehicle_timeout():
 	# periodically check for a destroyed vehicle
-	if get_viewport().has_node("vehicle_body"):
-		var vb: VehicleBody = get_viewport().get_node("vehicle_body")
-		if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
-			vb.queue_free()
+	#if get_viewport().has_node("vehicle_body"):
+	#	var vb: VehicleBody = get_viewport().get_node("vehicle_body")
+	#	if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
+	#		print("vb.vehicle_state == ConfigVehicles.AliveState.DEAD: destroying vehicle body")
+	#		#vb.queue_free()  # doing this removes the camera and really screws thigns up
+	#else:
+	# TODO move the camera to the player so we can destroy the VehicleBody and keep seeing the exploded parts
+
+	var re_spawn: bool = false
+	var have_vb =  has_vehicle_body()
+	var vb: VehicleBody
+	
+	if have_vb == false:
+		#print("have_vb == false")
+		re_spawn = true
 	else:
-		if StatePlayers.players[player_number]["lives_left"] > 0:
-			# print("player:_process() "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...")
-			init_vehicle_body(last_spawn_point)
+		vb = get_vehicle_body()  # get_viewport().get_node("vehicle_body")
+		if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
+			#print("vb.vehicle_state == ConfigVehicles.AliveState.DEAD")
+			re_spawn = true
+	
+	if re_spawn:
+		re_spawn = false
+		if not get_parent().is_in_slow_motion():  # wait until the main scene finished any slow motion dying stuff
+			#print("not get_parent().is_in_slow_motion()")
+			#print("vehicle_state ="+str(vb.vehicle_state))
+			#if vehicle_state == ConfigVehicles.AliveState.DYING:
+			#print("Engine.time_scale="+str(Engine.time_scale))
+			if StatePlayers.players[player_number]["lives_left"] > 0:
+				#print("player: "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...")
+				re_spawn = true
+				
+	if re_spawn:
+		#print("if re_spawn")
+		if vb != null:
+			#print("vb != null -> vb.queue_free()")
+			#print("vb.vehicle_state == "+str(vb.vehicle_state))
+			vb.queue_free()
+		init_vehicle_body(last_spawn_point)
+
+
+func has_vehicle_body() -> bool:
+	for ch in get_viewport().get_children():
+		if ch is VehicleBody:
+			return true
+	return false
+
+
+func get_camera() -> Camera:
+	return $VC/V/Camera as Camera
+	

@@ -296,18 +296,33 @@ func start_timer_slow_motion() -> void:
 
 
 func _on_TimerCheckPowerups_timeout():
-	# print("_on_TimerCheckPowerups_timeout")
-	if not $Platforms/NukeSpawnPoint.has_node("PowerUpNuke") and $Platforms/NukeSpawnPoint/TimerNukePowerUp.is_stopped():
-		# print("setting TimerNukePowerUp")
-		$Platforms/NukeSpawnPoint/TimerNukePowerUp.set_paused(false)
-		$Platforms/NukeSpawnPoint/TimerNukePowerUp.start(10.0)
-		# print("$Platforms/NukeSpawnPoint/TimerNukePowerUp is paused = "+str($Platforms/NukeSpawnPoint/TimerNukePowerUp.is_paused()))
+	
+	if not $Powerups/NukeSpawnPoint.has_node("PowerUpNuke") and $Powerups/TimerNukePowerUp.is_stopped():
+		$Powerups/TimerNukePowerUp.set_paused(false)
+		$Powerups/TimerNukePowerUp.start(10.0)
+		
+	if not $Powerups/ShieldPowerupSpawnPoint.has_node("PowerUpShield1") and $Powerups/TimerShieldPowerup.is_stopped():
+		$Powerups/TimerShieldPowerup.set_paused(false)
+		$Powerups/TimerShieldPowerup.start(10.0)
 
 
 func _on_TimerNukePowerUp_timeout():
-	# print("_on_TimerNukePowerUp_timeout")
-	if $Platforms/NukeSpawnPoint/TimerNukePowerUp.is_stopped():
+	print("_on_TimerNukePowerUp_timeout")
+	if $Powerups/TimerNukePowerUp.is_stopped():
+		print("Respawning new_nuke_powerup")
 		var new_nuke_powerup = load(Global.power_up_folder).instance()
 		new_nuke_powerup.name = "PowerUpNuke"
-		$Platforms/NukeSpawnPoint.add_child(new_nuke_powerup)
+		new_nuke_powerup.type = ConfigWeapons.PowerupType.NUKE
+		$Powerups/NukeSpawnPoint.add_child(new_nuke_powerup)
 		new_nuke_powerup.get_node("ActivationSound").play()
+
+
+func _on_TimerShieldPowerup_timeout():
+	print("_on_TimerShieldPowerup_timeout")
+	if $Powerups/TimerShieldPowerup.is_stopped():
+		print("Respawning shield_powerup")
+		var new_shield_powerup = load(Global.power_up_folder).instance()
+		new_shield_powerup.name = "PowerUpShield1"
+		new_shield_powerup.type = ConfigWeapons.PowerupType.SHIELD
+		$Powerups/ShieldPowerupSpawnPoint.add_child(new_shield_powerup)
+		new_shield_powerup.get_node("ActivationSound").play()

@@ -21,6 +21,8 @@ var final_score_scene: String = "res://scenes/final_score/final_score.tscn"
 
 # effects folders
 var explosion_folder: String = "res://effects/visual/explosion.tscn"
+var nuke_meshes_scene_folder: String = "res://weapons/nuke/nuke_mesh.tscn"
+var shield_meshes_scene_folder: String = "res://power_ups/shield_powerup_mesh.tscn"
 
 # vehicles
 var vehicle_body_folder: String = "res://vehicles/vehicle_body.tscn"

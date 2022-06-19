@@ -130,6 +130,10 @@ enum ExplosiveStage {
 	EFFECTS=5  # 5=animation and sound
 }
 
+enum PowerupType {
+	NUKE=1, 
+	SHIELD=2
+	}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

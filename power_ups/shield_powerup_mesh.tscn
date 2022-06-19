@@ -1,0 +1,7 @@
+[gd_scene format=2]
+
+[node name="ShieldPowerupMeshes" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.479566, 0 )
+
+[node name="CSGBox" type="CSGBox" parent="."]
+width = 0.716

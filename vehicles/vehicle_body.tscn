@@ -5,7 +5,6 @@
 [ext_resource path="res://assets/audio/sounds/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3" type="AudioStream" id=3]
 [ext_resource path="res://assets/textures/dot.png" type="Texture" id=4]
 [ext_resource path="res://assets/materials/shield.tres" type="Material" id=5]
-[ext_resource path="res://assets/materials/shield_outer.tres" type="Material" id=6]
 [ext_resource path="res://effects/audio/audio_stream_player.gd" type="Script" id=7]
 [ext_resource path="res://effects/visual/shield.gd" type="Script" id=8]
 [ext_resource path="res://vehicles/follow_camera.gd" type="Script" id=9]
@@ -60,6 +59,8 @@ proximity_fade_distance = 1.0
 
 [sub_resource type="QuadMesh" id=37]
 material = SubResource( 47 )
+
+[sub_resource type="SphereMesh" id=63]
 
 [sub_resource type="QuadMesh" id=58]
 material = ExtResource( 11 )
@@ -240,19 +241,24 @@ stream = ExtResource( 23 )
 autostart = true
 
 [node name="Shield" type="Spatial" parent="Effects"]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -0.00169557, 0.222867, -0.0955184 )
-visible = false
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -0.00169557, -0.238068, -0.0955184 )
 script = ExtResource( 8 )
 
 [node name="OuterShell" type="CSGSphere" parent="Effects/Shield"]
+visible = false
 radial_segments = 42
 rings = 15
 material = ExtResource( 5 )
 
 [node name="InnerCut" type="CSGSphere" parent="Effects/Shield"]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0 )
+visible = false
 radial_segments = 24
-material = ExtResource( 6 )
+material = ExtResource( 5 )
+
+[node name="GlowingSphere" type="MeshInstance" parent="Effects/Shield"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.369303, 0 )
+mesh = SubResource( 63 )
+material/0 = ExtResource( 5 )
 
 [node name="WheelSkidDust" type="Particles" parent="Effects"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000409719, 0.372261, 0.0959512 )
@@ -2056,8 +2062,12 @@ autostart = true
 wait_time = 4.0
 autostart = true
 
+[node name="TimerDisableShield" type="Timer" parent="."]
+wait_time = 30.0
+
 [connection signal="timeout" from="Effects/Audio/TimerCheckSoundVolume" to="Effects/Audio" method="_on_TimerCheckSoundVolume_timeout"]
 [connection signal="timeout" from="DynamicGripTimer" to="." method="_on_DynamicGripTimer_timeout"]
 [connection signal="timeout" from="CheckSkidTimer" to="." method="_on_CheckSkidTimer_timeout"]
 [connection signal="timeout" from="CheckWheelSpeedDustTimer" to="." method="_on_CheckWheelSpeedDustTimer_timeout"]
 [connection signal="timeout" from="CheckAccelDamage" to="." method="_on_CheckAccelDamage_timeout"]
+[connection signal="timeout" from="TimerDisableShield" to="." method="_on_TimerDisableShield_timeout"]

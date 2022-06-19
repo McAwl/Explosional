@@ -653,6 +653,11 @@ func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z) -> Vector3:
 
 
 func add_damage(amount) -> void:
+	
+	if is_shield_on():
+		print("ignoring damage - shield is on")
+		return
+
 	total_damage += amount
 	$CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
 	accel_damage_enabled = false
@@ -779,11 +784,27 @@ func _on_CarBody_body_entered(body):
 		add_damage(max_damage)
 
 
-func power_up(power_up_name) -> void:
-	print("power_up: power_up_name = "+str(power_up_name))
-	weapons_state[ConfigWeapons.Type.NUKE].enabled = true
-	weapon_select = ConfigWeapons.Type.NUKE
-	cycle_weapon(true)
+func power_up(type: int) -> void:
+	print("power_up: power_up = "+str(type))
+	if type == ConfigWeapons.PowerupType.NUKE:
+		weapons_state[ConfigWeapons.Type.NUKE].enabled = true
+		weapon_select = ConfigWeapons.Type.NUKE
+		cycle_weapon(true)
+	elif type == ConfigWeapons.PowerupType.SHIELD:
+		shield_on(30.0)  # turn on shield for 30s
+
+
+func shield_on(duration_sec):
+	$Effects/Shield.show()
+	$TimerDisableShield.start(duration_sec)
+
+
+func shield_off():
+	$Effects/Shield.hide()
+
+
+func is_shield_on():
+	return $Effects/Shield.visible
 
 
 func get_camera() -> Camera:
@@ -959,3 +980,8 @@ func randomly_emit(node, prob):
 
 func _on_CheckAccelDamage_timeout():
 	accel_damage_enabled = true 
+
+
+func _on_TimerDisableShield_timeout():
+	shield_off()
+

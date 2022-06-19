@@ -1,7 +1,6 @@
 extends Spatial
 
 # This script gets attached to an instance of a vehicle mesh instance scene
-
 var apply_forces: bool = false
 var force: float = 0.1
 var total_mass: float = 40.0
@@ -12,6 +11,8 @@ var global_transform_origin_parent: Vector3
 var limit_meshes_to_explode: int = 10  # 
 var num_meshes_exploded: int = 0
 var new_exploded_vehicle_part: Resource = load(Global.exploded_vehicle_part_folder)
+var centre_of_meshes: Vector3 = Vector3(0,0,0)
+var timer_centre_of_meshes: float = 0.1
 
 
 # Called when the node enters the scene tree for the first time.
@@ -26,6 +27,11 @@ func _process(delta):
 		print("max_lifetime_sec <= 0.0: vehicle mesh queue_free")
 		queue_free()
 
+	timer_centre_of_meshes -= delta
+	if timer_centre_of_meshes < 0.0:
+		timer_centre_of_meshes = 0.1
+		calc_centre_of_meshes()
+
 
 func av_lifetime(_av_lifetime_sec) -> void:
 	pass  # av_lifetime_sec
@@ -38,6 +44,18 @@ func detach_rigid_bodies(force_, total_mass_, _linear_velocity, _global_transfor
 	global_transform_origin_parent = _global_transform_origin_parent
 	apply_forces = true  # one time only impulse
 	print("detach_rigid_bodies")
+
+
+func calc_centre_of_meshes():
+	print("_on_timer_centre_of_meshes_timeout()")
+	centre_of_meshes = Vector3(0,0,0)
+	var num_meshes:int = 0
+	for ch in get_children():
+		if ch is RigidBody:
+			centre_of_meshes += ch.translation
+			num_meshes += 1
+	centre_of_meshes /= float(num_meshes)
+	print("centre_of_meshes="+str(centre_of_meshes))
 
 
 func _physics_process(_delta):

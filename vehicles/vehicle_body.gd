@@ -26,6 +26,8 @@ var take_damage: bool = true
 var wheel_positions: Array = []
 var wheels: Array = []
 
+var vehicle_parts_exploded: Spatial   #= get_node("MeshInstances")
+
 # this is changingstate info, see config_weapons.gd for constants
 var weapons_state: Dictionary = {
 	ConfigWeapons.Type.MINE: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.MINE], "enabled": true}, \
@@ -123,6 +125,9 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	$CheckAccelDamage.start(4.0)
 	
 	init_camera(StatePlayers.num_players())
+	
+	vehicle_parts_exploded = get_node("MeshInstances")
+	
 	return true
 
 
@@ -339,6 +344,17 @@ func _process(delta):
 		if dying_finished():
 			print("dying_finished() -> AliveState.DEAD")
 			vehicle_state = ConfigVehicles.AliveState.DEAD
+		else:
+			if !vehicle_parts_exploded == null:
+				# Move the target cameras to the centre of the collection of meshes
+				print("moving cam to centre_of_meshes")
+				var centre_of_meshes = vehicle_parts_exploded.centre_of_meshes
+				$CameraBase/CameraBasesTargets/CamTargetForward.translation = centre_of_meshes
+				$CameraBase/CameraBasesTargets/CamTargetForward_UD.translation = centre_of_meshes
+				$CameraBase/CameraBasesTargets/CamTargetReverse.translation = centre_of_meshes
+				$CameraBase/CameraBasesTargets/CamTargetReverse_UD.translation = centre_of_meshes
+				#get_camera().fix_distance(10.0)
+				
 
 	if total_damage >= max_damage:
 		print("Exiting _process: total_damage >= max_damage")
@@ -417,7 +433,16 @@ func _input(_event):
 			fire_missile_or_rocket()
 	elif Input.is_action_just_released("kill_player1"):
 		if player_number == 1:
-			add_damage(10.0)
+			add_damage(max_damage)
+	elif Input.is_action_just_released("kill_player2"):
+		if player_number == 2:
+			add_damage(max_damage)
+	elif Input.is_action_just_released("kill_player3"):
+		if player_number == 3:
+			add_damage(max_damage)
+	elif Input.is_action_just_released("kill_player4"):
+		if player_number == 4:
+			add_damage(max_damage)
 
 
 func check_accel_damage() -> void:
@@ -762,8 +787,8 @@ func power_up(power_up_name) -> void:
 
 
 func get_camera() -> Camera:
-	return get_player().get_camera() as Camera
-	#return $CameraBase/Camera as Camera
+	#return get_player().get_camera() as Camera
+	return $CameraBase/Camera as Camera
 
 
 func set_label(new_label) -> void:
@@ -844,20 +869,19 @@ func remove_main_collision_shapes() -> void:
 func explode_vehicle_meshes() -> void:
 	# 
 	if self.has_node("MeshInstances"):
-		var vm: Spatial = get_node("MeshInstances")
 		print("Found node MeshInstances: destroying...")
 		print("explode_vehicle_meshes(): self.has_node('MeshInstances')")
 		print("self.translation="+str(self.translation))
-		vm.set_script(SCRIPT_VEHICLE_DETACH_RIGID_BODIES)
-		vm.set_process(true)
-		vm.set_physics_process(true)
-		vm.detach_rigid_bodies(0.00, self.mass, self.linear_velocity, self.global_transform.origin)
+		vehicle_parts_exploded.set_script(SCRIPT_VEHICLE_DETACH_RIGID_BODIES)
+		vehicle_parts_exploded.set_process(true)
+		vehicle_parts_exploded.set_physics_process(true)
+		vehicle_parts_exploded.detach_rigid_bodies(0.00, self.mass, self.linear_velocity, self.global_transform.origin)
 		# self.remove_child(ch)
 		# ch.set_as_toplevel(true)
 		# move the exploded mesh to the player, as the VehicleBody will be deleted after the explosion
-		remove_child(vm)
-		get_player().add_child(vm)
-		vm.name = "vehicle_parts_exploded"
+		remove_child(vehicle_parts_exploded)
+		get_player().add_child(vehicle_parts_exploded)
+		vehicle_parts_exploded.name = "vehicle_parts_exploded"
 		# Move the target cameras to the centre of the body
 		$CameraBase/CameraBasesTargets/CamTargetForward.translation = Vector3(0.0, 0.0, 0.0)
 		$CameraBase/CameraBasesTargets/CamTargetForward_UD.translation = Vector3(0.0, 0.0, 0.0)

@@ -15,18 +15,13 @@ func _ready():
 # start all the effects
 func start_effects(from_parent, hide_main=false) -> void:
 	reparent(from_parent)  
-	if hide_main==true:
+	if hide_main==true:  # make sure the material is made local to this instance, or won't work if there are other instances of same material!
 		$Visual/Main.hide()
-	print("1 start_effects: $Visual/Main.visible="+str($Visual/Main.visible))
 	$Visual/Smoke.emitting = true
 	$Visual/Smoke.reparent($Visual)
 	$Visual/Light.visible = true
-	print("2 start_effects: $Visual/Main.visible="+str($Visual/Main.visible))
 	$Visual/AnimationPlayer.play("Explode")
-	print("3 start_effects: $Visual/Main.visible="+str($Visual/Main.visible))
 	$Audio/ExplosionSound.playing = true
-	print("4 start_effects: $Visual/Main.visible="+str($Visual/Main.visible))
-	
 
 
 # We reparent the explosion so the parent weapon can destroy itself

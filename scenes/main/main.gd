@@ -217,7 +217,7 @@ func check_and_enforce_slow_motion() -> void:
 
 
 func is_in_slow_motion():
-	print("Engine.time_scale="+str(Engine.time_scale))
+	#print("Engine.time_scale="+str(Engine.time_scale))
 	if Engine.time_scale < 1.0:
 		return true
 	else:

@@ -29,12 +29,12 @@ const DAMAGE: Dictionary = {
 
 # TODO remove this, if we want to completely move to damage due to force (acceleration)
 const DAMAGE_INDIRECT: Dictionary = {
-	Type.MINE: {"damage": 1, "range": 10.0}, 
-	Type.ROCKET: {"damage": 1, "range": 10.0}, 
-	Type.MISSILE: {"damage": 1, "range": 10.0}, 
-	Type.NUKE: {"damage": 5.0, "range": 10.0}, 
-	Type.BALLISTIC: {"damage": 1, "range": 10.0},
-	Type.BALLISTIC_MISSILE: {"damage": 1, "range": 10.0},
+	Type.MINE: {"damage": 10, "range": 10.0}, 
+	Type.ROCKET: {"damage": 10, "range": 10.0}, 
+	Type.MISSILE: {"damage": 10, "range": 10.0}, 
+	Type.NUKE: {"damage": 60.0, "range": 500.0}, 
+	Type.BALLISTIC: {"damage": 10, "range": 10.0},
+	Type.BALLISTIC_MISSILE: {"damage": 10, "range": 10.0},
 	}
 	
 const SCENE: Dictionary = {
@@ -132,7 +132,8 @@ enum ExplosiveStage {
 
 enum PowerupType {
 	NUKE=1, 
-	SHIELD=2
+	SHIELD=2,
+	HEALTH=3
 	}
 
 # Called when the node enters the scene tree for the first time.

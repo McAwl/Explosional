@@ -304,6 +304,10 @@ func _on_TimerCheckPowerups_timeout():
 	if not $Powerups/ShieldPowerupSpawnPoint.has_node("PowerUpShield1") and $Powerups/TimerShieldPowerup.is_stopped():
 		$Powerups/TimerShieldPowerup.set_paused(false)
 		$Powerups/TimerShieldPowerup.start(10.0)
+	
+	if not $Powerups/HealthPowerupSpawnPoint.has_node("PowerUpHealth1") and $Powerups/TimerHealthPowerup.is_stopped():
+		$Powerups/TimerHealthPowerup.set_paused(false)
+		$Powerups/TimerHealthPowerup.start(10.0)
 
 
 func _on_TimerNukePowerUp_timeout():
@@ -326,3 +330,14 @@ func _on_TimerShieldPowerup_timeout():
 		new_shield_powerup.type = ConfigWeapons.PowerupType.SHIELD
 		$Powerups/ShieldPowerupSpawnPoint.add_child(new_shield_powerup)
 		new_shield_powerup.get_node("ActivationSound").play()
+
+
+func _on_TimerHealthPowerup_timeout():
+	print("_on_TimerHealthPowerup_timeout")
+	if $Powerups/TimerHealthPowerup.is_stopped():
+		print("Respawning health_powerup")
+		var new_health_powerup = load(Global.power_up_folder).instance()
+		new_health_powerup.name = "PowerUpHealth1"
+		new_health_powerup.type = ConfigWeapons.PowerupType.HEALTH
+		$Powerups/HealthPowerupSpawnPoint.add_child(new_health_powerup)
+		new_health_powerup.get_node("ActivationSound").play()

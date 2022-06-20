@@ -1,7 +1,27 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="SpatialMaterial" id=1]
+albedo_color = Color( 0.968627, 0, 1, 1 )
 
 [node name="ShieldPowerupMeshes" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.479566, 0 )
 
-[node name="CSGBox" type="CSGBox" parent="."]
+[node name="CSGBox1" type="CSGBox" parent="."]
 width = 0.716
+material = SubResource( 1 )
+
+[node name="CSGBox2" type="CSGBox" parent="CSGBox1"]
+transform = Transform( 0.455629, 0, 0, 0, 1.02999, -1.02999, 0, 1.03295, 1.03295, 0, -0.516387, 0.889868 )
+operation = 2
+depth = 0.635321
+
+[node name="CSGBox3" type="CSGBox" parent="CSGBox1"]
+transform = Transform( 0.99892, 0, 0, 0, 1.04835, 1.04835, 0, -0.984134, 0.984134, 0, -0.516387, -0.920558 )
+operation = 2
+width = 0.949366
+depth = 0.635321
+
+[node name="CSGCylinder" type="CSGCylinder" parent="CSGBox1"]
+transform = Transform( -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 1.49646, 0 )
+operation = 2
+sides = 12

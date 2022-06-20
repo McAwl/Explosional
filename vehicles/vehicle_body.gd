@@ -184,19 +184,7 @@ func init_visual_effects(start) -> void:
 	
 	lights_disabled = false
 	
-	$Effects/Damage/ParticlesSmoke.emitting = false
-	$Effects/Damage/ParticlesSmoke.amount = 1
-	$Effects/Damage/ParticlesSmoke.visible = false
-	
-	$Effects/Damage/LightsOnFire/OnFireLight1.visible = true
-	$Effects/Damage/LightsOnFire/OnFireLight1.light_energy = 0.0
-	$Effects/Damage/LightsOnFire/OnFireLight2.light_energy = 0.0
-	$Effects/Damage/LightsOnFire/OnFireLight4.light_energy = 0.0
-	$Effects/Damage/LightsOnFire/OnFireLight5.light_energy = 0.0
-	
-	$Effects/Damage/Flames3D.emitting = false
-	$Effects/Damage/Flames3D.amount = 1
-	$Effects/Damage/Flames3D.visible = false
+	align_effects_with_damage()
 
 	lights_off()
 	
@@ -661,21 +649,34 @@ func add_damage(amount) -> void:
 	total_damage += amount
 	$CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
 	accel_damage_enabled = false
-	if $Effects/Damage/ParticlesSmoke.emitting == false:
-		$Effects/Damage/ParticlesSmoke.emitting = true
-		$Effects/Damage/Flames3D.emitting = true
-	$Effects/Damage/ParticlesSmoke.amount *= 2  # increase engine smoke indicating damage
-	$Effects/Damage/Flames3D.visible = true
-	$Effects/Damage/Flames3D.amount = 1 + int(50*total_damage/max_damage)
-	$Effects/Damage/LightsOnFire/OnFireLight1.light_energy = total_damage/20.0
-	$Effects/Damage/LightsOnFire/OnFireLight2.light_energy = total_damage/20.0
-	$Effects/Damage/LightsOnFire/OnFireLight4.light_energy = total_damage/20.0
-	$Effects/Damage/LightsOnFire/OnFireLight5.light_energy = total_damage/20.0
+	align_effects_with_damage()
 	engine_force_value *= 0.75  # decrease engine power to indicate damage
 
 	if total_damage >= max_damage and vehicle_state != ConfigVehicles.AliveState.DYING:
 		print("damage: total_damage >= max_damage")
 		start_vehicle_dying()
+
+
+func align_effects_with_damage():
+	if total_damage > 0:
+		if $Effects/Damage/ParticlesSmoke.emitting == false:
+			$Effects/Damage/ParticlesSmoke.emitting = true
+			$Effects/Damage/Flames3D.emitting = true
+		$Effects/Damage/ParticlesSmoke.amount *= 2  # increase engine smoke indicating damage
+		$Effects/Damage/Flames3D.visible = true
+		$Effects/Damage/Flames3D.amount = 1 + int(50*total_damage/max_damage)
+		$Effects/Damage/LightsOnFire/OnFireLight1.light_energy = total_damage/20.0
+		$Effects/Damage/LightsOnFire/OnFireLight2.light_energy = total_damage/20.0
+		$Effects/Damage/LightsOnFire/OnFireLight4.light_energy = total_damage/20.0
+		$Effects/Damage/LightsOnFire/OnFireLight5.light_energy = total_damage/20.0
+	else:
+		$Effects/Damage/ParticlesSmoke.emitting = false
+		$Effects/Damage/ParticlesSmoke.amount = 1
+		$Effects/Damage/ParticlesSmoke.visible = false
+		$Effects/Damage/LightsOnFire/OnFireLight1.visible = true
+		$Effects/Damage/Flames3D.emitting = false
+		$Effects/Damage/Flames3D.amount = 1
+		$Effects/Damage/Flames3D.visible = false
 
 
 func get_player() -> Player:
@@ -792,6 +793,15 @@ func power_up(type: int) -> void:
 		cycle_weapon(true)
 	elif type == ConfigWeapons.PowerupType.SHIELD:
 		shield_on(30.0)  # turn on shield for 30s
+	elif type == ConfigWeapons.PowerupType.HEALTH:
+		if total_damage > 0:
+			reset_total_damage()
+
+
+func reset_total_damage():
+	total_damage = 0
+	align_effects_with_damage()
+	configure_vehicle_properties()  # reset engine power
 
 
 func shield_on(duration_sec):

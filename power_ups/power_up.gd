@@ -6,6 +6,7 @@ var activated: bool = false
 export var type: int = -1
 var nuke_meshes: Resource = load(Global.nuke_meshes_scene_folder)
 var shield_meshes: Resource = load(Global.shield_meshes_scene_folder)
+var health_meshes: Resource = load(Global.health_meshes_scene_folder)
 
 func _ready():
 	pass # Replace with function body.
@@ -33,6 +34,10 @@ func _process(delta):
 			$Area.add_child(new_mesh)
 		elif type == ConfigWeapons.PowerupType.SHIELD:
 			var new_mesh = shield_meshes.instance()
+			new_mesh.scale = Vector3(0.2, 0.2, 0.2)
+			$Area.add_child(new_mesh)
+		elif type == ConfigWeapons.PowerupType.HEALTH:
+			var new_mesh = health_meshes.instance()
 			new_mesh.scale = Vector3(0.2, 0.2, 0.2)
 			$Area.add_child(new_mesh)
 		else:

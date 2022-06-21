@@ -7,11 +7,13 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var is_game_paused: bool = false
 var trees: Array = []
 var num_trees: int = 0
-var num_trees_total: int = 0  #100
+var num_trees_total: int = 200  #100
 var grasses: Array = []
 var num_grasses: int = 0
-var num_grasses_total: int = 0  #200
+var num_grasses_total: int = 500  #200
 var ray: RayCastProceduralVegetation = load(Global.raycast_procedural_veg_folder).instance()
+var tree_resource: Resource = load(Global.tree_folder)
+var grass_resource: Resource = load(Global.grass_folder)
 var veg_check_raycast: bool = false
 var last_veg: Array = []
 var in_slow_motion: bool = false
@@ -64,12 +66,12 @@ func _ready():
 
 	# Add veg instances, but place later in physics as we need raycasts
 	for _nt in range(0, num_trees_total):
-		var tree: AnimatedTree = load(Global.tree_folder).instance()
+		var tree: AnimatedTree = tree_resource.instance()
 		$Vegetation/Trees.add_child(tree)
 		trees.append(tree.get_instance_id())
 		
 	for _ng in range(0, num_grasses_total): 
-		var grass: AnimatedGrass = load(Global.grass_folder).instance()
+		var grass: AnimatedGrass = grass_resource.instance()
 		$Vegetation/Grass.add_child(grass)
 		grasses.append(grass.get_instance_id())
 

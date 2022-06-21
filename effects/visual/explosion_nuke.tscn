@@ -603,6 +603,7 @@ transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0
 emitting = false
 amount = 200
 lifetime = 5.0
+visibility_aabb = AABB( -100, -100, -4, 200, 200, 200 )
 local_coords = false
 process_material = SubResource( 5 )
 draw_pass_1 = SubResource( 7 )
@@ -619,6 +620,7 @@ transform = Transform( 1, 0, 0, 0, 0.00246091, 0.999997, 0, -0.999997, 0.0024609
 emitting = false
 amount = 200
 lifetime = 4.0
+visibility_aabb = AABB( -100, -100, -4, 200, 200, 200 )
 process_material = SubResource( 10 )
 draw_pass_1 = SubResource( 12 )
 
@@ -627,6 +629,7 @@ transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 13.0
 emitting = false
 amount = 200
 lifetime = 2.5
+visibility_aabb = AABB( -100, -100, -100, 200, 200, 200 )
 process_material = SubResource( 15 )
 draw_pass_1 = SubResource( 17 )
 

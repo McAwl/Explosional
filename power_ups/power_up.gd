@@ -34,11 +34,11 @@ func _process(delta):
 			$Area.add_child(new_mesh)
 		elif type == ConfigWeapons.PowerupType.SHIELD:
 			var new_mesh = shield_meshes.instance()
-			new_mesh.scale = Vector3(0.2, 0.2, 0.2)
+			new_mesh.scale = Vector3(0.4, 0.4, 0.4)
 			$Area.add_child(new_mesh)
 		elif type == ConfigWeapons.PowerupType.HEALTH:
 			var new_mesh = health_meshes.instance()
-			new_mesh.scale = Vector3(0.2, 0.2, 0.2)
+			new_mesh.scale = Vector3(0.4, 0.4, 0.4)
 			$Area.add_child(new_mesh)
 		else:
 			print("power_up "+str(type)+" unknown")

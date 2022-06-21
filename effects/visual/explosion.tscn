@@ -9,10 +9,12 @@
 [ext_resource path="res://effects/visual/smoke.gd" type="Script" id=7]
 
 [sub_resource type="Gradient" id=76]
+resource_local_to_scene = true
 offsets = PoolRealArray( 0, 0.218978, 0.49635, 0.781022, 1 )
 colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 0.792157, 1, 1, 1, 1, 1, 1, 1, 0.745098, 1, 1, 1, 0 )
 
 [sub_resource type="GradientTexture" id=105]
+resource_local_to_scene = true
 gradient = SubResource( 76 )
 
 [sub_resource type="Curve" id=77]
@@ -29,6 +31,7 @@ _data = [ Vector2( 0, 0.534091 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 
 curve = SubResource( 92 )
 
 [sub_resource type="ParticlesMaterial" id=78]
+resource_local_to_scene = true
 lifetime_randomness = 0.28
 emission_shape = 5
 emission_ring_radius = 2.0
@@ -57,6 +60,7 @@ color = Color( 0.466667, 0.466667, 0.466667, 1 )
 color_ramp = SubResource( 105 )
 
 [sub_resource type="QuadMesh" id=79]
+resource_local_to_scene = true
 material = ExtResource( 1 )
 
 [sub_resource type="QuadMesh" id=103]
@@ -601,14 +605,15 @@ lifetime = 20.0
 one_shot = true
 explosiveness = 1.0
 randomness = 0.53
+visibility_aabb = AABB( -10, -10, -10, 20, 20, 20 )
 local_coords = false
 process_material = SubResource( 78 )
 draw_pass_1 = SubResource( 79 )
 script = ExtResource( 7 )
 
 [node name="Light" type="OmniLight" parent="Visual"]
-light_color = Color( 0, 0, 0, 1 )
-light_energy = 0.0
+light_color = Color( 0.996078, 0.776471, 0.580392, 1 )
+light_energy = 20.0
 light_specular = 1.0
 shadow_enabled = true
 omni_range = 3.0

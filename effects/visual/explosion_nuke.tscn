@@ -640,5 +640,6 @@ transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0
 emitting = false
 amount = 500
 lifetime = 5.0
+visibility_aabb = AABB( -100, -100, 0, 200, 200, 200 )
 process_material = SubResource( 20 )
 draw_pass_1 = SubResource( 22 )

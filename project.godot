@@ -135,12 +135,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Explosional"
-config/description="This is a demo implementing different types of trucks of
-varying complexity using vehicle physics.
-
-Do not be surprised if everything is bouncy and glitchy,
-Godot's physics system is not polished and will likely be
-reworked in the future."
+config/description="A split-screen multi-player game with vehicles, weapons and explosions."
 run/main_scene="res://scenes/logo/logo.tscn"
 boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://icon.png"

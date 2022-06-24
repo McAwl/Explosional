@@ -1,10 +1,11 @@
-[gd_scene load_steps=45 format=2]
+[gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://vehicles/vehicle_body.gd" type="Script" id=2]
 [ext_resource path="res://assets/audio/sounds/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3" type="AudioStream" id=3]
 [ext_resource path="res://assets/textures/dot.png" type="Texture" id=4]
 [ext_resource path="res://assets/materials/shield.tres" type="Material" id=5]
+[ext_resource path="res://vehicles/vehicle_wheel_mesh.tscn" type="PackedScene" id=6]
 [ext_resource path="res://effects/audio/audio_stream_player.gd" type="Script" id=7]
 [ext_resource path="res://effects/visual/shield.gd" type="Script" id=8]
 [ext_resource path="res://vehicles/follow_camera.gd" type="Script" id=9]
@@ -105,8 +106,6 @@ anim_offset_random = 1.0
 
 [sub_resource type="SphereMesh" id=53]
 
-[sub_resource type="CylinderMesh" id=52]
-
 [sub_resource type="ParticlesMaterial" id=60]
 resource_local_to_scene = true
 lifetime_randomness = 0.5
@@ -144,6 +143,8 @@ color_ramp = SubResource( 4 )
 anim_speed = 0.2
 anim_offset = 1.0
 anim_offset_random = 1.0
+
+[sub_resource type="CylinderMesh" id=52]
 
 [sub_resource type="ParticlesMaterial" id=62]
 resource_local_to_scene = true
@@ -242,6 +243,7 @@ autostart = true
 
 [node name="Shield" type="Spatial" parent="Effects"]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -0.00169557, -0.238068, -0.0955184 )
+visible = false
 script = ExtResource( 8 )
 
 [node name="OuterShell" type="CSGSphere" parent="Effects/Shield"]
@@ -631,104 +633,58 @@ material/0 = null
 [node name="Wheels" type="Spatial" parent="VehicleTypes/Racer"]
 
 [node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/Racer/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.565, 0.275, 0.953 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.565, 0.44, 0.953 )
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.23
+wheel_rest_length = 0.275
 wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel1" type="MeshInstance" parent="VehicleTypes/Racer/Wheels/Wheel1"]
-transform = Transform( -0.00331974, 0.0999896, 0, -0.229976, -0.00144336, 0, 0, 0, 0.23, -0.0131113, -0.0121696, 0.00509012 )
-visible = false
-mesh = SubResource( 52 )
-material/0 = ExtResource( 13 )
-
-[node name="Wheel1CSG" type="CSGTorus" parent="VehicleTypes/Racer/Wheels/Wheel1"]
-transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, -0.0027858, 0, 0 )
-inner_radius = 0.1
-outer_radius = 0.23
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Racer/Wheels/Wheel1" instance=ExtResource( 6 )]
 
 [node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/Racer/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.571, 0.275, -0.881 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.571, 0.439543, -0.881 )
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.23
+wheel_rest_length = 0.275
 wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel2" type="MeshInstance" parent="VehicleTypes/Racer/Wheels/Wheel2"]
-transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0, 0, 0, 0.23, -0.0301507, 0.0100485, 0.0114711 )
-mesh = SubResource( 52 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 13 )
-
-[node name="Wheel2CSG" type="CSGTorus" parent="VehicleTypes/Racer/Wheels/Wheel2"]
-transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00348157, 0.00229442, -0.00175607 )
-inner_radius = 0.1
-outer_radius = 0.23
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Racer/Wheels/Wheel2" instance=ExtResource( 6 )]
 
 [node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/Racer/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.577, 0.275, 0.922 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.577, 0.44, 0.922 )
 use_as_traction = true
 use_as_steering = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.23
+wheel_rest_length = 0.275
 wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel3" type="MeshInstance" parent="VehicleTypes/Racer/Wheels/Wheel3"]
-transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0.000158877, 0.000158875, 3.44299e-07, 0.23, 0.0204801, 0.000714689, 0.0108781 )
-visible = false
-mesh = SubResource( 52 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 13 )
-
-[node name="Wheel3CSG" type="CSGTorus" parent="VehicleTypes/Racer/Wheels/Wheel3"]
-transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0.000690771, -0.000690771, 6.03891e-11, 1, 0.0165168, -0.00189039, 0.00578099 )
-inner_radius = 0.1
-outer_radius = 0.23
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Racer/Wheels/Wheel3" instance=ExtResource( 6 )]
 
 [node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/Racer/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.577, 0.275, -0.88 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.577, 0.439543, -0.88 )
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.23
+wheel_rest_length = 0.275
 wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/Racer/Wheels/Wheel4"]
-transform = Transform( -0.00114639, 0.0999988, 0, -0.229997, -0.000498428, 0, 0, 0, 0.23, 0.0479246, -0.00331897, 0.00355035 )
-visible = false
-mesh = SubResource( 52 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 13 )
-
-[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/Racer/Wheels/Wheel4"]
-transform = Transform( -4.21324e-08, -1.92775, 0, 0.963876, -8.42647e-08, 0, 0, 0, 0.963876, 0.00150269, -0.00304165, 0.00200105 )
-inner_radius = 0.1
-outer_radius = 0.23
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Racer/Wheels/Wheel4" instance=ExtResource( 6 )]
 
 [node name="Rally" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.585815, -0.0955184 )
@@ -1056,19 +1012,8 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel1" type="MeshInstance" parent="VehicleTypes/Rally/Wheels/Wheel1"]
-transform = Transform( -0.00433009, 0.0999896, 0, -0.299969, -0.00144336, 0, 0, 0, 0.3, -0.124151, -0.0105667, 0.00509012 )
-visible = false
-mesh = SubResource( 52 )
-material/0 = ExtResource( 13 )
-
-[node name="Wheel1CSG" type="CSGTorus" parent="VehicleTypes/Rally/Wheels/Wheel1"]
-transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00752211, 0, 0 )
-inner_radius = 0.1
-outer_radius = 0.3
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Rally/Wheels/Wheel1" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0 )
 
 [node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/Rally/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.571, -0.07, -0.814 )
@@ -1080,20 +1025,8 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel2" type="MeshInstance" parent="VehicleTypes/Rally/Wheels/Wheel2"]
-transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, -0.0301507, 0.0100485, 0.0114711 )
-visible = false
-mesh = SubResource( 52 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 13 )
-
-[node name="Wheel2CSG" type="CSGTorus" parent="VehicleTypes/Rally/Wheels/Wheel2"]
-transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00348157, 0.00229442, -0.00175607 )
-inner_radius = 0.1
-outer_radius = 0.3
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Rally/Wheels/Wheel2" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0 )
 
 [node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/Rally/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.577, -0.07, 1.038 )
@@ -1106,20 +1039,8 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel3" type="MeshInstance" parent="VehicleTypes/Rally/Wheels/Wheel3"]
-transform = Transform( -0.00149528, 0.0999988, 2.71065e-13, -0.299996, -0.000498428, 0.000207231, 0.000207228, 3.44299e-07, 0.3, 0.0204801, 0.000714689, 0.0108781 )
-visible = false
-mesh = SubResource( 52 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 13 )
-
-[node name="Wheel3CSG" type="CSGTorus" parent="VehicleTypes/Rally/Wheels/Wheel3"]
-transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0.000690771, -0.000690771, 6.03891e-11, 1, 0.0165168, -0.012314, 0.00578821 )
-inner_radius = 0.1
-outer_radius = 0.3
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Rally/Wheels/Wheel3" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0 )
 
 [node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/Rally/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.577, -0.07, -0.774 )
@@ -1131,23 +1052,12 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/Rally/Wheels/Wheel4"]
-transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )
-visible = false
-mesh = SubResource( 52 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 13 )
-
-[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/Rally/Wheels/Wheel4"]
-transform = Transform( -4.21324e-08, -1.92775, 0, 0.963876, -8.42647e-08, 0, 0, 0, 0.963876, 0.00150269, -0.00304165, 0.00200105 )
-inner_radius = 0.1
-outer_radius = 0.3
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Rally/Wheels/Wheel4" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0 )
 
 [node name="Tank" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.516244, 0 )
+visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Tank"]
 
@@ -1633,7 +1543,6 @@ material = ExtResource( 14 )
 
 [node name="Truck" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.476245, 0 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Truck"]
 
@@ -1957,19 +1866,8 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel1" type="MeshInstance" parent="VehicleTypes/Truck/Wheels/Wheel1"]
-transform = Transform( -0.00433009, 0.0999896, 0, -0.299969, -0.00144336, 0, 0, 0, 0.3, -0.124151, -0.0105667, 0.00509012 )
-visible = false
-mesh = SubResource( 52 )
-material/0 = ExtResource( 13 )
-
-[node name="Wheel1CSG" type="CSGTorus" parent="VehicleTypes/Truck/Wheels/Wheel1"]
-transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00752211, 0, 0 )
-inner_radius = 0.1
-outer_radius = 0.3
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Truck/Wheels/Wheel1" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Wheel2" type="VehicleWheel" parent="VehicleTypes/Truck/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.535, -0.2, -0.793 )
@@ -1981,20 +1879,8 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel2" type="MeshInstance" parent="VehicleTypes/Truck/Wheels/Wheel2"]
-transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, -0.0301507, 0.0100485, 0.0114711 )
-visible = false
-mesh = SubResource( 52 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 13 )
-
-[node name="Wheel2CSG" type="CSGTorus" parent="VehicleTypes/Truck/Wheels/Wheel2"]
-transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0, 0, 0, 1, 0.00348157, 0.00229442, -0.00175607 )
-inner_radius = 0.1
-outer_radius = 0.3
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Truck/Wheels/Wheel2" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/Truck/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.488, -0.2, 1.242 )
@@ -2007,20 +1893,8 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel3" type="MeshInstance" parent="VehicleTypes/Truck/Wheels/Wheel3"]
-transform = Transform( -0.00149528, 0.0999988, 2.71065e-13, -0.299996, -0.000498428, 0.000207231, 0.000207228, 3.44299e-07, 0.3, 0.0204801, 0.000714689, 0.0108781 )
-visible = false
-mesh = SubResource( 52 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 13 )
-
-[node name="Wheel3CSG" type="CSGTorus" parent="VehicleTypes/Truck/Wheels/Wheel3"]
-transform = Transform( -4.37114e-08, -2, 0, 1, -8.74228e-08, 0.000690771, -0.000690771, 6.03891e-11, 1, 0.0165168, -0.012314, 0.00578821 )
-inner_radius = 0.1
-outer_radius = 0.3
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Truck/Wheels/Wheel3" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Wheel4" type="VehicleWheel" parent="VehicleTypes/Truck/Wheels"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.538562, -0.200321, -0.868905 )
@@ -2032,20 +1906,8 @@ suspension_travel = 2.0
 suspension_stiffness = 40.0
 damping_compression = 0.88
 
-[node name="Wheel4" type="MeshInstance" parent="VehicleTypes/Truck/Wheels/Wheel4"]
-transform = Transform( -0.00149528, 0.0999988, 0, -0.299996, -0.000498428, 0, 0, 0, 0.3, 0.0479246, -0.00331897, 0.00355035 )
-visible = false
-mesh = SubResource( 52 )
-skeleton = NodePath("../../Wheel1")
-material/0 = ExtResource( 13 )
-
-[node name="Wheel4CSG" type="CSGTorus" parent="VehicleTypes/Truck/Wheels/Wheel4"]
-transform = Transform( -4.21324e-08, -1.92775, 0, 0.963876, -8.42647e-08, 0, 0, 0, 0.963876, 0.00150269, -0.00304165, 0.00200105 )
-inner_radius = 0.1
-outer_radius = 0.3
-sides = 16
-ring_sides = 12
-material = ExtResource( 14 )
+[node name="VehicleWheelMesh" parent="VehicleTypes/Truck/Wheels/Wheel4" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="DynamicGripTimer" type="Timer" parent="."]
 autostart = true

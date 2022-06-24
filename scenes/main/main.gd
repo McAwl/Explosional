@@ -7,10 +7,10 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var is_game_paused: bool = false
 var trees: Array = []
 var num_trees: int = 0
-var num_trees_total: int = 200  #100
+var num_trees_total: int = 100  #100
 var grasses: Array = []
 var num_grasses: int = 0
-var num_grasses_total: int = 500  #200
+var num_grasses_total: int = 200  #200
 var ray: RayCastProceduralVegetation = load(Global.raycast_procedural_veg_folder).instance()
 var tree_resource: Resource = load(Global.tree_folder)
 var grass_resource: Resource = load(Global.grass_folder)
@@ -174,9 +174,9 @@ func _physics_process(_delta):
 				if "terrain" in ray.get_collider().name.to_lower() and not "lava" in ray.get_collider().name.to_lower():
 					#print("colliding with terrain..")
 					#print("collision point = "+str(ray.get_collision_point()))
-					if rng.randf() < 0.5 and num_trees < num_trees_total:  # len(trees)>0: # tree
+					if num_trees < num_trees_total:  # place trees first
 						if ray.get_collision_normal().normalized().y > 0.98 and ray.get_collision_normal().normalized().y < 0.99:  # slightly sloping ground for trees
-							print("tree collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
+							#print("tree collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
 							# var tree = load("res://scenes/tree.tscn").instance()  #
 							var tree = instance_from_id(trees[0])
 							#$Vegetation/Trees.add_child(tree)
@@ -190,7 +190,7 @@ func _physics_process(_delta):
 							last_veg = ["tree", tree.translation]
 					elif num_grasses < num_grasses_total:  # len(grasses)>0:  # grass
 						if ray.get_collision_normal().normalized().y > 0.9999:  # very flat ground for grass
-							print("grass collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
+							#print("grass collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
 							#tree.global_transform.origin = ray.get_collision_point()
 							# var grass = load("res://scenes/grass.tscn").instance()  # 
 							var grass = instance_from_id(grasses[0])

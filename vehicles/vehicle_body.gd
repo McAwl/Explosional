@@ -93,7 +93,10 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 			if ch.name == "CameraBasesTargets":
 				# print("ctm="+str(ctm))
 				#print("ch="+str(ch))
-				$CameraBase.add_child(ch)
+				if has_node("CameraBase"):
+					$CameraBase.add_child(ch)
+				else:
+					print("Error: no CameraBase, children are: "+str(get_children()))
 			else:
 				add_child(ch)
 		elif ch.name in ["Wheels", "CollisionShapes", "Effects"]:  # move from 2 levels down
@@ -129,6 +132,10 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	vehicle_parts_exploded = get_node("MeshInstances")
 	
 	return true
+
+
+func get_type():
+	return StatePlayers.players[player_number]["vehicle"]
 
 
 func configure_weapons() -> void:
@@ -215,10 +222,11 @@ func set_wheel_parameters(_vts) -> void:
 			wh.suspension_travel = ConfigVehicles.config[_vts]["suspension_travel"]
 			wh.wheel_friction_slip = ConfigVehicles.config[_vts]["wheel_friction_slip"]
 			wh.wheel_roll_influence = ConfigVehicles.config[_vts]["wheel_roll_influence"]
+			#wh.suspension_max_force = 4.0 * mass   # as per https://github.com/godotengine/godot/issues/45339
+			if wh.suspension_travel > wh.wheel_rest_length:
+				print("Warning wheel suspension_travel > wh.wheel_rest_length")
 			for ch2 in wh.get_children():
-				if ch2 is MeshInstance:
-					ch2.visible = false
-				if ch2 is CSGTorus and StatePlayers.players[player_number]["vehicle"] != ConfigVehicles.Type.TANK:
+				if StatePlayers.players[player_number]["vehicle"] != ConfigVehicles.Type.TANK:
 					ch2.visible = true
 	
 	if StatePlayers.players[player_number]["vehicle"] == ConfigVehicles.Type.TANK:
@@ -536,7 +544,7 @@ func _physics_process(delta):
 		steer_target = Input.get_action_strength("turn_left_player"+str(player_number)) - Input.get_action_strength("turn_right_player"+str(player_number))
 		steer_target *= ConfigVehicles.STEER_LIMIT
 
-		var old_engine_force: float = engine_force
+		#var old_engine_force: float = engine_force
 	
 		if Input.is_action_pressed("accelerate_player"+str(player_number)):
 			# Increase engine force at low speeds to make the initial acceleration faster.
@@ -562,7 +570,9 @@ func _physics_process(delta):
 			brake = 0.0
 			
 		if delta < 1.0:
-			engine_force_ewma = (delta*engine_force) + ((1.0-delta)*old_engine_force)
+			engine_force_ewma = (engine_force*delta) + (engine_force_ewma*(1-delta))
+		else:
+			engine_force_ewma = (engine_force*0.5) + (engine_force_ewma*0.5)
 
 		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta)
 	
@@ -994,4 +1004,19 @@ func _on_CheckAccelDamage_timeout():
 
 func _on_TimerDisableShield_timeout():
 	shield_off()
+
+
+func get_max_speed_km_hr():
+	return ConfigVehicles.config[get_type()]["max_speed_km_hr"]
+
+
+func get_av_wheel_friction_slip():
+	var num_wheels = 0
+	var av_wheel_friction_slip = 0
+	for wh in get_children():
+		if wh is VehicleWheel:
+			num_wheels += 1
+			av_wheel_friction_slip += wh.wheel_friction_slip
+	av_wheel_friction_slip /= num_wheels
+	return av_wheel_friction_slip
 

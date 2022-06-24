@@ -205,8 +205,13 @@ func _on_TimerUpdateSpeedometer_timeout():
 	if get_vehicle_body() == null:
 		return
 	# print("_on_TimerUpdateSpeedometer_timeout()")
-	# 3.6 kilometers per hour equal one meter per second
-	get_canvaslayer().get_node('GridContainer').get_node('Label1').text = "%03d km/hr" % int(round(abs(get_vehicle_body().fwd_mps*3.6)))  #+" km/hr"
+	# 3.6 kilometers per hour equal one meter per second\
+	var text = "%03d km/hr" % int(round(abs(get_vehicle_body().fwd_mps*3.6))) + \
+	"  max: "+str(get_vehicle_body().get_max_speed_km_hr()) + \
+	" km/hr  \npower: %04d" % int(round(get_vehicle_body().engine_force_ewma)) + \
+	"  max: "+str(get_vehicle_body().engine_force_value) + \
+	"  grip: "+str(get_vehicle_body().get_av_wheel_friction_slip())
+	get_canvaslayer().get_node('GridContainer').get_node('Label1').text = text
 
 
 func _on_TimerUpdateHUD_timeout():

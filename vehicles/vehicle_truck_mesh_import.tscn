@@ -442,7 +442,7 @@ skeleton = NodePath("../truck")
 material/0 = ExtResource( 8 )
 
 [node name="1" type="MeshInstance" parent="." index="11"]
-transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 4.25747e-08, 1.65893, -2.64306 )
+transform = Transform( 0.01, 0, 0, 0, -1.62921e-09, -0.01, 0, 0.01, -1.62921e-09, 4.25747e-08, 1.65893, -2.66353 )
 mesh = SubResource( 11 )
 skeleton = NodePath("../truck")
 material/0 = ExtResource( 6 )

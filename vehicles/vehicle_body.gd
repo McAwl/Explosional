@@ -14,6 +14,8 @@ export var speed: float = 0.0
 var speed_low_limit: float = 5.0
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
+var special_ability_state: Dictionary = {"shield": false, "climb_walls": false}
+
 var cooldown_timer: float = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.MINE]
 var timer_0_1_sec: float = 0.1
 var timer_1_sec: float = 1.0  # timer to eg: check if car needs to turn light on 
@@ -80,9 +82,9 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	pos = _pos
 	#print("VehicleBody() init: StatePlayers.num_players()="+str(StatePlayers.num_players()))
 	
-	#print("vehicle="+str(StatePlayers.players[player_number]["vehicle"]))
+	#print("vehicle="+str(get_type()))
 	# Depending on vehicle type, we look for its nodes
-	var vehicle_type_node: Spatial = $VehicleTypes.get_node(ConfigVehicles.nice_name[StatePlayers.players[player_number]["vehicle"]]) as Spatial
+	var vehicle_type_node: Spatial = $VehicleTypes.get_node(ConfigVehicles.nice_name[get_type()]) as Spatial
 	if vehicle_type_node == null:
 		return false
 	# move all the vehicle type nodes to the correct location
@@ -113,9 +115,9 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	if has_node("VehicleTypes"):
 		get_node("VehicleTypes").queue_free()
 	
-	print("StatePlayers.players[player_number]['vehicle']="+str(StatePlayers.players[player_number]["vehicle"]))
-	if StatePlayers.players[player_number]["vehicle"] < 0:  # in ConfigVehicles.Type:
-		print("vehicle_type "+str(StatePlayers.players[player_number]["vehicle"])+" not found in ConfigVehicles.Type="+str(ConfigVehicles.Type))
+	print("StatePlayers.players[player_number]['vehicle']="+str(get_type()))
+	if get_type() < 0:  # in ConfigVehicles.Type:
+		print("vehicle_type "+str(get_type())+" not found in ConfigVehicles.Type="+str(ConfigVehicles.Type))
 		return false
 		
 	configure_vehicle_properties()
@@ -141,9 +143,8 @@ func get_type():
 func configure_weapons() -> void:
 	for k in ConfigWeapons.Type.values():  # .keys():
 		#print("checking weapon "+str(k))  # 0=mine, etc
-		var vt = StatePlayers.players[player_number]["vehicle"]
 		#print("vt="+str(vt))
-		if vt in ConfigWeapons.vehicle_weapons[k]:
+		if get_type() in ConfigWeapons.vehicle_weapons[k]:
 			#print("vt "+str(vt)+" has weapon "+str(k))
 			weapons_state[k]["enabled"] = true
 			weapon_select = k
@@ -158,8 +159,8 @@ func init_audio_effects() -> void:
 
 
 func engine_sound_on() -> void:
-	#print("engine_sound_on(): "+str(StatePlayers.players[player_number]["vehicle"]))
-	match StatePlayers.players[player_number]["vehicle"]:
+	#print("engine_sound_on(): "+str(get_type()))
+	match get_type():
 		ConfigVehicles.Type.RACER:
 			$Effects/Audio/EngineSound.playing = false
 			$Effects/Audio/EngineSoundRally.playing = true
@@ -206,16 +207,16 @@ func dying_visual_effects() -> void:
 
 
 func configure_vehicle_properties() -> void:
-	var vts: int = StatePlayers.players[player_number]["vehicle"]
 	#print("vts="+str(vts))
-	engine_force_value = ConfigVehicles.config[vts]["engine_force_value"]
-	mass = ConfigVehicles.config[vts]["mass_kg/100"]
-	set_wheel_parameters(vts)
+	engine_force_value = ConfigVehicles.config[get_type()]["engine_force_value"]
+	mass = ConfigVehicles.config[get_type()]["mass_kg/100"]
+	set_wheel_parameters(get_type())
 
 
 func set_wheel_parameters(_vts) -> void:
 	
 	for wh in get_children():
+		print("Setting "+str(ConfigVehicles.config[_vts]))
 		if wh is VehicleWheel:
 			wh.visible = true
 			wh.suspension_stiffness = ConfigVehicles.config[_vts]["suspension_stiffness"]
@@ -225,13 +226,15 @@ func set_wheel_parameters(_vts) -> void:
 			#wh.suspension_max_force = 4.0 * mass   # as per https://github.com/godotengine/godot/issues/45339
 			if wh.suspension_travel > wh.wheel_rest_length:
 				print("Warning wheel suspension_travel > wh.wheel_rest_length")
-			for ch2 in wh.get_children():
-				if StatePlayers.players[player_number]["vehicle"] != ConfigVehicles.Type.TANK:
-					ch2.visible = true
+			#for ch2 in wh.get_children():
+			#	if get_type() != ConfigVehicles.Type.TANK:
+			#		ch2.visible = true
 	
-	if StatePlayers.players[player_number]["vehicle"] == ConfigVehicles.Type.TANK:
+	if get_type() == ConfigVehicles.Type.TANK:
 		get_wheel(5).use_as_traction = true  # middle
 		get_wheel(6).use_as_traction = true  # middle
+		get_wheel(7).use_as_traction = true  # middle
+		get_wheel(8).use_as_traction = true  # middle
 	else:
 		if ConfigVehicles.config[_vts]["all_wheel_drive"] == true:
 			get_wheel(1).use_as_traction = true  # front
@@ -243,7 +246,11 @@ func set_wheel_parameters(_vts) -> void:
 			get_wheel(3).use_as_traction = true  # front
 			get_wheel(2).use_as_traction = false  # rear
 			get_wheel(4).use_as_traction = false  # rear
-	 
+
+
+func is_4wd() -> bool:
+	return ConfigVehicles.config[get_type()]["all_wheel_drive"]
+
 
 func re_parent_to_main_scene(child) -> void:
 	remove_child(child)
@@ -548,7 +555,7 @@ func _physics_process(delta):
 	
 		if Input.is_action_pressed("accelerate_player"+str(player_number)):
 			# Increase engine force at low speeds to make the initial acceleration faster.
-			var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["max_speed_km_hr"]
+			var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
 			if fwd_mps < speed_low_limit and speed != 0 and fwd_mps != 0.0:
 				engine_force = clamp(engine_force_value * speed_low_limit / abs(fwd_mps), 0, engine_force_value)
 				#print("clamped engine_force="+str(engine_force))
@@ -565,7 +572,7 @@ func _physics_process(delta):
 		if Input.is_action_pressed("reverse_player"+str(player_number)):
 			engine_force = -engine_force_value/2.0
 			if fwd_mps > speed_low_limit:
-				brake = ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["brake"] / 5.0
+				brake = ConfigVehicles.config[get_type()]["brake"] / 5.0
 		else:
 			brake = 0.0
 			
@@ -575,7 +582,20 @@ func _physics_process(delta):
 			engine_force_ewma = (engine_force*0.5) + (engine_force_ewma*0.5)
 
 		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta)
-	
+		
+		# Keep 4wd vehicles on inclines surfaces, given Godot's VehicleWheel traction doesn't work properly
+		if fwd_mps < 1.0 and engine_force > 0 and is_4wd():
+			if get_type() == ConfigVehicles.Type.RALLY:
+				apply_impulse( Vector3(0,0,0), 0.5*engine_force*transform.basis.z )   # offset, impulse(=direction*force)
+				special_ability_state["climb_walls"] = true
+				power_up_effect(true)
+			else:  # e.g. get_type == ConfigVehicles.Type.TANK:
+				apply_impulse( Vector3(0,0,0), 0.1*engine_force*transform.basis.z )   # offset, impulse(=direction*force)
+				special_ability_state["climb_walls"] = false
+				# power up effects will switch off automatically with TimerDisablePowerup
+		else:
+			special_ability_state["climb_walls"] = false
+
 	if hit_by_missile["active"] == true:
 		print("Player "+str(player_number)+ " hit by missile!")
 		#var direction = hit_by_missile_origin - $Body.transform.origin  
@@ -626,7 +646,7 @@ func check_for_clipping() -> void:
 				#	print("raycast "+raycast.name+" is colliding with "+str(raycast.get_collider().name))
 		if num_wheels_clipped > 0:
 			#print("applying impulse - wheel(s) are clipped")
-			apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.1, rng.randf()*5.0*ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["mass_kg/100"], rng.randf()*0.1) )   # from underneath, upwards force
+			apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.1, rng.randf()*5.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.1) )   # from underneath, upwards force
 			$CheckAccelDamage.start(2.0)  # disable damage for temporarily
 	
 
@@ -946,7 +966,7 @@ func dying_finished() -> bool:
 # Dynamically adjust the grip depending on speed
 # This means vehicles can more easily climb walls, but not roll at higher speed
 func _on_DynamicGripTimer_timeout():
-	if ConfigVehicles.config[StatePlayers.players[player_number]["vehicle"]]["all_wheel_drive"] == true:
+	if ConfigVehicles.config[get_type()]["all_wheel_drive"] == true:
 		for wh in get_children():
 			if wh is VehicleWheel:
 				if abs(fwd_mps) < 1.0:
@@ -1003,6 +1023,7 @@ func _on_CheckAccelDamage_timeout():
 
 
 func _on_TimerDisableShield_timeout():
+	special_ability_state["shield"] = false
 	shield_off()
 
 
@@ -1017,6 +1038,20 @@ func get_av_wheel_friction_slip():
 		if wh is VehicleWheel:
 			num_wheels += 1
 			av_wheel_friction_slip += wh.wheel_friction_slip
-	av_wheel_friction_slip /= num_wheels
+	if num_wheels > 0:
+		av_wheel_friction_slip /= num_wheels
+	else:
+		av_wheel_friction_slip = 1.0  # 1.0 = normal setting
 	return av_wheel_friction_slip
+
+
+
+func _on_TimerDisablePowerup_timeout():
+	if not special_ability_state["climb_walls"]:
+		power_up_effect(false)
+
+
+func power_up_effect(enable):
+	$Effects/Powerup.visible = enable
+
 

@@ -209,7 +209,7 @@ func _on_TimerUpdateSpeedometer_timeout():
 	var text = "%03d km/hr" % int(round(abs(get_vehicle_body().fwd_mps*3.6))) + \
 	"  max: "+str(get_vehicle_body().get_max_speed_km_hr()) + \
 	" km/hr  \npower: %04d" % int(round(get_vehicle_body().engine_force_ewma)) + \
-	"  max: "+str(get_vehicle_body().engine_force_value) + \
+	"  max: %04d" % + int(round(get_vehicle_body().engine_force_value)) + \
 	"  grip: "+str(get_vehicle_body().get_av_wheel_friction_slip())
 	get_canvaslayer().get_node('GridContainer').get_node('Label1').text = text
 

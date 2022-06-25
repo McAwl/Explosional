@@ -44,10 +44,10 @@ var config: Dictionary = {
 	Type.TANK:
 		{"engine_force_value": 400,  # keep this at 1x mass
 		"mass_kg/100": 500.0, 
-		"suspension_stiffness": 200.0, "suspension_travel": 0.1,
+		"suspension_stiffness": 100.0, "suspension_travel": 1.0,
 		"all_wheel_drive": true,
 		"wheel_friction_slip": 15.0,  # 0 is no grip, 1 is normal grip
-		"wheel_roll_influence": 0.9,
+		"wheel_roll_influence": 0.1,
 		"brake": 50.0,
 		"max_speed_km_hr": 50.0}, 
 	Type.TRUCK:

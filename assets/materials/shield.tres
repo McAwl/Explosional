@@ -7,6 +7,7 @@ seamless = true
 noise = SubResource( 1 )
 
 [resource]
+resource_local_to_scene = true
 flags_transparent = true
 vertex_color_use_as_albedo = true
 albedo_color = Color( 0.980392, 1, 0, 0.00392157 )

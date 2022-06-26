@@ -280,6 +280,9 @@ func get_bombs():
 	
 
 func reset_game() -> void:
+	Engine.time_scale = 1.0
+	all_audio_pitch(1.0)
+	in_slow_motion = false
 	StatePlayers.players = {}
 	var next_level_resource = load(Global.logo_scene_folder)
 	var next_level = next_level_resource.instance() as LogoScene

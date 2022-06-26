@@ -11,12 +11,12 @@ enum Type {
 	}
 
 const COOLDOWN_TIMER_DEFAULTS: Dictionary = {
-	Type.MINE: 5.0, 
-	Type.ROCKET: 5.0, 
-	Type.MISSILE: 2.0, 
-	Type.NUKE: 6.0, 
+	Type.MINE: 10.0, 
+	Type.ROCKET: 20.0, 
+	Type.MISSILE: 30.0, 
+	Type.NUKE: 60.0, 
 	Type.BALLISTIC: 10.0,
-	Type.BALLISTIC_MISSILE: 10.0}
+	Type.BALLISTIC_MISSILE: 30.0}
 
 # TODO remove this, if we want to completely move to damage due to force (acceleration)
 const DAMAGE: Dictionary = {

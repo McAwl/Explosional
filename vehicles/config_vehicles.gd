@@ -65,7 +65,7 @@ const STEER_SPEED: float = 1.5
 const STEER_LIMIT: float = 0.6 #0.4
 const EXPLOSION_STRENGTH: float = 50.0
 const ENGINE_FORCE_VALUE_DEFAULT: int = 80
-
+const ACCEL_DAMAGE_THRESHOLD: float = 70.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

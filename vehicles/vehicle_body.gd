@@ -48,7 +48,6 @@ var acceleration_calc_for_damage2: float = 0.0
 var acceleration_fwd_0_1_ewma: float = 0.0
 var acceleration_fwd_0_1: float = 0.0
 var vel: Vector3
-const ACCEL_DAMAGE_THRESHOLD: float = 50.0
 const CHECK_ACCEL_DAMAGE_INTERVAL: float = 0.5
 var accel_damage_enabled: bool = false
 var fwd_mps: float = 0.0
@@ -455,7 +454,7 @@ func check_accel_damage() -> void:
 		
 	#print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
 	#print("accel_damage_threshold="+str(accel_damage_threshold))
-	if acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD:
+	if acceleration_calc_for_damage > ConfigVehicles.ACCEL_DAMAGE_THRESHOLD:
 		#print("acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD()")
 		var rammed_another_car: bool = false
 		$Effects/Audio/CrashSound.playing = true
@@ -476,11 +475,11 @@ func check_accel_damage() -> void:
 				print("player "+str(player_number)+" rammed "+str(collider_name))
 				rammed_another_car = true
 		if rammed_another_car == false:
-			var damage: float = round(acceleration_calc_for_damage / ACCEL_DAMAGE_THRESHOLD)
+			var damage: float = round(acceleration_calc_for_damage / ConfigVehicles.ACCEL_DAMAGE_THRESHOLD)
 			print("damage="+str(damage))
 			add_damage(damage)
 		# else don't take any damage
-	elif acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD/2.0:
+	elif acceleration_calc_for_damage > ConfigVehicles.ACCEL_DAMAGE_THRESHOLD/2.0:
 		$Effects/Audio/CrashSound.playing = true
 		$Effects/Audio/CrashSound.volume_db = -18.0
 
@@ -548,9 +547,7 @@ func _physics_process(delta):
 
 	if total_damage < max_damage:
 		
-		steer_target = Input.get_action_strength("turn_left_player"+str(player_number)) - Input.get_action_strength("turn_right_player"+str(player_number))
-		steer_target *= ConfigVehicles.STEER_LIMIT
-
+		
 		#var old_engine_force: float = engine_force
 	
 		if Input.is_action_pressed("accelerate_player"+str(player_number)):
@@ -581,6 +578,30 @@ func _physics_process(delta):
 		else:
 			engine_force_ewma = (engine_force*0.5) + (engine_force_ewma*0.5)
 
+		var left  = Input.get_action_strength("turn_left_player"+str(player_number))  # * ConfigVehicles.STEER_LIMIT
+		var right = Input.get_action_strength("turn_right_player"+str(player_number))  # * ConfigVehicles.STEER_LIMIT
+		if get_type() == ConfigVehicles.Type.TANK:
+			# Use per wheel forces so we can turn the vehicle without steering a wheel
+			for wh in get_children():
+				if wh is VehicleWheel:
+					if engine_force == 0.0 and (left > 0.0 or right > 0.0):
+						wh.engine_force = engine_force_value
+					elif engine_force > 0.0 and (left > 0.0 or right > 0.0):
+						wh.engine_force = engine_force/2.0
+					else:
+						wh.engine_force = engine_force
+					#print("wh.name="+str(wh.name))
+					if wh.name in ["Wheel1", "Wheel2", "Wheel6", "Wheel7"]:  # left row
+						wh.engine_force *= 1.0 if right-left == 0.0 else right-left
+					elif wh.name in ["Wheel3", "Wheel4", "Wheel5", "Wheel8"]:  # right row
+						wh.engine_force *= 1.0 if left-right == 0.0 else left-right
+					#else:
+					#	print("Warning: wheel name not found for tank")
+					#print("wh.engine_force="+str(wh.engine_force)+", left="+str(left)+", right="+str(right))
+				#engine_force = 0.0  # turn off overall engine force, leaving per-wheel forces used above
+		else:  # steer wheels normally
+			steer_target = left - right
+			steer_target *= ConfigVehicles.STEER_LIMIT
 		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta)
 		
 		# Keep 4wd vehicles on inclines surfaces, given Godot's VehicleWheel traction doesn't work properly
@@ -595,7 +616,7 @@ func _physics_process(delta):
 				# power up effects will switch off automatically with TimerDisablePowerup
 		else:
 			special_ability_state["climb_walls"] = false
-
+		
 	if hit_by_missile["active"] == true:
 		print("Player "+str(player_number)+ " hit by missile!")
 		#var direction = hit_by_missile_origin - $Body.transform.origin  

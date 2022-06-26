@@ -1390,7 +1390,7 @@ collide_with_areas = true
 [node name="Wheels" type="Spatial" parent="VehicleTypes/Tank"]
 
 [node name="Wheel1" type="VehicleWheel" parent="VehicleTypes/Tank/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0.784128, 0.222905, 1.27715 )
+transform = Transform( 1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0.784128, 0.274351, 1.27715 )
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3
@@ -1420,7 +1420,7 @@ damping_relaxation = 0.7
 transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Wheel3" type="VehicleWheel" parent="VehicleTypes/Tank/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1.1, -0.000759848, 0, 0.000759848, 1.1, -0.809738, 0.222905, 1.24359 )
+transform = Transform( 1, 0, 0, 0, 1.1, -0.000759848, 0, 0.000759848, 1.1, -0.809738, 0.274351, 1.24359 )
 use_as_traction = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3
@@ -1450,9 +1450,8 @@ damping_relaxation = 0.7
 transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Wheel5" type="VehicleWheel" parent="VehicleTypes/Tank/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, -0.80829, 0.16, 0.365346 )
+transform = Transform( 1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, -0.80829, 0.16, 0.437818 )
 use_as_traction = true
-use_as_steering = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3
 wheel_rest_length = 0.3
@@ -1466,9 +1465,8 @@ damping_relaxation = 0.7
 transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Wheel6" type="VehicleWheel" parent="VehicleTypes/Tank/Wheels"]
-transform = Transform( 1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0.785553, 0.16, 0.406973 )
+transform = Transform( 1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0.785553, 0.16, 0.479445 )
 use_as_traction = true
-use_as_steering = true
 wheel_roll_influence = 0.9
 wheel_radius = 0.3
 wheel_rest_length = 0.3

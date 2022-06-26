@@ -136,7 +136,12 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 
 
 func get_type():
-	return StatePlayers.players[player_number]["vehicle"]
+	if not player_number in StatePlayers.players.keys():
+		print("Error: player_number not in StatePlayers.players")
+		print("  StatePlayers.players="+str(StatePlayers.players))
+		return null
+	else:
+		return StatePlayers.players[player_number]["vehicle"]
 
 
 func configure_weapons() -> void:
@@ -161,21 +166,16 @@ func engine_sound_on() -> void:
 	#print("engine_sound_on(): "+str(get_type()))
 	match get_type():
 		ConfigVehicles.Type.RACER:
-			$Effects/Audio/EngineSound.playing = false
-			$Effects/Audio/EngineSoundRally.playing = true
+			$Effects/Audio/EngineSound.playing = true
 		ConfigVehicles.Type.RALLY:
-			$Effects/Audio/EngineSound.playing = false
-			$Effects/Audio/EngineSoundRally.playing = true
+			$Effects/Audio/EngineSound.playing = true
 		ConfigVehicles.Type.TANK:
 			$Effects/Audio/EngineSound.playing = true
-			$Effects/Audio/EngineSound.playing = false
 		ConfigVehicles.Type.TRUCK:
 			$Effects/Audio/EngineSound.playing = true
-			$Effects/Audio/EngineSound.playing = false
 		_:
-			print("Warning: using defain engine sound")
-			$Effects/Audio/EngineSound.playing = false
-			$Effects/Audio/EngineSoundRally.playing = true
+			print("Warning: using default engine sound")
+			$Effects/Audio/EngineSound.playing = true
 
 
 func engine_sound_off() -> void:
@@ -513,6 +513,10 @@ func set_icon() -> void:
 
 
 func _physics_process(delta):
+	
+	if not player_number in StatePlayers.players.keys():
+		return  # in process of being reset?
+		
 	# Keep polling continuous Input related to movement here: e.g. accelerate and move. All others move to e.g. _input()
 	
 	# test adding constant downwards force so a vehicle can climb walls
@@ -546,8 +550,7 @@ func _physics_process(delta):
 	check_accel_damage()
 
 	if total_damage < max_damage:
-		
-		
+
 		#var old_engine_force: float = engine_force
 	
 		if Input.is_action_pressed("accelerate_player"+str(player_number)):
@@ -1036,7 +1039,7 @@ func _on_CheckSkidTimer_timeout():
 	
 	for wh in get_children():
 		if wh is VehicleWheel: 
-			if wh.get_skidinfo() < 0.5:
+			if wh.get_skidinfo() < 0.15:
 				skidding = true
 
 	if skidding == true:

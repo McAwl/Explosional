@@ -22,6 +22,13 @@ var nice_name: Dictionary = {
 	Type.TRUCK: "Truck",
 }
 
+var engine_sound_pitch: Dictionary = {
+	Type.RACER: 1.0,
+	Type.RALLY: 0.9,
+	Type.TANK: 0.7,
+	Type.TRUCK: 0.8,
+}
+
 var config: Dictionary = {
 	Type.RACER:
 		{"engine_force_value": 220,  # keep this at 3x mass
@@ -30,7 +37,7 @@ var config: Dictionary = {
 		"all_wheel_drive": false,
 		"wheel_friction_slip": 1.1,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.9,
-		"brake": 10.0,
+		"brake": 20.0,
 		"max_speed_km_hr": 200.0}, 
 	Type.RALLY:
 		{"engine_force_value": 70,  # keep this at 3x mass
@@ -39,7 +46,7 @@ var config: Dictionary = {
 		"all_wheel_drive": true,
 		"wheel_friction_slip": 1.3,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.9,
-		"brake": 5.0,
+		"brake": 10.0,
 		"max_speed_km_hr": 150.0}, 
 	Type.TANK:
 		{"engine_force_value": 400,  # keep this at 1x mass
@@ -48,7 +55,7 @@ var config: Dictionary = {
 		"all_wheel_drive": true,
 		"wheel_friction_slip": 15.0,  # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.1,
-		"brake": 50.0,
+		"brake": 100.0,
 		"max_speed_km_hr": 50.0}, 
 	Type.TRUCK:
 		{"engine_force_value": 350,  # keep this at 1x mass
@@ -57,7 +64,7 @@ var config: Dictionary = {
 		"all_wheel_drive": false,
 		"wheel_friction_slip":1.0,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.5,
-		"brake": 50.0,
+		"brake": 100.0,
 		"max_speed_km_hr": 80.0}
 	}
 

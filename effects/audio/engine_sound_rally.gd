@@ -25,6 +25,10 @@ func _ready():
 	pass
 
 
+func get_vehicle() -> VehicleBody:
+	return get_parent().get_parent().get_parent() as VehicleBody
+
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if playing == true:
@@ -32,9 +36,9 @@ func _process(delta):
 		if timer_0_1s <= 0.0:
 			timer_0_1s = 0.1
 			current_position_sec = self.get_playback_position()
-			speed = get_parent().get_parent().get_parent().fwd_mps_0_1_ewma
-			pitch_scale = 0.5 + (0.2*((10.0+speed)/10.0))
-			accel = get_parent().get_parent().get_parent().acceleration_fwd_0_1_ewma
+			speed = get_vehicle().fwd_mps_0_1_ewma
+			pitch_scale = (0.5 + (0.2*((10.0+speed)/10.0))) * ConfigVehicles.engine_sound_pitch[get_vehicle().get_type()]
+			accel = get_vehicle().acceleration_fwd_0_1_ewma
 			if current_position_sec < idle[0]:
 				self.play(idle[0])
 			else:

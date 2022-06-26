@@ -1,8 +1,0 @@
-{
-	"contains_albedo": true,
-	"resolution": 512,
-	"src": {
-		"a": "#ff888888",
-		"rgb": "res://assets/textures/cement.png"
-	}
-}

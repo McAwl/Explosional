@@ -1,12 +1,10 @@
-[gd_scene load_steps=44 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://vehicles/vehicle_body.gd" type="Script" id=2]
-[ext_resource path="res://assets/audio/sounds/478133__canucklovingbrit__truck-diesel-10dodge-start.mp3" type="AudioStream" id=3]
 [ext_resource path="res://assets/textures/dot.png" type="Texture" id=4]
 [ext_resource path="res://assets/materials/shield.tres" type="Material" id=5]
 [ext_resource path="res://vehicles/vehicle_wheel_mesh.tscn" type="PackedScene" id=6]
-[ext_resource path="res://effects/audio/audio_stream_player.gd" type="Script" id=7]
 [ext_resource path="res://effects/visual/shield.gd" type="Script" id=8]
 [ext_resource path="res://vehicles/follow_camera.gd" type="Script" id=9]
 [ext_resource path="res://effects/visual/flames.tscn" type="PackedScene" id=10]
@@ -211,21 +209,15 @@ draw_pass_1 = SubResource( 37 )
 [node name="Audio" type="Spatial" parent="Effects"]
 script = ExtResource( 25 )
 
-[node name="EngineSound" type="AudioStreamPlayer" parent="Effects/Audio"]
-stream = ExtResource( 3 )
-volume_db = -9.0
-pitch_scale = 0.56
-script = ExtResource( 7 )
-
 [node name="CrashSound" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 1 )
 
-[node name="EngineSoundRally" type="AudioStreamPlayer" parent="Effects/Audio"]
+[node name="EngineSound" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 18 )
 volume_db = 6.0
 script = ExtResource( 19 )
 
-[node name="Tween" type="Tween" parent="Effects/Audio/EngineSoundRally"]
+[node name="Tween" type="Tween" parent="Effects/Audio/EngineSound"]
 
 [node name="GunshotSound" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 20 )

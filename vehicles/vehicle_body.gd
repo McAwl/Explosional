@@ -785,7 +785,8 @@ func fire_missile_or_rocket() -> void:
 		weapon_instance.global_transform.origin = $Positions/Weapons/BallisticMissilePosition.global_transform.origin
 	else:
 		weapon_instance.global_transform.origin = $Positions/Weapons/RocketPosition.global_transform.origin
-		weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
+		#weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
+		weapon_instance.velocity[1] += 1.0   # angle it up a bit
 	#print("weapon velocity="+str(weapon_instance.velocity))
 	if weapon_select == ConfigWeapons.Type.ROCKET:
 		weapon_instance.activate(player_number, false)  # homing = false

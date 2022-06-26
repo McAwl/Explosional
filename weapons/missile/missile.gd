@@ -151,6 +151,8 @@ func _physics_process(delta):
 		
 		if weapon_type == ConfigWeapons.Type.BALLISTIC:  #4:  # for ballistic weapons, add gravity
 			velocity += Vector3.DOWN * 0.04
+		elif weapon_type == ConfigWeapons.Type.ROCKET:  #4:  # for rocket add a little bit of gravity
+			velocity += Vector3.DOWN * 0.01
 		
 		if weapon_type == ConfigWeapons.Type.ROCKET:  # 1:  # rocket
 			add_random_movement(0.05)

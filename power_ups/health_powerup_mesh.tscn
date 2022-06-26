@@ -8,9 +8,37 @@ transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.479566, 0 )
 [node name="CSGBox" type="CSGBox" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 0.385064, 0, 0, 0 )
 width = 0.716
+depth = 5.16344
 material = ExtResource( 1 )
 
-[node name="CSGBox2" type="CSGBox" parent="."]
-width = 0.716
-height = 0.775068
+[node name="CSGBox2" type="CSGBox" parent="CSGBox"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 2.59697, 0, 0.751824, 2.1698 )
+operation = 2
+width = 0.795063
+height = 0.836551
+depth = 0.927564
+material = ExtResource( 1 )
+
+[node name="CSGBox3" type="CSGBox" parent="CSGBox"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 2.59697, 0, -0.784731, -2.21733 )
+operation = 2
+width = 0.795063
+height = 0.836551
+depth = 0.927564
+material = ExtResource( 1 )
+
+[node name="CSGBox4" type="CSGBox" parent="CSGBox"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 2.59697, 0, -0.808659, 2.13398 )
+operation = 2
+width = 0.795063
+height = 0.836551
+depth = 0.927564
+material = ExtResource( 1 )
+
+[node name="CSGBox5" type="CSGBox" parent="CSGBox"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 2.59697, 0, 0.751824, -2.23516 )
+operation = 2
+width = 0.795063
+height = 0.836551
+depth = 0.927564
 material = ExtResource( 1 )

@@ -701,11 +701,33 @@ func add_damage(amount) -> void:
 	$CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
 	accel_damage_enabled = false
 	align_effects_with_damage()
-	engine_force_value *= 0.75  # decrease engine power to indicate damage
-
+	check_engine_force_value()
+	
 	if total_damage >= max_damage and vehicle_state != ConfigVehicles.AliveState.DYING:
 		print("damage: total_damage >= max_damage")
 		start_vehicle_dying()
+
+
+func check_engine_force_value() -> void:
+	engine_force_value = ConfigVehicles.config[get_type()]["engine_force_value"]*pow(0.75, total_damage)  # decrease engine power to indicate damage
+
+
+func restore_health(amount):
+	if amount == 0:
+		return
+
+	var new_total_damage = total_damage - amount
+	if new_total_damage < 0:
+		new_total_damage = 0
+	
+	if new_total_damage >= 0:
+		print("Restored to "+str(new_total_damage)+" damage")
+		total_damage = new_total_damage
+		align_effects_with_damage()
+	else:
+		print("Warning: restore_health() had no effect")
+		
+	check_engine_force_value()
 
 
 func align_effects_with_damage():
@@ -1075,5 +1097,3 @@ func _on_TimerDisablePowerup_timeout():
 
 func power_up_effect(enable):
 	$Effects/Powerup.visible = enable
-
-

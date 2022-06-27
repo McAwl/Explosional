@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Bridge.obj-8a13e739a1db43119e87151d4f6e642e.mesh"
+
+[deps]
+
+files=[ "res://.import/Bridge.obj-8a13e739a1db43119e87151d4f6e642e.mesh" ]
+
+source_file="res://assets/models/terrain/Bridge.obj"
+dest_files=[ "res://.import/Bridge.obj-8a13e739a1db43119e87151d4f6e642e.mesh", "res://.import/Bridge.obj-8a13e739a1db43119e87151d4f6e642e.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

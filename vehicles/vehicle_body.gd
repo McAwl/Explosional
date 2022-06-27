@@ -60,6 +60,8 @@ var vehicle_state: int = ConfigVehicles.AliveState.ALIVE
 var set_pos: bool = false
 var pos: Vector3
 
+var shield: Dictionary = {"enabled": false, "hits_left": 0}
+
 
 func _ready():
 	vehicle_state = ConfigVehicles.AliveState.ALIVE
@@ -195,6 +197,7 @@ func init_visual_effects(start) -> void:
 
 	lights_off()
 	
+	shield_off()
 	$Effects/Shield.visible = false
 	
 	if start == false:
@@ -697,7 +700,11 @@ func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z) -> Vector3:
 func add_damage(amount) -> void:
 	
 	if is_shield_on():
+		shield["hits_left"] -= 1
 		print("ignoring damage - shield is on")
+		if shield["hits_left"] <= 0:
+			shield_off()
+			print("shield off - max hits reached")
 		return
 
 	total_damage += amount
@@ -869,7 +876,7 @@ func power_up(type: int) -> void:
 		weapon_select = ConfigWeapons.Type.NUKE
 		cycle_weapon(true)
 	elif type == ConfigWeapons.PowerupType.SHIELD:
-		shield_on(30.0)  # turn on shield for 30s
+		shield_on(3)  # turn on shield for 30s
 	elif type == ConfigWeapons.PowerupType.HEALTH:
 		if total_damage > 0:
 			reset_total_damage()
@@ -881,17 +888,20 @@ func reset_total_damage():
 	configure_vehicle_properties()  # reset engine power
 
 
-func shield_on(duration_sec):
+func shield_on(max_hits):
+	shield["enabled"] = true
+	shield["hits_left"] = max_hits
 	$Effects/Shield.show()
-	$TimerDisableShield.start(duration_sec)
+	#$TimerDisableShield.start(duration_sec)
 
 
 func shield_off():
+	shield["enabled"] = false
 	$Effects/Shield.hide()
 
 
 func is_shield_on():
-	return $Effects/Shield.visible
+	return shield["enabled"]  #$Effects/Shield.visible
 
 
 func get_camera() -> Camera:
@@ -1069,9 +1079,9 @@ func _on_CheckAccelDamage_timeout():
 	accel_damage_enabled = true 
 
 
-func _on_TimerDisableShield_timeout():
-	special_ability_state["shield"] = false
-	shield_off()
+#func _on_TimerDisableShield_timeout():
+#	special_ability_state["shield"] = false
+#	shield_off()
 
 
 func get_max_speed_km_hr():

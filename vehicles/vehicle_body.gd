@@ -60,7 +60,7 @@ var vehicle_state: int = ConfigVehicles.AliveState.ALIVE
 var set_pos: bool = false
 var pos: Vector3
 
-var shield: Dictionary = {"enabled": false, "hits_left": 0}
+var powerup_state: Dictionary = {"shield": {"enabled": false, "hits_left": 0, "max_hits": 0}}
 
 
 func _ready():
@@ -197,7 +197,8 @@ func init_visual_effects(start) -> void:
 
 	lights_off()
 	
-	shield_off()
+	powerup_state["shield"]["enabled"] = false
+	$Effects/Shield.hide()
 	$Effects/Shield.visible = false
 	
 	if start == false:
@@ -479,7 +480,7 @@ func check_accel_damage() -> void:
 				rammed_another_car = true
 		if rammed_another_car == false:
 			var damage: float = round(acceleration_calc_for_damage / ConfigVehicles.ACCEL_DAMAGE_THRESHOLD)
-			print("damage="+str(damage))
+			print("adding acceleration damage="+str(damage))
 			add_damage(damage)
 		# else don't take any damage
 	elif acceleration_calc_for_damage > ConfigVehicles.ACCEL_DAMAGE_THRESHOLD/2.0:
@@ -699,17 +700,21 @@ func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z) -> Vector3:
 
 func add_damage(amount) -> void:
 	
-	if is_shield_on():
-		shield["hits_left"] -= 1
+	$CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
+	accel_damage_enabled = false
+	
+	if powerup_state["shield"]["enabled"] == true:
+		powerup_state["shield"]["hits_left"] -= 1
 		print("ignoring damage - shield is on")
-		if shield["hits_left"] <= 0:
-			shield_off()
+		if powerup_state["shield"]["hits_left"] <= 0:
+			powerup_state["shield"]["enabled"] = false
+			if special_ability_state["shield"] == false:
+				$Effects/Shield.hide()
 			print("shield off - max hits reached")
 		return
 
 	total_damage += amount
-	$CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
-	accel_damage_enabled = false
+	print("accel_damage_enabled="+str(accel_damage_enabled))
 	align_effects_with_damage()
 	check_engine_force_value()
 	
@@ -876,7 +881,12 @@ func power_up(type: int) -> void:
 		weapon_select = ConfigWeapons.Type.NUKE
 		cycle_weapon(true)
 	elif type == ConfigWeapons.PowerupType.SHIELD:
-		shield_on(3)  # turn on shield for 30s
+		$Effects/Shield.show()
+		$Effects/Shield/GlowingSphere.show()
+		$Effects/Audio/ActivationSound.play()
+		powerup_state["shield"]["enabled"] = true
+		powerup_state["shield"]["hits_left"] = 3
+		powerup_state["shield"]["max_hits"] = 3
 	elif type == ConfigWeapons.PowerupType.HEALTH:
 		if total_damage > 0:
 			reset_total_damage()
@@ -888,20 +898,12 @@ func reset_total_damage():
 	configure_vehicle_properties()  # reset engine power
 
 
-func shield_on(max_hits):
-	shield["enabled"] = true
-	shield["hits_left"] = max_hits
-	$Effects/Shield.show()
-	#$TimerDisableShield.start(duration_sec)
-
-
-func shield_off():
-	shield["enabled"] = false
-	$Effects/Shield.hide()
-
-
 func is_shield_on():
-	return shield["enabled"]  #$Effects/Shield.visible
+	return powerup_state["shield"]["enabled"] or special_ability_state["shield"]  #$Effects/Shield.visible
+
+
+func is_shield_off():
+	return not powerup_state["shield"]["enabled"] and not special_ability_state["shield"]  #$Effects/Shield.visible
 
 
 func get_camera() -> Camera:
@@ -1077,11 +1079,18 @@ func randomly_emit(node, prob):
 
 func _on_CheckAccelDamage_timeout():
 	accel_damage_enabled = true 
+	print("accel_damage_enabled="+str(accel_damage_enabled))
 
 
-#func _on_TimerDisableShield_timeout():
-#	special_ability_state["shield"] = false
-#	shield_off()
+func _on_TimerShieldCheckSpecialAbility_timeout():
+	if get_type() == ConfigVehicles.Type.RACER:
+		if fwd_mps > (80.0/200) * (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]:
+			$TimerDisableShieldAbility.start(5.0)
+			if special_ability_state["shield"] == false:
+				special_ability_state["shield"] = true
+				$Effects/Shield.show()
+				$Effects/Shield/GlowingSphere.show()
+				$Effects/Audio/ActivationSound.play()
 
 
 func get_max_speed_km_hr():
@@ -1110,3 +1119,19 @@ func _on_TimerDisablePowerup_timeout():
 
 func power_up_effect(enable):
 	$Effects/Powerup.visible = enable
+
+
+func _on_TimerDisableShieldAbility_timeout():
+	special_ability_state["shield"] = false
+	if powerup_state["shield"]["enabled"] == false:
+		$Effects/Shield.hide()
+
+
+func _on_TimerFlickerShield_timeout():
+	if $Effects/Shield.visible == true and powerup_state["shield"]["enabled"] == true and special_ability_state["shield"] == false:
+		if powerup_state["shield"]["max_hits"] > 0.0:
+			if not $Effects/Shield/GlowingSphere.visible:
+				$Effects/Shield/GlowingSphere.show()
+			elif rng.randf() > float(powerup_state["shield"]["hits_left"])/float(powerup_state["shield"]["max_hits"]):
+				$Effects/Shield/GlowingSphere.hide()
+

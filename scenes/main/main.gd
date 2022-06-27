@@ -346,3 +346,4 @@ func _on_TimerHealthPowerup_timeout():
 		new_health_powerup.type = ConfigWeapons.PowerupType.HEALTH
 		$Powerups/HealthPowerupSpawnPoint.add_child(new_health_powerup)
 		new_health_powerup.get_node("ActivationSound").play()
+

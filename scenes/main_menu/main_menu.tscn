@@ -118,10 +118,56 @@ margin_top = 196.0
 margin_right = 141.0
 margin_bottom = 222.0
 focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
+focus_neighbour_bottom = NodePath("../../../../../GameModeSelection/CheckBox1Competitive")
 custom_fonts/font = ExtResource( 4 )
 text = "Quit to Desktop"
 
+[node name="GameModeSelection" type="HBoxContainer" parent="."]
+margin_left = 141.0
+margin_top = 441.0
+margin_right = 710.0
+margin_bottom = 509.0
+custom_constants/separation = 39
+
+[node name="Label" type="Label" parent="GameModeSelection"]
+margin_top = 24.0
+margin_right = 95.0
+margin_bottom = 44.0
+custom_fonts/font = ExtResource( 4 )
+text = "Game mode"
+
+[node name="CheckBox1Competitive" type="CheckBox" parent="GameModeSelection"]
+margin_left = 134.0
+margin_right = 260.0
+margin_bottom = 68.0
+hint_tooltip = "Normal damage. Last player alive wins. AI is active."
+focus_neighbour_left = NodePath("../../MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToDesktop")
+focus_neighbour_top = NodePath("../../MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToDesktop")
+focus_neighbour_right = NodePath("../CheckBox2Peaceful")
+custom_fonts/font = ExtResource( 4 )
+text = "Competitive"
+
+[node name="CheckBox2Peaceful" type="CheckBox" parent="GameModeSelection"]
+margin_left = 299.0
+margin_right = 400.0
+margin_bottom = 68.0
+hint_tooltip = "No damage. No AI. No end of game."
+focus_neighbour_left = NodePath("../CheckBox1Competitive")
+focus_neighbour_right = NodePath("../CheckBox3Tough")
+custom_fonts/font = ExtResource( 4 )
+text = "Peaceful"
+
+[node name="CheckBox3Tough" type="CheckBox" parent="GameModeSelection"]
+margin_left = 439.0
+margin_right = 517.0
+margin_bottom = 68.0
+hint_tooltip = "Direct one-hit death, no indirect damage. Last player alive wins. AI is active."
+focus_neighbour_left = NodePath("../CheckBox2Peaceful")
+custom_fonts/font = ExtResource( 4 )
+text = "Tough"
+
 [node name="PlayerSelection" type="Control" parent="."]
+pause_mode = 2
 anchor_left = 0.4
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -392,6 +438,9 @@ valign = 1
 [connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/OptionsButton" to="." method="_on_OptionsButton_button_up"]
 [connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/ResetGameButton" to="." method="_on_ResetGameButton_button_up"]
 [connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToDesktop" to="." method="_on_QuitToDesktop_button_up"]
+[connection signal="button_up" from="GameModeSelection/CheckBox1Competitive" to="." method="_on_CheckBox1Competitive_button_up"]
+[connection signal="button_up" from="GameModeSelection/CheckBox2Peaceful" to="." method="_on_CheckBox2Peaceful_button_up"]
+[connection signal="button_up" from="GameModeSelection/CheckBox3Tough" to="." method="_on_CheckBox3Tough_button_up"]
 [connection signal="button_up" from="PlayerSelection/GridContainer/Player1SelectButton" to="." method="_on_Player1SelectButton_button_up"]
 [connection signal="button_up" from="PlayerSelection/GridContainer/Player2SelectButton" to="." method="_on_Player2SelectButton_button_up"]
 [connection signal="button_up" from="PlayerSelection/GridContainer/Player3SelectButton" to="." method="_on_Player3SelectButton_button_up"]

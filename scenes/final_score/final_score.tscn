@@ -22,9 +22,6 @@ margin_bottom = 433.0
 custom_fonts/font = SubResource( 1 )
 text = "Player x wins!"
 align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="StartButton" type="Button" parent="."]
 margin_left = 899.098
@@ -36,7 +33,13 @@ grow_vertical = 2
 custom_fonts/font = SubResource( 2 )
 text = "Re-Start"
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": true
 }
 
+[node name="TimerReset" type="Timer" parent="."]
+pause_mode = 2
+wait_time = 5.0
+autostart = true
+
 [connection signal="pressed" from="StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="timeout" from="TimerReset" to="." method="_on_TimerReset_timeout"]

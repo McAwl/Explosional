@@ -17,12 +17,16 @@ var grass_resource: Resource = load(Global.grass_folder)
 var veg_check_raycast: bool = false
 var last_veg: Array = []
 var in_slow_motion: bool = false
+var game_over_checked = false
 
-export var air_strike: Dictionary = {"on": false, "duration_so_far_sec": 0.0, "duration_sec": 30.0, "interval_so_far_sec": 0.0, "interval_sec": 120.0, "circle_radius_m": 10.0}
+export var air_strike_state: Dictionary = {
+	"on": false, 
+	"duration_so_far_sec": 0.0, 
+	"interval_so_far_sec": 0.0}
+	
 export var start_clock_hrs: float = 12.0
 export var test_nuke: bool = false
 export var fake_sun_omni_light: bool = false
-export var test_turn_off_airstrike: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -32,6 +36,7 @@ func _ready():
 	$VC/CL/MainMenu.set_visible(false)
 	$VC/CL/MainMenu.game_active = true
 	$VC/CL/MainMenu/PlayerSelection.hide()
+	$VC/CL/MainMenu/GameModeSelection.hide()
 	$VC/CL/MainMenu/LoadingText.hide()
 	
 	# hide the mouse
@@ -77,9 +82,9 @@ func _ready():
 
 
 func turn_airstrike_on() -> void:
-	air_strike["on"] = true
-	air_strike["interval_so_far_sec"] = 0.0
-	air_strike["duration_so_far_sec"] = 0.0
+	air_strike_state["on"] = true
+	air_strike_state["interval_so_far_sec"] = 0.0
+	air_strike_state["duration_so_far_sec"] = 0.0
 	# var players = get_tree().get_nodes_in_group("player")  # 
 	# print("len(players)="+str(len(players)))
 	air_strike_label().visible = true
@@ -89,9 +94,9 @@ func turn_airstrike_on() -> void:
 
 
 func turn_airstrike_off() -> void:
-	air_strike["on"] = false
-	air_strike["interval_so_far_sec"] = 0.0
-	air_strike["duration_so_far_sec"] = 0.0
+	air_strike_state["on"] = false
+	air_strike_state["interval_so_far_sec"] = 0.0
+	air_strike_state["duration_so_far_sec"] = 0.0
 	air_strike_label().visible = false
 	air_strike_label().get_node("TextFlash").stop()
 	$VC/CL/IconRadiation.visible = false
@@ -113,12 +118,12 @@ func _process(delta):
 		for player in get_players():
 			player.toggle_hud()
 		
-	air_strike["interval_so_far_sec"] +=delta
-	air_strike["duration_so_far_sec"] += delta
-		
-	if air_strike["on"] == false and air_strike["interval_so_far_sec"] > air_strike["interval_sec"] and test_turn_off_airstrike == false:
+	air_strike_state["interval_so_far_sec"] += delta
+	air_strike_state["duration_so_far_sec"] += delta
+	
+	if air_strike_state["on"] == false and air_strike_state["interval_so_far_sec"] > Global.air_strike_config["interval_sec"] and Global.game_mode != Global.GameMode.PEACEFUL:
 		turn_airstrike_on()
-	elif air_strike["on"] == true and air_strike["duration_so_far_sec"] > air_strike["duration_sec"]:
+	elif air_strike_state["on"] == true and air_strike_state["duration_so_far_sec"] > Global.air_strike_config["duration_sec"]:
 		turn_airstrike_off()
 		# print("Turing airstrike off")
 		#for node in get_tree().root.get_node("TownScene").get_children():  #find_node("*Bomb*":
@@ -128,11 +133,11 @@ func _process(delta):
 			#	print("  type = "+str(node.type))
 			
 		
-	if air_strike["on"] == true:
+	if air_strike_state["on"] == true:
 		for player in get_players():  # range(1, num_players+1):
-			if player.has_node("vehicle_body"):
+			if player.has_vehicle_body():
 				if player.get_vehicle_body().lifetime_so_far_sec > 5.0:
-					if randf()<0.005:
+					if randf() < delta/5.0:  # target a rate of one bomb per player per five seconds
 						var weapon_instance = load(Global.explosive_folder).instance()
 						add_child(weapon_instance) 
 						var speed = player.get_vehicle_body().get_speed2()
@@ -227,22 +232,30 @@ func is_in_slow_motion():
 
 
 func check_game_over() -> void:
-	var dead_cars: int = 0
-	var num_cars: int = 0
-	for player_number in range(1, StatePlayers.num_players()+1):
-		num_cars += 1
-		if StatePlayers.players[player_number]["lives_left"] < 0:
-			dead_cars += 1
-	if dead_cars >= (num_cars-1) and num_cars>1:
-		var next_level_resource: Resource = load(Global.final_score_scene)
-		var next_level: FinalScore = next_level_resource.instance()
-		var winner_name: String = ""
+	if not game_over_checked:
+		var dead_cars: int = 0
+		var num_cars: int = 0
 		for player_number in range(1, StatePlayers.num_players()+1):
-			if StatePlayers.players[player_number]["lives_left"] >= 0:
-				winner_name = StatePlayers.players[player_number]["name"]  #get_player(player_number).player_name
-		next_level.player_winner_name = winner_name
-		get_tree().root.call_deferred("add_child", next_level)
-
+			num_cars += 1
+			if StatePlayers.players[player_number]["lives_left"] <= 0:
+				dead_cars += 1
+		if dead_cars >= (num_cars-1) and num_cars>1:
+			game_over_checked = true
+			Engine.time_scale = 1.0
+			all_audio_pitch(1.0)
+			in_slow_motion = false
+			get_tree().paused = false
+			var final_score_resource: Resource = load(Global.final_score_scene)
+			var final_score_scene: FinalScore = final_score_resource.instance()
+			var winner_name: String = ""
+			for player_number in range(1, StatePlayers.num_players()+1):
+				if StatePlayers.players[player_number]["lives_left"] > 0:
+					winner_name = StatePlayers.players[player_number]["name"]  #get_player(player_number).player_name
+			final_score_scene.player_winner_name = winner_name
+			StatePlayers.players = {}
+			get_tree().root.call_deferred("add_child", final_score_scene)
+			queue_free()
+			
 
 func all_audio_pitch(pitch) -> void:
 	$Effects/BackgroundMusic.pitch_scale = pitch

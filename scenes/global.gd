@@ -1,5 +1,26 @@
 extends Node
 
+enum GameMode {
+	NOT_SET=0,
+	COMPETITIVE=1,
+	PEACEFUL=2,
+	TOUGH=3
+}
+
+enum DAMAGE_TYPE {
+	DIRECT_HIT=0,
+	INDIRECT_HIT=1,
+	FORCE=2,
+	LAVA=3,
+	TEST=4
+}
+
+var air_strike_config: Dictionary = {
+	"duration_sec": 10.0, 
+	"interval_sec": 120.0, 
+	"circle_radius_m": 10.0}
+
+var game_mode: int = GameMode.COMPETITIVE
 
 var logo_scene_folder: String = "res://scenes/logo/logo.tscn"
 
@@ -45,6 +66,7 @@ var explosive_folder: String = "res://weapons/explosive/explosive.tscn"
 
 # powerups
 var power_up_folder: String = "res://power_ups/power_up.tscn"
+
 
 
 # Called when the node enters the scene tree for the first time.

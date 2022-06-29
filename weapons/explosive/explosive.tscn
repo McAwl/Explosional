@@ -42,7 +42,6 @@ spot_angle = 11.97
 visible = false
 
 [node name="BombMeshes" type="Spatial" parent="."]
-visible = false
 
 [node name="Body" type="MeshInstance" parent="BombMeshes"]
 transform = Transform( 0.291023, 0, 0, 0, -0.00910172, -0.3325, 0, 0.295343, -0.00808462, 0, 0.341193, 0 )

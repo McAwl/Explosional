@@ -11,7 +11,6 @@ var closest_target_direction: Vector3
 var closest_target_direction_normalised: Vector3
 var print_timer: float = 0.1
 var speed_up_down_rate: float = 0.5  # 1.0
-var explosion_range: float = 10.0
 var fwd_speed: float
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var exploded: bool = false
@@ -239,7 +238,7 @@ func explode(body=null) -> void:  # null if lifetime has expired
 		var direction: Vector3 = global_transform.origin - target.global_transform.origin
 		var distance: float = global_transform.origin.distance_to(target.global_transform.origin)
 		print("distance = "+str(distance))
-		if distance < explosion_range and target != body:
+		if distance < ConfigWeapons.DAMAGE_INDIRECT[weapon_type]["range"] and target != body:
 			print("Missile indirect damage to "+str(target.name))
 			target.hit_by_missile["active"] = true
 			target.hit_by_missile["origin"] = transform.origin

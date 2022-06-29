@@ -16,6 +16,7 @@ var vehicle_selection: int = -1 # ConfigVehicles.Type
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	next_level_resource = load(Global.main_scene)
 	$LoadingText.hide()
 	$OptionMenu.hide()
@@ -41,6 +42,14 @@ func _ready():
 		$VersionText/VersionContainer/VersionText.text = "Explosional! BETA 2022 McAwl"
 	else:
 		$VersionText/VersionContainer/VersionText.text = "Explosional! "+ version + " Build "+build+" 2022 McAwl"
+	
+	match Global.game_mode:
+		Global.GameMode.COMPETITIVE:
+			$GameModeSelection/CheckBox1Competitive.pressed = true
+		Global.GameMode.PEACEFUL:
+			$GameModeSelection/CheckBox2Peaceful.pressed = true
+		Global.GameMode.TOUGH:
+			$GameModeSelection/CheckBox3Tough.pressed = true
 	
 	configure().resume()
 
@@ -143,6 +152,7 @@ func start_game() -> void:
 	$LoadingText.show()
 	$MainSelection/MainContainer.hide()
 	$PlayerSelection.hide()
+	$GameModeSelection.hide()
 	yield(get_tree().create_timer(1),"timeout")
 	var next_level = next_level_resource.instance()
 	StatePlayers.players = players
@@ -235,3 +245,21 @@ func _on_MusicVolume_value_changed(value):
 
 func _on_VehicleVolume_value_changed(value):
 	Global.vehicle_sound_volume_db = value
+
+
+func _on_CheckBox1Competitive_button_up():
+	Global.game_mode = Global.GameMode.COMPETITIVE
+	$GameModeSelection/CheckBox2Peaceful.pressed = false
+	$GameModeSelection/CheckBox3Tough.pressed = false
+
+
+func _on_CheckBox2Peaceful_button_up():
+	Global.game_mode = Global.GameMode.PEACEFUL
+	$GameModeSelection/CheckBox1Competitive.pressed = false
+	$GameModeSelection/CheckBox3Tough.pressed = false
+
+
+func _on_CheckBox3Tough_button_up():
+	Global.game_mode = Global.GameMode.TOUGH
+	$GameModeSelection/CheckBox1Competitive.pressed = false
+	$GameModeSelection/CheckBox2Peaceful.pressed = false

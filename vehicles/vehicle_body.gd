@@ -182,7 +182,6 @@ func engine_sound_on() -> void:
 
 func engine_sound_off() -> void:
 	$Effects/Audio/EngineSound.playing = false
-	$Effects/Audio/EngineSoundRally.playing = false
 
 
 func init_camera(_num_players) -> void:
@@ -372,7 +371,7 @@ func _process(delta):
 		check_lights()
 		var ongoing_damage: float = check_ongoing_damage()
 		if ongoing_damage > 0:
-			add_damage(ongoing_damage)
+			add_damage(ongoing_damage, Global.DAMAGE_TYPE.LAVA)
 
 	timer_0_1_sec -= delta
 	if timer_0_1_sec <= 0.0:
@@ -439,16 +438,16 @@ func _input(_event):
 			fire_missile_or_rocket()
 	elif Input.is_action_just_released("kill_player1"):
 		if player_number == 1:
-			add_damage(max_damage)
+			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
 	elif Input.is_action_just_released("kill_player2"):
 		if player_number == 2:
-			add_damage(max_damage)
+			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
 	elif Input.is_action_just_released("kill_player3"):
 		if player_number == 3:
-			add_damage(max_damage)
+			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
 	elif Input.is_action_just_released("kill_player4"):
 		if player_number == 4:
-			add_damage(max_damage)
+			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
 
 
 func check_accel_damage() -> void:
@@ -481,7 +480,7 @@ func check_accel_damage() -> void:
 		if rammed_another_car == false:
 			var damage: float = round(acceleration_calc_for_damage / ConfigVehicles.ACCEL_DAMAGE_THRESHOLD)
 			print("adding acceleration damage="+str(damage))
-			add_damage(damage)
+			add_damage(damage, Global.DAMAGE_TYPE.FORCE)
 		# else don't take any damage
 	elif acceleration_calc_for_damage > ConfigVehicles.ACCEL_DAMAGE_THRESHOLD/2.0:
 		$Effects/Audio/CrashSound.playing = true
@@ -639,11 +638,13 @@ func _physics_process(delta):
 			# 	damage(weapons[2].damage)
 			# else:
 			#	damage(weapons[1].damage)
+			add_damage(ConfigWeapons.DAMAGE[ConfigWeapons.Type.MISSILE], Global.DAMAGE_TYPE.DIRECT_HIT)
 		else:
 			var indirect_explosion_force: float = hit_by_missile["force"]/hit_by_missile["distance"]
 			print("force="+str(hit_by_missile["force"])+" at distance="+str(hit_by_missile["distance"])+" -> indirect_explosion_force="+str(indirect_explosion_force))
 			apply_impulse( Vector3(0,0,0), indirect_explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
-			# damage(1)
+			if hit_by_missile["distance"] <= ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["range"]:
+				add_damage(ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["damage"], Global.DAMAGE_TYPE.INDIRECT_HIT)
 		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
 			
 		hit_by_missile["active"] = false
@@ -698,7 +699,7 @@ func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z) -> Vector3:
 	return global_pos
 
 
-func add_damage(amount) -> void:
+func add_damage(amount: float, damage_type: int) -> void:
 	
 	$CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
 	accel_damage_enabled = false
@@ -713,7 +714,22 @@ func add_damage(amount) -> void:
 			print("shield off - max hits reached")
 		return
 
-	total_damage += amount
+	match Global.game_mode:
+		Global.GameMode.COMPETITIVE:
+			total_damage += amount
+		Global.GameMode.PEACEFUL:
+			if damage_type == Global.DAMAGE_TYPE.LAVA:
+				total_damage += amount
+			else:
+				print("Ignoring damage: GameMode.PEACEFUL")  
+		Global.GameMode.TOUGH:
+			if damage_type == Global.DAMAGE_TYPE.DIRECT_HIT or damage_type == Global.DAMAGE_TYPE.LAVA:
+				total_damage += max_damage  # any direct hit is instant death
+			else:
+				print("Ignoring damage: GameMode.TOUGH and damage_type="+str(damage_type)) 
+		_:
+			print("Error: unknown damage type")
+	
 	print("accel_damage_enabled="+str(accel_damage_enabled))
 	align_effects_with_damage()
 	check_engine_force_value()
@@ -871,7 +887,7 @@ func _on_CarBody_body_entered(body):
 
 	if "Lava" in body.name:
 		#print("Taking max_damage damage")
-		add_damage(max_damage)
+		add_damage(max_damage, Global.DAMAGE_TYPE.LAVA)
 
 
 func power_up(type: int) -> void:
@@ -984,6 +1000,12 @@ func remove_main_collision_shapes() -> void:
 	new_rigid_body.remove_child(cs)
 	add_child(cs)
 	new_rigid_body.queue_free()
+	# if we're moving downwards, replace with upwards movement
+	if self.linear_velocity.y < 1.0:
+		if self.linear_velocity.y < 0.0:
+			self.linear_velocity.y = -self.linear_velocity.y
+		else:
+			self.linear_velocity.y = 1.0
 
 
 func explode_vehicle_meshes() -> void:

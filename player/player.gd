@@ -190,12 +190,18 @@ func get_canvaslayer() -> CanvasLayer:
 
 
 func set_label_player_name() -> void:
-	get_label_player_name().text = StatePlayers.players[player_number]["name"]
+	if player_number in StatePlayers.players.keys():
+		get_label_player_name().text = StatePlayers.players[player_number]["name"]
+	else:
+		print("Warning: player_number "+str(player_number)+" not in StatePlayers.players.keys()")
 
 
 func set_label_lives_left() -> void:
-	get_label_lives_left().text = str(StatePlayers.players[player_number]["lives_left"])
-	
+	if player_number in StatePlayers.players.keys():
+		get_label_lives_left().text = str(StatePlayers.players[player_number]["lives_left"])
+	else:
+		print("Warning: player_number "+str(player_number)+" not in StatePlayers.players.keys()")
+
 
 func set_global_transform_origin(o) -> void:
 	get_vehicle_body().global_transform.origin = o

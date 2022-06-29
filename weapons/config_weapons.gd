@@ -29,12 +29,12 @@ const DAMAGE: Dictionary = {
 
 # TODO remove this, if we want to completely move to damage due to force (acceleration)
 const DAMAGE_INDIRECT: Dictionary = {
-	Type.MINE: {"damage": 10, "range": 10.0}, 
-	Type.ROCKET: {"damage": 10, "range": 10.0}, 
-	Type.MISSILE: {"damage": 10, "range": 10.0}, 
-	Type.NUKE: {"damage": 60.0, "range": 500.0}, 
-	Type.BALLISTIC: {"damage": 10, "range": 10.0},
-	Type.BALLISTIC_MISSILE: {"damage": 10, "range": 10.0},
+	Type.MINE: {"damage": 0, "range": 10.0},  # does this make sense? no
+	Type.ROCKET: {"damage": 1, "range": 10.0}, 
+	Type.MISSILE: {"damage": 1, "range": 10.0}, 
+	Type.NUKE: {"damage": 5, "range": 500.0}, 
+	Type.BALLISTIC: {"damage": 0, "range": 10.0},
+	Type.BALLISTIC_MISSILE: {"damage": 3, "range": 20.0},
 	}
 	
 const SCENE: Dictionary = {

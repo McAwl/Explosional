@@ -44,6 +44,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scenes/final_score/final_score.gd"
 }, {
+"base": "Particles",
+"class": "Flame",
+"language": "GDScript",
+"path": "res://effects/visual/flames.gd"
+}, {
 "base": "Camera",
 "class": "FollowCamera",
 "language": "GDScript",
@@ -90,6 +95,11 @@ _global_script_classes=[ {
 "path": "res://scenes/main/main.gd"
 }, {
 "base": "Spatial",
+"class": "Missile",
+"language": "GDScript",
+"path": "res://weapons/missile/missile.gd"
+}, {
+"base": "Spatial",
 "class": "Player",
 "language": "GDScript",
 "path": "res://player/player.gd"
@@ -105,9 +115,19 @@ _global_script_classes=[ {
 "path": "res://effects/visual/shield.gd"
 }, {
 "base": "Particles",
+"class": "Smoke",
+"language": "GDScript",
+"path": "res://effects/visual/smoke.gd"
+}, {
+"base": "Particles",
 "class": "SmokeTrail",
 "language": "GDScript",
 "path": "res://effects/visual/smoke_trail.gd"
+}, {
+"base": "MarginContainer",
+"class": "Speedometer",
+"language": "GDScript",
+"path": "res://player/speedometer.gd"
 } ]
 _global_script_class_icons={
 "AnimatedGrass": "",
@@ -117,6 +137,7 @@ _global_script_class_icons={
 "Explosion": "",
 "Explosive": "",
 "FinalScore": "",
+"Flame": "",
 "FollowCamera": "",
 "ImageDataReource": "",
 "LODCPUParticles": "res://addons/lod/lod_cpu_particles.svg",
@@ -126,10 +147,13 @@ _global_script_class_icons={
 "LODSpotLight": "res://addons/lod/lod_spot_light.svg",
 "LogoScene": "",
 "MainScene": "",
+"Missile": "",
 "Player": "",
 "RayCastProceduralVegetation": "",
 "Shield": "",
-"SmokeTrail": ""
+"Smoke": "",
+"SmokeTrail": "",
+"Speedometer": ""
 }
 
 [application]
@@ -415,6 +439,11 @@ pause={
 Windows={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":16777239,"unicode":0,"echo":false,"script":null)
+ ]
+}
+toggle_snow={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":16777251,"unicode":0,"echo":false,"script":null)
  ]
 }
 kill_player1={

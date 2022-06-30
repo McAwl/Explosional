@@ -1,5 +1,6 @@
-extends Spatial
 class_name Player
+extends Spatial
+
 
 var player_number: int
 var last_spawn_point: Vector3
@@ -11,6 +12,86 @@ func _ready():
 	$VC/V/CanvasLayer/HeadUpDisplay/icon_missile.visible = false
 	$VC/V/CanvasLayer/HeadUpDisplay/icon_nuke.visible = false
 	$VC/V/CanvasLayer/HeadUpDisplay/health.tint_progress = "#7e00ff00"  # green
+
+
+
+func _process(_delta):
+	 update_other_player_label()  # need to do this on every screen refresh
+
+
+
+func _on_TimerUpdateSpeedometer_timeout():
+	if get_vehicle_body() == null:
+		return
+	#print("_on_TimerUpdateSpeedometer_timeout()")
+	# 3.6 kilometers per hour equal one meter per second\
+	var speed_km_hr = get_vehicle_body().fwd_mps*3.6
+	var text = "%03d km/hr" % int(round(abs(speed_km_hr))) + \
+	"  max: "+str(get_vehicle_body().get_max_speed_km_hr()) + \
+	" km/hr  \npower: %04d" % int(round(get_vehicle_body().engine_force_ewma)) + \
+	"  max: %04d" % + int(round(get_vehicle_body().engine_force_value)) + \
+	"  grip: "+str(get_vehicle_body().get_av_wheel_friction_slip())
+	get_canvaslayer().get_node('GridContainer').get_node('Label1').text = text
+	get_canvaslayer().get_node('Speedometer').update_dial(speed_km_hr, get_vehicle_body().get_max_speed_km_hr())
+	
+
+
+func _on_TimerUpdateHUD_timeout():
+	# periodically update player display
+	set_label_player_name()
+	set_label_lives_left()
+	var health_display: TextureProgress = get_hud().get_node("health")
+	if get_vehicle_body() != null:
+		health_display.value = get_vehicle_body().max_damage-get_vehicle_body().total_damage
+		if get_vehicle_body().max_damage-get_vehicle_body().total_damage >= 7.0:
+			health_display.tint_progress = "#7e00ff00"  # green
+		elif get_vehicle_body().max_damage-get_vehicle_body().total_damage <= 3.0:
+			health_display.tint_progress = "#7eff0000"  # red
+		else:
+			health_display.tint_progress = "#7eff6c00"  # orange
+
+
+func _on_TimerCheckDestroyedVehicle_timeout():
+	# periodically check for a destroyed vehicle
+	#if get_viewport().has_node("vehicle_body"):
+	#	var vb: VehicleBody = get_viewport().get_node("vehicle_body")
+	#	if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
+	#		print("vb.vehicle_state == ConfigVehicles.AliveState.DEAD: destroying vehicle body")
+	#		#vb.queue_free()  # doing this removes the camera and really screws thigns up
+	#else:
+	# TODO move the camera to the player so we can destroy the VehicleBody and keep seeing the exploded parts
+
+	var re_spawn: bool = false
+	var have_vb =  has_vehicle_body()
+	var vb: VehicleBody
+	
+	if have_vb == false:
+		#print("have_vb == false")
+		re_spawn = true
+	else:
+		vb = get_vehicle_body()  # get_viewport().get_node("vehicle_body")
+		if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
+			#print("vb.vehicle_state == ConfigVehicles.AliveState.DEAD")
+			re_spawn = true
+	
+	if re_spawn:
+		re_spawn = false
+		if not get_parent().is_in_slow_motion():  # wait until the main scene finished any slow motion dying stuff
+			#print("not get_parent().is_in_slow_motion()")
+			#print("vehicle_state ="+str(vb.vehicle_state))
+			#if vehicle_state == ConfigVehicles.AliveState.DYING:
+			#print("Engine.time_scale="+str(Engine.time_scale))
+			if StatePlayers.players[player_number]["lives_left"] > 0:
+				#print("player: "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...")
+				re_spawn = true
+				
+	if re_spawn:
+		#print("if re_spawn")
+		if vb != null:
+			#print("vb != null -> vb.queue_free()")
+			#print("vb.vehicle_state == "+str(vb.vehicle_state))
+			vb.queue_free()
+		init_vehicle_body(last_spawn_point)
 
 
 func reset_health() -> void:
@@ -29,16 +110,12 @@ func toggle_hud() -> void:
 		get_hud().visible = true
 
 
-func _process(_delta):
-	 update_other_player_label()  # need to do this on every screen refresh
-
-
 func init(_player_number, pos=null) -> void:
 	last_spawn_point = pos
-	# print("player:init()")
+	#print("player:init()")
 	
 	player_number = _player_number
-	# print("player init(): StatePlayers.num_players()="+str(StatePlayers.num_players()))
+	#print("player init(): StatePlayers.num_players()="+str(StatePlayers.num_players()))
 	
 	
 	# Add a vehicle to the player
@@ -71,15 +148,15 @@ func init_vehicle_body(pos) -> void:
 	
 
 func set_viewport_container_one(_player_number) -> void:
-	# print("set_viewport_container_one():")
-	# print("player_number="+str(_player_number))
+	#print("set_viewport_container_one():")
+	#print("player_number="+str(_player_number))
 	if _player_number == 1:
 		set_viewport_container(0, 0, 0, 0, 1920, 1080)
 
 
 func set_viewport_container_two(_player_number) -> void:
-	# print("set_viewport_container_two():")
-	# print("player_number="+str(_player_number))
+	#print("set_viewport_container_two():")
+	#print("player_number="+str(_player_number))
 	if _player_number == 1:
 		set_viewport_container(0, 0, 540, 0, 1920, 540)
 	elif _player_number == 2:
@@ -87,8 +164,8 @@ func set_viewport_container_two(_player_number) -> void:
 
 
 func set_viewport_container_three(_player_number) -> void:
-	# print("set_viewport_container_three():")
-	# print("_player_number="+str(_player_number))
+	#print("set_viewport_container_three():")
+	#print("_player_number="+str(_player_number))
 	if _player_number == 1:
 		set_viewport_container(0, 960, 540, 0, 960, 540)
 	elif _player_number == 2:
@@ -98,8 +175,8 @@ func set_viewport_container_three(_player_number) -> void:
 
 
 func set_viewport_container_four(_player_number) -> void:
-	# print("set_viewport_container_four():")
-	# print("_player_number="+str(_player_number))
+	#print("set_viewport_container_four():")
+	#print("_player_number="+str(_player_number))
 	if _player_number == 1:
 		set_viewport_container(0, 960, 540, 0, 960, 540)
 	elif _player_number == 2:
@@ -112,18 +189,18 @@ func set_viewport_container_four(_player_number) -> void:
 
 func set_viewport_container(_left, _right, _bottom, _top, size_x, size_y) -> void:
 	"""
-	# get_label_lives_left().margin_right = 0
-	# get_label().margin_bottom = 0
-	# get_label().margin_top = _top
-	# get_label().rect_size.x = size_x
-	# get_label().rect_size.y = size_y
+	#get_label_lives_left().margin_right = 0
+	#get_label().margin_bottom = 0
+	#get_label().margin_top = _top
+	#get_label().rect_size.x = size_x
+	#get_label().rect_size.y = size_y
 	#print("LRTB="+str([_left, _right, _bottom, _top]))
-	# print("$VC margins LRBT="+str([$VC.margin_left, $VC.margin_right, $VC.margin_bottom, $VC.margin_top]))
-	# print("$VC.rect_size="+str($VC.rect_size))
-	# print("$V size="+str([$VC/V.size]))
-	# print("label rect_size="+str(get_label().rect_size))
-	# print("label align="+str(get_label().align))
-	# print("label LRBT="+str([get_label().margin_left, get_label().margin_right, get_label().margin_bottom, get_label().margin_top]))"""
+	#print("$VC margins LRBT="+str([$VC.margin_left, $VC.margin_right, $VC.margin_bottom, $VC.margin_top]))
+	#print("$VC.rect_size="+str($VC.rect_size))
+	#print("$V size="+str([$VC/V.size]))
+	#print("label rect_size="+str(get_label().rect_size))
+	#print("label align="+str(get_label().align))
+	#print("label LRBT="+str([get_label().margin_left, get_label().margin_right, get_label().margin_bottom, get_label().margin_top]))"""
 	$VC.margin_left = _left
 	$VC.margin_right = _right
 	$VC.margin_bottom = _bottom
@@ -133,7 +210,7 @@ func set_viewport_container(_left, _right, _bottom, _top, size_x, size_y) -> voi
 	get_viewport().size.x = size_x
 	get_viewport().size.y = size_y
 	# label stuff is relative to the container, not window...
-	# get_label().margin_left = _left
+	#get_label().margin_left = _left
 	get_label_player_name().margin_right = 0
 
 
@@ -207,34 +284,6 @@ func set_global_transform_origin(o) -> void:
 	get_vehicle_body().global_transform.origin = o
 
 
-func _on_TimerUpdateSpeedometer_timeout():
-	if get_vehicle_body() == null:
-		return
-	# print("_on_TimerUpdateSpeedometer_timeout()")
-	# 3.6 kilometers per hour equal one meter per second\
-	var text = "%03d km/hr" % int(round(abs(get_vehicle_body().fwd_mps*3.6))) + \
-	"  max: "+str(get_vehicle_body().get_max_speed_km_hr()) + \
-	" km/hr  \npower: %04d" % int(round(get_vehicle_body().engine_force_ewma)) + \
-	"  max: %04d" % + int(round(get_vehicle_body().engine_force_value)) + \
-	"  grip: "+str(get_vehicle_body().get_av_wheel_friction_slip())
-	get_canvaslayer().get_node('GridContainer').get_node('Label1').text = text
-
-
-func _on_TimerUpdateHUD_timeout():
-	# periodically update player display
-	set_label_player_name()
-	set_label_lives_left()
-	var health_display: TextureProgress = get_hud().get_node("health")
-	if get_vehicle_body() != null:
-		health_display.value = get_vehicle_body().max_damage-get_vehicle_body().total_damage
-		if get_vehicle_body().max_damage-get_vehicle_body().total_damage >= 7.0:
-			health_display.tint_progress = "#7e00ff00"  # green
-		elif get_vehicle_body().max_damage-get_vehicle_body().total_damage <= 3.0:
-			health_display.tint_progress = "#7eff0000"  # red
-		else:
-			health_display.tint_progress = "#7eff6c00"  # orange
-
-
 func update_other_player_label():
 	for player_num in StatePlayers.players.keys():  #get_parent().get_players():
 		#print("player_num="+str(player_num))
@@ -269,49 +318,6 @@ func update_other_player_label():
 			else:
 				var label = get_hud().get_node("label_player_"+str(player_number)+"_pos")
 				label.visible = false  # don't show own label
-
-
-func _on_TimerCheckDestroyedVehicle_timeout():
-	# periodically check for a destroyed vehicle
-	#if get_viewport().has_node("vehicle_body"):
-	#	var vb: VehicleBody = get_viewport().get_node("vehicle_body")
-	#	if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
-	#		print("vb.vehicle_state == ConfigVehicles.AliveState.DEAD: destroying vehicle body")
-	#		#vb.queue_free()  # doing this removes the camera and really screws thigns up
-	#else:
-	# TODO move the camera to the player so we can destroy the VehicleBody and keep seeing the exploded parts
-
-	var re_spawn: bool = false
-	var have_vb =  has_vehicle_body()
-	var vb: VehicleBody
-	
-	if have_vb == false:
-		#print("have_vb == false")
-		re_spawn = true
-	else:
-		vb = get_vehicle_body()  # get_viewport().get_node("vehicle_body")
-		if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
-			#print("vb.vehicle_state == ConfigVehicles.AliveState.DEAD")
-			re_spawn = true
-	
-	if re_spawn:
-		re_spawn = false
-		if not get_parent().is_in_slow_motion():  # wait until the main scene finished any slow motion dying stuff
-			#print("not get_parent().is_in_slow_motion()")
-			#print("vehicle_state ="+str(vb.vehicle_state))
-			#if vehicle_state == ConfigVehicles.AliveState.DYING:
-			#print("Engine.time_scale="+str(Engine.time_scale))
-			if StatePlayers.players[player_number]["lives_left"] > 0:
-				#print("player: "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...")
-				re_spawn = true
-				
-	if re_spawn:
-		#print("if re_spawn")
-		if vb != null:
-			#print("vb != null -> vb.queue_free()")
-			#print("vb.vehicle_state == "+str(vb.vehicle_state))
-			vb.queue_free()
-		init_vehicle_body(last_spawn_point)
 
 
 func has_vehicle_body() -> bool:

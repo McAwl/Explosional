@@ -1,18 +1,35 @@
-extends Node2D
 class_name FinalScore
+extends Node2D
 
 
 # Declare member variables here. Examples:
 var player_winner_name
 
 
-# Called when the node enters the scene tree for the first time.
+# Built-in methods
+
 func _ready():
 	$Label.text = "Player "+str(player_winner_name)+" wins!"
 	Engine.time_scale = 1.0
 	# hide the mouse
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
+
+func _process(_delta):
+	print("Engine.time_scale = "+str(Engine.time_scale))
+
+
+# Signal methods
+
+func _on_StartButton_pressed():
+	reset_game()
+
+
+func _on_TimerReset_timeout():
+	reset_game()
+
+
+# Public methods
 
 func reset_game():
 	queue_free()
@@ -23,14 +40,3 @@ func reset_game():
 	get_tree().paused = false
 	queue_free()
 
-
-func _process(delta):
-	print("Engine.time_scale = "+str(Engine.time_scale))
-	
-
-func _on_StartButton_pressed():
-	reset_game()
-
-
-func _on_TimerReset_timeout():
-	reset_game()

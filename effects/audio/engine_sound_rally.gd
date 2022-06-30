@@ -1,6 +1,5 @@
 extends AudioStreamPlayer
 
-var timer_0_1s: float = 0.1
 
 # Define periods in the audio where specific events happen
 export var gear_change_1: Array = [15.03, 15.46]
@@ -11,22 +10,17 @@ export var slowing_down: Array = [28.0, 36.0]
 export var stable_speed: Array = [87.0, 89.0]
 export var idle: Array = [4.5, 6.9, 10.0]  # min / [medium spots] / max
 
+var timer_0_1s: float = 0.1
 var current_position_sec: float
-
 var accel: float
 var speed: float
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
-
-
 var state = ConfigVehicles.SpeedState.IDLE
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass
-
-
-func get_vehicle() -> VehicleBody:
-	return get_parent().get_parent().get_parent() as VehicleBody
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -82,7 +76,11 @@ func _process(delta):
 						state = ConfigVehicles.SpeedState.STABLE
 
 
+func get_vehicle() -> VehicleBody:
+	return get_parent().get_parent().get_parent() as VehicleBody
+
+
 func slowly_increase_volume(duration_sec) -> void:
 	$Tween.interpolate_property(self, "volume_db", Global.vehicle_sound_volume_db, Global.vehicle_sound_volume_db+6.0, duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
 	$Tween.start()
-	
+

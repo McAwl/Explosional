@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://assets/display/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://player/player.gd" type="Script" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://assets/display/icons/heart.png" type="Texture" id=11]
 [ext_resource path="res://assets/display/fonts/font_theme_large.tres" type="DynamicFont" id=12]
 [ext_resource path="res://assets/display/icons/ballistic_missile.png" type="Texture" id=13]
+[ext_resource path="res://player/speedometer.tscn" type="PackedScene" id=14]
 
 [sub_resource type="DynamicFontData" id=7]
 font_path = "res://assets/display/fonts/Xolonium-Regular.ttf"
@@ -59,44 +60,59 @@ shadow_atlas_size = 128
 
 [node name="CanvasLayer" type="CanvasLayer" parent="VC/V"]
 
+[node name="Speedometer" parent="VC/V/CanvasLayer" instance=ExtResource( 14 )]
+anchor_left = 0.017
+anchor_top = 0.724
+anchor_right = 0.224
+anchor_bottom = 0.767
+rect_scale = Vector2( 0.25, 0.25 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
 [node name="GridContainer" type="GridContainer" parent="VC/V/CanvasLayer"]
-anchor_left = 0.1
-anchor_top = 0.9
+visible = false
+anchor_left = 0.005
+anchor_top = 0.805
 anchor_right = 0.1
-anchor_bottom = 0.9
+anchor_bottom = 0.883
 rect_scale = Vector2( 0.7, 0.7 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/vseparation = 20
 custom_constants/hseparation = 20
-columns = 4
+columns = 5
 
 [node name="Label1" type="Label" parent="VC/V/CanvasLayer/GridContainer"]
-margin_bottom = 37.0
+margin_right = 166.0
+margin_bottom = 43.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 8 )
+text = "100 km/hr"
 
 [node name="Label2" type="Label" parent="VC/V/CanvasLayer/GridContainer"]
-margin_left = 20.0
-margin_right = 20.0
-margin_bottom = 37.0
+margin_left = 186.0
+margin_right = 217.0
+margin_bottom = 43.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 10 )
+text = "ferf"
 
 [node name="Label3" type="Label" parent="VC/V/CanvasLayer/GridContainer"]
-margin_left = 40.0
-margin_right = 40.0
-margin_bottom = 37.0
+margin_left = 237.0
+margin_right = 248.0
+margin_bottom = 43.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 10 )
+text = "3
+"
 
 [node name="Label4" type="Label" parent="VC/V/CanvasLayer/GridContainer"]
-margin_left = 60.0
-margin_right = 60.0
-margin_bottom = 37.0
+margin_left = 268.0
+margin_right = 268.0
+margin_bottom = 43.0
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 10 )
 
@@ -295,6 +311,7 @@ align = 1
 valign = 1
 
 [node name="TimerUpdateSpeedometer" type="Timer" parent="."]
+wait_time = 0.1
 autostart = true
 
 [node name="TimerUpdateHUD" type="Timer" parent="."]

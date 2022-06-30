@@ -5,13 +5,15 @@ var player_number
 var missile_homing = false
 
 export var speed = 0.0
-# Called when the node enters the scene tree for the first time.
+
+
+# Built-in methods
+
 func _ready():
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+# Public methods
+
 func get_speed():
 	return speed

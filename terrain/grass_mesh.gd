@@ -8,6 +8,7 @@ export var character_path := NodePath()
 
 onready var _character: Spatial = get_parent().get_node("CharacterRoot/Character")  # get_node(character_path)
 
+
 func _enter_tree() -> void:
 	connect("visibility_changed", self, "_on_WindGrass_visibility_changed")
 

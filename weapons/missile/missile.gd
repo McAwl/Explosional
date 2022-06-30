@@ -1,4 +1,6 @@
+class_name Missile
 extends Spatial
+
 
 var velocity: Vector3 = Vector3.ZERO
 var homing: bool = true
@@ -19,7 +21,9 @@ var flicker_thrust_timer: float = 0.1
 var lifetime_seconds: float = 10.0
 var homing_start_timer: float
 
-# Called when the node enters the scene tree for the first time.
+
+# Built-in methods
+
 func _ready():
 	print("Launched missile of type "+str(weapon_type))
 	$ParticlesThrust.visible = true
@@ -32,10 +36,6 @@ func _ready():
 		print("  MUZZLE_SPEED="+str(ConfigWeapons.MUZZLE_SPEED[weapon_type]))
 	$Body/OmniLight.light_color = Color(0, 1, 0)  # green = not active
 	print("  lifetime_seconds="+str(lifetime_seconds))
-
-
-func muzzle_speed() -> float:
-	return ConfigWeapons.MUZZLE_SPEED[weapon_type]
 
 
 func _process(delta):
@@ -55,7 +55,7 @@ func _process(delta):
 		flicker_thrust_light()
 	
 	if print_timer < 0.0:
-		# print(" hit_something="+str(hit_something))
+		#print(" hit_something="+str(hit_something))
 		print_timer = 0.5
 		if has_node("Body"):
 			fwd_speed = abs($Body.transform.basis.xform_inv($Body.linear_velocity).z)
@@ -181,6 +181,36 @@ func _physics_process(delta):
 								closest_target_direction_normalised = closest_target_direction.normalized()
 
 
+# Signal methods
+
+
+func _on_Body_body_entered(body):
+	print("Missile hit body of type "+str(typeof(body))+", name="+str(body))
+	if exploded == false:
+		explode(body)
+
+
+func _on_TimerCheckActiveLight_timeout():
+	if homing == false:
+		$Body/OmniLight.hide()
+	else:
+		if homing_check_target_timer > 0.0:
+			$Body/OmniLight.light_color = Color(0, 1, 0)  # green = not active
+			$Body/OmniLight.show()
+		else:
+			$Body/OmniLight.light_color = Color(1, 0, 0)  # red = active
+			if closest_target_distance == null:
+				$Body/OmniLight.show()
+			else:
+				$Body/OmniLight.visible = !$Body/OmniLight.visible  # flash red = homing on a target
+
+
+# Public methods
+
+func muzzle_speed() -> float:
+	return ConfigWeapons.MUZZLE_SPEED[weapon_type]
+
+
 func add_random_movement(strength) -> void:
 	# steer left/right a bit
 	velocity += transform.basis.x * rng.randfn(0.0, strength)
@@ -199,12 +229,6 @@ func activate(_parent_player_number, _homing) -> void:
 		$ThrustLight.show()
 	else:
 		$ThrustLight.hide()
-
-
-func _on_Body_body_entered(body):
-	print("Missile hit body of type "+str(typeof(body))+", name="+str(body))
-	if exploded == false:
-		explode(body)
 
 
 func explode(body=null) -> void:  # null if lifetime has expired
@@ -267,19 +291,4 @@ func flicker_thrust_light() -> void:
 			$ThrustLight.light_color = Color(1, 0.6, 0) 
 		else: 
 			$ThrustLight.light_color = Color(1, 0.2, 0)
-
-
-func _on_TimerCheckActiveLight_timeout():
-	if homing == false:
-		$Body/OmniLight.hide()
-	else:
-		if homing_check_target_timer > 0.0:
-			$Body/OmniLight.light_color = Color(0, 1, 0)  # green = not active
-			$Body/OmniLight.show()
-		else:
-			$Body/OmniLight.light_color = Color(1, 0, 0)  # red = active
-			if closest_target_distance == null:
-				$Body/OmniLight.show()
-			else:
-				$Body/OmniLight.visible = !$Body/OmniLight.visible  # flash red = homing on a target
 

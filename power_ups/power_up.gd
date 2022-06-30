@@ -1,28 +1,17 @@
 extends Spatial
 
-var initialised: bool = false
-var activated: bool = false
 
 export var type: int = -1
+
+var initialised: bool = false
+var activated: bool = false
 var nuke_meshes: Resource = load(Global.nuke_meshes_scene_folder)
 var shield_meshes: Resource = load(Global.shield_meshes_scene_folder)
 var health_meshes: Resource = load(Global.health_meshes_scene_folder)
 
+
 func _ready():
 	pass # Replace with function body.
-
-
-func disable() -> void:
-	# print("disabling NukePowerUp")
-	visible = false
-	$Timer.start()
-	transform.origin.x += 20.0
-
-
-func _on_Timer_timeout():
-	# print("Setting NukePowerUp")
-	visible = true
-	transform.origin.x -= 20.0
 
 
 func _process(delta):
@@ -49,8 +38,14 @@ func _process(delta):
 			queue_free()
 
 
+func _on_Timer_timeout():
+	#print("Setting NukePowerUp")
+	visible = true
+	transform.origin.x -= 20.0
+
+
 func _on_Area_body_entered(body):
-	# print("_on_Area_body_entered")
+	#print("_on_Area_body_entered")
 	if body is VehicleBody:
 		body.power_up(type)
 		activated = true
@@ -58,3 +53,9 @@ func _on_Area_body_entered(body):
 		$Area/GlowingSphere.hide()
 		$Lights.hide()
 
+
+func disable() -> void:
+	#print("disabling NukePowerUp")
+	visible = false
+	$Timer.start()
+	transform.origin.x += 20.0

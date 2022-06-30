@@ -1,8 +1,10 @@
-extends Spatial
 class_name Explosion
+extends Spatial
+
 
 # This explosion scene is meant to be instanced when the explosion is needed,
 # not stored in any scenes
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -10,6 +12,12 @@ func _ready():
 	$Visual/Smoke.show()
 	$Visual/Light.show()
 	pass
+
+
+
+func _on_TimerFailsafeDestroy_timeout():
+	print("Warning: used TimerFailsafeDestroy for node "+self.name+" parent="+str(get_parent().name))
+	queue_free()
 
 
 # start all the effects
@@ -45,7 +53,3 @@ func effects_finished() -> bool:
 		return false
 	return true
 
-
-func _on_TimerFailsafeDestroy_timeout():
-	print("Warning: used TimerFailsafeDestroy for node "+self.name+" parent="+str(get_parent().name))
-	queue_free()

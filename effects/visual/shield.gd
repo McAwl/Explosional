@@ -1,5 +1,5 @@
-extends Spatial
 class_name Shield
+extends Spatial
 
 
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()

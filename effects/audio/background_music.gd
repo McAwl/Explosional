@@ -1,9 +1,11 @@
-extends AudioStreamPlayer
 class_name BackgroundMusic
+extends AudioStreamPlayer
+
 
 var tracks: Array = []
 var timer_0_5s: float = 1.0
 var current_track_num: int
+
 export var start_paused: bool = true
 
 
@@ -50,6 +52,10 @@ func _process(delta):
 			load_new_track()
 
 
+func _on_TimerCheckVolume_timeout():
+	volume_db = Global.background_music_volume_db
+
+
 func load_new_track() -> void:
 	if len(tracks) > 0:
 		var old_track_num: int = current_track_num
@@ -61,8 +67,4 @@ func load_new_track() -> void:
 		playing = true
 	else:
 		print("Error: no music tracks")
-
-
-func _on_TimerCheckVolume_timeout():
-	volume_db = Global.background_music_volume_db
 

@@ -1,5 +1,6 @@
-extends RigidBody
 class_name Explosive
+extends RigidBody
+
 
 # A class to represent differnet kinds of explosives:
 # 1. A Mine, which explodes when in proximity to a vehicle
@@ -32,7 +33,8 @@ var flash_timer: float = 0.25
 var hit_on_contact: bool = false
 
 
-# Called when the node enters the scene tree for the first time.
+# Built-in methods
+
 func _ready():
 	material_green = SpatialMaterial.new() #Make a new Spatial Material
 	material_green.albedo_color = Color(0.0, 1.0, 0.0, 1.0) #Set color of new material
@@ -46,7 +48,6 @@ func _ready():
 	$ExplosionNuke/Top/OmniLight.visible = false
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 
 	timer_1s -= delta
@@ -110,7 +111,7 @@ func _process(delta):
 		$SpotLight.hide()
 		if no_animations_or_sound_playing() or (type == ConfigWeapons.Type.MINE and explosive_proximity_timer_limit < 0.0):
 			# explosion particles have finished, explosion sound has finished, so disable the bomb
-			# print("explosive_stage == ConfigWeapons.ExplosiveStage.5 no_animations_or_sound_playing() or (type == Type.MINE and explosive_proximity_timer_limit < 0.0) or or (type == Type.BOMB and explosive_proximity_timer_limit < 0.0)")
+			#print("explosive_stage == ConfigWeapons.ExplosiveStage.5 no_animations_or_sound_playing() or (type == Type.MINE and explosive_proximity_timer_limit < 0.0) or or (type == Type.BOMB and explosive_proximity_timer_limit < 0.0)")
 			#explosive_stage = 0
 			visible = false
 			# if explosive_proximity_timer_limit < 0.0:
@@ -124,42 +125,18 @@ func _process(delta):
 			$MineMeshes/OmniLight.visible = !$MineMeshes/OmniLight.visible
 
 
-func no_animations_or_sound_playing() -> bool:
-	# print("explosive_stage ==  "+str(explosive_stage))
-	if self.has_node("Explosion"):
-		if $Explosion.effects_finished() == false: 
-			# print("$ParticlesExplosion.emitting == true")
-			return false
-	if $ExplosionNuke/AnimationPlayer.current_animation == "nuke":
-		# print("$ExplosionNuke/AnimationPlayer.current_animation == nuke")
-		# print(str($ExplosionNuke/AnimationPlayer.current_animation_position))
-		return false
-	else:
-		print("no_animations_or_sound_playing(): returned true")
-		# print("$ExplosionNuke/AnimationPlayer.current_animation="+str($ExplosionNuke/AnimationPlayer.current_animation))
-		return true
-
-
-func get_players():
-	return get_node("/root/MainScene").get_players()
-
-
-func get_bombs():
-	return get_node("/root/MainScene").get_players()
-
-
 func _physics_process(_delta):
 	
 	if explosive_stage == ConfigWeapons.ExplosiveStage.EXPLODE:
-		# print("explosive_stage == 4")
+		#print("explosive_stage == 4")
 		hide_meshinstances()
 		if type == ConfigWeapons.Type.NUKE:
-			# print("_physics_process(): explosive_stage == 4 type == ConfigWeapons.Type.NUKE")
+			#print("_physics_process(): explosive_stage == 4 type == ConfigWeapons.Type.NUKE")
 			linear_velocity = Vector3(0.0, 0.0, 0.0)
 			angular_velocity = Vector3(0.0, 0.0, 0.0)
 			rotation_degrees = Vector3(0.0, 0.0, 0.0)
-			# print("type == "+str(type))
-			# $ExplosionNuke/AnimationPlayer.seek(0.0)
+			#print("type == "+str(type))
+			#$ExplosionNuke/AnimationPlayer.seek(0.0)
 			$ExplosionNuke/AnimationPlayer.play("nuke")
 			$ExplosionNuke/AnimationPlayer.seek(0.0)
 			$ExplosionNuke/ExplosionNukeSound.playing = true
@@ -168,13 +145,13 @@ func _physics_process(_delta):
 			explosion.name = "Explosion"
 			self.add_child(explosion)
 			$Explosion.global_transform.origin = global_transform.origin
-			# print("type == ConfigWeapons.ConfigWeapons.Type.MINE setting $ParticlesExplosion.emitting = true")
+			#print("type == ConfigWeapons.ConfigWeapons.Type.MINE setting $ParticlesExplosion.emitting = true")
 			$Explosion.start_effects(self)
 		elif type == ConfigWeapons.Type.BOMB:
 			var explosion: Explosion = load(Global.explosion_folder).instance()
 			explosion.name = "Explosion"
 			self.add_child(explosion)
-			# print(" type == ConfigWeapons.Type.BOMB setting $ParticlesExplosion.emitting = true")
+			#print(" type == ConfigWeapons.Type.BOMB setting $ParticlesExplosion.emitting = true")
 			$Explosion.start_effects(self)
 		var targets = []
 		for target in get_players():  # i in range(1,5): # explosion toward all players
@@ -207,15 +184,15 @@ func _physics_process(_delta):
 				#	if type == Type.NUKE:
 				#		if target.player_number != var _number:
 				#			target.damage(10)
-				#			# print("target took nuke damage launched_by_player_number "+str(launched_by_player_number))
+				#			#print("target took nuke damage launched_by_player_number "+str(launched_by_player_number))
 				#		# else don't take damage from player that launched it
 				#	else:
 				#		target.damage(2)
-				#		# print("target took damage launched_by_player_number "+str(launched_by_player_number))
-				#		# print("direction="+str(direction))
+				#		#print("target took damage launched_by_player_number "+str(launched_by_player_number))
+				#		#print("direction="+str(direction))
 				
 
-		# print("setting explosive_stage = 5")
+		#print("setting explosive_stage = 5")
 		explosive_stage = ConfigWeapons.ExplosiveStage.EFFECTS
 		explosive_proximity_check_timer = ConfigWeapons.EXPLOSIVE_ACTIVE_WAIT * 4  # to ensure we don't wait forever
 
@@ -223,6 +200,42 @@ func _physics_process(_delta):
 		# linear_velocity = Vector3(0.0, 0.0, 0.0)
 		# angular_velocity = Vector3(0.0, 0.0, 0.0)
 		rotation_degrees = Vector3(0.0, 0.0, 0.0)
+
+
+# Signal methods
+
+func _on_Bomb_body_entered(_body):
+	if hit_on_contact == true and explosive_stage < ConfigWeapons.ExplosiveStage.EXPLODE:
+		timer = ConfigWeapons.EXPLOSIVE_ACTIVE_WAIT
+		#print("mine: _on_Bomb_body_entered(_body):")
+		#print("body.name="+str(_body.name))
+		explosive_stage = ConfigWeapons.ExplosiveStage.EXPLODE
+
+
+# Public methods
+
+func no_animations_or_sound_playing() -> bool:
+	#print("explosive_stage ==  "+str(explosive_stage))
+	if self.has_node("Explosion"):
+		if $Explosion.effects_finished() == false: 
+			#print("$ParticlesExplosion.emitting == true")
+			return false
+	if $ExplosionNuke/AnimationPlayer.current_animation == "nuke":
+		#print("$ExplosionNuke/AnimationPlayer.current_animation == nuke")
+		#print(str($ExplosionNuke/AnimationPlayer.current_animation_position))
+		return false
+	else:
+		print("no_animations_or_sound_playing(): returned true")
+		#print("$ExplosionNuke/AnimationPlayer.current_animation="+str($ExplosionNuke/AnimationPlayer.current_animation))
+		return true
+
+
+func get_players():
+	return get_node("/root/MainScene").get_players()
+
+
+func get_bombs():
+	return get_node("/root/MainScene").get_players()
 
 
 func material_override(material) -> void:
@@ -251,16 +264,8 @@ func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player
 	print("weapon of type "+str(ConfigWeapons.Type.keys()[type]) + " launched by player_number "+str(launched_by_player_number)+player_str)
 
 
-func _on_Bomb_body_entered(_body):
-	if hit_on_contact == true and explosive_stage < ConfigWeapons.ExplosiveStage.EXPLODE:
-		timer = ConfigWeapons.EXPLOSIVE_ACTIVE_WAIT
-		# print("mine: _on_Bomb_body_entered(_body):")
-		# print("body.name="+str(_body.name))
-		explosive_stage = ConfigWeapons.ExplosiveStage.EXPLODE
-
-
 func set_as_mine() -> void:
-	# print("set_as_mine()")
+	#print("set_as_mine()")
 	hit_on_contact = false
 	mine_meshes(true)
 	bomb_meshes(false)
@@ -270,7 +275,7 @@ func set_as_mine() -> void:
 
 
 func set_as_bomb() -> void:
-	# print("set_as_bomb()")
+	#print("set_as_bomb()")
 	hit_on_contact = true
 	mine_meshes(false)
 	bomb_meshes(true)
@@ -281,7 +286,7 @@ func set_as_bomb() -> void:
 
 
 func set_as_nuke() -> void:
-	# print("set_as_nuke()")
+	#print("set_as_nuke()")
 	hit_on_contact = true
 	mine_meshes(false)
 	bomb_meshes(false)
@@ -293,30 +298,28 @@ func set_as_nuke() -> void:
 
 
 func hide_meshinstances() -> void:
-	# print("Hiding all meshinstances in object mine[/bomb/nuke/etc?]")
+	#print("Hiding all meshinstances in object mine[/bomb/nuke/etc?]")
 	mine_meshes(false)
 	bomb_meshes(false)
 	nuke_meshes(false)
 
 
 func mine_meshes(_show) -> void:
-	# print("Setting mine meshinstances to "+str(_show))
+	#print("Setting mine meshinstances to "+str(_show))
 	$MineMeshes/Main.visible = _show
 	$MineMeshes/Top.visible = _show
 	$MineMeshes/OmniLight.visible = _show
 
 
 func bomb_meshes(_show) -> void:
-	# print("Setting bomb meshinstances to "+str(_show))
+	#print("Setting bomb meshinstances to "+str(_show))
 	$BombMeshes/Body.visible = _show
 	$BombMeshes/Fin1.visible = _show
 	$BombMeshes/Fin2.visible = _show
 
 
 func nuke_meshes(_show) -> void:
-	# print("Setting nuke meshinstances to "+str(_show))
+	#print("Setting nuke meshinstances to "+str(_show))
 	$NukeMeshes/Body.visible = _show
 	$NukeMeshes/Fin1.visible = _show
 	$NukeMeshes/Fin2.visible = _show
-
-

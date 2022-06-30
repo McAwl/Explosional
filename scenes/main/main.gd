@@ -1,5 +1,15 @@
-extends Spatial
 class_name MainScene
+extends Spatial
+
+
+export var air_strike_state: Dictionary = {
+	"on": false, 
+	"duration_so_far_sec": 0.0, 
+	"interval_so_far_sec": 0.0}
+	
+export var start_clock_hrs: float = 12.0
+export var test_nuke: bool = false
+export var fake_sun_omni_light: bool = false
 
 var town = null
 var timer_1_sec: float = 1.0
@@ -19,19 +29,12 @@ var last_veg: Array = []
 var in_slow_motion: bool = false
 var game_over_checked = false
 
-export var air_strike_state: Dictionary = {
-	"on": false, 
-	"duration_so_far_sec": 0.0, 
-	"interval_so_far_sec": 0.0}
-	
-export var start_clock_hrs: float = 12.0
-export var test_nuke: bool = false
-export var fake_sun_omni_light: bool = false
 
-# Called when the node enters the scene tree for the first time.
+# built-in virtual methods
+
 func _ready():
 	randomize()
-	# $TimerSlowMotion.start()  # for Procedurally place vegetation
+	#$TimerSlowMotion.start()  # for Procedurally place vegetation
 	self.add_child(ray)
 	$VC/CL/MainMenu.set_visible(false)
 	$VC/CL/MainMenu.game_active = true
@@ -52,7 +55,7 @@ func _ready():
 		$DirectionalLightSun.visible = true
 		$Moons/OmniLight.visible = false
 		$DirectionalLightMoon.visible = true
-	var spawn_points: Array = get_spawn_points()
+	var spawn_points: Array = _get_spawn_points()
 	for player_number in range(1, StatePlayers.num_players()+1):
 		var player_instance: Player = load(Global.player_folder).instance()
 		add_child(player_instance)
@@ -81,28 +84,6 @@ func _ready():
 		grasses.append(grass.get_instance_id())
 
 
-func turn_airstrike_on() -> void:
-	air_strike_state["on"] = true
-	air_strike_state["interval_so_far_sec"] = 0.0
-	air_strike_state["duration_so_far_sec"] = 0.0
-	# var players = get_tree().get_nodes_in_group("player")  # 
-	# print("len(players)="+str(len(players)))
-	air_strike_label().visible = true
-	air_strike_label().get_node("TextFlash").play("font_blink")
-	$VC/CL/IconRadiation.visible = true
-	$Effects/Siren.playing = true
-
-
-func turn_airstrike_off() -> void:
-	air_strike_state["on"] = false
-	air_strike_state["interval_so_far_sec"] = 0.0
-	air_strike_state["duration_so_far_sec"] = 0.0
-	air_strike_label().visible = false
-	air_strike_label().get_node("TextFlash").stop()
-	$VC/CL/IconRadiation.visible = false
-	$Effects/Siren.playing = false
-	
-
 func _process(delta):
 	
 	if Input.is_action_pressed("pause") or Input.is_action_pressed("back"):
@@ -122,12 +103,12 @@ func _process(delta):
 	air_strike_state["duration_so_far_sec"] += delta
 	
 	if air_strike_state["on"] == false and air_strike_state["interval_so_far_sec"] > Global.air_strike_config["interval_sec"] and Global.game_mode != Global.GameMode.PEACEFUL:
-		turn_airstrike_on()
+		_turn_airstrike_on()
 	elif air_strike_state["on"] == true and air_strike_state["duration_so_far_sec"] > Global.air_strike_config["duration_sec"]:
-		turn_airstrike_off()
-		# print("Turing airstrike off")
+		_turn_airstrike_off()
+		#print("Turing airstrike off")
 		#for node in get_tree().root.get_node("TownScene").get_children():  #find_node("*Bomb*":
-			# print("After airstrike finished, found root.get_children() objects: "+str(node.name))
+			#print("After airstrike finished, found root.get_children() objects: "+str(node.name))
 			#if "omb" in node.name:
 			#	print("  Found bomb: stage = "+str(node.bomb_stage))
 			#	print("  type = "+str(node.type))
@@ -153,8 +134,8 @@ func _process(delta):
 	timer_1_sec -= delta
 	
 	if timer_1_sec < 0.0:
-		check_game_over()
-		check_and_enforce_slow_motion()
+		_check_game_over()
+		_check_and_enforce_slow_motion()
 		timer_1_sec = 1.0
 
 
@@ -173,16 +154,16 @@ func _physics_process(_delta):
 			veg_check_raycast = false  # move the raycast on the next physics process
 			#ray.force_raycast_update()
 			#print("ray translation="+str(ray.translation))
-			# ray.cast_to = Vector3(0, -1000, 0)
+			#ray.cast_to = Vector3(0, -1000, 0)
 			if ray.is_colliding():
-				# print(" colliding with "+str(ray.get_collider().name))
+				#print(" colliding with "+str(ray.get_collider().name))
 				if "terrain" in ray.get_collider().name.to_lower() and not "lava" in ray.get_collider().name.to_lower():
 					#print("colliding with terrain..")
 					#print("collision point = "+str(ray.get_collision_point()))
 					if num_trees < num_trees_total:  # place trees first
 						if ray.get_collision_normal().normalized().y > 0.98 and ray.get_collision_normal().normalized().y < 0.99:  # slightly sloping ground for trees
 							#print("tree collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
-							# var tree = load("res://scenes/tree.tscn").instance()  #
+							#var tree = load("res://scenes/tree.tscn").instance()  #
 							var tree = instance_from_id(trees[0])
 							#$Vegetation/Trees.add_child(tree)
 							#tree.global_transform.origin = ray.get_collision_point()
@@ -197,7 +178,7 @@ func _physics_process(_delta):
 						if ray.get_collision_normal().normalized().y > 0.9999:  # very flat ground for grass
 							#print("grass collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
 							#tree.global_transform.origin = ray.get_collision_point()
-							# var grass = load("res://scenes/grass.tscn").instance()  # 
+							#var grass = load("res://scenes/grass.tscn").instance()  # 
 							var grass = instance_from_id(grasses[0])
 							#$Vegetation/Grass.add_child(grass)
 							grass.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
@@ -212,106 +193,7 @@ func _physics_process(_delta):
 				last_veg = []
 
 
-func check_and_enforce_slow_motion() -> void:
-	if $TimerSlowMotion.is_stopped():
-		Engine.time_scale = 1.0
-		all_audio_pitch(1.0)
-		in_slow_motion = false
-	else:
-		Engine.time_scale = 0.1
-		all_audio_pitch(0.1)
-		in_slow_motion = true
-
-
-func is_in_slow_motion():
-	#print("Engine.time_scale="+str(Engine.time_scale))
-	if Engine.time_scale < 1.0:
-		return true
-	else:
-		return false
-
-
-func check_game_over() -> void:
-	if not game_over_checked:
-		var dead_cars: int = 0
-		var num_cars: int = 0
-		for player_number in range(1, StatePlayers.num_players()+1):
-			num_cars += 1
-			if StatePlayers.players[player_number]["lives_left"] <= 0:
-				dead_cars += 1
-		if dead_cars >= (num_cars-1) and num_cars>1:
-			game_over_checked = true
-			Engine.time_scale = 1.0
-			all_audio_pitch(1.0)
-			in_slow_motion = false
-			get_tree().paused = false
-			var final_score_resource: Resource = load(Global.final_score_scene)
-			var final_score_scene: FinalScore = final_score_resource.instance()
-			var winner_name: String = ""
-			for player_number in range(1, StatePlayers.num_players()+1):
-				if StatePlayers.players[player_number]["lives_left"] > 0:
-					winner_name = StatePlayers.players[player_number]["name"]  #get_player(player_number).player_name
-			final_score_scene.player_winner_name = winner_name
-			StatePlayers.players = {}
-			get_tree().root.call_deferred("add_child", final_score_scene)
-			queue_free()
-			
-
-func all_audio_pitch(pitch) -> void:
-	$Effects/BackgroundMusic.pitch_scale = pitch
-	$Effects/Siren.pitch_scale = pitch
-
-
-func get_spawn_points() -> Array:
-	return get_node("SpawnPoints").get_children()
-
-
-func get_random_spawn_point() -> Spatial:
-	var spawn_points = get_spawn_points()
-	return spawn_points[randi() % spawn_points.size()].global_transform.origin
-	
-	
-func get_players(ignore_player_number=false) -> Array:
-	var players_all = get_tree().get_nodes_in_group("player")  # 
-	#print("players_all="+str(players_all))
-	var players2 = []
-	for player in players_all:  # range(1, num_players+1):
-		if ignore_player_number == false:
-			players2.append(get_player(player.player_number))
-		else:
-			if ignore_player_number != player.player_number:
-				players2.append(get_player(player.player_number))
-	return players2
-
-
-func get_player(player_number) -> Player:
-	return get_node("Player"+str(player_number)) as Player
-	
-
-func get_bombs():
-	return get_tree().get_nodes_in_group("bomb")
-	
-
-func reset_game() -> void:
-	Engine.time_scale = 1.0
-	all_audio_pitch(1.0)
-	in_slow_motion = false
-	StatePlayers.players = {}
-	var next_level_resource = load(Global.logo_scene_folder)
-	var next_level = next_level_resource.instance() as LogoScene
-	get_tree().root.call_deferred("add_child", next_level)
-	get_tree().paused = false
-	queue_free()
-
-
-func air_strike_label() -> Label:
-	return $VC.get_node("CL/LabelAirStrike") as Label
-
-
-func start_timer_slow_motion() -> void:
-	$TimerSlowMotion.start()
-	check_and_enforce_slow_motion()
-
+# Signal methods
 
 func _on_TimerCheckPowerups_timeout():
 	
@@ -359,4 +241,132 @@ func _on_TimerHealthPowerup_timeout():
 		new_health_powerup.type = ConfigWeapons.PowerupType.HEALTH
 		$Powerups/HealthPowerupSpawnPoint.add_child(new_health_powerup)
 		new_health_powerup.get_node("ActivationSound").play()
+
+
+# Private methods
+
+
+func _turn_airstrike_on() -> void:
+	air_strike_state["on"] = true
+	air_strike_state["interval_so_far_sec"] = 0.0
+	air_strike_state["duration_so_far_sec"] = 0.0
+	#var players = get_tree().get_nodes_in_group("player")  # 
+	#print("len(players)="+str(len(players)))
+	_air_strike_label().visible = true
+	_air_strike_label().get_node("TextFlash").play("font_blink")
+	$VC/CL/IconRadiation.visible = true
+	$Effects/Siren.playing = true
+
+
+func _turn_airstrike_off() -> void:
+	air_strike_state["on"] = false
+	air_strike_state["interval_so_far_sec"] = 0.0
+	air_strike_state["duration_so_far_sec"] = 0.0
+	_air_strike_label().visible = false
+	_air_strike_label().get_node("TextFlash").stop()
+	$VC/CL/IconRadiation.visible = false
+	$Effects/Siren.playing = false
+	
+
+func _check_and_enforce_slow_motion() -> void:
+	if $TimerSlowMotion.is_stopped():
+		Engine.time_scale = 1.0
+		_all_audio_pitch(1.0)
+		in_slow_motion = false
+	else:
+		Engine.time_scale = 0.1
+		_all_audio_pitch(0.1)
+		in_slow_motion = true
+
+
+func _check_game_over() -> void:
+	if not game_over_checked:
+		var dead_cars: int = 0
+		var num_cars: int = 0
+		for player_number in range(1, StatePlayers.num_players()+1):
+			num_cars += 1
+			if StatePlayers.players[player_number]["lives_left"] <= 0:
+				dead_cars += 1
+		if dead_cars >= (num_cars-1) and num_cars>1:
+			game_over_checked = true
+			Engine.time_scale = 1.0
+			_all_audio_pitch(1.0)
+			in_slow_motion = false
+			get_tree().paused = false
+			var final_score_resource: Resource = load(Global.final_score_scene)
+			var final_score_scene: FinalScore = final_score_resource.instance()
+			var winner_name: String = ""
+			for player_number in range(1, StatePlayers.num_players()+1):
+				if StatePlayers.players[player_number]["lives_left"] > 0:
+					winner_name = StatePlayers.players[player_number]["name"]  #get_player(player_number).player_name
+			final_score_scene.player_winner_name = winner_name
+			StatePlayers.players = {}
+			get_tree().root.call_deferred("add_child", final_score_scene)
+			queue_free()
+
+
+func _all_audio_pitch(pitch) -> void:
+	$Effects/BackgroundMusic.pitch_scale = pitch
+	$Effects/Siren.pitch_scale = pitch
+
+
+func _get_spawn_points() -> Array:
+	return get_node("SpawnPoints").get_children()
+
+
+func _get_random_spawn_point() -> Spatial:
+	var spawn_points = _get_spawn_points()
+	return spawn_points[randi() % spawn_points.size()].global_transform.origin
+
+
+func _get_bombs():
+	return get_tree().get_nodes_in_group("bomb")
+
+
+func _air_strike_label() -> Label:
+	return $VC.get_node("CL/LabelAirStrike") as Label
+
+
+# Public methods
+
+func start_timer_slow_motion() -> void:
+	$TimerSlowMotion.start()
+	_check_and_enforce_slow_motion()
+
+
+func is_in_slow_motion():
+	#print("Engine.time_scale="+str(Engine.time_scale))
+	if Engine.time_scale < 1.0:
+		return true
+	else:
+		return false
+
+
+func get_players(ignore_player_number=false) -> Array:
+	var players_all = get_tree().get_nodes_in_group("player")  # 
+	#print("players_all="+str(players_all))
+	var players2 = []
+	for player in players_all:  # range(1, num_players+1):
+		if ignore_player_number == false:
+			players2.append(get_player(player.player_number))
+		else:
+			if ignore_player_number != player.player_number:
+				players2.append(get_player(player.player_number))
+	return players2
+
+
+func get_player(player_number) -> Player:
+	return get_node("Player"+str(player_number)) as Player
+
+
+func reset_game() -> void:
+	Engine.time_scale = 1.0
+	_all_audio_pitch(1.0)
+	in_slow_motion = false
+	StatePlayers.players = {}
+	var next_level_resource = load(Global.logo_scene_folder)
+	var next_level = next_level_resource.instance() as LogoScene
+	get_tree().root.call_deferred("add_child", next_level)
+	get_tree().paused = false
+	queue_free()
 

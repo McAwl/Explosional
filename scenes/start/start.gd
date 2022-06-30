@@ -1,18 +1,14 @@
 extends Node
 
+
 var players: Dictionary = {}
 var max_line_length: int = 12
 
 
-# Called when the node enters the scene tree for the first time.
+# Built-in methods
+
 func _ready():
 	pass
-
-
-func enable_name_textedit(player_num, player_linedit) -> void:
-	get_node("Player"+str(player_num)+"Name").editable = true
-	player_linedit.grab_focus()
-	# print("Player "+str(player_linedit.name)+": is_virtual_keyboard_enabled()="+str($player_linedit.is_virtual_keyboard_enabled()))
 
 
 func _process(_delta):
@@ -21,13 +17,13 @@ func _process(_delta):
 		$StartButton.disabled = false
 		
 	if len(players)==0 and Input.is_action_just_released("fire_player1"):
-		enable_name_textedit(1, $Player1Name)
+		_enable_name_textedit(1, $Player1Name)
 	if len(players)==1 and Input.is_action_just_released("fire_player2"):
-		enable_name_textedit(2, $Player2Name)
+		_enable_name_textedit(2, $Player2Name)
 	if len(players)==2 and Input.is_action_just_released("fire_player3"):
-		enable_name_textedit(3, $Player3Name)
+		_enable_name_textedit(3, $Player3Name)
 	if len(players)==3 and Input.is_action_just_released("fire_player4"):
-		enable_name_textedit(4, $Player4Name)
+		_enable_name_textedit(4, $Player4Name)
 		
 	if len($Player1Name.text) > 0:
 		players[1] = {"name": $Player1Name.text}
@@ -50,9 +46,22 @@ func _process(_delta):
 		_on_Button_pressed()
 
 
+# Signal methods
+
 func _on_Button_pressed():
 	var next_level_resource = load(Global.instructions_scene)
 	var next_level = next_level_resource.instance()
 	next_level.players = players
 	get_tree().root.call_deferred("add_child", next_level)
 	queue_free()
+
+
+# Private methods
+
+func _enable_name_textedit(player_num, player_linedit) -> void:
+	get_node("Player"+str(player_num)+"Name").editable = true
+	player_linedit.grab_focus()
+	#print("Player "+str(player_linedit.name)+": is_virtual_keyboard_enabled()="+str($player_linedit.is_virtual_keyboard_enabled()))
+
+
+# Public methods

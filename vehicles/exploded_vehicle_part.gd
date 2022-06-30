@@ -1,23 +1,20 @@
-extends RigidBody
 class_name ExplodedVehiclePart
+extends RigidBody
+
 
 var timer_1_sec: float = 1.0
 var timer_lifetime: float = 60.0
 var max_lifetime: float = 60.0
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
-# Called when the node enters the scene tree for the first time.
+
+# Built-in methods
+
 func _ready():
 	# make the flames come from a small volume
 	$Flames3D.emission_box_extents(Vector3(0.2, 0.2, 0.2))
 
 
-func set_lifetime(_max_lifetime) -> void:
-	timer_lifetime = _max_lifetime
-	max_lifetime = _max_lifetime
-	
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	
 	timer_1_sec -= delta
@@ -34,3 +31,10 @@ func _process(delta):
 			print("av_lifetime_sec: vehicle mesh rigid body "+str(name)+"queue_free")
 			queue_free()
 
+
+# Public methods
+
+func set_lifetime(_max_lifetime) -> void:
+	timer_lifetime = _max_lifetime
+	max_lifetime = _max_lifetime
+	

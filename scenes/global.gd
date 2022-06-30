@@ -1,5 +1,6 @@
 extends Node
 
+
 enum GameMode {
 	NOT_SET=0,
 	COMPETITIVE=1,
@@ -48,7 +49,7 @@ var health_meshes_scene_folder: String = "res://power_ups/health_powerup_mesh.ts
 
 # vehicles
 var vehicle_body_folder: String = "res://vehicles/vehicle_body.tscn"
-const vehicle_detach_rigid_bodies_folder: String = "res://vehicles/vehicle_detach_rigid_bodies.gd"
+const VEHICLE_DETACH_RIGID_BODIES_FOLDER: String = "res://vehicles/vehicle_detach_rigid_bodies.gd"
 var exploded_vehicle_part_folder: String = "res://vehicles/exploded_vehicle_part.tscn"
 var vehicle_sound_volume_db: float = 0.0
 const VEHICLE_SOUND_MAX_VOLUME_DB: float = 0.0
@@ -68,12 +69,8 @@ var explosive_folder: String = "res://weapons/explosive/explosive.tscn"
 var power_up_folder: String = "res://power_ups/power_up.tscn"
 
 
+# Built-in methods
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass

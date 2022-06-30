@@ -1,23 +1,28 @@
-extends Camera
 class_name FollowCamera
+extends Camera
+
+
+enum View {THIRD_PERSON=0, FIRST_PERSON=1}
+
+const FOLLOW_SPEED: float = 2.0  # set 0-1: 0.1=slow follow 0.9=fast follow
 
 export var min_distance: float = 2.0
 export var max_distance: float = 4.0
 export var angle_v_adjust: float = 0.0
-
-var collision_exception: Array = []
 export var height: float = 1.5
 
-const FOLLOW_SPEED: float = 2.0  # set 0-1: 0.1=slow follow 0.9=fast follow
+var collision_exception: Array = []
 var lerp_val: float = 0.5
 var target
 var timer_0_5s: float = 0.5
 var number_of_players: int
-enum View {THIRD_PERSON=0, FIRST_PERSON=1}
 var view: int = View.THIRD_PERSON
 var raycast_cam_to_vehicle: RayCast
 var raycast_vehicle_to_cam: RayCast
-	
+
+
+# Built-in methods
+
 func _ready():
 	var node = self
 	target = global_transform
@@ -96,16 +101,16 @@ func _physics_process(delta):
 				iray = get_world().direct_space_state.intersect_ray(global_transform.origin, get_carbody_positions().get_node("CamRaycastTargetRear").global_transform.origin)
 			else:
 				iray = get_world().direct_space_state.intersect_ray(global_transform.origin, get_carbody_positions().get_node("CamRaycastTargetFront").global_transform.origin)
-			# print("iray="+str(iray))
-			# print("get_parent().get_instance_id()="+str(get_parent().get_parent().get_instance_id()))
-			# print("len iray="+str(len(iray)))
+			#print("iray="+str(iray))
+			#print("get_parent().get_instance_id()="+str(get_parent().get_parent().get_instance_id()))
+			#print("len iray="+str(len(iray)))
 			var colliding: bool = false
 			if "collider_id" in iray:
 				if iray["collider_id"] != get_carbody().get_instance_id():
 					# no we can't see the vehicle from the cam, so swap to first-person view
 					# TODO also move the third-person camera closer
 					colliding = true
-					# print("colliding")
+					#print("colliding")
 					self.visible = false
 					self.current = false
 					if fwd_mps >= -2.0:
@@ -120,11 +125,11 @@ func _physics_process(delta):
 						get_parent().get_node("CameraFPBack").current = true
 						get_parent().get_node("CameraFPFront").visible = false
 						get_parent().get_node("CameraFPFront").current = false
-				# else:
-				# 	print("colliding with own vehicle body")
+				#else:
+				#print("colliding with own vehicle body")
 			
 			if colliding == false:
-				# print("no collisions - setting third person cam")
+				#print("no collisions - setting third person cam")
 				self.visible = true
 				self.current = true
 				get_parent().get_node("CameraFPBack").visible = false

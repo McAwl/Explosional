@@ -1,21 +1,20 @@
 extends VehicleBody
 
+
 const SCRIPT_VEHICLE_DETACH_RIGID_BODIES = preload("res://vehicles/vehicle_detach_rigid_bodies.gd")  # Global.vehicle_detach_rigid_bodies_folder)
-
-var steer_target: float = 0
-
-var print_timer: float = 0.0
+const CHECK_ACCEL_DAMAGE_INTERVAL: float = 0.5
 
 export var engine_force_value: float = ConfigVehicles.ENGINE_FORCE_VALUE_DEFAULT  #40
+export var speed: float = 0.0
+
+var steer_target: float = 0
+var print_timer: float = 0.0
 var engine_force_ewma: float
 var player_number: int
 var camera: Camera
-export var speed: float = 0.0
 var speed_low_limit: float = 5.0
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
-
 var special_ability_state: Dictionary = {"shield": false, "climb_walls": false}
-
 var cooldown_timer: float = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.MINE]
 var timer_0_1_sec: float = 0.1
 var timer_1_sec: float = 1.0  # timer to eg: check if car needs to turn light on 
@@ -48,7 +47,6 @@ var acceleration_calc_for_damage2: float = 0.0
 var acceleration_fwd_0_1_ewma: float = 0.0
 var acceleration_fwd_0_1: float = 0.0
 var vel: Vector3
-const CHECK_ACCEL_DAMAGE_INTERVAL: float = 0.5
 var accel_damage_enabled: bool = false
 var fwd_mps: float = 0.0
 var old_fwd_mps_0_1: float = 0.0
@@ -59,13 +57,378 @@ var knock_back_firing_ballistic: bool = false  # knock the vehicle backwards whe
 var vehicle_state: int = ConfigVehicles.AliveState.ALIVE 
 var set_pos: bool = false
 var pos: Vector3
-
 var powerup_state: Dictionary = {"shield": {"enabled": false, "hits_left": 0, "max_hits": 0}}
 
+
+# Built-in  methods
 
 func _ready():
 	vehicle_state = ConfigVehicles.AliveState.ALIVE
 
+
+func _process(delta):
+	
+	if vehicle_state == ConfigVehicles.AliveState.DEAD:
+		return
+
+	if set_pos == false:
+		print("Exiting _process: set_pos == false")
+		set_global_transform_origin()
+
+	print_timer += delta
+		
+	if global_transform.origin.y < -50.0:
+		print("global_transform.origin.y < -50.0 -> AliveState.DEAD")
+		vehicle_state = ConfigVehicles.AliveState.DEAD
+	
+	if vehicle_state == ConfigVehicles.AliveState.DYING:
+		explosion2_timer -= delta
+		if explosion2_timer <= 0.0:
+			explosion2_timer = 0.2
+		if dying_finished():
+			print("dying_finished() -> AliveState.DEAD")
+			vehicle_state = ConfigVehicles.AliveState.DEAD
+		else:
+			if !vehicle_parts_exploded == null:
+				# Move the target cameras to the centre of the collection of meshes
+				print("moving cam to centre_of_meshes")
+				var centre_of_meshes = vehicle_parts_exploded.centre_of_meshes
+				$CameraBase/CameraBasesTargets/CamTargetForward.translation = centre_of_meshes
+				$CameraBase/CameraBasesTargets/CamTargetForward_UD.translation = centre_of_meshes
+				$CameraBase/CameraBasesTargets/CamTargetReverse.translation = centre_of_meshes
+				$CameraBase/CameraBasesTargets/CamTargetReverse_UD.translation = centre_of_meshes
+				#get_camera().fix_distance(10.0)
+				
+
+	if total_damage >= max_damage:
+		print("Exiting _process: total_damage >= max_damage")
+		return
+
+	timer_1_sec -= delta
+	if timer_1_sec <= 0.0:
+		timer_1_sec = 1.0
+		check_lights()
+		var ongoing_damage: float = check_ongoing_damage()
+		if ongoing_damage > 0:
+			add_damage(ongoing_damage, Global.DAMAGE_TYPE.LAVA)
+
+	timer_0_1_sec -= delta
+	if timer_0_1_sec <= 0.0:
+		flicker_lights()
+		timer_0_1_sec = 0.1
+		if not ("instance" in weapons_state[weapon_select]):
+			#print(str(weapons[weapon_select]["name"])+" not in dict")
+			weapons_state[weapon_select]["active"] = false
+			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
+		elif weapons_state[weapon_select]["instance"] == null:
+			#print(str(weapons[weapon_select]["name"])+" is null")
+			weapons_state[weapon_select]["active"] = false
+			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
+		elif not is_instance_valid(weapons_state[weapon_select]["instance"]):
+			#print(str(weapons[weapon_select]["name"])+" is invalid instance")
+			weapons_state[weapon_select]["active"] = false
+			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
+		#else:
+		#print(str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
+		get_player().set_label_player_name()  # , total_damage, weapons_state[weapon_select].damage)
+		get_player().set_label_lives_left()
+		get_player().get_hud().get_node("cooldown").max_value = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
+		get_player().get_hud().get_node("cooldown").value = cooldown_timer
+		
+		# Update all the 0.1 sec physical calculations
+		# speed
+		old_fwd_mps_0_1 = fwd_mps_0_1
+		fwd_mps_0_1 = transform.basis.xform_inv(linear_velocity).z  # global linear velocity rotated to our forward direction (z)
+		fwd_mps_0_1_ewma = (0.5*fwd_mps_0_1) + (0.5*fwd_mps_0_1)  # smooth it out over 1 sec
+		# accel
+		acceleration_fwd_0_1 = 0.1 * (fwd_mps_0_1-old_fwd_mps_0_1)  # calc fwd accel every 0.1s
+		acceleration_fwd_0_1_ewma = (0.9*acceleration_fwd_0_1_ewma) + (0.1*acceleration_fwd_0_1)  # smooth it out over 1 sec
+
+	lifetime_so_far_sec += delta
+
+	if weapons_state[weapon_select]["active"] == false:
+		if weapons_state[weapon_select]["cooldown_timer"] > 0.0:
+			weapons_state[weapon_select]["cooldown_timer"] -= delta
+			if weapons_state[weapon_select]["cooldown_timer"] < 0.0:
+				weapons_state[weapon_select]["cooldown_timer"]  = 0.0
+		cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
+	
+	if cooldown_timer < 0.0:
+		cooldown_timer = 0.0
+
+
+func _input(_event):
+	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
+		cycle_weapon()
+	elif Input.is_action_just_released("fire_player"+str(player_number)) and weapons_state[weapon_select]["active"] == false and weapons_state[weapon_select]["cooldown_timer"] <= 0.0 and weapons_state[weapon_select]["enabled"] == true:
+		#print("Player pressed fire")
+		weapons_state[weapon_select]["cooldown_timer"] = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
+		get_player().set_label_player_name()
+		get_player().set_label_lives_left()
+		if weapon_select == ConfigWeapons.Type.MINE or weapon_select == ConfigWeapons.Type.NUKE:  # mine or nuke
+			fire_mine_or_nuke()
+		elif weapon_select == ConfigWeapons.Type.ROCKET:
+			fire_missile_or_rocket()
+		elif weapon_select == ConfigWeapons.Type.MISSILE:
+			fire_missile_or_rocket()
+		elif weapon_select == ConfigWeapons.Type.BALLISTIC:
+			fire_missile_or_rocket()
+		elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
+			fire_missile_or_rocket()
+	elif Input.is_action_just_released("kill_player1"):
+		if player_number == 1:
+			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
+	elif Input.is_action_just_released("kill_player2"):
+		if player_number == 2:
+			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
+	elif Input.is_action_just_released("kill_player3"):
+		if player_number == 3:
+			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
+	elif Input.is_action_just_released("kill_player4"):
+		if player_number == 4:
+			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
+
+
+func _physics_process(delta):
+	
+	if not player_number in StatePlayers.players.keys():
+		return  # in process of being reset?
+		
+	# Keep polling continuous Input related to movement here: e.g. accelerate and move. All others move to e.g. _input()
+	
+	# test adding constant downwards force so a vehicle can climb walls
+	#change this vector according to your needs. "* delta" scales it to the time-interval of fixed_process
+	#var gravity=Vector3(0,get_mass() * 9.8/2.0,0)*delta
+	#    
+	#local coordinates of objects center of gravity
+	#var local_cog = Vector3(0,0,0)
+	#
+	#apply one gravity "impulse" per process interval
+	#apply_impulse(local_cog,  gravity)
+	
+	var new_vel: Vector3 = get_linear_velocity()
+	#var new_vel_max: float = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
+	fwd_mps = transform.basis.xform_inv(linear_velocity).z  # global velocity rotated to our forward (z) direction
+	# Smooth out the accel calc by using a 50/50 exponentially-weighted moving average
+	#var old_acceleration_calc_for_damage = acceleration_calc_for_damage
+	# accel is sqrt(dx^2 + dy^2 + dz^2)
+	var new_acceleration = sqrt(pow(new_vel.x - vel.x, 2)+pow(new_vel.y - vel.y, 2)+pow(new_vel.z - vel.z, 2))/delta  # now this should be in m/s/s, so 1g=9.6
+	acceleration_calc_for_damage = (0.8*acceleration_calc_for_damage) + (0.2*new_acceleration)
+	vel = new_vel
+	
+	#if abs(old_acceleration_calc_for_damage) > 0.0 and abs(acceleration_calc_for_damage) > 0.0:
+	#	if abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) > 2.0 or abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) < 0.5:
+	#		print("old_acceleration_calc_for_damage="+str(old_acceleration_calc_for_damage))
+	#		print("  new acceleration_calc_for_damage (smoothed)="+str(acceleration_calc_for_damage))
+	#		print("  new_acceleration="+str(new_acceleration))
+	#		#print("  CheckAccelDamage="+str($CheckAccelDamage.))
+	#		print("  lifetime_so_far_sec="+str(lifetime_so_far_sec))
+	
+	check_accel_damage()
+
+	if total_damage < max_damage:
+
+		#var old_engine_force: float = engine_force
+	
+		if Input.is_action_pressed("accelerate_player"+str(player_number)):
+			# Increase engine force at low speeds to make the initial acceleration faster.
+			var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
+			if fwd_mps < speed_low_limit and speed != 0 and fwd_mps != 0.0:
+				engine_force = clamp(engine_force_value * speed_low_limit / abs(fwd_mps), 0, engine_force_value)
+				#print("clamped engine_force="+str(engine_force))
+			elif fwd_mps > max_speed_limit_mps and speed != 0 and fwd_mps != 0.0:
+				var speed_over_limit_mps = max_speed_limit_mps - abs(fwd_mps)  # how far over limit in metres/sec
+				engine_force = clamp(engine_force_value * (abs(fwd_mps)/(10.0*speed_over_limit_mps)), 0, engine_force_value)  # once over speed limit, severely reduce engine force
+				#print("clamped engine_force="+str(engine_force))
+			else:
+				engine_force = engine_force_value
+				#print("engine_force="+str(engine_force))
+		else:
+			engine_force = 0
+			
+		if Input.is_action_pressed("reverse_player"+str(player_number)):
+			engine_force = -engine_force_value/2.0
+			if fwd_mps > speed_low_limit:
+				brake = ConfigVehicles.config[get_type()]["brake"] / 5.0
+		else:
+			brake = 0.0
+			
+		if delta < 1.0:
+			engine_force_ewma = (engine_force*delta) + (engine_force_ewma*(1-delta))
+		else:
+			engine_force_ewma = (engine_force*0.5) + (engine_force_ewma*0.5)
+
+		var left  = Input.get_action_strength("turn_left_player"+str(player_number))  # * ConfigVehicles.STEER_LIMIT
+		var right = Input.get_action_strength("turn_right_player"+str(player_number))  # * ConfigVehicles.STEER_LIMIT
+		if get_type() == ConfigVehicles.Type.TANK:
+			# Use per wheel forces so we can turn the vehicle without steering a wheel
+			for wh in get_children():
+				if wh is VehicleWheel:
+					if engine_force == 0.0 and (left > 0.0 or right > 0.0):
+						wh.engine_force = engine_force_value
+					elif engine_force > 0.0 and (left > 0.0 or right > 0.0):
+						wh.engine_force = engine_force/2.0
+					else:
+						wh.engine_force = engine_force
+					#print("wh.name="+str(wh.name))
+					if wh.name in ["Wheel1", "Wheel2", "Wheel6", "Wheel7"]:  # left row
+						wh.engine_force *= 1.0 if right-left == 0.0 else right-left
+					elif wh.name in ["Wheel3", "Wheel4", "Wheel5", "Wheel8"]:  # right row
+						wh.engine_force *= 1.0 if left-right == 0.0 else left-right
+					#else:
+					#	print("Warning: wheel name not found for tank")
+					#print("wh.engine_force="+str(wh.engine_force)+", left="+str(left)+", right="+str(right))
+				#engine_force = 0.0  # turn off overall engine force, leaving per-wheel forces used above
+		else:  # steer wheels normally
+			steer_target = left - right
+			steer_target *= ConfigVehicles.STEER_LIMIT
+		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta)
+		
+		# Keep 4wd vehicles on inclines surfaces, given Godot's VehicleWheel traction doesn't work properly
+		if fwd_mps < 1.0 and engine_force > 0 and is_4wd():
+			if get_type() == ConfigVehicles.Type.RALLY:
+				apply_impulse( Vector3(0,0,0), 0.5*engine_force*transform.basis.z )   # offset, impulse(=direction*force)
+				special_ability_state["climb_walls"] = true
+				power_up_effect(true)
+			else:  # e.g. get_type == ConfigVehicles.Type.TANK:
+				apply_impulse( Vector3(0,0,0), 0.1*engine_force*transform.basis.z )   # offset, impulse(=direction*force)
+				special_ability_state["climb_walls"] = false
+				# power up effects will switch off automatically with TimerDisablePowerup
+		else:
+			special_ability_state["climb_walls"] = false
+		
+	if hit_by_missile["active"] == true:
+		print("Player "+str(player_number)+ " hit by missile!")
+		#var direction = hit_by_missile_origin - $Body.transform.origin  
+		var direction: Vector3 = hit_by_missile["direction_for_explosion"]  # $Body.transform.origin - hit_by_missile_origin 
+		direction[1] += 5.0
+		if direction[1] < 0:
+			direction[1] = 0  # remove downwards force - as vehicles can be blown through the terrain
+		#var explosion_force: float = 200.0  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
+		if hit_by_missile["direct_hit"] == true:
+			print("(direct hit) explosion_force="+str(hit_by_missile["force"]))
+			apply_impulse( Vector3(0,0,0), hit_by_missile["force"]*direction.normalized() )   # offset, impulse(=direction*force)
+			#if hit_by_missile["homing"]:
+			#damage(weapons[2].damage)
+			#else:
+			#damage(weapons[1].damage)
+			add_damage(ConfigWeapons.DAMAGE[ConfigWeapons.Type.MISSILE], Global.DAMAGE_TYPE.DIRECT_HIT)
+		else:
+			var indirect_explosion_force: float = hit_by_missile["force"]/hit_by_missile["distance"]
+			print("force="+str(hit_by_missile["force"])+" at distance="+str(hit_by_missile["distance"])+" -> indirect_explosion_force="+str(indirect_explosion_force))
+			apply_impulse( Vector3(0,0,0), indirect_explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
+			if hit_by_missile["distance"] <= ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["range"]:
+				add_damage(ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["damage"], Global.DAMAGE_TYPE.INDIRECT_HIT)
+		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
+			
+		hit_by_missile["active"] = false
+
+	# If we've fired a ballistic weapon, know backwards here
+	if knock_back_firing_ballistic == true:
+		print("knock_back_firing_ballistic: knocing vehicle back")
+		knock_back_firing_ballistic = false
+		apply_impulse( Vector3(0,0,0), -100.0*transform.basis.z )   # offset, impulse(=direction*force)
+		apply_impulse( Vector3(0,0,0), 50.0*transform.basis.y )   # offset, impulse(=direction*force)
+
+	timer_1_sec_physics -= delta
+	if timer_1_sec_physics < 0.0:
+		timer_1_sec_physics = 1.0
+		check_for_clipping()
+
+
+# Signal methods
+
+func _on_CarBody_body_entered(body):
+	if "Lava" in body.name:
+		#print("Taking max_damage damage")
+		add_damage(max_damage, Global.DAMAGE_TYPE.LAVA)
+
+
+func _on_DynamicGripTimer_timeout():
+	# Dynamically adjust the grip depending on speed
+	# This means vehicles can more easily climb walls, but not roll at higher speed
+	if ConfigVehicles.config[get_type()]["all_wheel_drive"] == true:
+		for wh in get_children():
+			if wh is VehicleWheel:
+				if abs(fwd_mps) < 1.0:
+					wh.wheel_friction_slip = 1000.0  # 0 is no grip, 1 is normal, any higher caused rolling at higher speeds
+				elif abs(fwd_mps) < 2.0:
+					wh.wheel_friction_slip = 100.0
+				elif abs(fwd_mps) < 5.0:
+					wh.wheel_friction_slip = 10.0
+				elif abs(fwd_mps) < 10.0:
+					wh.wheel_friction_slip = 5.0
+				else:
+					wh.wheel_friction_slip = 1.0
+
+
+func _on_CheckSkidTimer_timeout():
+	
+	if abs(fwd_mps) < 10.0:
+		#$Effects/WheelSkidDust.emitting = false
+		return
+		
+	var skidding: bool = false
+	randomly_emit($Effects/WheelSkidDust, 0.0)
+	
+	for wh in get_children():
+		if wh is VehicleWheel: 
+			if wh.get_skidinfo() < 0.15:
+				skidding = true
+
+	if skidding == true:
+		randomly_emit($Effects/WheelSkidDust, 0.25)
+		if $Effects/Audio/SkidSound.playing == false:
+			$Effects/Audio/SkidSound.playing = true
+			$Effects/Audio/SkidSound.pitch_scale = 0.5+(abs(fwd_mps)/100.0)
+			$Effects/Audio/SkidSound.play(8.21)
+		elif $Effects/Audio/SkidSound.playing == true:
+			if $Effects/Audio/SkidSound.get_playback_position() > 9.75:
+				$Effects/Audio/SkidSound.play(8.21)
+
+
+func _on_CheckWheelSpeedDustTimer_timeout():
+	randomly_emit($Effects/WheelSpeedDust, 1.0 - (20.0/(20.0+abs(fwd_mps))))
+	#$Effects/WheelSpeedDust.amount = num_particles  # changing this resets the particle system. Great!
+
+
+func _on_TimerDisablePowerup_timeout():
+	if not special_ability_state["climb_walls"]:
+		power_up_effect(false)
+
+
+func _on_TimerDisableShieldAbility_timeout():
+	special_ability_state["shield"] = false
+	if powerup_state["shield"]["enabled"] == false:
+		$Effects/Shield.hide()
+
+
+func _on_TimerFlickerShield_timeout():
+	if $Effects/Shield.visible == true and powerup_state["shield"]["enabled"] == true and special_ability_state["shield"] == false:
+		if powerup_state["shield"]["max_hits"] > 0.0:
+			if not $Effects/Shield/GlowingSphere.visible:
+				$Effects/Shield/GlowingSphere.show()
+			elif rng.randf() > float(powerup_state["shield"]["hits_left"])/float(powerup_state["shield"]["max_hits"]):
+				$Effects/Shield/GlowingSphere.hide()
+
+
+func _on_CheckAccelDamage_timeout():
+	accel_damage_enabled = true 
+	print("accel_damage_enabled="+str(accel_damage_enabled))
+
+
+func _on_TimerShieldCheckSpecialAbility_timeout():
+	if get_type() == ConfigVehicles.Type.RACER:
+		if fwd_mps > (80.0/200) * (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]:
+			$TimerDisableShieldAbility.start(5.0)
+			if special_ability_state["shield"] == false:
+				special_ability_state["shield"] = true
+				$Effects/Shield.show()
+				$Effects/Shield/GlowingSphere.show()
+				$Effects/Audio/ActivationSound.play()
+
+
+# Public methods
 
 func init(_pos=null, _player_number=null, _name=null) -> bool:
 	
@@ -90,11 +453,11 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 		return false
 	# move all the vehicle type nodes to the correct location
 	for ch in vehicle_type_node.get_children():
-		# var ctm = ch.get_node(ch.name)
+		#var ctm = ch.get_node(ch.name)
 		if ch.name in ["Raycasts", "Positions", "MeshInstances", "Lights", "CameraBasesTargets"]:  # move from 1 level down
 			vehicle_type_node.remove_child(ch)
 			if ch.name == "CameraBasesTargets":
-				# print("ctm="+str(ctm))
+				#print("ctm="+str(ctm))
 				#print("ch="+str(ch))
 				if has_node("CameraBase"):
 					$CameraBase.add_child(ch)
@@ -266,10 +629,10 @@ func get_main_scene():
 
 func check_lights() -> void:
 	if get_main_scene().get_node("DirectionalLightSun").light_energy < 0.3: 
-		# print("turning lights on")
+		#print("turning lights on")
 		lights_on()
 	else:
-		# print("turning lights off")
+		#print("turning lights off")
 		lights_off()
 
 
@@ -325,129 +688,6 @@ func check_raycast(substring_in_hit_name, raycast) -> bool:
 				$Effects/Damage/LavaLight1.visible = true
 				return true
 	return false
-
-
-func _process(delta):
-	
-	if vehicle_state == ConfigVehicles.AliveState.DEAD:
-		return
-
-	if set_pos == false:
-		print("Exiting _process: set_pos == false")
-		set_global_transform_origin()
-
-	print_timer += delta
-		
-	if global_transform.origin.y < -50.0:
-		print("global_transform.origin.y < -50.0 -> AliveState.DEAD")
-		vehicle_state = ConfigVehicles.AliveState.DEAD
-	
-	if vehicle_state == ConfigVehicles.AliveState.DYING:
-		explosion2_timer -= delta
-		if explosion2_timer <= 0.0:
-			explosion2_timer = 0.2
-		if dying_finished():
-			print("dying_finished() -> AliveState.DEAD")
-			vehicle_state = ConfigVehicles.AliveState.DEAD
-		else:
-			if !vehicle_parts_exploded == null:
-				# Move the target cameras to the centre of the collection of meshes
-				print("moving cam to centre_of_meshes")
-				var centre_of_meshes = vehicle_parts_exploded.centre_of_meshes
-				$CameraBase/CameraBasesTargets/CamTargetForward.translation = centre_of_meshes
-				$CameraBase/CameraBasesTargets/CamTargetForward_UD.translation = centre_of_meshes
-				$CameraBase/CameraBasesTargets/CamTargetReverse.translation = centre_of_meshes
-				$CameraBase/CameraBasesTargets/CamTargetReverse_UD.translation = centre_of_meshes
-				#get_camera().fix_distance(10.0)
-				
-
-	if total_damage >= max_damage:
-		print("Exiting _process: total_damage >= max_damage")
-		return
-
-	timer_1_sec -= delta
-	if timer_1_sec <= 0.0:
-		timer_1_sec = 1.0
-		check_lights()
-		var ongoing_damage: float = check_ongoing_damage()
-		if ongoing_damage > 0:
-			add_damage(ongoing_damage, Global.DAMAGE_TYPE.LAVA)
-
-	timer_0_1_sec -= delta
-	if timer_0_1_sec <= 0.0:
-		flicker_lights()
-		timer_0_1_sec = 0.1
-		if not ("instance" in weapons_state[weapon_select]):
-			#print(str(weapons[weapon_select]["name"])+" not in dict")
-			weapons_state[weapon_select]["active"] = false
-			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
-		elif weapons_state[weapon_select]["instance"] == null:
-			#print(str(weapons[weapon_select]["name"])+" is null")
-			weapons_state[weapon_select]["active"] = false
-			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
-		elif not is_instance_valid(weapons_state[weapon_select]["instance"]):
-			#print(str(weapons[weapon_select]["name"])+" is invalid instance")
-			weapons_state[weapon_select]["active"] = false
-			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
-		#else:
-		#	print(str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
-		get_player().set_label_player_name()  # , total_damage, weapons_state[weapon_select].damage)
-		get_player().set_label_lives_left()
-		get_player().get_hud().get_node("cooldown").max_value = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
-		get_player().get_hud().get_node("cooldown").value = cooldown_timer
-		
-		# Update all the 0.1 sec physical calculations
-		# speed
-		old_fwd_mps_0_1 = fwd_mps_0_1
-		fwd_mps_0_1 = transform.basis.xform_inv(linear_velocity).z  # global linear velocity rotated to our forward direction (z)
-		fwd_mps_0_1_ewma = (0.5*fwd_mps_0_1) + (0.5*fwd_mps_0_1)  # smooth it out over 1 sec
-		# accel
-		acceleration_fwd_0_1 = 0.1 * (fwd_mps_0_1-old_fwd_mps_0_1)  # calc fwd accel every 0.1s
-		acceleration_fwd_0_1_ewma = (0.9*acceleration_fwd_0_1_ewma) + (0.1*acceleration_fwd_0_1)  # smooth it out over 1 sec
-
-	lifetime_so_far_sec += delta
-
-	if weapons_state[weapon_select]["active"] == false:
-		if weapons_state[weapon_select]["cooldown_timer"] > 0.0:
-			weapons_state[weapon_select]["cooldown_timer"] -= delta
-			if weapons_state[weapon_select]["cooldown_timer"] < 0.0:
-				weapons_state[weapon_select]["cooldown_timer"]  = 0.0
-		cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
-	
-	if cooldown_timer < 0.0:
-		cooldown_timer = 0.0
-
-
-func _input(_event):
-	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
-		cycle_weapon()
-	elif Input.is_action_just_released("fire_player"+str(player_number)) and weapons_state[weapon_select]["active"] == false and weapons_state[weapon_select]["cooldown_timer"] <= 0.0 and weapons_state[weapon_select]["enabled"] == true:
-		#print("Player pressed fire")
-		weapons_state[weapon_select]["cooldown_timer"] = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
-		get_player().set_label_player_name()
-		get_player().set_label_lives_left()
-		if weapon_select == ConfigWeapons.Type.MINE or weapon_select == ConfigWeapons.Type.NUKE:  # mine or nuke
-			fire_mine_or_nuke()
-		elif weapon_select == ConfigWeapons.Type.ROCKET:
-			fire_missile_or_rocket()
-		elif weapon_select == ConfigWeapons.Type.MISSILE:
-			fire_missile_or_rocket()
-		elif weapon_select == ConfigWeapons.Type.BALLISTIC:
-			fire_missile_or_rocket()
-		elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
-			fire_missile_or_rocket()
-	elif Input.is_action_just_released("kill_player1"):
-		if player_number == 1:
-			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
-	elif Input.is_action_just_released("kill_player2"):
-		if player_number == 2:
-			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
-	elif Input.is_action_just_released("kill_player3"):
-		if player_number == 3:
-			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
-	elif Input.is_action_just_released("kill_player4"):
-		if player_number == 4:
-			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
 
 
 func check_accel_damage() -> void:
@@ -513,153 +753,6 @@ func set_icon() -> void:
 		#else:
 		#	print("ConfigWeapons.Type[wk] not in ConfigWeapons.ICON.keys() for ConfigWeapons.Type[wk]="+str(ConfigWeapons.Type[wk]))
 	get_player().get_hud().get_node("icon_"+ConfigWeapons.Type.keys()[weapon_select].to_lower()).show()
-
-
-func _physics_process(delta):
-	
-	if not player_number in StatePlayers.players.keys():
-		return  # in process of being reset?
-		
-	# Keep polling continuous Input related to movement here: e.g. accelerate and move. All others move to e.g. _input()
-	
-	# test adding constant downwards force so a vehicle can climb walls
-	#change this vector according to your needs. "* delta" scales it to the time-interval of fixed_process
-	#var gravity=Vector3(0,get_mass() * 9.8/2.0,0)*delta
-	#    
-	#local coordinates of objects center of gravity
-	#var local_cog = Vector3(0,0,0)
-	#
-	#apply one gravity "impulse" per process interval
-	#apply_impulse(local_cog,  gravity)
-	
-	var new_vel: Vector3 = get_linear_velocity()
-	#var new_vel_max: float = max(abs(new_vel.x), max(abs(new_vel.y), abs(new_vel.z)))
-	fwd_mps = transform.basis.xform_inv(linear_velocity).z  # global velocity rotated to our forward (z) direction
-	# Smooth out the accel calc by using a 50/50 exponentially-weighted moving average
-	#var old_acceleration_calc_for_damage = acceleration_calc_for_damage
-	# accel is sqrt(dx^2 + dy^2 + dz^2)
-	var new_acceleration = sqrt(pow(new_vel.x - vel.x, 2)+pow(new_vel.y - vel.y, 2)+pow(new_vel.z - vel.z, 2))/delta  # now this should be in m/s/s, so 1g=9.6
-	acceleration_calc_for_damage = (0.8*acceleration_calc_for_damage) + (0.2*new_acceleration)
-	vel = new_vel
-	
-	#if abs(old_acceleration_calc_for_damage) > 0.0 and abs(acceleration_calc_for_damage) > 0.0:
-	#	if abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) > 2.0 or abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) < 0.5:
-	#		print("old_acceleration_calc_for_damage="+str(old_acceleration_calc_for_damage))
-	#		print("  new acceleration_calc_for_damage (smoothed)="+str(acceleration_calc_for_damage))
-	#		print("  new_acceleration="+str(new_acceleration))
-	#		#print("  CheckAccelDamage="+str($CheckAccelDamage.))
-	#		print("  lifetime_so_far_sec="+str(lifetime_so_far_sec))
-	
-	check_accel_damage()
-
-	if total_damage < max_damage:
-
-		#var old_engine_force: float = engine_force
-	
-		if Input.is_action_pressed("accelerate_player"+str(player_number)):
-			# Increase engine force at low speeds to make the initial acceleration faster.
-			var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
-			if fwd_mps < speed_low_limit and speed != 0 and fwd_mps != 0.0:
-				engine_force = clamp(engine_force_value * speed_low_limit / abs(fwd_mps), 0, engine_force_value)
-				#print("clamped engine_force="+str(engine_force))
-			elif fwd_mps > max_speed_limit_mps and speed != 0 and fwd_mps != 0.0:
-				var speed_over_limit_mps = max_speed_limit_mps - abs(fwd_mps)  # how far over limit in metres/sec
-				engine_force = clamp(engine_force_value * (abs(fwd_mps)/(10.0*speed_over_limit_mps)), 0, engine_force_value)  # once over speed limit, severely reduce engine force
-				#print("clamped engine_force="+str(engine_force))
-			else:
-				engine_force = engine_force_value
-				#print("engine_force="+str(engine_force))
-		else:
-			engine_force = 0
-			
-		if Input.is_action_pressed("reverse_player"+str(player_number)):
-			engine_force = -engine_force_value/2.0
-			if fwd_mps > speed_low_limit:
-				brake = ConfigVehicles.config[get_type()]["brake"] / 5.0
-		else:
-			brake = 0.0
-			
-		if delta < 1.0:
-			engine_force_ewma = (engine_force*delta) + (engine_force_ewma*(1-delta))
-		else:
-			engine_force_ewma = (engine_force*0.5) + (engine_force_ewma*0.5)
-
-		var left  = Input.get_action_strength("turn_left_player"+str(player_number))  # * ConfigVehicles.STEER_LIMIT
-		var right = Input.get_action_strength("turn_right_player"+str(player_number))  # * ConfigVehicles.STEER_LIMIT
-		if get_type() == ConfigVehicles.Type.TANK:
-			# Use per wheel forces so we can turn the vehicle without steering a wheel
-			for wh in get_children():
-				if wh is VehicleWheel:
-					if engine_force == 0.0 and (left > 0.0 or right > 0.0):
-						wh.engine_force = engine_force_value
-					elif engine_force > 0.0 and (left > 0.0 or right > 0.0):
-						wh.engine_force = engine_force/2.0
-					else:
-						wh.engine_force = engine_force
-					#print("wh.name="+str(wh.name))
-					if wh.name in ["Wheel1", "Wheel2", "Wheel6", "Wheel7"]:  # left row
-						wh.engine_force *= 1.0 if right-left == 0.0 else right-left
-					elif wh.name in ["Wheel3", "Wheel4", "Wheel5", "Wheel8"]:  # right row
-						wh.engine_force *= 1.0 if left-right == 0.0 else left-right
-					#else:
-					#	print("Warning: wheel name not found for tank")
-					#print("wh.engine_force="+str(wh.engine_force)+", left="+str(left)+", right="+str(right))
-				#engine_force = 0.0  # turn off overall engine force, leaving per-wheel forces used above
-		else:  # steer wheels normally
-			steer_target = left - right
-			steer_target *= ConfigVehicles.STEER_LIMIT
-		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta)
-		
-		# Keep 4wd vehicles on inclines surfaces, given Godot's VehicleWheel traction doesn't work properly
-		if fwd_mps < 1.0 and engine_force > 0 and is_4wd():
-			if get_type() == ConfigVehicles.Type.RALLY:
-				apply_impulse( Vector3(0,0,0), 0.5*engine_force*transform.basis.z )   # offset, impulse(=direction*force)
-				special_ability_state["climb_walls"] = true
-				power_up_effect(true)
-			else:  # e.g. get_type == ConfigVehicles.Type.TANK:
-				apply_impulse( Vector3(0,0,0), 0.1*engine_force*transform.basis.z )   # offset, impulse(=direction*force)
-				special_ability_state["climb_walls"] = false
-				# power up effects will switch off automatically with TimerDisablePowerup
-		else:
-			special_ability_state["climb_walls"] = false
-		
-	if hit_by_missile["active"] == true:
-		print("Player "+str(player_number)+ " hit by missile!")
-		#var direction = hit_by_missile_origin - $Body.transform.origin  
-		var direction: Vector3 = hit_by_missile["direction_for_explosion"]  # $Body.transform.origin - hit_by_missile_origin 
-		direction[1] += 5.0
-		if direction[1] < 0:
-			direction[1] = 0  # remove downwards force - as vehicles can be blown through the terrain
-		#var explosion_force: float = 200.0  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
-		if hit_by_missile["direct_hit"] == true:
-			print("(direct hit) explosion_force="+str(hit_by_missile["force"]))
-			apply_impulse( Vector3(0,0,0), hit_by_missile["force"]*direction.normalized() )   # offset, impulse(=direction*force)
-			# if hit_by_missile["homing"]:
-			# 	damage(weapons[2].damage)
-			# else:
-			#	damage(weapons[1].damage)
-			add_damage(ConfigWeapons.DAMAGE[ConfigWeapons.Type.MISSILE], Global.DAMAGE_TYPE.DIRECT_HIT)
-		else:
-			var indirect_explosion_force: float = hit_by_missile["force"]/hit_by_missile["distance"]
-			print("force="+str(hit_by_missile["force"])+" at distance="+str(hit_by_missile["distance"])+" -> indirect_explosion_force="+str(indirect_explosion_force))
-			apply_impulse( Vector3(0,0,0), indirect_explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
-			if hit_by_missile["distance"] <= ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["range"]:
-				add_damage(ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["damage"], Global.DAMAGE_TYPE.INDIRECT_HIT)
-		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
-			
-		hit_by_missile["active"] = false
-
-	# If we've fired a ballistic weapon, know backwards here
-	if knock_back_firing_ballistic == true:
-		print("knock_back_firing_ballistic: knocing vehicle back")
-		knock_back_firing_ballistic = false
-		apply_impulse( Vector3(0,0,0), -100.0*transform.basis.z )   # offset, impulse(=direction*force)
-		apply_impulse( Vector3(0,0,0), 50.0*transform.basis.y )   # offset, impulse(=direction*force)
-
-	timer_1_sec_physics -= delta
-	if timer_1_sec_physics < 0.0:
-		timer_1_sec_physics = 1.0
-		check_for_clipping()
 
 
 func check_for_clipping() -> void:
@@ -799,7 +892,7 @@ func fire_mine_or_nuke() -> void:
 	var weapon_instance = load(ConfigWeapons.SCENE[weapon_select]).instance()
 	add_child(weapon_instance) 
 	weapon_instance.rotation_degrees = rotation_degrees
-	# weapons_state[weapon_select]["active"] = true
+	#weapons_state[weapon_select]["active"] = true
 	if weapon_select == ConfigWeapons.Type.MINE:
 		weapon_instance.set_as_mine()
 		weapon_instance.activate($Positions/Weapons/BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
@@ -852,7 +945,7 @@ func fire_missile_or_rocket() -> void:
 	else:
 		weapon_instance.activate(player_number, true)  # homing = true
 	weapon_instance.set_as_toplevel(true)
-	# weapons_state[weapon_select]["active"] = true
+	#weapons_state[weapon_select]["active"] = true
 	
 
 func lights_on() -> void:
@@ -881,13 +974,6 @@ func set_global_transform_origin() -> void:
 		set_pos = true
 	else:
 		print("_process(): warning: vehicle not is_inside_tree()")
-
-
-func _on_CarBody_body_entered(body):
-
-	if "Lava" in body.name:
-		#print("Taking max_damage damage")
-		add_damage(max_damage, Global.DAMAGE_TYPE.LAVA)
 
 
 func power_up(type: int) -> void:
@@ -972,7 +1058,7 @@ func start_vehicle_dying() -> void:
 func remove_nodes_for_dying() -> void:
 	remove_wheels()
 	remove_raycasts()
-	# remove_weapon_positions()
+	#remove_weapon_positions()
 
 
 func remove_wheels() -> void:
@@ -1009,7 +1095,7 @@ func remove_main_collision_shapes() -> void:
 
 
 func explode_vehicle_meshes() -> void:
-	# 
+
 	if self.has_node("MeshInstances"):
 		print("Found node MeshInstances: destroying...")
 		print("explode_vehicle_meshes(): self.has_node('MeshInstances')")
@@ -1018,8 +1104,8 @@ func explode_vehicle_meshes() -> void:
 		vehicle_parts_exploded.set_process(true)
 		vehicle_parts_exploded.set_physics_process(true)
 		vehicle_parts_exploded.detach_rigid_bodies(0.00, self.mass, self.linear_velocity, self.global_transform.origin)
-		# self.remove_child(ch)
-		# ch.set_as_toplevel(true)
+		#self.remove_child(ch)
+		#ch.set_as_toplevel(true)
 		# move the exploded mesh to the player, as the VehicleBody will be deleted after the explosion
 		remove_child(vehicle_parts_exploded)
 		get_player().add_child(vehicle_parts_exploded)
@@ -1044,75 +1130,11 @@ func dying_finished() -> bool:
 	return false
 
 
-# Dynamically adjust the grip depending on speed
-# This means vehicles can more easily climb walls, but not roll at higher speed
-func _on_DynamicGripTimer_timeout():
-	if ConfigVehicles.config[get_type()]["all_wheel_drive"] == true:
-		for wh in get_children():
-			if wh is VehicleWheel:
-				if abs(fwd_mps) < 1.0:
-					wh.wheel_friction_slip = 1000.0  # 0 is no grip, 1 is normal, any higher caused rolling at higher speeds
-				elif abs(fwd_mps) < 2.0:
-					wh.wheel_friction_slip = 100.0
-				elif abs(fwd_mps) < 5.0:
-					wh.wheel_friction_slip = 10.0
-				elif abs(fwd_mps) < 10.0:
-					wh.wheel_friction_slip = 5.0
-				else:
-					wh.wheel_friction_slip = 1.0
-
-
-func _on_CheckSkidTimer_timeout():
-	
-	if abs(fwd_mps) < 10.0:
-		#$Effects/WheelSkidDust.emitting = false
-		return
-		
-	var skidding: bool = false
-	randomly_emit($Effects/WheelSkidDust, 0.0)
-	
-	for wh in get_children():
-		if wh is VehicleWheel: 
-			if wh.get_skidinfo() < 0.15:
-				skidding = true
-
-	if skidding == true:
-		randomly_emit($Effects/WheelSkidDust, 0.25)
-		if $Effects/Audio/SkidSound.playing == false:
-			$Effects/Audio/SkidSound.playing = true
-			$Effects/Audio/SkidSound.pitch_scale = 0.5+(abs(fwd_mps)/100.0)
-			$Effects/Audio/SkidSound.play(8.21)
-		elif $Effects/Audio/SkidSound.playing == true:
-			if $Effects/Audio/SkidSound.get_playback_position() > 9.75:
-				$Effects/Audio/SkidSound.play(8.21)
-
-
-func _on_CheckWheelSpeedDustTimer_timeout():
-	randomly_emit($Effects/WheelSpeedDust, 1.0 - (20.0/(20.0+abs(fwd_mps))))
-	# $Effects/WheelSpeedDust.amount = num_particles  # changing this resets the particle system. Great!
-
-
 func randomly_emit(node, prob):
 	if rng.randf() < prob:
 		node.emitting = true
 	else:
 		node.emitting = false
-
-
-func _on_CheckAccelDamage_timeout():
-	accel_damage_enabled = true 
-	print("accel_damage_enabled="+str(accel_damage_enabled))
-
-
-func _on_TimerShieldCheckSpecialAbility_timeout():
-	if get_type() == ConfigVehicles.Type.RACER:
-		if fwd_mps > (80.0/200) * (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]:
-			$TimerDisableShieldAbility.start(5.0)
-			if special_ability_state["shield"] == false:
-				special_ability_state["shield"] = true
-				$Effects/Shield.show()
-				$Effects/Shield/GlowingSphere.show()
-				$Effects/Audio/ActivationSound.play()
 
 
 func get_max_speed_km_hr():
@@ -1133,27 +1155,6 @@ func get_av_wheel_friction_slip():
 	return av_wheel_friction_slip
 
 
-
-func _on_TimerDisablePowerup_timeout():
-	if not special_ability_state["climb_walls"]:
-		power_up_effect(false)
-
-
 func power_up_effect(enable):
 	$Effects/Powerup.visible = enable
-
-
-func _on_TimerDisableShieldAbility_timeout():
-	special_ability_state["shield"] = false
-	if powerup_state["shield"]["enabled"] == false:
-		$Effects/Shield.hide()
-
-
-func _on_TimerFlickerShield_timeout():
-	if $Effects/Shield.visible == true and powerup_state["shield"]["enabled"] == true and special_ability_state["shield"] == false:
-		if powerup_state["shield"]["max_hits"] > 0.0:
-			if not $Effects/Shield/GlowingSphere.visible:
-				$Effects/Shield/GlowingSphere.show()
-			elif rng.randf() > float(powerup_state["shield"]["hits_left"])/float(powerup_state["shield"]["max_hits"]):
-				$Effects/Shield/GlowingSphere.hide()
 

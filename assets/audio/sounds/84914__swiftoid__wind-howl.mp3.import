@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/84914__swiftoid__wind-howl.mp3-80c29d79dd60e6805e6592f7accae9bb.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/sounds/84914__swiftoid__wind-howl.mp3"
+dest_files=[ "res://.import/84914__swiftoid__wind-howl.mp3-80c29d79dd60e6805e6592f7accae9bb.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

@@ -63,6 +63,7 @@ var powerup_state: Dictionary = {"shield": {"enabled": false, "hits_left": 0, "m
 # Built-in  methods
 
 func _ready():
+	var _connect_change_weather = Global.connect("change_weather", self, "change_weather")
 	vehicle_state = ConfigVehicles.AliveState.ALIVE
 
 
@@ -156,6 +157,9 @@ func _process(delta):
 	if cooldown_timer < 0.0:
 		cooldown_timer = 0.0
 
+	$CameraBase/Camera/Particles.process_material.direction = Global.weather_state["wind_direction"]
+	$CameraBase/Camera/Particles.process_material.initial_velocity = Global.weather_state["wind_strength"]/100.0
+	add_central_force(Global.weather_state["wind_direction"] * Global.weather_state["wind_strength"])
 
 func _input(_event):
 	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
@@ -187,12 +191,21 @@ func _input(_event):
 	elif Input.is_action_just_released("kill_player4"):
 		if player_number == 4:
 			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
+	elif Input.is_action_just_released("toggle_snow"):
+		# fog will set to camera.far as long as the fog depth end = 0 in the main enviroment
+		if not $CameraBase/Camera/TweenFar.is_active():
+			Global.toggle_weather()
 
 
 func _physics_process(delta):
 	
 	if not player_number in StatePlayers.players.keys():
 		return  # in process of being reset?
+	
+	# Add forces due to weather
+	add_central_force(Global.weather_state["wind_direction"] * Global.weather_state["wind_strength"])
+	#print("Global.weather_state['wind_direction']="+str(Global.weather_state['wind_direction']))
+	#print("Global.weather_state['wind_strength']="+str(Global.weather_state['wind_strength']))
 		
 	# Keep polling continuous Input related to movement here: e.g. accelerate and move. All others move to e.g. _input()
 	
@@ -562,6 +575,7 @@ func init_visual_effects(start) -> void:
 	powerup_state["shield"]["enabled"] = false
 	$Effects/Shield.hide()
 	$Effects/Shield.visible = false
+	$CameraBase/Camera/Particles.hide()
 	
 	if start == false:
 		engine_sound_off()
@@ -1157,4 +1171,24 @@ func get_av_wheel_friction_slip():
 
 func power_up_effect(enable):
 	$Effects/Powerup.visible = enable
+
+
+func change_weather(weather_type: int) -> void:
+	print("VehicleBody: changing weather")
+	if weather_type == Global.Weather.NORMAL:
+		print("VehicleBody: changing weather to NORMAL")
+		$CameraBase/Camera/Particles.hide()
+		$CameraBase/Camera/TweenFar.interpolate_property($CameraBase/Camera, "far", Global.visibility[Global.Weather.SNOW], Global.visibility[Global.Weather.NORMAL], 10.0, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		$CameraBase/Camera/TweenFar.start()
+		#$CameraBase/Camera.far = Global.visibility[Global.Weather.SNOW]
+		#get_main_scene().set_weather(Global.Weather.SNOW)
+		#get_main_scene().wind(false)
+	else: 
+		print("VehicleBody: changing weather to SNOW")
+		$CameraBase/Camera/Particles.show()
+		$CameraBase/Camera/TweenFar.interpolate_property($CameraBase/Camera, "far", Global.visibility[Global.Weather.NORMAL], Global.visibility[Global.Weather.SNOW], 10.0, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		$CameraBase/Camera/TweenFar.start()
+		#$CameraBase/Camera.far = Global.visibility[Global.Weather.NORMAL]
+		#get_main_scene().set_weather(Global.Weather.NORMAL)
+		#get_main_scene().wind(false)
 

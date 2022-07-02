@@ -14,7 +14,7 @@ func _ready():
 # Public methods
 
 func update_dial(_speed_km_hr, _max_speed_km_hr):
-	print("update_dial: _speed_km_hr="+str(_speed_km_hr)+", _max_speed_km_hr="+str(_max_speed_km_hr))
+	#print("update_dial: _speed_km_hr="+str(_speed_km_hr)+", _max_speed_km_hr="+str(_max_speed_km_hr))
 	if _speed_km_hr < 0:
 		$Needle.rect_rotation = MIN_ROTATION
 	elif _speed_km_hr > _max_speed_km_hr:

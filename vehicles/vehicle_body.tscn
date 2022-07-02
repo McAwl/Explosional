@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=2]
+[gd_scene load_steps=48 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://vehicles/vehicle_body.gd" type="Script" id=2]
@@ -26,6 +26,36 @@
 
 [sub_resource type="PhysicsMaterial" id=1]
 rough = true
+
+[sub_resource type="Curve" id=64]
+_data = [ Vector2( 0, 0.00834632 ), 0.0, 0.0, 0, 0, Vector2( 0.5, 0.981073 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=65]
+curve = SubResource( 64 )
+
+[sub_resource type="ParticlesMaterial" id=66]
+emission_shape = 2
+emission_box_extents = Vector3( 10, 10, 10 )
+direction = Vector3( 1, 0, 1 )
+spread = 0.0
+gravity = Vector3( 0, -1, 0 )
+initial_velocity = 1.0
+scale = 0.1
+scale_curve = SubResource( 65 )
+
+[sub_resource type="SpatialMaterial" id=67]
+flags_transparent = true
+params_billboard_mode = 3
+params_billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+albedo_texture = ExtResource( 4 )
+proximity_fade_enable = true
+proximity_fade_distance = 0.5
+
+[sub_resource type="QuadMesh" id=68]
+material = SubResource( 67 )
 
 [sub_resource type="Gradient" id=33]
 offsets = PoolRealArray( 0, 0.242236, 0.732919, 0.993789, 1 )
@@ -179,6 +209,17 @@ fov = 74.0
 near = 0.1
 far = 200.0
 script = ExtResource( 9 )
+
+[node name="Particles" type="Particles" parent="CameraBase/Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0724817, 3.30988, -4.50111 )
+amount = 100
+lifetime = 2.0
+visibility_aabb = AABB( -4.03329, -4, -4, 8.06658, 8, 8 )
+local_coords = false
+process_material = SubResource( 66 )
+draw_pass_1 = SubResource( 68 )
+
+[node name="TweenFar" type="Tween" parent="CameraBase/Camera"]
 
 [node name="CameraFPFront" type="Camera" parent="CameraBase"]
 transform = Transform( -0.998921, 0.00220149, 0.0463805, -2.11161e-08, 0.998875, -0.047413, -0.0464328, -0.0473618, -0.997798, -0.124779, -1.27877, 2.63899 )

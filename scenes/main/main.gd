@@ -33,6 +33,7 @@ var game_over_checked = false
 # built-in virtual methods
 
 func _ready():
+	var _connect_change_weather = Global.connect("change_weather", self, "change_weather")
 	randomize()
 	#$TimerSlowMotion.start()  # for Procedurally place vegetation
 	self.add_child(ray)
@@ -138,6 +139,8 @@ func _process(delta):
 		_check_and_enforce_slow_motion()
 		timer_1_sec = 1.0
 
+	$Effects/Wind.volume_db = Global.weather_state["wind_volume_db"]
+	
 
 func _physics_process(_delta):
 	
@@ -328,6 +331,37 @@ func _air_strike_label() -> Label:
 
 
 # Public methods
+
+func change_weather(weather_type: int) -> void:
+	print("MainScene: changing weather")
+	var fdc_snow = Global.weather_model[Global.Weather.SNOW]["fog_depth_curve"]
+	var fdc_normal = Global.weather_model[Global.Weather.NORMAL]["fog_depth_curve"]
+	print("main: change_weather: fdc_snow="+str(fdc_snow)+", fdc_normal="+str(fdc_normal))
+	match weather_type:
+		Global.Weather.NORMAL:
+			print("MainScene: changing weather to NORMAL")
+			$Effects/TweenFog.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_begin", 0.0, 20.0, 10.0, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$Effects/TweenFog.start()
+			$Effects/TweenFogDepthCurve.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_curve", fdc_snow, fdc_normal, 10.0, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$Effects/TweenFogDepthCurve.start()
+		Global.Weather.SNOW:
+			print("MainScene: changing weather to SNOW")
+			$Effects/TweenFog.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_begin", 20.0, 0.0, 10.0, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$Effects/TweenFog.start()
+			$Effects/TweenFogDepthCurve.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_curve", fdc_normal, fdc_snow, 10.0, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$Effects/TweenFogDepthCurve.start()
+			#$Viewport/WorldEnvironment.environment.fog_depth_begin
+		_:
+			print("MainScene: changing weather to NORMAL")
+			$Effects/TweenFog.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_begin", 0.0, 20.0, 10.0, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$Effects/TweenFog.start()
+			$Effects/TweenFogDepthCurve.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_curve", fdc_snow, fdc_normal, 10.0, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$Effects/TweenFogDepthCurve.start()
+
+
+func wind(active: bool):
+	$Effects/Wind.playing = active
+
 
 func start_timer_slow_motion() -> void:
 	$TimerSlowMotion.start()

@@ -61,10 +61,10 @@ var config: Dictionary = {
 	Type.TRUCK:
 		{"engine_force_value": 350,  # keep this at 1x mass
 		"mass_kg/100": 300.0, 
-		"suspension_stiffness": 90.0, "suspension_travel":0.2,
+		"suspension_stiffness": 90.0, "suspension_travel":1.0,
 		"all_wheel_drive": false,
 		"wheel_friction_slip":1.0,   # 0 is no grip, 1 is normal grip
-		"wheel_roll_influence": 0.5,
+		"wheel_roll_influence": 0.1,
 		"brake": 100.0,
 		"max_speed_km_hr": 80.0}
 	}

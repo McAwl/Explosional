@@ -24,8 +24,8 @@ enum DAMAGE_TYPE {
 }
 
 var weather_model: Array = [
-	{"type": Weather.NORMAL, "duration_s": 120.0, "max_wind_strength": 0.0, "fog_depth_curve": 4.75}, 
-	{"type": Weather.SNOW, "duration_s": 30.0, "max_wind_strength": 500.0, "fog_depth_curve": 1.0}
+	{"type": Weather.NORMAL, "duration_s": 120.0, "max_wind_strength": 0.0, "fog_depth_curve": 4.75, "fog_depth_begin": 20.0, "visibility": 200.0}, 
+	{"type": Weather.SNOW, "duration_s": 30.0, "max_wind_strength": 500.0, "fog_depth_curve": 1.0, "fog_depth_begin": 0.0, "visibility": 50.0}
 	]
 var weather_state: Dictionary = {
 	"index": 0,  
@@ -37,6 +37,7 @@ var weather_state: Dictionary = {
 	}
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var weather_recalc_timer = 1.0
+var weather_change_duration_sec = 10.0
 
 var air_strike_config: Dictionary = {
 	"duration_sec": 10.0, 
@@ -76,8 +77,6 @@ var vehicle_body_folder: String = "res://vehicles/vehicle_body.tscn"
 var exploded_vehicle_part_folder: String = "res://vehicles/exploded_vehicle_part.tscn"
 var vehicle_sound_volume_db: float = 0.0
 
-var visibility: Dictionary = {Weather.NORMAL: 200.0, Weather.SNOW: 50.0}
-
 # player
 var player_folder: String = "res://player/player.tscn"
 
@@ -100,7 +99,7 @@ func _ready():
 
 
 func _process(delta):
-	
+	var old_index = weather_state["index"]
 	weather_state["time_left_s"] -= delta
 	if weather_state["time_left_s"] < 0.0:
 		print("weather_state['time_left_s'] < 0.0")
@@ -112,7 +111,13 @@ func _process(delta):
 		weather_state["type"] = weather_state["index"]
 		print("type is now "+str(weather_state["type"]))
 		weather_state["time_left_s"] = weather_model[weather_state["index"]]["duration_s"]
-		_set_weather()
+		_set_weather(
+		{
+			"fog_depth_curve": [weather_model[old_index]["fog_depth_curve"], weather_model[weather_state["index"]]["fog_depth_curve"]], 
+			"fog_depth_begin": [weather_model[old_index]["fog_depth_begin"], weather_model[weather_state["index"]]["fog_depth_begin"]], 
+			"visibility": [weather_model[old_index]["visibility"], weather_model[weather_state["index"]]["visibility"]],
+			"snow_visible": true if weather_state["type"] == Weather.SNOW else false,
+		})
 	
 	# Once a second, recalc the weather conditions
 	weather_recalc_timer -= delta
@@ -138,16 +143,17 @@ func _process(delta):
 
 # Private methods
 
-func _set_weather():
+func _set_weather(weather_change_dict: Dictionary):
 	print("set_weather()")
 	#weather_state["wind_strength"] = 0.0  # weather_model[weather_state["index"]]["max_wind_strength"] / 2.0
 	#print("Setting wind_strength to "+str(weather_state["wind_strength"]))
-	emit_signal("change_weather", weather_state["type"])
+	emit_signal("change_weather", weather_change_dict, weather_change_duration_sec)
 
 
 # Public methods
 
 func toggle_weather():
+	var old_index = weather_state["index"]
 	print("toggle_weather()")
 	# TODO: Can also be set by the player for debugging (for now), so make public for now, private later
 	weather_state["index"] += 1
@@ -157,5 +163,11 @@ func toggle_weather():
 	weather_state["type"] = weather_state["index"]
 	print("toggle_weather() to index "+str(weather_state["index"]))
 	print("type is now "+str(weather_state["type"]))
-	_set_weather()
+	_set_weather(
+		{
+			"fog_depth_curve": [weather_model[old_index]["fog_depth_curve"], weather_model[weather_state["index"]]["fog_depth_curve"]], 
+			"fog_depth_begin": [weather_model[old_index]["fog_depth_begin"], weather_model[weather_state["index"]]["fog_depth_begin"]], 
+			"visibility": [weather_model[old_index]["visibility"], weather_model[weather_state["index"]]["visibility"]],
+			"snow_visible": true if weather_state["type"] == Weather.SNOW else false,
+		})
 

@@ -73,6 +73,7 @@ func _physics_process(delta):
 	var fwd_mps: float = get_carbody().transform.basis.xform_inv(linear_velocity).z
 	var angular_velocity: Vector3 = get_carbody().angular_velocity
 	
+	# ?
 	if abs(fwd_mps) < 0.5:
 		if abs(get_carbody().rotation_degrees[0]) > 90 or abs(get_carbody().rotation_degrees[2]) > 90:
 			target_forward_third_person = cbts.get_global_transform()

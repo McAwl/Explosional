@@ -157,8 +157,8 @@ func _process(delta):
 	if cooldown_timer < 0.0:
 		cooldown_timer = 0.0
 
-	$CameraBase/Camera/Particles.process_material.direction = Global.weather_state["wind_direction"]
-	$CameraBase/Camera/Particles.process_material.initial_velocity = Global.weather_state["wind_strength"]/100.0
+	$CameraBase/Camera/ParticlesSnow.process_material.direction = Global.weather_state["wind_direction"]
+	$CameraBase/Camera/ParticlesSnow.process_material.initial_velocity = Global.weather_state["wind_strength"]/100.0
 	add_central_force(Global.weather_state["wind_direction"] * Global.weather_state["wind_strength"])
 
 func _input(_event):
@@ -575,7 +575,7 @@ func init_visual_effects(start) -> void:
 	powerup_state["shield"]["enabled"] = false
 	$Effects/Shield.hide()
 	$Effects/Shield.visible = false
-	$CameraBase/Camera/Particles.hide()
+	$CameraBase/Camera/ParticlesSnow.hide()
 	
 	if start == false:
 		engine_sound_off()
@@ -1173,22 +1173,14 @@ func power_up_effect(enable):
 	$Effects/Powerup.visible = enable
 
 
-func change_weather(weather_type: int) -> void:
-	print("VehicleBody: changing weather")
-	if weather_type == Global.Weather.NORMAL:
-		print("VehicleBody: changing weather to NORMAL")
-		$CameraBase/Camera/Particles.hide()
-		$CameraBase/Camera/TweenFar.interpolate_property($CameraBase/Camera, "far", Global.visibility[Global.Weather.SNOW], Global.visibility[Global.Weather.NORMAL], 10.0, Tween.TRANS_LINEAR, Tween.EASE_IN)
-		$CameraBase/Camera/TweenFar.start()
-		#$CameraBase/Camera.far = Global.visibility[Global.Weather.SNOW]
-		#get_main_scene().set_weather(Global.Weather.SNOW)
-		#get_main_scene().wind(false)
-	else: 
-		print("VehicleBody: changing weather to SNOW")
-		$CameraBase/Camera/Particles.show()
-		$CameraBase/Camera/TweenFar.interpolate_property($CameraBase/Camera, "far", Global.visibility[Global.Weather.NORMAL], Global.visibility[Global.Weather.SNOW], 10.0, Tween.TRANS_LINEAR, Tween.EASE_IN)
-		$CameraBase/Camera/TweenFar.start()
-		#$CameraBase/Camera.far = Global.visibility[Global.Weather.NORMAL]
-		#get_main_scene().set_weather(Global.Weather.NORMAL)
-		#get_main_scene().wind(false)
+func change_weather(weather_change: Dictionary, change_duration_sec) -> void:
+	print("VehicleBody: weather_change.keys()="+str(weather_change.keys()))
+	for weather_item_key in weather_change.keys():
+		if "visibility" == weather_item_key:
+			print("VehicleBody: changing weather: visibility")
+			print("  old="+str(weather_change["visibility"][0])+", new="+str(weather_change["visibility"][1]))
+			$CameraBase/Camera/TweenFar.interpolate_property($CameraBase/Camera, "far", weather_change["visibility"][0], weather_change["visibility"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$CameraBase/Camera/TweenFar.start()
+		if "snow_visible" == weather_item_key:
+			$CameraBase/Camera/ParticlesSnow.visible = weather_change["snow_visible"]
 

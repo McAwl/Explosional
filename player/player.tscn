@@ -15,6 +15,7 @@
 [ext_resource path="res://assets/display/icons/ballistic_missile.png" type="Texture" id=13]
 [ext_resource path="res://player/speedometer.tscn" type="PackedScene" id=14]
 [ext_resource path="res://assets/audio/sounds/619834__eponn__correct-menu-game-android.wav" type="AudioStream" id=15]
+[ext_resource path="res://assets/display/fonts/hud_text.tres" type="StyleBox" id=16]
 
 [sub_resource type="DynamicFontData" id=7]
 font_path = "res://assets/display/fonts/Xolonium-Regular.ttf"
@@ -42,20 +43,6 @@ font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=3]
 font_data = ExtResource( 1 )
-
-[sub_resource type="StyleBoxFlat" id=9]
-bg_color = Color( 0.305882, 0.305882, 0.305882, 0.490196 )
-border_blend = true
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-corner_detail = 2
-expand_margin_left = 15.0
-expand_margin_right = 15.0
-expand_margin_top = 10.0
-expand_margin_bottom = 10.0
-anti_aliasing = false
 
 [node name="Player" type="Spatial" groups=["player"]]
 pause_mode = 2
@@ -279,6 +266,7 @@ __meta__ = {
 }
 
 [node name="label_player_name" type="Label" parent="VC/V/CanvasLayer/HeadUpDisplay"]
+visible = false
 margin_right = 103.0
 margin_bottom = 22.0
 custom_fonts/font = SubResource( 1 )
@@ -295,6 +283,7 @@ margin_right = 80.0
 margin_bottom = 40.0
 rect_pivot_offset = Vector2( 40, 20 )
 custom_fonts/font = SubResource( 4 )
+custom_styles/normal = ExtResource( 16 )
 text = "1"
 align = 1
 
@@ -303,16 +292,23 @@ margin_left = 20.0
 margin_top = 10.0
 margin_right = 60.0
 margin_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 2
 rect_pivot_offset = Vector2( 20, 10 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
 custom_fonts/font = SubResource( 5 )
+custom_styles/normal = ExtResource( 16 )
 text = "2"
 align = 1
+valign = 1
 
 [node name="label_player_3_pos" type="Label" parent="VC/V/CanvasLayer/HeadUpDisplay"]
 margin_right = 40.0
 margin_bottom = 20.0
 rect_pivot_offset = Vector2( 20, 10 )
 custom_fonts/font = SubResource( 6 )
+custom_styles/normal = ExtResource( 16 )
 text = "3"
 align = 1
 valign = 1
@@ -322,6 +318,7 @@ margin_right = 40.0
 margin_bottom = 20.0
 rect_pivot_offset = Vector2( 20, 10 )
 custom_fonts/font = SubResource( 3 )
+custom_styles/normal = ExtResource( 16 )
 text = "4"
 align = 1
 valign = 1
@@ -341,7 +338,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 custom_fonts/font = ExtResource( 10 )
-custom_styles/normal = SubResource( 9 )
+custom_styles/normal = ExtResource( 16 )
 text = "Achievement!"
 align = 1
 valign = 1

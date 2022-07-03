@@ -250,7 +250,6 @@ func _on_TimerHealthPowerup_timeout():
 
 # Private methods
 
-
 func _turn_airstrike_on() -> void:
 	air_strike_state["on"] = true
 	air_strike_state["interval_so_far_sec"] = 0.0
@@ -316,6 +315,9 @@ func _all_audio_pitch(pitch) -> void:
 
 
 func _get_spawn_points() -> Array:
+	# Returns a random-order array of SpawnPoints
+	var shuffled = get_node("SpawnPoints").get_children()
+	shuffled.shuffle()
 	return get_node("SpawnPoints").get_children()
 
 

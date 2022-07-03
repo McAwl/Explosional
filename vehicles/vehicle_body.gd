@@ -441,6 +441,19 @@ func _on_TimerShieldCheckSpecialAbility_timeout():
 				$Effects/Audio/ActivationSound.play()
 
 
+func _on_TimerCheckSpeedDemon5Achievement_timeout():
+	get_player().add_achievement(Global.Achievements.SPEED_DEMON5)
+
+
+func _on_TimerCheckMaxSpeed_timeout():
+	var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
+	if fwd_mps >= max_speed_limit_mps:
+		if $TimerCheckSpeedDemon5Achievement.is_stopped():
+			$TimerCheckSpeedDemon5Achievement.start()
+	else:
+		$TimerCheckSpeedDemon5Achievement.stop()
+
+
 # Public methods
 
 func init(_pos=null, _player_number=null, _name=null) -> bool:
@@ -782,7 +795,7 @@ func check_for_clipping() -> void:
 				#	print("raycast "+raycast.name+" is colliding with "+str(raycast.get_collider().name))
 		if num_wheels_clipped > 0:
 			#print("applying impulse - wheel(s) are clipped")
-			apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.1, rng.randf()*5.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.1) )   # from underneath, upwards force
+			apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.05, rng.randf()*2.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.05) )   # from underneath, upwards force
 			$CheckAccelDamage.start(2.0)  # disable damage for temporarily
 	
 
@@ -1188,18 +1201,4 @@ func change_weather(weather_change: Dictionary, change_duration_sec) -> void:
 			$CameraBase/Camera/TweenFar.start()
 		if "snow_visible" == weather_item_key:
 			$CameraBase/Camera/ParticlesSnow.visible = weather_change["snow_visible"]
-
-
-
-func _on_TimerCheckSpeedDemon5Achievement_timeout():
-	get_player().add_achievement(Global.Achievements.SPEED_DEMON5)
-
-
-func _on_TimerCheckMaxSpeed_timeout():
-	var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
-	if fwd_mps >= max_speed_limit_mps:
-		if $TimerCheckSpeedDemon5Achievement.is_stopped():
-			$TimerCheckSpeedDemon5Achievement.start()
-	else:
-		$TimerCheckSpeedDemon5Achievement.stop()
 

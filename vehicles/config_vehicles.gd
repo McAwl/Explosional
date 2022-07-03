@@ -34,7 +34,7 @@ var config: Dictionary = {
 	Type.RACER:
 		{"engine_force_value": 220,  # keep this at 3x mass
 		"mass_kg/100": 70.0, 
-		"suspension_stiffness": 75.0, "suspension_travel": 0.25,
+		"suspension_stiffness": 50.0, "suspension_travel": 0.25,
 		"all_wheel_drive": false,
 		"wheel_friction_slip": 1.1,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.9,
@@ -43,7 +43,7 @@ var config: Dictionary = {
 	Type.RALLY:
 		{"engine_force_value": 70,  # keep this at 3x mass
 		"mass_kg/100": 50.0, 
-		"suspension_stiffness": 50.0, "suspension_travel": 2.0,
+		"suspension_stiffness": 40.0, "suspension_travel": 2.0,
 		"all_wheel_drive": true,
 		"wheel_friction_slip": 1.3,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.9,
@@ -52,7 +52,7 @@ var config: Dictionary = {
 	Type.TANK:
 		{"engine_force_value": 350,  # keep this at 1x mass
 		"mass_kg/100": 500.0, 
-		"suspension_stiffness": 100.0, "suspension_travel": 1.0,
+		"suspension_stiffness": 20.0, "suspension_travel": 1.0,
 		"all_wheel_drive": true,
 		"wheel_friction_slip": 15.0,  # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.1,
@@ -61,7 +61,7 @@ var config: Dictionary = {
 	Type.TRUCK:
 		{"engine_force_value": 350,  # keep this at 1x mass
 		"mass_kg/100": 300.0, 
-		"suspension_stiffness": 90.0, "suspension_travel":1.0,
+		"suspension_stiffness": 20.0, "suspension_travel":1.0,
 		"all_wheel_drive": false,
 		"wheel_friction_slip":1.0,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.1,

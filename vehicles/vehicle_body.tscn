@@ -1548,7 +1548,7 @@ damping_relaxation = 0.7
 transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Truck" type="Spatial" parent="VehicleTypes"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.258158, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.339322, 0 )
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Truck"]
 
@@ -1884,8 +1884,8 @@ wheel_rest_length = 0.3
 wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
-damping_compression = 0.6
-damping_relaxation = 0.7
+damping_compression = 0.7
+damping_relaxation = 0.8
 
 [node name="VehicleWheelMesh" parent="VehicleTypes/Truck/Wheels/Wheel1" instance=ExtResource( 6 )]
 transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
@@ -1899,8 +1899,8 @@ wheel_rest_length = 0.3
 wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
-damping_compression = 0.6
-damping_relaxation = 0.7
+damping_compression = 0.7
+damping_relaxation = 0.8
 
 [node name="VehicleWheelMesh" parent="VehicleTypes/Truck/Wheels/Wheel2" instance=ExtResource( 6 )]
 transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
@@ -1915,8 +1915,8 @@ wheel_rest_length = 0.3
 wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
-damping_compression = 0.6
-damping_relaxation = 0.7
+damping_compression = 0.7
+damping_relaxation = 0.8
 
 [node name="VehicleWheelMesh" parent="VehicleTypes/Truck/Wheels/Wheel3" instance=ExtResource( 6 )]
 transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
@@ -1930,8 +1930,8 @@ wheel_rest_length = 0.3
 wheel_friction_slip = 0.7
 suspension_travel = 2.0
 suspension_stiffness = 40.0
-damping_compression = 0.6
-damping_relaxation = 0.7
+damping_compression = 0.7
+damping_relaxation = 0.8
 
 [node name="VehicleWheelMesh" parent="VehicleTypes/Truck/Wheels/Wheel4" instance=ExtResource( 6 )]
 transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )

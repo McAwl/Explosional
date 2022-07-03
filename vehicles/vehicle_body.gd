@@ -161,6 +161,7 @@ func _process(delta):
 	$CameraBase/Camera/ParticlesSnow.process_material.initial_velocity = Global.weather_state["wind_strength"]/100.0
 	add_central_force(Global.weather_state["wind_direction"] * Global.weather_state["wind_strength"])
 
+
 func _input(_event):
 	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
 		cycle_weapon()
@@ -277,12 +278,12 @@ func _physics_process(delta):
 			# Use per wheel forces so we can turn the vehicle without steering a wheel
 			for wh in get_children():
 				if wh is VehicleWheel:
-					if engine_force == 0.0 and (left > 0.0 or right > 0.0):
-						wh.engine_force = engine_force_value
-					elif engine_force > 0.0 and (left > 0.0 or right > 0.0):
+					if engine_force == 0.0 and (left > 0.0 or right > 0.0):  # turning at rest
+						wh.engine_force = ConfigVehicles.config[ConfigVehicles.Type.TANK]["engine_force_value"]
+					elif engine_force > 0.0 and (left > 0.0 or right > 0.0):  # turning at speed
 						wh.engine_force = engine_force/2.0
-					else:
-						wh.engine_force = engine_force
+					else:  # moving straight forward, no turing
+						wh.engine_force = engine_force  
 					#print("wh.name="+str(wh.name))
 					if wh.name in ["Wheel1", "Wheel2", "Wheel6", "Wheel7"]:  # left row
 						wh.engine_force *= 1.0 if right-left == 0.0 else right-left

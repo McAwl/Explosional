@@ -20,6 +20,8 @@ func _process(_delta):
 	 update_other_player_label()  # need to do this on every screen refresh
 
 
+# Signal methods
+
 func _on_TimerUpdateSpeedometer_timeout():
 	if get_vehicle_body() == null:
 		return
@@ -33,7 +35,6 @@ func _on_TimerUpdateSpeedometer_timeout():
 	"  grip: "+str(get_vehicle_body().get_av_wheel_friction_slip())
 	get_canvaslayer().get_node('GridContainer').get_node('Label1').text = text
 	get_canvaslayer().get_node('Speedometer').update_dial(speed_km_hr, get_vehicle_body().get_max_speed_km_hr())
-	
 
 
 func _on_TimerUpdateHUD_timeout():
@@ -93,6 +94,12 @@ func _on_TimerCheckDestroyedVehicle_timeout():
 			vb.queue_free()
 		init_vehicle_body(last_spawn_point)
 
+
+func _on_TimerDisableAchievementLabel_timeout():
+		get_canvaslayer().get_node("LabelAchievement").hide()
+
+
+# Public methods
 
 func reset_health() -> void:
 	$VC/V/CanvasLayer/health.value = get_vehicle_body().max_damage
@@ -188,19 +195,6 @@ func set_viewport_container_four(_player_number) -> void:
 
 
 func set_viewport_container(_left, _right, _bottom, _top, size_x, size_y) -> void:
-	"""
-	#get_label_lives_left().margin_right = 0
-	#get_label().margin_bottom = 0
-	#get_label().margin_top = _top
-	#get_label().rect_size.x = size_x
-	#get_label().rect_size.y = size_y
-	#print("LRTB="+str([_left, _right, _bottom, _top]))
-	#print("$VC margins LRBT="+str([$VC.margin_left, $VC.margin_right, $VC.margin_bottom, $VC.margin_top]))
-	#print("$VC.rect_size="+str($VC.rect_size))
-	#print("$V size="+str([$VC/V.size]))
-	#print("label rect_size="+str(get_label().rect_size))
-	#print("label align="+str(get_label().align))
-	#print("label LRBT="+str([get_label().margin_left, get_label().margin_right, get_label().margin_bottom, get_label().margin_top]))"""
 	$VC.margin_left = _left
 	$VC.margin_right = _right
 	$VC.margin_bottom = _bottom
@@ -285,39 +279,52 @@ func set_global_transform_origin(o) -> void:
 
 
 func update_other_player_label():
-	for player_num in StatePlayers.players.keys():  #get_parent().get_players():
+	
+	var keys = StatePlayers.players.keys()
+	if not 1 in keys:
+		get_hud().get_node("label_player_1_pos").hide()
+	if not 2 in keys:
+		get_hud().get_node("label_player_2_pos").hide()
+	if not 3 in keys:
+		get_hud().get_node("label_player_3_pos").hide()
+	if not 4 in keys:
+		get_hud().get_node("label_player_4_pos").hide()
+		
+	for player_num in keys:  #get_parent().get_players():
+		var label = get_hud().get_node("label_player_"+str(player_num)+"_pos")
 		#print("player_num="+str(player_num))
 		var player_dst = get_parent().get_player(player_num)
-		if self != player_dst:
-			if get_vehicle_body() != null:  # eg if player has no lives left, not in the game any more
-				var player_dst_vehicle_body = player_dst.get_vehicle_body()
-				if player_dst_vehicle_body != null:
-					var player_dst_hud_pos_loc = player_dst_vehicle_body.get_node("Positions").get_node("HUDPositionLocation")
-					var distance = get_vehicle_body().get_global_transform().origin.distance_to(player_dst_hud_pos_loc.global_transform.origin)
-					var player_dst_viewport_pos = get_vehicle_body().get_camera().unproject_position ( player_dst_hud_pos_loc.get_global_transform().origin ) 
-					var label = get_hud().get_node("label_player_"+str(player_num)+"_pos")
-					
-					var font_size = 10
-					if distance < 25.0:
-						font_size = 60
-					elif distance < 50.0:
-						font_size = 40
-					elif distance < 100.0:
-						font_size = 30
-					elif distance < 200.0:
-						font_size = 20
-					label.get("custom_fonts/font").set_size(font_size)
-					
-					if get_vehicle_body().get_camera().is_position_behind (player_dst_hud_pos_loc.get_global_transform().origin ):
-						label.visible = false
-					else:
-						label.visible = true
-						label.rect_position = player_dst_viewport_pos
-						label.rect_position.x -= font_size/2
-						label.rect_position.y -= 20 + (font_size/2)
+		if self != player_dst:  # ignore self
+			var player_dst_vehicle_body = player_dst.get_vehicle_body()
+			if player_dst_vehicle_body != null:  # eg if player has no lives left, not in the game any more
+				var player_dst_hud_pos_loc = player_dst_vehicle_body.get_node("Positions").get_node("HUDPositionLocation")
+				var distance = get_vehicle_body().get_global_transform().origin.distance_to(player_dst_hud_pos_loc.global_transform.origin)
+				var player_dst_viewport_pos = get_vehicle_body().get_camera().unproject_position ( player_dst_hud_pos_loc.get_global_transform().origin ) 
+
+				var font_size = 10
+				if distance < 25.0:
+					font_size = 60
+				elif distance < 50.0:
+					font_size = 40
+				elif distance < 100.0:
+					font_size = 30
+				elif distance < 200.0:
+					font_size = 20
+				label.get("custom_fonts/font").set_size(font_size)
+				
+				if get_vehicle_body().get_camera().is_position_behind (player_dst_hud_pos_loc.get_global_transform().origin ):
+					label.visible = false
+				else:
+					label.visible = true
+					label.rect_position = player_dst_viewport_pos
+					label.rect_position.x -= font_size/2
+					label.rect_position.y -= 20 + (font_size/2)
+					label.rect_size.x = font_size
+					label.rect_size.y = font_size*1.25
 			else:
-				var label = get_hud().get_node("label_player_"+str(player_number)+"_pos")
-				label.visible = false  # don't show own label
+				label.visible = false  # TODO: don't show label for player with destroyed vehicle. A best idea?
+		else:
+			label.visible = false  # don't show our own label
 
 
 func has_vehicle_body() -> bool:
@@ -349,5 +356,3 @@ func add_achievement(achievement: int) -> void:
 		$VC/V/CanvasLayer/TweenHorizAnchorBottom.interpolate_property(label, "anchor_bottom", 1.0, 0.5, 0.5, Tween.TRANS_BACK, Tween.EASE_OUT)
 		$VC/V/CanvasLayer/TweenHorizAnchorBottom.start()
 
-func _on_TimerDisableAchievementLabel_timeout():
-		get_canvaslayer().get_node("LabelAchievement").hide()

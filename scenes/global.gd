@@ -15,13 +15,24 @@ enum GameMode {
 	TOUGH=3
 }
 
-enum DAMAGE_TYPE {
+enum DamageType {
 	DIRECT_HIT=0,
 	INDIRECT_HIT=1,
 	FORCE=2,
 	LAVA=3,
 	TEST=4
 }
+
+enum Achievements {
+	HOT_STUFF=0,
+	SPEED_DEMON5=1
+}
+
+var achievement_config: Dictionary = {
+	Achievements.HOT_STUFF: {"nice_name": "Die in lava", "rare": false},
+	Achievements.SPEED_DEMON5: {"nice_name": "Drive at maximum speed for 5 seconds", "rare": false},
+	Achievements.SPEED_DEMON5: {"nice_name": "Drive at maximum speed for 10 seconds", "rare": true},
+	}
 
 var weather_model: Array = [
 	{"type": Weather.NORMAL, "duration_s": 120.0, "max_wind_strength": 0.0, "fog_depth_curve": 4.75, "fog_depth_begin": 20.0, "visibility": 200.0}, 
@@ -99,25 +110,10 @@ func _ready():
 
 
 func _process(delta):
-	var old_index = weather_state["index"]
 	weather_state["time_left_s"] -= delta
 	if weather_state["time_left_s"] < 0.0:
 		print("weather_state['time_left_s'] < 0.0")
-		weather_state["index"] += 1
-		if weather_state["index"] > len(weather_model) - 1:
-			print("Resettimg weather_state index to 0")
-			weather_state["index"] = 0
-		print("weather_state index set to "+str(weather_state["index"]))
-		weather_state["type"] = weather_state["index"]
-		print("type is now "+str(weather_state["type"]))
-		weather_state["time_left_s"] = weather_model[weather_state["index"]]["duration_s"]
-		_set_weather(
-		{
-			"fog_depth_curve": [weather_model[old_index]["fog_depth_curve"], weather_model[weather_state["index"]]["fog_depth_curve"]], 
-			"fog_depth_begin": [weather_model[old_index]["fog_depth_begin"], weather_model[weather_state["index"]]["fog_depth_begin"]], 
-			"visibility": [weather_model[old_index]["visibility"], weather_model[weather_state["index"]]["visibility"]],
-			"snow_visible": true if weather_state["type"] == Weather.SNOW else false,
-		})
+		toggle_weather()
 	
 	# Once a second, recalc the weather conditions
 	weather_recalc_timer -= delta

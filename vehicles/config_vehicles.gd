@@ -39,7 +39,7 @@ var config: Dictionary = {
 		"wheel_friction_slip": 1.1,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.9,
 		"brake": 20.0,
-		"max_speed_km_hr": 200.0}, 
+		"max_speed_km_hr": 150.0}, 
 	Type.RALLY:
 		{"engine_force_value": 70,  # keep this at 3x mass
 		"mass_kg/100": 50.0, 
@@ -48,9 +48,9 @@ var config: Dictionary = {
 		"wheel_friction_slip": 1.3,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.9,
 		"brake": 10.0,
-		"max_speed_km_hr": 150.0}, 
+		"max_speed_km_hr": 120.0}, 
 	Type.TANK:
-		{"engine_force_value": 400,  # keep this at 1x mass
+		{"engine_force_value": 350,  # keep this at 1x mass
 		"mass_kg/100": 500.0, 
 		"suspension_stiffness": 100.0, "suspension_travel": 1.0,
 		"all_wheel_drive": true,
@@ -66,7 +66,7 @@ var config: Dictionary = {
 		"wheel_friction_slip":1.0,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.1,
 		"brake": 100.0,
-		"max_speed_km_hr": 80.0}
+		"max_speed_km_hr": 70.0}
 	}
 
 

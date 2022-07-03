@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://assets/display/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://player/player.gd" type="Script" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://assets/display/fonts/font_theme_large.tres" type="DynamicFont" id=12]
 [ext_resource path="res://assets/display/icons/ballistic_missile.png" type="Texture" id=13]
 [ext_resource path="res://player/speedometer.tscn" type="PackedScene" id=14]
+[ext_resource path="res://assets/audio/sounds/619834__eponn__correct-menu-game-android.wav" type="AudioStream" id=15]
 
 [sub_resource type="DynamicFontData" id=7]
 font_path = "res://assets/display/fonts/Xolonium-Regular.ttf"
@@ -42,7 +43,22 @@ font_data = ExtResource( 1 )
 [sub_resource type="DynamicFont" id=3]
 font_data = ExtResource( 1 )
 
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 0.305882, 0.305882, 0.305882, 1 )
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 2
+expand_margin_left = 15.0
+expand_margin_right = 15.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+anti_aliasing = false
+
 [node name="Player" type="Spatial" groups=["player"]]
+pause_mode = 2
 script = ExtResource( 2 )
 
 [node name="VC" type="ViewportContainer" parent="."]
@@ -310,6 +326,32 @@ text = "4"
 align = 1
 valign = 1
 
+[node name="LabelAchievement" type="Label" parent="VC/V/CanvasLayer"]
+pause_mode = 2
+anchor_left = 0.5
+anchor_top = 0.957
+anchor_right = 0.5
+anchor_bottom = 0.957
+margin_left = -36.5
+margin_top = -3.0
+margin_right = 76.5
+margin_bottom = 17.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_fonts/font = ExtResource( 10 )
+custom_styles/normal = SubResource( 9 )
+text = "Achievement!"
+align = 1
+valign = 1
+
+[node name="TweenHorizAnchorTop" type="Tween" parent="VC/V/CanvasLayer"]
+pause_mode = 2
+
+[node name="TweenHorizAnchorBottom" type="Tween" parent="VC/V/CanvasLayer"]
+pause_mode = 2
+
 [node name="TimerUpdateSpeedometer" type="Timer" parent="."]
 wait_time = 0.1
 autostart = true
@@ -321,6 +363,16 @@ autostart = true
 wait_time = 0.1
 autostart = true
 
+[node name="TimerDisableAchievementLabel" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[node name="SoundAchievement" type="AudioStreamPlayer" parent="."]
+pause_mode = 2
+stream = ExtResource( 15 )
+bus = "Achievements"
+
 [connection signal="timeout" from="TimerUpdateSpeedometer" to="." method="_on_TimerUpdateSpeedometer_timeout"]
 [connection signal="timeout" from="TimerUpdateHUD" to="." method="_on_TimerUpdateHUD_timeout"]
 [connection signal="timeout" from="TimerCheckDestroyedVehicle" to="." method="_on_TimerCheckDestroyedVehicle_timeout"]
+[connection signal="timeout" from="TimerDisableAchievementLabel" to="." method="_on_TimerDisableAchievementLabel_timeout"]

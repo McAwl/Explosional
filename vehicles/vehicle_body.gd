@@ -111,7 +111,7 @@ func _process(delta):
 		check_lights()
 		var ongoing_damage: float = check_ongoing_damage()
 		if ongoing_damage > 0:
-			add_damage(ongoing_damage, Global.DAMAGE_TYPE.LAVA)
+			add_damage(ongoing_damage, Global.DamageType.LAVA)
 
 	timer_0_1_sec -= delta
 	if timer_0_1_sec <= 0.0:
@@ -181,16 +181,16 @@ func _input(_event):
 			fire_missile_or_rocket()
 	elif Input.is_action_just_released("kill_player1"):
 		if player_number == 1:
-			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
+			add_damage(max_damage, Global.DamageType.TEST)
 	elif Input.is_action_just_released("kill_player2"):
 		if player_number == 2:
-			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
+			add_damage(max_damage, Global.DamageType.TEST)
 	elif Input.is_action_just_released("kill_player3"):
 		if player_number == 3:
-			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
+			add_damage(max_damage, Global.DamageType.TEST)
 	elif Input.is_action_just_released("kill_player4"):
 		if player_number == 4:
-			add_damage(max_damage, Global.DAMAGE_TYPE.TEST)
+			add_damage(max_damage, Global.DamageType.TEST)
 	elif Input.is_action_just_released("toggle_snow"):
 		# fog will set to camera.far as long as the fog depth end = 0 in the main enviroment
 		if not $CameraBase/Camera/TweenFar.is_active():
@@ -325,13 +325,13 @@ func _physics_process(delta):
 			#damage(weapons[2].damage)
 			#else:
 			#damage(weapons[1].damage)
-			add_damage(ConfigWeapons.DAMAGE[ConfigWeapons.Type.MISSILE], Global.DAMAGE_TYPE.DIRECT_HIT)
+			add_damage(ConfigWeapons.DAMAGE[ConfigWeapons.Type.MISSILE], Global.DamageType.DIRECT_HIT)
 		else:
 			var indirect_explosion_force: float = hit_by_missile["force"]/hit_by_missile["distance"]
 			print("force="+str(hit_by_missile["force"])+" at distance="+str(hit_by_missile["distance"])+" -> indirect_explosion_force="+str(indirect_explosion_force))
 			apply_impulse( Vector3(0,0,0), indirect_explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 			if hit_by_missile["distance"] <= ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["range"]:
-				add_damage(ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["damage"], Global.DAMAGE_TYPE.INDIRECT_HIT)
+				add_damage(ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["damage"], Global.DamageType.INDIRECT_HIT)
 		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
 			
 		hit_by_missile["active"] = false
@@ -354,7 +354,7 @@ func _physics_process(delta):
 func _on_CarBody_body_entered(body):
 	if "Lava" in body.name:
 		#print("Taking max_damage damage")
-		add_damage(max_damage, Global.DAMAGE_TYPE.LAVA)
+		add_damage(max_damage, Global.DamageType.LAVA)
 
 
 func _on_DynamicGripTimer_timeout():
@@ -734,7 +734,7 @@ func check_accel_damage() -> void:
 		if rammed_another_car == false:
 			var damage: float = round(acceleration_calc_for_damage / ConfigVehicles.ACCEL_DAMAGE_THRESHOLD)
 			print("adding acceleration damage="+str(damage))
-			add_damage(damage, Global.DAMAGE_TYPE.FORCE)
+			add_damage(damage, Global.DamageType.FORCE)
 		# else don't take any damage
 	elif acceleration_calc_for_damage > ConfigVehicles.ACCEL_DAMAGE_THRESHOLD/2.0:
 		$Effects/Audio/CrashSound.playing = true
@@ -820,28 +820,33 @@ func add_damage(amount: float, damage_type: int) -> void:
 				$Effects/Shield.hide()
 			print("shield off - max hits reached")
 		return
-
+	
+	if special_ability_state["shield"] == true:
+		print("ignoring damage - shield is on")
+		return
+		
 	match Global.game_mode:
 		Global.GameMode.COMPETITIVE:
 			total_damage += amount
 		Global.GameMode.PEACEFUL:
-			if damage_type == Global.DAMAGE_TYPE.LAVA:
+			if damage_type == Global.DamageType.LAVA:
 				total_damage += amount
 			else:
 				print("Ignoring damage: GameMode.PEACEFUL")  
 		Global.GameMode.TOUGH:
-			if damage_type == Global.DAMAGE_TYPE.DIRECT_HIT or damage_type == Global.DAMAGE_TYPE.LAVA:
+			if damage_type == Global.DamageType.DIRECT_HIT or damage_type == Global.DamageType.LAVA:
 				total_damage += max_damage  # any direct hit is instant death
 			else:
 				print("Ignoring damage: GameMode.TOUGH and damage_type="+str(damage_type)) 
 		_:
 			print("Error: unknown damage type")
-	
+
 	print("accel_damage_enabled="+str(accel_damage_enabled))
 	align_effects_with_damage()
 	check_engine_force_value()
 	
 	if total_damage >= max_damage and vehicle_state != ConfigVehicles.AliveState.DYING:
+		get_player().add_achievement(Global.Achievements.HOT_STUFF)
 		print("damage: total_damage >= max_damage")
 		start_vehicle_dying()
 
@@ -1183,4 +1188,18 @@ func change_weather(weather_change: Dictionary, change_duration_sec) -> void:
 			$CameraBase/Camera/TweenFar.start()
 		if "snow_visible" == weather_item_key:
 			$CameraBase/Camera/ParticlesSnow.visible = weather_change["snow_visible"]
+
+
+
+func _on_TimerCheckSpeedDemon5Achievement_timeout():
+	get_player().add_achievement(Global.Achievements.SPEED_DEMON5)
+
+
+func _on_TimerCheckMaxSpeed_timeout():
+	var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
+	if fwd_mps >= max_speed_limit_mps:
+		if $TimerCheckSpeedDemon5Achievement.is_stopped():
+			$TimerCheckSpeedDemon5Achievement.start()
+	else:
+		$TimerCheckSpeedDemon5Achievement.stop()
 

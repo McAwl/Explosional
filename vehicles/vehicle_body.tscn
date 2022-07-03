@@ -1965,6 +1965,13 @@ one_shot = true
 wait_time = 0.1
 autostart = true
 
+[node name="TimerCheckSpeedDemon5Achievement" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[node name="TimerCheckMaxSpeed" type="Timer" parent="."]
+autostart = true
+
 [connection signal="timeout" from="Effects/Audio/TimerCheckSoundVolume" to="Effects/Audio" method="_on_TimerCheckSoundVolume_timeout"]
 [connection signal="timeout" from="DynamicGripTimer" to="." method="_on_DynamicGripTimer_timeout"]
 [connection signal="timeout" from="CheckSkidTimer" to="." method="_on_CheckSkidTimer_timeout"]
@@ -1974,3 +1981,5 @@ autostart = true
 [connection signal="timeout" from="TimerDisablePowerup" to="." method="_on_TimerDisablePowerup_timeout"]
 [connection signal="timeout" from="TimerDisableShieldAbility" to="." method="_on_TimerDisableShieldAbility_timeout"]
 [connection signal="timeout" from="TimerFlickerShield" to="." method="_on_TimerFlickerShield_timeout"]
+[connection signal="timeout" from="TimerCheckSpeedDemon5Achievement" to="." method="_on_TimerCheckSpeedDemon5Achievement_timeout"]
+[connection signal="timeout" from="TimerCheckMaxSpeed" to="." method="_on_TimerCheckMaxSpeed_timeout"]

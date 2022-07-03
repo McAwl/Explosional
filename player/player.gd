@@ -4,6 +4,7 @@ extends Spatial
 
 var player_number: int
 var last_spawn_point: Vector3
+var achievements: Dictionary = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -12,12 +13,11 @@ func _ready():
 	$VC/V/CanvasLayer/HeadUpDisplay/icon_missile.visible = false
 	$VC/V/CanvasLayer/HeadUpDisplay/icon_nuke.visible = false
 	$VC/V/CanvasLayer/HeadUpDisplay/health.tint_progress = "#7e00ff00"  # green
-
+	get_canvaslayer().get_node("LabelAchievement").hide()
 
 
 func _process(_delta):
 	 update_other_player_label()  # need to do this on every screen refresh
-
 
 
 func _on_TimerUpdateSpeedometer_timeout():
@@ -329,4 +329,25 @@ func has_vehicle_body() -> bool:
 
 func get_camera() -> Camera:
 	return $VC/V/Camera as Camera
-	
+
+
+func add_achievement(achievement: int) -> void:
+	if not achievement in achievements.keys():
+		var label = get_canvaslayer().get_node("LabelAchievement")
+		achievements[achievement] = {}
+		#print("player achievements = "+str(achievements))
+		label.anchor_top = 1.0
+		label.anchor_bottom = 1.0
+		label.show()
+		#print("Global.achievement_config="+str(Global.achievement_config))
+		#print("added achievement="+str(achievement))
+		label.text = "Achievement unlocked\n"+str(Global.achievement_config[achievement]["nice_name"])
+		$TimerDisableAchievementLabel.start()
+		$SoundAchievement.playing = true
+		$VC/V/CanvasLayer/TweenHorizAnchorTop.interpolate_property(label, "anchor_top", 1.0, 0.5, 0.5, Tween.TRANS_BACK, Tween.EASE_OUT)
+		$VC/V/CanvasLayer/TweenHorizAnchorTop.start()
+		$VC/V/CanvasLayer/TweenHorizAnchorBottom.interpolate_property(label, "anchor_bottom", 1.0, 0.5, 0.5, Tween.TRANS_BACK, Tween.EASE_OUT)
+		$VC/V/CanvasLayer/TweenHorizAnchorBottom.start()
+
+func _on_TimerDisableAchievementLabel_timeout():
+		get_canvaslayer().get_node("LabelAchievement").hide()

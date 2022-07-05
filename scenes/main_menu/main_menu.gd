@@ -159,6 +159,10 @@ func _on_VehicleVolume_value_changed(value):
 	Global.vehicle_sound_volume_db = value
 
 
+func _on_WindSpeed_value_changed(value):
+	Global.weather_model[Global.Weather.SNOW]["max_wind_strength"] = value
+
+
 func _on_CheckBox1Competitive_button_up():
 	Global.game_mode = Global.GameMode.COMPETITIVE
 	$GameModeSelection/CheckBox2Peaceful.pressed = false

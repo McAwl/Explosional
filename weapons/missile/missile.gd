@@ -191,18 +191,19 @@ func _on_Body_body_entered(body):
 
 
 func _on_TimerCheckActiveLight_timeout():
-	if homing == false:
-		$Body/OmniLight.hide()
-	else:
-		if homing_check_target_timer > 0.0:
-			$Body/OmniLight.light_color = Color(0, 1, 0)  # green = not active
-			$Body/OmniLight.show()
+	if $Body.has_node("OmniLight"):
+		if homing == false:
+			$Body/OmniLight.hide()
 		else:
-			$Body/OmniLight.light_color = Color(1, 0, 0)  # red = active
-			if closest_target_distance == null:
+			if homing_check_target_timer > 0.0:
+				$Body/OmniLight.light_color = Color(0, 1, 0)  # green = not active
 				$Body/OmniLight.show()
 			else:
-				$Body/OmniLight.visible = !$Body/OmniLight.visible  # flash red = homing on a target
+				$Body/OmniLight.light_color = Color(1, 0, 0)  # red = active
+				if closest_target_distance == null:
+					$Body/OmniLight.show()
+				else:
+					$Body/OmniLight.visible = !$Body/OmniLight.visible  # flash red = homing on a target
 
 
 # Public methods

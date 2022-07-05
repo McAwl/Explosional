@@ -1100,7 +1100,6 @@ transform = Transform( 1, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0 )
 
 [node name="Tank" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.516244, 0 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Tank"]
 
@@ -1549,6 +1548,7 @@ transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Truck" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.339322, 0 )
+visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Truck"]
 

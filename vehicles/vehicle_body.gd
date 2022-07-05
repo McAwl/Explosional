@@ -204,7 +204,8 @@ func _physics_process(delta):
 		return  # in process of being reset?
 	
 	# Add forces due to weather
-	add_central_force(Global.weather_state["wind_direction"] * Global.weather_state["wind_strength"])
+	var weather_force_modifier_per_vehicle: float = pow(ConfigVehicles.config[get_type()]["mass_kg/100"]/70.0, 1.5)
+	add_central_force(weather_force_modifier_per_vehicle*Global.weather_state["wind_direction"] * Global.weather_state["wind_strength"])
 	#print("Global.weather_state['wind_direction']="+str(Global.weather_state['wind_direction']))
 	#print("Global.weather_state['wind_strength']="+str(Global.weather_state['wind_strength']))
 		
@@ -261,7 +262,8 @@ func _physics_process(delta):
 			engine_force = 0
 			
 		if Input.is_action_pressed("reverse_player"+str(player_number)):
-			engine_force = -engine_force_value/2.0
+			# brakes shouldn't be effected by whether the engine is damaged
+			engine_force = -ConfigVehicles.config[ConfigVehicles.Type.TANK]["engine_force_value"]/2.0
 			if fwd_mps > speed_low_limit:
 				brake = ConfigVehicles.config[get_type()]["brake"] / 5.0
 		else:
@@ -279,20 +281,32 @@ func _physics_process(delta):
 			for wh in get_children():
 				if wh is VehicleWheel:
 					if engine_force == 0.0 and (left > 0.0 or right > 0.0):  # turning at rest
-						wh.engine_force = ConfigVehicles.config[ConfigVehicles.Type.TANK]["engine_force_value"]
+						wh.engine_force = 6.0*ConfigVehicles.config[ConfigVehicles.Type.TANK]["engine_force_value"]
+						#print("turning at rest wh.engine_force="+str(wh.engine_force))
 					elif engine_force > 0.0 and (left > 0.0 or right > 0.0):  # turning at speed
-						wh.engine_force = engine_force/2.0
-					else:  # moving straight forward, no turing
-						wh.engine_force = engine_force  
+						wh.engine_force = 4.0*engine_force
+						#print("turning at speed wh.engine_force="+str(wh.engine_force))
+					elif engine_force > 0.0: # moving straight forward, no turing
+						wh.engine_force = engine_force
+						#print("straight wh.engine_force="+str(wh.engine_force))
+					#else:  
+					#	print("??")
 					#print("wh.name="+str(wh.name))
-					if wh.name in ["Wheel1", "Wheel2", "Wheel6", "Wheel7"]:  # left row
-						wh.engine_force *= 1.0 if right-left == 0.0 else right-left
-					elif wh.name in ["Wheel3", "Wheel4", "Wheel5", "Wheel8"]:  # right row
-						wh.engine_force *= 1.0 if left-right == 0.0 else left-right
-					#else:
-					#	print("Warning: wheel name not found for tank")
+					if wh.engine_force > 0.0:  # turn tank wheels in opposite directions
+						if wh.name in ["Wheel1", "Wheel2", "Wheel6", "Wheel7"]:  # left row
+							#print("left row "+str(wh.name))
+							wh.engine_force *= 1.0 if right-left == 0.0 else right-left
+						elif wh.name in ["Wheel3", "Wheel4", "Wheel5", "Wheel8"]:  # right row
+							#print("right row "+str(wh.name))
+							wh.engine_force *= 1.0 if left-right == 0.0 else left-right
+						#else:
+						#	print("Warning: wheel name not found for tank")
 					#print("wh.engine_force="+str(wh.engine_force)+", left="+str(left)+", right="+str(right))
-				#engine_force = 0.0  # turn off overall engine force, leaving per-wheel forces used above
+					#engine_force = 0.0  # turn off overall engine force, leaving per-wheel forces used above
+					#if (left > 0.0 or right > 0.0):
+					#	print("turing wh.engine_force="+str(wh.engine_force))
+					#	if wh.engine_force == 0.0:
+					#		print("Warning: wheel "+str(wh.name)+" force=0 and user is turning")
 		else:  # steer wheels normally
 			steer_target = left - right
 			steer_target *= ConfigVehicles.STEER_LIMIT

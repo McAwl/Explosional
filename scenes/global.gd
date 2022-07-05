@@ -36,7 +36,7 @@ var achievement_config: Dictionary = {
 
 var weather_model: Array = [
 	{"type": Weather.NORMAL, "duration_s": 120.0, "max_wind_strength": 0.0, "fog_depth_curve": 4.75, "fog_depth_begin": 20.0, "visibility": 200.0}, 
-	{"type": Weather.SNOW, "duration_s": 30.0, "max_wind_strength": 500.0, "fog_depth_curve": 1.0, "fog_depth_begin": 0.0, "visibility": 50.0}
+	{"type": Weather.SNOW, "duration_s": 30.0, "max_wind_strength":300.0, "fog_depth_curve": 1.0, "fog_depth_begin": 0.0, "visibility": 50.0}
 	]
 var weather_state: Dictionary = {
 	"index": 0,  
@@ -124,9 +124,12 @@ func _process(delta):
 		
 		# random walk for wind direction
 		var x = weather_state["wind_direction"].x
+		var y = weather_state["wind_direction"].y
 		var z = weather_state["wind_direction"].z
-		weather_state["wind_direction"] = Vector3(0.9*x + 0.1*rng.randf_range(-1.0, 1.0), 0, 0.9*z + 0.1*rng.randf_range(-1.0, 1.0))
+		
+		weather_state["wind_direction"] = Vector3(0.9*x + 0.1*rng.randf_range(-1.0, 1.0), 0.9*y + 0.1*rng.randf_range(0.0, 1.0), 0.9*z + 0.1*rng.randf_range(-1.0, 1.0))
 		weather_state["wind_direction"].x = clamp(weather_state["wind_direction"].x, -1.0, 1.0)
+		weather_state["wind_direction"].y = clamp(weather_state["wind_direction"].y, -2.0, 2.0)
 		weather_state["wind_direction"].z = clamp(weather_state["wind_direction"].z, -1.0, 1.0)
 		
 		# random walk for wind strength, but walk toward max/2

@@ -874,7 +874,8 @@ func add_damage(amount: float, damage_type: int) -> void:
 	check_engine_force_value()
 	
 	if total_damage >= max_damage and vehicle_state != ConfigVehicles.AliveState.DYING:
-		get_player().add_achievement(Global.Achievements.HOT_STUFF)
+		if damage_type == Global.DamageType.LAVA:
+			get_player().add_achievement(Global.Achievements.HOT_STUFF)
 		print("damage: total_damage >= max_damage")
 		start_vehicle_dying()
 

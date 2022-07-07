@@ -348,7 +348,7 @@ func add_achievement(achievement: int) -> void:
 		label.show()
 		#print("Global.achievement_config="+str(Global.achievement_config))
 		#print("added achievement="+str(achievement))
-		label.text = "Achievement unlocked\n"+str(Global.achievement_config[achievement]["nice_name"])
+		label.text = "Achievement unlocked: "+str(Global.achievement_config[achievement]["nice_name"])+"\n"+str(Global.achievement_config[achievement]["explanation"])
 		$TimerDisableAchievementLabel.start()
 		$SoundAchievement.playing = true
 		$VC/V/CanvasLayer/TweenHorizAnchorTop.interpolate_property(label, "anchor_top", 1.0, 0.5, 0.5, Tween.TRANS_BACK, Tween.EASE_OUT)

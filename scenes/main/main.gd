@@ -396,3 +396,8 @@ func reset_game() -> void:
 	get_tree().paused = false
 	queue_free()
 
+
+func _on_PlayArea_body_exited(body):
+	if body is VehicleBody:
+		body.add_damage(body.max_damage, Global.DamageType.OFF_MAP)
+		# body.get_player().add_achievement(Global.Achievements.OUT_OF_THIS_WORLD)

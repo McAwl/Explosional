@@ -20,24 +20,29 @@ enum DamageType {
 	INDIRECT_HIT=1,
 	FORCE=2,
 	LAVA=3,
-	TEST=4
+	TEST=4,
+	OFF_MAP=5,
 }
 
 enum Achievements {
 	HOT_STUFF=0,
-	SPEED_DEMON5=1
+	SPEED_DEMON5=1,
+	SPEED_DEMON10=2,
+	OUT_OF_THIS_WORLD=3
 }
 
 var achievement_config: Dictionary = {
-	Achievements.HOT_STUFF: {"nice_name": "Die in lava", "rare": false},
-	Achievements.SPEED_DEMON5: {"nice_name": "Drive at maximum speed for 5 seconds", "rare": false},
-	Achievements.SPEED_DEMON5: {"nice_name": "Drive at maximum speed for 10 seconds", "rare": true},
+	Achievements.HOT_STUFF: {"nice_name": "Hot Stuff", "explanation": "Die in lava", "rare": false},
+	Achievements.SPEED_DEMON5: {"nice_name": "Speed Demon 5", "explanation": "Drive at maximum speed for 5 seconds", "rare": false},
+	Achievements.SPEED_DEMON5: {"nice_name": "Speed Demon 10", "explanation": "Drive at maximum speed for 10 seconds", "rare": true},
+	Achievements.OUT_OF_THIS_WORLD: {"nice_name": "Out of this World", "explanation": "Drove off the map", "rare": true},
 	}
 
 var weather_model: Array = [
 	{"type": Weather.NORMAL, "duration_s": 120.0, "max_wind_strength": 0.0, "fog_depth_curve": 4.75, "fog_depth_begin": 20.0, "visibility": 200.0}, 
 	{"type": Weather.SNOW, "duration_s": 30.0, "max_wind_strength":300.0, "fog_depth_curve": 1.0, "fog_depth_begin": 0.0, "visibility": 50.0}
 	]
+	
 var weather_state: Dictionary = {
 	"index": 0,  
 	"type": Weather.NORMAL, 
@@ -46,6 +51,7 @@ var weather_state: Dictionary = {
 	"wind_strength": 0.0,
 	"wind_volume_db": -21.0,
 	}
+	
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var weather_recalc_timer = 1.0
 var weather_change_duration_sec = 10.0

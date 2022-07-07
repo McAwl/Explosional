@@ -839,9 +839,9 @@ func add_damage(amount: float, damage_type: int) -> void:
 	$CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
 	accel_damage_enabled = false
 	
-	if powerup_state["shield"]["enabled"] == true:
+	if powerup_state["shield"]["enabled"] == true and not damage_type == Global.DamageType.LAVA and not damage_type == Global.DamageType.OFF_MAP:
 		powerup_state["shield"]["hits_left"] -= 1
-		print("ignoring damage - shield is on")
+		print("ignoring damage of type "+str(damage_type)+" - shield powerup is on")
 		if powerup_state["shield"]["hits_left"] <= 0:
 			powerup_state["shield"]["enabled"] = false
 			if special_ability_state["shield"] == false:
@@ -849,20 +849,20 @@ func add_damage(amount: float, damage_type: int) -> void:
 			print("shield off - max hits reached")
 		return
 	
-	if special_ability_state["shield"] == true:
-		print("ignoring damage - shield is on")
+	if special_ability_state["shield"] == true and not damage_type == Global.DamageType.LAVA and not damage_type == Global.DamageType.OFF_MAP:
+		print("ignoring damage of type "+str(damage_type)+" - shield special ability is on")
 		return
 		
 	match Global.game_mode:
 		Global.GameMode.COMPETITIVE:
 			total_damage += amount
 		Global.GameMode.PEACEFUL:
-			if damage_type == Global.DamageType.LAVA:
+			if damage_type == Global.DamageType.LAVA or damage_type == Global.DamageType.OFF_MAP:
 				total_damage += amount
 			else:
 				print("Ignoring damage: GameMode.PEACEFUL")  
 		Global.GameMode.TOUGH:
-			if damage_type == Global.DamageType.DIRECT_HIT or damage_type == Global.DamageType.LAVA:
+			if damage_type == Global.DamageType.DIRECT_HIT or damage_type == Global.DamageType.LAVA or damage_type == Global.DamageType.OFF_MAP:
 				total_damage += max_damage  # any direct hit is instant death
 			else:
 				print("Ignoring damage: GameMode.TOUGH and damage_type="+str(damage_type)) 

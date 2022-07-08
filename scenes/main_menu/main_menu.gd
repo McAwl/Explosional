@@ -88,7 +88,9 @@ func _on_OptionsButton_button_up():
 	$OptionMenu.show()
 	$OptionMenu/GridContainer/Option1Button.grab_focus()
 	$PlayerSelection.hide()
+	$GameModeSelection.hide()
 	$MainSelection/MainContainer/ButtonsContainer.hide()
+	$OptionMenu/GridContainer/MusicVolume/MusicVolume.grab_focus()
 
 
 func _on_OptionBackButton_button_up():
@@ -97,9 +99,11 @@ func _on_OptionBackButton_button_up():
 	if game_active:
 		get_resume_button().grab_focus()
 		$PlayerSelection.hide()
+		$GameModeSelection.show()
 	else:
 		get_start_button().grab_focus()
 		$PlayerSelection.show()
+		$GameModeSelection.show()
 
 
 func _on_AddPlayerButton_button_up():
@@ -214,6 +218,7 @@ func configure():
 func set_visible(_visibile) -> void:
 	$MainSelection.visible = _visibile
 	$VersionText.visible = _visibile
+	$GameModeSelection.visible = _visibile
 
 
 func pause() -> void:

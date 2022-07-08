@@ -1,0 +1,21 @@
+# Rename tags named foo-bar-#.#.# to v#.#.# and push the tag changes
+git tag -l | while read t; do n="v${t##*-}"; git tag $n $t; git push --tags ; git tag -d $t; git push origin :refs/tags/$t ; done
+
+Renamed all my x.y.z tags to vx.y.z
+
+
+
+This changes x.y.z to x/y/z, but won't delete tags that are already in new format
+
+# make sure your tags are up to date
+git fetch origin
+# rename all tags
+git tag -l | while read t; do n=$(echo $t | sed "s?\.?/?g"); if [[ "$n" != "$t" ]]; then git tag $n $t; git tag -d $t; git push origin :refs/tags/$t ; done
+
+@llinardos
+llinardos commented on 3 May 2021
+
+This changes build/n to build/0n (e.g.: build/8 -> build/08).
+
+git tag -l | while read t; do n=$(echo $t | sed "s?\/?/0?g"); git tag $n $t; git tag -d $t; done
+

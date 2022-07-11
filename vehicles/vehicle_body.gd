@@ -162,40 +162,61 @@ func _process(delta):
 	add_central_force(Global.weather_state["wind_direction"] * Global.weather_state["wind_strength"])
 
 
-func _input(_event):
-	if Input.is_action_just_released("cycle_weapon_player"+str(player_number)):
-		cycle_weapon()
-	elif Input.is_action_just_released("fire_player"+str(player_number)) and weapons_state[weapon_select]["active"] == false and weapons_state[weapon_select]["cooldown_timer"] <= 0.0 and weapons_state[weapon_select]["enabled"] == true:
-		#print("Player pressed fire")
-		weapons_state[weapon_select]["cooldown_timer"] = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
-		get_player().set_label_player_name()
-		get_player().set_label_lives_left()
-		if weapon_select == ConfigWeapons.Type.MINE or weapon_select == ConfigWeapons.Type.NUKE:  # mine or nuke
-			fire_mine_or_nuke()
-		elif weapon_select == ConfigWeapons.Type.ROCKET:
-			fire_missile_or_rocket()
-		elif weapon_select == ConfigWeapons.Type.MISSILE:
-			fire_missile_or_rocket()
-		elif weapon_select == ConfigWeapons.Type.BALLISTIC:
-			fire_missile_or_rocket()
-		elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
-			fire_missile_or_rocket()
-	elif Input.is_action_just_released("kill_player1"):
-		if player_number == 1:
-			add_damage(max_damage, Global.DamageType.TEST)
-	elif Input.is_action_just_released("kill_player2"):
-		if player_number == 2:
-			add_damage(max_damage, Global.DamageType.TEST)
-	elif Input.is_action_just_released("kill_player3"):
-		if player_number == 3:
-			add_damage(max_damage, Global.DamageType.TEST)
-	elif Input.is_action_just_released("kill_player4"):
-		if player_number == 4:
-			add_damage(max_damage, Global.DamageType.TEST)
-	elif Input.is_action_just_released("toggle_snow"):
-		# fog will set to camera.far as long as the fog depth end = 0 in the main enviroment
-		if not $CameraBase/Camera/TweenFar.is_active():
-			Global.toggle_weather()
+func _input(event):
+	if InputMap.event_is_action (event, "cycle_weapon_player"+str(player_number)):
+		if event.is_pressed():
+			cycle_weapon()
+			# Stop the event from spreading
+			get_tree().set_input_as_handled()
+	elif InputMap.event_is_action (event, "fire_player"+str(player_number)) and weapons_state[weapon_select]["active"] == false and weapons_state[weapon_select]["cooldown_timer"] <= 0.0 and weapons_state[weapon_select]["enabled"] == true:
+		if event.is_pressed():
+			#print("Player pressed fire")
+			weapons_state[weapon_select]["cooldown_timer"] = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
+			get_player().set_label_player_name()
+			get_player().set_label_lives_left()
+			if weapon_select == ConfigWeapons.Type.MINE or weapon_select == ConfigWeapons.Type.NUKE:  # mine or nuke
+				fire_mine_or_nuke()
+			elif weapon_select == ConfigWeapons.Type.ROCKET:
+				fire_missile_or_rocket()
+			elif weapon_select == ConfigWeapons.Type.MISSILE:
+				fire_missile_or_rocket()
+			elif weapon_select == ConfigWeapons.Type.BALLISTIC:
+				fire_missile_or_rocket()
+			elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
+				fire_missile_or_rocket()
+			# Stop the event from spreading
+			get_tree().set_input_as_handled()
+	elif InputMap.event_is_action (event, "kill_player1"):
+		if event.is_pressed():
+			if player_number == 1:
+				add_damage(max_damage, Global.DamageType.TEST)
+			# Stop the event from spreading
+			get_tree().set_input_as_handled()
+	elif InputMap.event_is_action (event, "kill_player2"):
+		if event.is_pressed():
+			if player_number == 2:
+				add_damage(max_damage, Global.DamageType.TEST)
+			# Stop the event from spreading
+			get_tree().set_input_as_handled()
+	elif InputMap.event_is_action (event, "kill_player3"):
+		if event.is_pressed():
+			if player_number == 3:
+				add_damage(max_damage, Global.DamageType.TEST)
+			# Stop the event from spreading
+			get_tree().set_input_as_handled()
+	elif InputMap.event_is_action (event, "kill_player4"):
+		if event.is_pressed():
+			if player_number == 4:
+				add_damage(max_damage, Global.DamageType.TEST)
+			# Stop the event from spreading
+			get_tree().set_input_as_handled()
+	elif InputMap.event_is_action (event, "toggle_snow"):
+		if event.is_pressed():
+			# fog will set to camera.far as long as the fog depth end = 0 in the main enviroment
+			if not $CameraBase/Camera/TweenFar.is_active():
+				Global.toggle_weather()
+			# Stop the event from spreading
+			get_tree().set_input_as_handled()
 
 
 func _physics_process(delta):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://assets/materials/smoke.tres" type="Material" id=1]
 [ext_resource path="res://assets/materials/shockwave.tres" type="Material" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://effects/visual/explosion.gd" type="Script" id=5]
 [ext_resource path="res://addons/mrminimal_flipbook_particles/assets/explosions/explosion_01/materials/explosion_01_material.tres" type="Material" id=6]
 [ext_resource path="res://effects/visual/smoke.gd" type="Script" id=7]
+[ext_resource path="res://effects/visual/explosion_audio.gd" type="Script" id=8]
 
 [sub_resource type="Gradient" id=76]
 resource_local_to_scene = true
@@ -592,6 +593,11 @@ refraction_texture_channel = 0
 script = ExtResource( 5 )
 
 [node name="Audio" type="Spatial" parent="."]
+script = ExtResource( 8 )
+
+[node name="TimerCheckAudioPitch" type="Timer" parent="Audio"]
+wait_time = 0.1
+autostart = true
 
 [node name="ExplosionSound" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource( 3 )
@@ -699,4 +705,5 @@ sides = 18
 ring_sides = 8
 material = SubResource( 85 )
 
+[connection signal="timeout" from="Audio/TimerCheckAudioPitch" to="Audio" method="_on_TimerCheckAudioPitch_timeout"]
 [connection signal="timeout" from="TimerFailsafeDestroy" to="." method="_on_TimerFailsafeDestroy_timeout"]

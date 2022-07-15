@@ -32,6 +32,7 @@ func _process(delta):
 			current_position_sec = self.get_playback_position()
 			speed = get_vehicle().fwd_mps_0_1_ewma
 			pitch_scale = (0.5 + (0.2*((10.0+speed)/10.0))) * ConfigVehicles.engine_sound_pitch[get_vehicle().get_type()]
+			pitch_scale *= Engine.time_scale
 			accel = get_vehicle().acceleration_fwd_0_1_ewma
 			if current_position_sec < idle[0]:
 				self.play(idle[0])

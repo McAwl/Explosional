@@ -73,13 +73,13 @@ func _process(delta):
 		return
 
 	if set_pos == false:
-		print("Exiting _process: set_pos == false")
+		Global.debug_print(3, "Exiting _process: set_pos == false")
 		set_global_transform_origin()
 
 	print_timer += delta
 		
 	if global_transform.origin.y < -50.0:
-		print("global_transform.origin.y < -50.0 -> AliveState.DEAD")
+		Global.debug_print(3, "global_transform.origin.y < -50.0 -> AliveState.DEAD")
 		vehicle_state = ConfigVehicles.AliveState.DEAD
 	
 	if vehicle_state == ConfigVehicles.AliveState.DYING:
@@ -87,12 +87,12 @@ func _process(delta):
 		if explosion2_timer <= 0.0:
 			explosion2_timer = 0.2
 		if dying_finished():
-			print("dying_finished() -> AliveState.DEAD")
+			Global.debug_print(3, "dying_finished() -> AliveState.DEAD")
 			vehicle_state = ConfigVehicles.AliveState.DEAD
 		else:
 			if !vehicle_parts_exploded == null:
 				# Move the target cameras to the centre of the collection of meshes
-				print("moving cam to centre_of_meshes")
+				Global.debug_print(3, "moving cam to centre_of_meshes")
 				var centre_of_meshes = vehicle_parts_exploded.centre_of_meshes
 				$CameraBase/CameraBasesTargets/CamTargetForward.translation = centre_of_meshes
 				$CameraBase/CameraBasesTargets/CamTargetForward_UD.translation = centre_of_meshes
@@ -102,7 +102,7 @@ func _process(delta):
 				
 
 	if total_damage >= max_damage:
-		print("Exiting _process: total_damage >= max_damage")
+		Global.debug_print(3, "Exiting _process: total_damage >= max_damage")
 		return
 
 	timer_1_sec -= delta
@@ -118,19 +118,19 @@ func _process(delta):
 		flicker_lights()
 		timer_0_1_sec = 0.1
 		if not ("instance" in weapons_state[weapon_select]):
-			#print(str(weapons[weapon_select]["name"])+" not in dict")
+			#Global.debug_print(3, str(weapons[weapon_select]["name"])+" not in dict")
 			weapons_state[weapon_select]["active"] = false
 			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
 		elif weapons_state[weapon_select]["instance"] == null:
-			#print(str(weapons[weapon_select]["name"])+" is null")
+			#Global.debug_print(3, str(weapons[weapon_select]["name"])+" is null")
 			weapons_state[weapon_select]["active"] = false
 			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
 		elif not is_instance_valid(weapons_state[weapon_select]["instance"]):
-			#print(str(weapons[weapon_select]["name"])+" is invalid instance")
+			#Global.debug_print(3, str(weapons[weapon_select]["name"])+" is invalid instance")
 			weapons_state[weapon_select]["active"] = false
 			cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
 		#else:
-		#print(str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
+		#Global.debug_print(3, str(weapons[weapon_select]["name"])+" in dict. Lifetime="+str(weapons[weapon_select]["instance"].lifetime_seconds))
 		get_player().set_label_player_name()  # , total_damage, weapons_state[weapon_select].damage)
 		get_player().set_label_lives_left()
 		get_player().get_hud().get_node("cooldown").max_value = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
@@ -170,7 +170,7 @@ func _input(event):
 			get_tree().set_input_as_handled()
 	elif InputMap.event_is_action (event, "fire_player"+str(player_number)) and weapons_state[weapon_select]["active"] == false and weapons_state[weapon_select]["cooldown_timer"] <= 0.0 and weapons_state[weapon_select]["enabled"] == true:
 		if event.is_pressed():
-			#print("Player pressed fire")
+			#Global.debug_print(3, "Player pressed fire")
 			weapons_state[weapon_select]["cooldown_timer"] = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
 			get_player().set_label_player_name()
 			get_player().set_label_lives_left()
@@ -227,8 +227,8 @@ func _physics_process(delta):
 	# Add forces due to weather
 	var weather_force_modifier_per_vehicle: float = pow(ConfigVehicles.config[get_type()]["mass_kg/100"]/70.0, 1.5)
 	add_central_force(weather_force_modifier_per_vehicle*Global.weather_state["wind_direction"] * Global.weather_state["wind_strength"])
-	#print("Global.weather_state['wind_direction']="+str(Global.weather_state['wind_direction']))
-	#print("Global.weather_state['wind_strength']="+str(Global.weather_state['wind_strength']))
+	#Global.debug_print(3, "Global.weather_state['wind_direction']="+str(Global.weather_state['wind_direction']))
+	#Global.debug_print(3, "Global.weather_state['wind_strength']="+str(Global.weather_state['wind_strength']))
 		
 	# Keep polling continuous Input related to movement here: e.g. accelerate and move. All others move to e.g. _input()
 	
@@ -254,11 +254,11 @@ func _physics_process(delta):
 	
 	#if abs(old_acceleration_calc_for_damage) > 0.0 and abs(acceleration_calc_for_damage) > 0.0:
 	#	if abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) > 2.0 or abs(old_acceleration_calc_for_damage)/abs(acceleration_calc_for_damage) < 0.5:
-	#		print("old_acceleration_calc_for_damage="+str(old_acceleration_calc_for_damage))
-	#		print("  new acceleration_calc_for_damage (smoothed)="+str(acceleration_calc_for_damage))
-	#		print("  new_acceleration="+str(new_acceleration))
-	#		#print("  CheckAccelDamage="+str($CheckAccelDamage.))
-	#		print("  lifetime_so_far_sec="+str(lifetime_so_far_sec))
+	#		Global.debug_print(3, "old_acceleration_calc_for_damage="+str(old_acceleration_calc_for_damage))
+	#		Global.debug_print(3, "  new acceleration_calc_for_damage (smoothed)="+str(acceleration_calc_for_damage))
+	#		Global.debug_print(3, "  new_acceleration="+str(new_acceleration))
+	#		#Global.debug_print(3, "  CheckAccelDamage="+str($CheckAccelDamage.))
+	#		Global.debug_print(3, "  lifetime_so_far_sec="+str(lifetime_so_far_sec))
 	
 	check_accel_damage()
 
@@ -271,14 +271,14 @@ func _physics_process(delta):
 			var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
 			if fwd_mps < speed_low_limit and speed != 0 and fwd_mps != 0.0:
 				engine_force = clamp(engine_force_value * speed_low_limit / abs(fwd_mps), 0, engine_force_value)
-				#print("clamped engine_force="+str(engine_force))
+				#Global.debug_print(3, "clamped engine_force="+str(engine_force))
 			elif fwd_mps > max_speed_limit_mps and speed != 0 and fwd_mps != 0.0:
 				var speed_over_limit_mps = max_speed_limit_mps - abs(fwd_mps)  # how far over limit in metres/sec
 				engine_force = clamp(engine_force_value * (abs(fwd_mps)/(10.0*speed_over_limit_mps)), 0, engine_force_value)  # once over speed limit, severely reduce engine force
-				#print("clamped engine_force="+str(engine_force))
+				#Global.debug_print(3, "clamped engine_force="+str(engine_force))
 			else:
 				engine_force = engine_force_value
-				#print("engine_force="+str(engine_force))
+				#Global.debug_print(3, "engine_force="+str(engine_force))
 		else:
 			engine_force = 0
 			
@@ -303,31 +303,31 @@ func _physics_process(delta):
 				if wh is VehicleWheel:
 					if engine_force == 0.0 and (left > 0.0 or right > 0.0):  # turning at rest
 						wh.engine_force = 6.0*ConfigVehicles.config[ConfigVehicles.Type.TANK]["engine_force_value"]
-						#print("turning at rest wh.engine_force="+str(wh.engine_force))
+						#Global.debug_print(3, "turning at rest wh.engine_force="+str(wh.engine_force))
 					elif engine_force > 0.0 and (left > 0.0 or right > 0.0):  # turning at speed
 						wh.engine_force = 4.0*engine_force
-						#print("turning at speed wh.engine_force="+str(wh.engine_force))
+						#Global.debug_print(3, "turning at speed wh.engine_force="+str(wh.engine_force))
 					elif engine_force > 0.0: # moving straight forward, no turing
 						wh.engine_force = engine_force
-						#print("straight wh.engine_force="+str(wh.engine_force))
+						#Global.debug_print(3, "straight wh.engine_force="+str(wh.engine_force))
 					#else:  
-					#	print("??")
-					#print("wh.name="+str(wh.name))
+					#	Global.debug_print(3, "??")
+					#Global.debug_print(3, "wh.name="+str(wh.name))
 					if wh.engine_force > 0.0:  # turn tank wheels in opposite directions
 						if wh.name in ["Wheel1", "Wheel2", "Wheel6", "Wheel7"]:  # left row
-							#print("left row "+str(wh.name))
+							#Global.debug_print(3, "left row "+str(wh.name))
 							wh.engine_force *= 1.0 if right-left == 0.0 else right-left
 						elif wh.name in ["Wheel3", "Wheel4", "Wheel5", "Wheel8"]:  # right row
-							#print("right row "+str(wh.name))
+							#Global.debug_print(3, "right row "+str(wh.name))
 							wh.engine_force *= 1.0 if left-right == 0.0 else left-right
 						#else:
-						#	print("Warning: wheel name not found for tank")
-					#print("wh.engine_force="+str(wh.engine_force)+", left="+str(left)+", right="+str(right))
+						#	Global.debug_print(3, "Warning: wheel name not found for tank")
+					#Global.debug_print(3, "wh.engine_force="+str(wh.engine_force)+", left="+str(left)+", right="+str(right))
 					#engine_force = 0.0  # turn off overall engine force, leaving per-wheel forces used above
 					#if (left > 0.0 or right > 0.0):
-					#	print("turing wh.engine_force="+str(wh.engine_force))
+					#	Global.debug_print(3, "turing wh.engine_force="+str(wh.engine_force))
 					#	if wh.engine_force == 0.0:
-					#		print("Warning: wheel "+str(wh.name)+" force=0 and user is turning")
+					#		Global.debug_print(3, "Warning: wheel "+str(wh.name)+" force=0 and user is turning")
 		else:  # steer wheels normally
 			steer_target = left - right
 			steer_target *= ConfigVehicles.STEER_LIMIT
@@ -347,7 +347,7 @@ func _physics_process(delta):
 			special_ability_state["climb_walls"] = false
 		
 	if hit_by_missile["active"] == true:
-		print("Player "+str(player_number)+ " hit by missile!")
+		Global.debug_print(3, "Player "+str(player_number)+ " hit by missile!")
 		#var direction = hit_by_missile_origin - $Body.transform.origin  
 		var direction: Vector3 = hit_by_missile["direction_for_explosion"]  # $Body.transform.origin - hit_by_missile_origin 
 		direction[1] += 5.0
@@ -355,7 +355,7 @@ func _physics_process(delta):
 			direction[1] = 0  # remove downwards force - as vehicles can be blown through the terrain
 		#var explosion_force: float = 200.0  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
 		if hit_by_missile["direct_hit"] == true:
-			print("(direct hit) explosion_force="+str(hit_by_missile["force"]))
+			Global.debug_print(3, "(direct hit) explosion_force="+str(hit_by_missile["force"]))
 			apply_impulse( Vector3(0,0,0), hit_by_missile["force"]*direction.normalized() )   # offset, impulse(=direction*force)
 			#if hit_by_missile["homing"]:
 			#damage(weapons[2].damage)
@@ -364,7 +364,7 @@ func _physics_process(delta):
 			add_damage(ConfigWeapons.DAMAGE[ConfigWeapons.Type.MISSILE], Global.DamageType.DIRECT_HIT)
 		else:
 			var indirect_explosion_force: float = hit_by_missile["force"]/hit_by_missile["distance"]
-			print("force="+str(hit_by_missile["force"])+" at distance="+str(hit_by_missile["distance"])+" -> indirect_explosion_force="+str(indirect_explosion_force))
+			Global.debug_print(3, "force="+str(hit_by_missile["force"])+" at distance="+str(hit_by_missile["distance"])+" -> indirect_explosion_force="+str(indirect_explosion_force))
 			apply_impulse( Vector3(0,0,0), indirect_explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 			if hit_by_missile["distance"] <= ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["range"]:
 				add_damage(ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["damage"], Global.DamageType.INDIRECT_HIT)
@@ -374,7 +374,7 @@ func _physics_process(delta):
 
 	# If we've fired a ballistic weapon, know backwards here
 	if knock_back_firing_ballistic == true:
-		print("knock_back_firing_ballistic: knocing vehicle back")
+		Global.debug_print(3, "knock_back_firing_ballistic: knocing vehicle back")
 		knock_back_firing_ballistic = false
 		apply_impulse( Vector3(0,0,0), -100.0*transform.basis.z )   # offset, impulse(=direction*force)
 		apply_impulse( Vector3(0,0,0), 50.0*transform.basis.y )   # offset, impulse(=direction*force)
@@ -389,7 +389,7 @@ func _physics_process(delta):
 
 func _on_CarBody_body_entered(body):
 	if "Lava" in body.name:
-		#print("Taking max_damage damage")
+		#Global.debug_print(3, "Taking max_damage damage")
 		add_damage(max_damage, Global.DamageType.LAVA)
 
 
@@ -463,7 +463,7 @@ func _on_TimerFlickerShield_timeout():
 
 func _on_CheckAccelDamage_timeout():
 	accel_damage_enabled = true 
-	print("accel_damage_enabled="+str(accel_damage_enabled))
+	Global.debug_print(3, "accel_damage_enabled="+str(accel_damage_enabled))
 
 
 func _on_TimerShieldCheckSpecialAbility_timeout():
@@ -494,7 +494,7 @@ func _on_TimerCheckMaxSpeed_timeout():
 
 func init(_pos=null, _player_number=null, _name=null) -> bool:
 	
-	#print("VehicleBody:init()")
+	#Global.debug_print(3, "VehicleBody:init()")
 	
 	lifetime_so_far_sec = 0.0
 	cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
@@ -506,9 +506,9 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 		name = _name
 	
 	pos = _pos
-	#print("VehicleBody() init: StatePlayers.num_players()="+str(StatePlayers.num_players()))
+	#Global.debug_print(3, "VehicleBody() init: StatePlayers.num_players()="+str(StatePlayers.num_players()))
 	
-	#print("vehicle="+str(get_type()))
+	#Global.debug_print(3, "vehicle="+str(get_type()))
 	# Depending on vehicle type, we look for its nodes
 	var vehicle_type_node: Spatial = $VehicleTypes.get_node(ConfigVehicles.nice_name[get_type()]) as Spatial
 	if vehicle_type_node == null:
@@ -519,12 +519,12 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 		if ch.name in ["Raycasts", "Positions", "MeshInstances", "Lights", "CameraBasesTargets"]:  # move from 1 level down
 			vehicle_type_node.remove_child(ch)
 			if ch.name == "CameraBasesTargets":
-				#print("ctm="+str(ctm))
-				#print("ch="+str(ch))
+				#Global.debug_print(3, "ctm="+str(ctm))
+				#Global.debug_print(3, "ch="+str(ch))
 				if has_node("CameraBase"):
 					$CameraBase.add_child(ch)
 				else:
-					print("Error: no CameraBase, children are: "+str(get_children()))
+					Global.debug_print(3, "Error: no CameraBase, children are: "+str(get_children()))
 			else:
 				add_child(ch)
 		elif ch.name in ["Wheels", "CollisionShapes", "Effects"]:  # move from 2 levels down
@@ -541,9 +541,9 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	if has_node("VehicleTypes"):
 		get_node("VehicleTypes").queue_free()
 	
-	print("StatePlayers.players[player_number]['vehicle']="+str(get_type()))
+	Global.debug_print(3, "StatePlayers.players[player_number]['vehicle']="+str(get_type()))
 	if get_type() < 0:  # in ConfigVehicles.Type:
-		print("vehicle_type "+str(get_type())+" not found in ConfigVehicles.Type="+str(ConfigVehicles.Type))
+		Global.debug_print(3, "vehicle_type "+str(get_type())+" not found in ConfigVehicles.Type="+str(ConfigVehicles.Type))
 		return false
 		
 	configure_vehicle_properties()
@@ -564,8 +564,8 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 
 func get_type():
 	if not player_number in StatePlayers.players.keys():
-		print("Error: player_number not in StatePlayers.players")
-		print("  StatePlayers.players="+str(StatePlayers.players))
+		Global.debug_print(3, "Error: player_number not in StatePlayers.players")
+		Global.debug_print(3, "  StatePlayers.players="+str(StatePlayers.players))
 		return null
 	else:
 		return StatePlayers.players[player_number]["vehicle"]
@@ -573,15 +573,15 @@ func get_type():
 
 func configure_weapons() -> void:
 	for k in ConfigWeapons.Type.values():  # .keys():
-		#print("checking weapon "+str(k))  # 0=mine, etc
-		#print("vt="+str(vt))
+		#Global.debug_print(3, "checking weapon "+str(k))  # 0=mine, etc
+		#Global.debug_print(3, "vt="+str(vt))
 		if get_type() in ConfigWeapons.vehicle_weapons[k]:
-			#print("vt "+str(vt)+" has weapon "+str(k))
+			#Global.debug_print(3, "vt "+str(vt)+" has weapon "+str(k))
 			weapons_state[k]["enabled"] = true
 			weapon_select = k
 			set_icon()
 		else:
-			#print("vt "+str(vt)+" doesnt have weapon "+str(k))
+			#Global.debug_print(3, "vt "+str(vt)+" doesnt have weapon "+str(k))
 			weapons_state[k]["enabled"] = false
 
 
@@ -590,7 +590,7 @@ func init_audio_effects() -> void:
 
 
 func engine_sound_on() -> void:
-	#print("engine_sound_on(): "+str(get_type()))
+	#Global.debug_print(3, "engine_sound_on(): "+str(get_type()))
 	match get_type():
 		ConfigVehicles.Type.RACER:
 			$Effects/Audio/EngineSound.playing = true
@@ -601,7 +601,7 @@ func engine_sound_on() -> void:
 		ConfigVehicles.Type.TRUCK:
 			$Effects/Audio/EngineSound.playing = true
 		_:
-			print("Warning: using default engine sound")
+			Global.debug_print(3, "Warning: using default engine sound")
 			$Effects/Audio/EngineSound.playing = true
 
 
@@ -635,7 +635,7 @@ func dying_visual_effects() -> void:
 
 
 func configure_vehicle_properties() -> void:
-	#print("vts="+str(vts))
+	#Global.debug_print(3, "vts="+str(vts))
 	engine_force_value = ConfigVehicles.config[get_type()]["engine_force_value"]
 	mass = ConfigVehicles.config[get_type()]["mass_kg/100"]
 	set_wheel_parameters(get_type())
@@ -644,7 +644,7 @@ func configure_vehicle_properties() -> void:
 func set_wheel_parameters(_vts) -> void:
 	
 	for wh in get_children():
-		print("Setting "+str(ConfigVehicles.config[_vts]))
+		Global.debug_print(3, "Setting "+str(ConfigVehicles.config[_vts]))
 		if wh is VehicleWheel:
 			wh.visible = true
 			wh.suspension_stiffness = ConfigVehicles.config[_vts]["suspension_stiffness"]
@@ -653,7 +653,7 @@ func set_wheel_parameters(_vts) -> void:
 			wh.wheel_roll_influence = ConfigVehicles.config[_vts]["wheel_roll_influence"]
 			#wh.suspension_max_force = 4.0 * mass   # as per https://github.com/godotengine/godot/issues/45339
 			if wh.suspension_travel > wh.wheel_rest_length:
-				print("Warning wheel suspension_travel > wh.wheel_rest_length")
+				Global.debug_print(3, "Warning wheel suspension_travel > wh.wheel_rest_length")
 			#for ch2 in wh.get_children():
 			#	if get_type() != ConfigVehicles.Type.TANK:
 			#		ch2.visible = true
@@ -683,7 +683,7 @@ func is_4wd() -> bool:
 func re_parent_to_main_scene(child) -> void:
 	remove_child(child)
 	get_main_scene().call_deferred("add_child", child)
-	print("reparented "+str(child.name))
+	Global.debug_print(3, "reparented "+str(child.name))
 
 
 func get_main_scene():
@@ -692,10 +692,10 @@ func get_main_scene():
 
 func check_lights() -> void:
 	if get_main_scene().get_node("DirectionalLightSun").light_energy < 0.3: 
-		#print("turning lights on")
+		#Global.debug_print(3, "turning lights on")
 		lights_on()
 	else:
-		#print("turning lights off")
+		#Global.debug_print(3, "turning lights off")
 		lights_off()
 
 
@@ -710,17 +710,17 @@ func flicker_lights() -> void:
 			$Effects/Damage/LightsOnFire.get_node("OnFireLight"+str(l)).light_energy = total_damage/10.0
 
 	if rng.randf() < 0.1*total_damage/max_damage:
-		#print("damaged LightFrontLeft flickering off")
+		#Global.debug_print(3, "damaged LightFrontLeft flickering off")
 		$Lights/LightFrontLeft.spot_range = 10  #100.0*(max_damage-total_damage)
 	elif rng.randf() < 0.5*total_damage/max_damage:
-		#print("damaged LightFrontLeft flickering on")
+		#Global.debug_print(3, "damaged LightFrontLeft flickering on")
 		$Lights/LightFrontLeft.spot_range = 100.0
 
 	if rng.randf() < 0.1*total_damage/max_damage:
-		#print("damaged LightFrontRight flickering off")
+		#Global.debug_print(3, "damaged LightFrontRight flickering off")
 		$Lights/LightFrontRight.spot_range = 10  # 100.0*(max_damage-total_damage)
 	elif rng.randf() < 0.5*total_damage/max_damage:
-		#print("damaged LightFrontRight flickering on")
+		#Global.debug_print(3, "damaged LightFrontRight flickering on")
 		$Lights/LightFrontRight.spot_range = 100.0
 
 
@@ -736,7 +736,7 @@ func check_ongoing_damage() -> int:
 	if total_damage < max_damage:
 		for raycast in [get_raycast(1), get_raycast(2), get_raycast(3), get_raycast(4), $Raycasts/RayCastCentreDown, $Raycasts/RayCastBonnetUp, $Raycasts/RayCastForward, $Raycasts/RayCastBackward, $Raycasts/RayCastLeft, $Raycasts/RayCastRight]:
 			if check_raycast("lava", raycast) == true:
-				#print("Player taking damage 1")
+				#Global.debug_print(3, "Player taking damage 1")
 				return 1
 		$Effects/Damage/LavaLight1.visible = false
 		return 0
@@ -747,7 +747,7 @@ func check_raycast(substring_in_hit_name, raycast) -> bool:
 	if raycast != null:
 		if raycast.is_colliding():
 			if substring_in_hit_name.to_lower() in raycast.get_collider().name.to_lower():
-				#print("Vehicle raycast "+str(raycast.name)+": collision matches substring: "+str(substring_in_hit_name))
+				#Global.debug_print(3, "Vehicle raycast "+str(raycast.name)+": collision matches substring: "+str(substring_in_hit_name))
 				$Effects/Damage/LavaLight1.visible = true
 				return true
 	return false
@@ -758,31 +758,31 @@ func check_accel_damage() -> void:
 	if not accel_damage_enabled:
 		return  # makes sure we don't check again soon after we add damage below
 		
-	#print("acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
-	#print("accel_damage_threshold="+str(accel_damage_threshold))
+	#Global.debug_print(3, "acceleration_calc_for_damage="+str(acceleration_calc_for_damage))
+	#Global.debug_print(3, "accel_damage_threshold="+str(accel_damage_threshold))
 	if acceleration_calc_for_damage > ConfigVehicles.ACCEL_DAMAGE_THRESHOLD:
-		#print("acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD()")
+		#Global.debug_print(3, "acceleration_calc_for_damage > ACCEL_DAMAGE_THRESHOLD()")
 		var rammed_another_car: bool = false
 		$Effects/Audio/CrashSound.playing = true
 		$Effects/Audio/CrashSound.volume_db = 0.0
 		if $Raycasts/RayCastFrontRamDamage1.is_colliding():
 			var collider_name: String = $Raycasts/RayCastFrontRamDamage1.get_collider().name
 			if "car" in collider_name.to_lower():
-				print("player "+str(player_number)+" rammed "+str(collider_name))
+				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider_name))
 				rammed_another_car = true
 		if $Raycasts/RayCastFrontRamDamage2.is_colliding():
 			var collider_name: String = $Raycasts/RayCastFrontRamDamage2.get_collider().name
 			if "car" in collider_name.to_lower():
-				print("player "+str(player_number)+" rammed "+str(collider_name))
+				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider_name))
 				rammed_another_car = true
 		if $Raycasts/RayCastFrontRamDamage3.is_colliding():
 			var collider_name: String = $Raycasts/RayCastFrontRamDamage3.get_collider().name
 			if "car" in collider_name.to_lower():
-				print("player "+str(player_number)+" rammed "+str(collider_name))
+				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider_name))
 				rammed_another_car = true
 		if rammed_another_car == false:
 			var damage: float = round(acceleration_calc_for_damage / ConfigVehicles.ACCEL_DAMAGE_THRESHOLD)
-			print("adding acceleration damage="+str(damage))
+			Global.debug_print(3, "adding acceleration damage="+str(damage))
 			add_damage(damage, Global.DamageType.FORCE)
 		# else don't take any damage
 	elif acceleration_calc_for_damage > ConfigVehicles.ACCEL_DAMAGE_THRESHOLD/2.0:
@@ -805,32 +805,32 @@ func cycle_weapon(keep=false) -> void:
 
 
 func set_icon() -> void:
-	#print("set_icon()")
-	#print("ConfigWeapons.ICON.keys()="+str(ConfigWeapons.ICON.keys()))
+	#Global.debug_print(3, "set_icon()")
+	#Global.debug_print(3, "ConfigWeapons.ICON.keys()="+str(ConfigWeapons.ICON.keys()))
 	for wk in ConfigWeapons.Type.keys():
-		#print("wk="+str(wk))
+		#Global.debug_print(3, "wk="+str(wk))
 		if ConfigWeapons.Type[wk] in ConfigWeapons.ICON.keys():
 			var icon_str: String = ConfigWeapons.ICON[ConfigWeapons.Type[wk]]
-			#print("icon_str="+str(icon_str))
+			#Global.debug_print(3, "icon_str="+str(icon_str))
 			get_player().get_hud().get_node(icon_str).hide()
 		#else:
-		#	print("ConfigWeapons.Type[wk] not in ConfigWeapons.ICON.keys() for ConfigWeapons.Type[wk]="+str(ConfigWeapons.Type[wk]))
+		#	Global.debug_print(3, "ConfigWeapons.Type[wk] not in ConfigWeapons.ICON.keys() for ConfigWeapons.Type[wk]="+str(ConfigWeapons.Type[wk]))
 	get_player().get_hud().get_node("icon_"+ConfigWeapons.Type.keys()[weapon_select].to_lower()).show()
 
 
 func check_for_clipping() -> void:
 	if abs(fwd_mps_0_1) < 0.1:  # stationary
-		#print("Checking for clipping")
+		#Global.debug_print(3, "Checking for clipping")
 		var num_wheels_clipped: int = 0
 		for raycast in $Raycasts.get_children():
 			if "Wheel" in raycast.name:
 				if not raycast.is_colliding():
 					num_wheels_clipped += 1
-					#print("raycast "+raycast.name+" not colliding")
+					#Global.debug_print(3, "raycast "+raycast.name+" not colliding")
 				#else:
-				#	print("raycast "+raycast.name+" is colliding with "+str(raycast.get_collider().name))
+				#	Global.debug_print(3, "raycast "+raycast.name+" is colliding with "+str(raycast.get_collider().name))
 		if num_wheels_clipped > 0:
-			#print("applying impulse - wheel(s) are clipped")
+			#Global.debug_print(3, "applying impulse - wheel(s) are clipped")
 			apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.05, rng.randf()*2.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.05) )   # from underneath, upwards force
 			$CheckAccelDamage.start(2.0)  # disable damage for temporarily
 	
@@ -862,16 +862,16 @@ func add_damage(amount: float, damage_type: int) -> void:
 	
 	if powerup_state["shield"]["enabled"] == true and not damage_type == Global.DamageType.LAVA and not damage_type == Global.DamageType.OFF_MAP:
 		powerup_state["shield"]["hits_left"] -= 1
-		print("ignoring damage of type "+str(damage_type)+" - shield powerup is on")
+		Global.debug_print(3, "ignoring damage of type "+str(damage_type)+" - shield powerup is on")
 		if powerup_state["shield"]["hits_left"] <= 0:
 			powerup_state["shield"]["enabled"] = false
 			if special_ability_state["shield"] == false:
 				$Effects/Shield.hide()
-			print("shield off - max hits reached")
+			Global.debug_print(3, "shield off - max hits reached")
 		return
 	
 	if special_ability_state["shield"] == true and not damage_type == Global.DamageType.LAVA and not damage_type == Global.DamageType.OFF_MAP:
-		print("ignoring damage of type "+str(damage_type)+" - shield special ability is on")
+		Global.debug_print(3, "ignoring damage of type "+str(damage_type)+" - shield special ability is on")
 		return
 		
 	match Global.game_mode:
@@ -881,23 +881,23 @@ func add_damage(amount: float, damage_type: int) -> void:
 			if damage_type == Global.DamageType.LAVA or damage_type == Global.DamageType.OFF_MAP:
 				total_damage += amount
 			else:
-				print("Ignoring damage: GameMode.PEACEFUL")  
+				Global.debug_print(3, "Ignoring damage: GameMode.PEACEFUL")  
 		Global.GameMode.TOUGH:
 			if damage_type == Global.DamageType.DIRECT_HIT or damage_type == Global.DamageType.LAVA or damage_type == Global.DamageType.OFF_MAP:
 				total_damage += max_damage  # any direct hit is instant death
 			else:
-				print("Ignoring damage: GameMode.TOUGH and damage_type="+str(damage_type)) 
+				Global.debug_print(3, "Ignoring damage: GameMode.TOUGH and damage_type="+str(damage_type)) 
 		_:
-			print("Error: unknown damage type")
+			Global.debug_print(3, "Error: unknown damage type")
 
-	print("accel_damage_enabled="+str(accel_damage_enabled))
+	Global.debug_print(3, "accel_damage_enabled="+str(accel_damage_enabled))
 	align_effects_with_damage()
 	check_engine_force_value()
 	
 	if total_damage >= max_damage and vehicle_state != ConfigVehicles.AliveState.DYING:
 		if damage_type == Global.DamageType.LAVA:
 			get_player().add_achievement(Global.Achievements.HOT_STUFF)
-		print("damage: total_damage >= max_damage")
+		Global.debug_print(3, "damage: total_damage >= max_damage")
 		start_vehicle_dying()
 
 
@@ -914,11 +914,11 @@ func restore_health(amount):
 		new_total_damage = 0
 	
 	if new_total_damage >= 0:
-		print("Restored to "+str(new_total_damage)+" damage")
+		Global.debug_print(3, "Restored to "+str(new_total_damage)+" damage")
 		total_damage = new_total_damage
 		align_effects_with_damage()
 	else:
-		print("Warning: restore_health() had no effect")
+		Global.debug_print(3, "Warning: restore_health() had no effect")
 		
 	check_engine_force_value()
 
@@ -957,7 +957,7 @@ func get_wheel(num) -> VehicleWheel:
 
 
 func fire_mine_or_nuke() -> void:
-	#print("Firing weapon="+str(weapon_select))
+	#Global.debug_print(3, "Firing weapon="+str(weapon_select))
 	var weapon_instance = load(ConfigWeapons.SCENE[weapon_select]).instance()
 	add_child(weapon_instance) 
 	weapon_instance.rotation_degrees = rotation_degrees
@@ -966,7 +966,7 @@ func fire_mine_or_nuke() -> void:
 		weapon_instance.set_as_mine()
 		weapon_instance.activate($Positions/Weapons/BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
 	elif weapon_select == ConfigWeapons.Type.NUKE:
-		#print("activating nuke")
+		#Global.debug_print(3, "activating nuke")
 		weapon_instance.set_as_nuke()
 		#weapon_instance.activate(get_node("/root/MainScene/Platforms/NukeSpawnPoint").global_transform.origin, 0.0, 0.0, 1, player_number, get_player())
 		var nuke_spawn_point = global_transform.origin
@@ -976,8 +976,8 @@ func fire_mine_or_nuke() -> void:
 			weapons_state[3]["enabled"] = false  # so powerup is needed again
 			cycle_weapon()  # de-select nuke, as it's not available any more
 	else:
-		print("fire_mine_or_nuke(): Error! Shouldn't be here")
-	#print("weapons_state[weapon_select]="+str(weapons_state[weapon_select]))
+		Global.debug_print(3, "fire_mine_or_nuke(): Error! Shouldn't be here")
+	#Global.debug_print(3, "weapons_state[weapon_select]="+str(weapons_state[weapon_select]))
 	weapon_instance.set_as_toplevel(true)
 
 
@@ -1002,7 +1002,7 @@ func fire_missile_or_rocket() -> void:
 		weapon_instance.global_transform.origin = $Positions/Weapons/RocketPosition.global_transform.origin
 		#weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
 		weapon_instance.velocity[1] += 1.0   # angle it up a bit
-	#print("weapon velocity="+str(weapon_instance.velocity))
+	#Global.debug_print(3, "weapon velocity="+str(weapon_instance.velocity))
 	if weapon_select == ConfigWeapons.Type.ROCKET:
 		weapon_instance.activate(player_number, false)  # homing = false
 	elif weapon_select == ConfigWeapons.Type.BALLISTIC:
@@ -1042,11 +1042,11 @@ func set_global_transform_origin() -> void:
 		global_transform.origin = pos
 		set_pos = true
 	else:
-		print("_process(): warning: vehicle not is_inside_tree()")
+		Global.debug_print(3, "_process(): warning: vehicle not is_inside_tree()")
 
 
 func power_up(type: int) -> void:
-	print("power_up: power_up = "+str(type))
+	Global.debug_print(3, "power_up: power_up = "+str(type))
 	if type == ConfigWeapons.PowerupType.NUKE:
 		weapons_state[ConfigWeapons.Type.NUKE].enabled = true
 		weapon_select = ConfigWeapons.Type.NUKE
@@ -1089,10 +1089,10 @@ func set_label(new_label) -> void:
 func start_vehicle_dying() -> void:
 	
 	if vehicle_state == ConfigVehicles.AliveState.ALIVE:
-		print("start_vehicle_dying(): vehicle_state = "+str(vehicle_state))
+		Global.debug_print(3, "start_vehicle_dying(): vehicle_state = "+str(vehicle_state))
 		vehicle_state = ConfigVehicles.AliveState.DYING
-		#print("reset_car()")
-		print("start_vehicle_dying(): total_damage >= max_damage")
+		#Global.debug_print(3, "reset_car()")
+		Global.debug_print(3, "start_vehicle_dying(): total_damage >= max_damage")
 		total_damage = max_damage
 		
 		for ch in $Effects/Audio.get_children():  # turn off engine sounds
@@ -1115,13 +1115,13 @@ func start_vehicle_dying() -> void:
 		
 		explosion2_timer = 0.25
 		
-		print("vehicle_body: Starting slow_motion_timer")
+		Global.debug_print(3, "vehicle_body: Starting slow_motion_timer")
 		get_main_scene().start_timer_slow_motion()
 		remove_main_collision_shapes()
 		explode_vehicle_meshes()
 		get_player().decrement_lives_left()
 	else:
-		print("start_vehicle_dying(): error, shouldn't be here. vehicle_state="+str(vehicle_state))
+		Global.debug_print(3, "start_vehicle_dying(): error, shouldn't be here. vehicle_state="+str(vehicle_state))
 
 
 func remove_nodes_for_dying() -> void:
@@ -1166,9 +1166,9 @@ func remove_main_collision_shapes() -> void:
 func explode_vehicle_meshes() -> void:
 
 	if self.has_node("MeshInstances"):
-		print("Found node MeshInstances: destroying...")
-		print("explode_vehicle_meshes(): self.has_node('MeshInstances')")
-		print("self.translation="+str(self.translation))
+		Global.debug_print(3, "Found node MeshInstances: destroying...")
+		Global.debug_print(3, "explode_vehicle_meshes(): self.has_node('MeshInstances')")
+		Global.debug_print(3, "self.translation="+str(self.translation))
 		vehicle_parts_exploded.set_script(SCRIPT_VEHICLE_DETACH_RIGID_BODIES)
 		vehicle_parts_exploded.set_process(true)
 		vehicle_parts_exploded.set_physics_process(true)
@@ -1190,11 +1190,11 @@ func dying_finished() -> bool:
 	if vehicle_state == ConfigVehicles.AliveState.DYING:
 		if $Effects/Damage.has_node("Explosion"):
 			if $Effects/Damage/Explosion.effects_finished():
-				print("dying_finished(): vehicle_state == DYING' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Effects/Damage/Explosion/AnimationPlayer.current_animation))
+				Global.debug_print(3, "dying_finished(): vehicle_state == DYING' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Effects/Damage/Explosion/AnimationPlayer.current_animation))
 				return true
 			return false
 		else:
-			print("dying_finished(): no $Effects/Damage.has_node('Explosion')")
+			Global.debug_print(3, "dying_finished(): no $Effects/Damage.has_node('Explosion')")
 			return true
 	return false
 
@@ -1229,13 +1229,17 @@ func power_up_effect(enable):
 
 
 func change_weather(weather_change: Dictionary, change_duration_sec) -> void:
-	print("VehicleBody: weather_change.keys()="+str(weather_change.keys()))
+	Global.debug_print(3, "VehicleBody: weather_change.keys()="+str(weather_change.keys()))
 	for weather_item_key in weather_change.keys():
 		if "visibility" == weather_item_key:
-			print("VehicleBody: changing weather: visibility")
-			print("  old="+str(weather_change["visibility"][0])+", new="+str(weather_change["visibility"][1]))
+			Global.debug_print(3, "VehicleBody: changing weather: visibility")
+			Global.debug_print(3, "  old="+str(weather_change["visibility"][0])+", new="+str(weather_change["visibility"][1]))
 			$CameraBase/Camera/TweenFar.interpolate_property($CameraBase/Camera, "far", weather_change["visibility"][0], weather_change["visibility"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$CameraBase/Camera/TweenFar.start()
 		if "snow_visible" == weather_item_key:
 			$CameraBase/Camera/ParticlesSnow.visible = weather_change["snow_visible"]
 
+
+
+func _on_TimerCheckSoundPitch_timeout():
+	pass # Replace with function body.

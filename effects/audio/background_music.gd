@@ -66,5 +66,5 @@ func load_new_track() -> void:
 		stream = load(Global.background_music_folder+"/"+tracks[current_track_num]) 
 		playing = true
 	else:
-		print("Error: no music tracks")
+		Global.debug_print(3, "Error: no music tracks")
 

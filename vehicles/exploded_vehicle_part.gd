@@ -28,7 +28,7 @@ func _process(delta):
 			else:
 				get_node("smoke_trail").emitting = false
 		if rng.randf_range(0, 1.0) > (timer_lifetime/max_lifetime):
-			print("av_lifetime_sec: vehicle mesh rigid body "+str(name)+"queue_free")
+			Global.debug_print(3, "av_lifetime_sec: vehicle mesh rigid body "+str(name)+"queue_free")
 			queue_free()
 
 

@@ -30,7 +30,7 @@ func _process(delta):
 			new_mesh.scale = Vector3(0.4, 0.4, 0.4)
 			$Area.add_child(new_mesh)
 		else:
-			print("power_up "+str(type)+" unknown")
+			Global.debug_print(3, "power_up "+str(type)+" unknown")
 			queue_free()
 		initialised = true
 	if activated == true and initialised == true:
@@ -39,13 +39,13 @@ func _process(delta):
 
 
 func _on_Timer_timeout():
-	#print("Setting NukePowerUp")
+	#Global.debug_print(3, "Setting NukePowerUp")
 	visible = true
 	transform.origin.x -= 20.0
 
 
 func _on_Area_body_entered(body):
-	#print("_on_Area_body_entered")
+	#Global.debug_print(3, "_on_Area_body_entered")
 	if body is VehicleBody:
 		body.power_up(type)
 		activated = true
@@ -55,7 +55,7 @@ func _on_Area_body_entered(body):
 
 
 func disable() -> void:
-	#print("disabling NukePowerUp")
+	#Global.debug_print(3, "disabling NukePowerUp")
 	visible = false
 	$Timer.start()
 	transform.origin.x += 20.0

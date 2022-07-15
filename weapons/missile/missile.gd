@@ -25,17 +25,17 @@ var homing_start_timer: float
 # Built-in methods
 
 func _ready():
-	print("Launched missile of type "+str(weapon_type))
+	Global.debug_print(3, "Launched missile of type "+str(weapon_type))
 	$ParticlesThrust.visible = true
 	$Body/MeshInstance.visible = true
 	if weapon_type == ConfigWeapons.Type.MISSILE or weapon_type == ConfigWeapons.Type.BALLISTIC_MISSILE:
 		homing_start_timer = ConfigWeapons.HOMING_DELAY[weapon_type]
 		lifetime_seconds = ConfigWeapons.LIFETIME_SECONDS[weapon_type]
-		print("  homing_start_timer="+str(homing_start_timer))
-		print("  TARGET_SPEED="+str(ConfigWeapons.TARGET_SPEED[weapon_type]))
-		print("  MUZZLE_SPEED="+str(ConfigWeapons.MUZZLE_SPEED[weapon_type]))
+		Global.debug_print(3, "  homing_start_timer="+str(homing_start_timer))
+		Global.debug_print(3, "  TARGET_SPEED="+str(ConfigWeapons.TARGET_SPEED[weapon_type]))
+		Global.debug_print(3, "  MUZZLE_SPEED="+str(ConfigWeapons.MUZZLE_SPEED[weapon_type]))
 	$Body/OmniLight.light_color = Color(0, 1, 0)  # green = not active
-	print("  lifetime_seconds="+str(lifetime_seconds))
+	Global.debug_print(3, "  lifetime_seconds="+str(lifetime_seconds))
 
 
 func _process(delta):
@@ -55,12 +55,12 @@ func _process(delta):
 		flicker_thrust_light()
 	
 	if print_timer < 0.0:
-		#print(" hit_something="+str(hit_something))
+		#Global.debug_print(3, " hit_something="+str(hit_something))
 		print_timer = 0.5
 		if has_node("Body"):
 			fwd_speed = abs($Body.transform.basis.xform_inv($Body.linear_velocity).z)
-			#print("fwd_speed="+str(fwd_speed))
-			#print("target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
+			#Global.debug_print(3, "fwd_speed="+str(fwd_speed))
+			#Global.debug_print(3, "target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
 	
 	if exploded == true or lifetime_seconds < 0.0:
 		
@@ -71,7 +71,7 @@ func _process(delta):
 			queue_free()
 	
 	if lifetime_seconds < 0.0 and exploded == false:
-		print("Missile self-destructing: lifetime_seconds < 0.0 and exploded == false")
+		Global.debug_print(3, "Missile self-destructing: lifetime_seconds < 0.0 and exploded == false")
 		explode(null)
 
 
@@ -82,9 +82,9 @@ func _physics_process(delta):
 
 	if fwd_speed == null:
 		fwd_speed = abs($Body.transform.basis.xform_inv($Body.linear_velocity).z)
-		#print("fwd_speed="+str(fwd_speed))
-		#print("transform.basis.z="+str(transform.basis.z))
-		#print("target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
+		#Global.debug_print(3, "fwd_speed="+str(fwd_speed))
+		#Global.debug_print(3, "transform.basis.z="+str(transform.basis.z))
+		#Global.debug_print(3, "target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
 	
 	
 	if exploded == false:
@@ -185,7 +185,7 @@ func _physics_process(delta):
 
 
 func _on_Body_body_entered(body):
-	print("Missile hit body of type "+str(typeof(body))+", name="+str(body))
+	Global.debug_print(3, "Missile hit body of type "+str(typeof(body))+", name="+str(body))
 	if exploded == false:
 		explode(body)
 
@@ -247,7 +247,7 @@ func explode(body=null) -> void:  # null if lifetime has expired
 	# TODO this shouldbe replaced by signals
 	if not body == null:
 		if body is VehicleBody:
-			print("Missile direct hit to "+str(body.name))
+			Global.debug_print(3, "Missile direct hit to "+str(body.name))
 			body.hit_by_missile["active"] = true
 			body.hit_by_missile["origin"] = transform.origin
 			body.hit_by_missile["direction_for_explosion"] = velocity
@@ -257,14 +257,14 @@ func explode(body=null) -> void:  # null if lifetime has expired
 
 	# regardless of what it hit, calc indirect damage to vehicle nearby, except for the one hit directly
 	for player in get_node("/root/MainScene").get_players():  # in range(1, 5): # explosion toward all players
-		print("Found a target for missile indirect damage = "+str(player.name))
+		Global.debug_print(3, "Found a target for missile indirect damage = "+str(player.name))
 		var target: VehicleBody = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 		#var target = get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 		var direction: Vector3 = global_transform.origin - target.global_transform.origin
 		var distance: float = global_transform.origin.distance_to(target.global_transform.origin)
-		print("distance = "+str(distance))
+		Global.debug_print(3, "distance = "+str(distance))
 		if distance < ConfigWeapons.DAMAGE_INDIRECT[weapon_type]["range"] and target != body:
-			print("Missile indirect damage to "+str(target.name))
+			Global.debug_print(3, "Missile indirect damage to "+str(target.name))
 			target.hit_by_missile["active"] = true
 			target.hit_by_missile["origin"] = transform.origin
 			target.hit_by_missile["direction_for_explosion"] = direction

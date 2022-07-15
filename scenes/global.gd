@@ -69,6 +69,9 @@ var title_screen_folder: String = "res://scenes/title_screen/title_screen.tscn"
 
 var start_scene: String = "res://scenes/start/start.tscn"
 
+var log_level = 1  # 1=error, 2=warning, etc up to 10 for very nested loops
+var log_topics = ["slow motion"]  # eg, include a string here and any log command (regardless of log_level) with this as 3rd argument will print
+
 # main scene
 var main_scene: String = "res://scenes/main/main.tscn"
 var background_music_folder: String = "res://assets/audio/music/background"
@@ -118,7 +121,7 @@ func _ready():
 func _process(delta):
 	weather_state["time_left_s"] -= delta
 	if weather_state["time_left_s"] < 0.0:
-		print("weather_state['time_left_s'] < 0.0")
+		Global.debug_print(3, "weather_state['time_left_s'] < 0.0")
 		toggle_weather()
 	
 	# Once a second, recalc the weather conditions
@@ -148,26 +151,26 @@ func _process(delta):
 
 # Private methods
 
-func _set_weather(weather_change_dict: Dictionary):
-	print("set_weather()")
+func _set_weather(weather_change_dict: Dictionary) -> void:
+	Global.debug_print(3, "set_weather()")
 	#weather_state["wind_strength"] = 0.0  # weather_model[weather_state["index"]]["max_wind_strength"] / 2.0
-	#print("Setting wind_strength to "+str(weather_state["wind_strength"]))
+	#Global.debug_print(3, "Setting wind_strength to "+str(weather_state["wind_strength"]))
 	emit_signal("change_weather", weather_change_dict, weather_change_duration_sec)
 
 
 # Public methods
 
-func toggle_weather():
+func toggle_weather() -> void:
 	var old_index = weather_state["index"]
-	print("toggle_weather()")
+	Global.debug_print(3, "toggle_weather()")
 	# TODO: Can also be set by the player for debugging (for now), so make public for now, private later
 	weather_state["index"] += 1
 	if weather_state["index"] > len(weather_model) - 1:
 		weather_state["index"] = 0
 	weather_state["time_left_s"] = weather_model[weather_state["index"]]["duration_s"]
 	weather_state["type"] = weather_state["index"]
-	print("toggle_weather() to index "+str(weather_state["index"]))
-	print("type is now "+str(weather_state["type"]))
+	Global.debug_print(3, "toggle_weather() to index "+str(weather_state["index"]))
+	Global.debug_print(3, "type is now "+str(weather_state["type"]))
 	_set_weather(
 		{
 			"fog_depth_curve": [weather_model[old_index]["fog_depth_curve"], weather_model[weather_state["index"]]["fog_depth_curve"]], 
@@ -175,4 +178,12 @@ func toggle_weather():
 			"visibility": [weather_model[old_index]["visibility"], weather_model[weather_state["index"]]["visibility"]],
 			"snow_visible": true if weather_state["type"] == Weather.SNOW else false,
 		})
+
+
+func debug_print(_log_level: int, message: String, _log_topic=null) -> void:
+	if _log_level <= log_level:
+		print(str(message))
+	elif _log_topic != null:
+		if _log_topic in log_topics:
+			print(str(message))
 

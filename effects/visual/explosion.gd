@@ -16,7 +16,7 @@ func _ready():
 
 
 func _on_TimerFailsafeDestroy_timeout():
-	print("Warning: used TimerFailsafeDestroy for node "+self.name+" parent="+str(get_parent().name))
+	Global.debug_print(3, "Warning: used TimerFailsafeDestroy for node "+self.name+" parent="+str(get_parent().name))
 	queue_free()
 
 

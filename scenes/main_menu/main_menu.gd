@@ -26,9 +26,9 @@ func _ready():
 	var output_version = []
 	var _os_execute_build = OS.execute("git", PoolStringArray(["rev-list", "--count", "HEAD"]), true, output_build)
 	var _os_execute_version = OS.execute("git", PoolStringArray(["describe", "--long", "--tags"]), true, output_version)
-	#print("output_build='"+str(output_build)+"'")
-	#print(str(len(output_build)))
-	#print(str(output_version))
+	#Global.debug_print(3, "output_build='"+str(output_build)+"'")
+	#Global.debug_print(3, str(len(output_build)))
+	#Global.debug_print(3, str(output_version))
 	if output_build.empty() or output_build[0].empty():
 		push_error("Failed to fetch version. Make sure you have git installed and project is inside valid git directory.")
 	else:
@@ -63,28 +63,28 @@ func _process(delta):
 func _input(event):
 	if active == true and timer <= 0.0:
 		if event is InputEventKey and not event.pressed:  # not pressed=released
-			#print("event.scancode="+str(event.scancode))
+			#Global.debug_print(3, "event.scancode="+str(event.scancode))
 			if event.scancode == KEY_ESCAPE or event.scancode == KEY_P:  # if Input.is_action_just_released("pause") or Input.is_action_pressed("back"):
-				#print("resuming..")
+				#Global.debug_print(3, "resuming..")
 				resume()
 
 
 # Signal methods
 
 func _on_ResumeButton_button_up():
-	print("resume button pressed")
+	Global.debug_print(3, "resume button pressed")
 	resume()
 	pass # Replace with function body.
 
 
 func _on_StartButton_button_down():
-	print("start button pressed")
+	Global.debug_print(3, "start button pressed")
 	$PlayerSelection.show()
 	start_game()
 
 
 func _on_OptionsButton_button_up():
-	print("options button pressed")
+	Global.debug_print(3, "options button pressed")
 	$OptionMenu.show()
 	$OptionMenu/GridContainer/Option1Button.grab_focus()
 	$PlayerSelection.hide()
@@ -111,7 +111,7 @@ func _on_AddPlayerButton_button_up():
 
 
 func _on_QuitToDesktop_button_up():
-	print("quit to desktop button pressed")
+	Global.debug_print(3, "quit to desktop button pressed")
 	get_tree().quit()
 
 
@@ -194,7 +194,7 @@ func configure():
 	#var apb = $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/AddPlayerButton
 	var qmmb = $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/ResetGameButton
 	$VehicleSelection.hide()
-	#print("game_active="+str(game_active))
+	#Global.debug_print(3, "game_active="+str(game_active))
 	if game_active:
 		get_resume_button().show()
 		qmmb.show()
@@ -249,7 +249,7 @@ func start_game() -> void:
 	var next_level = next_level_resource.instance()
 	StatePlayers.players = players
 	StatePlayers.configure_players()
-	print("players = "+str(players))
+	Global.debug_print(3, "players = "+str(players))
 	get_tree().root.call_deferred("add_child", next_level)
 	queue_free()
 

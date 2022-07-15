@@ -25,7 +25,7 @@ func _process(_delta):
 func _on_TimerUpdateSpeedometer_timeout():
 	if get_vehicle_body() == null:
 		return
-	#print("_on_TimerUpdateSpeedometer_timeout()")
+	#Global.debug_print(3, "_on_TimerUpdateSpeedometer_timeout()")
 	# 3.6 kilometers per hour equal one meter per second\
 	var speed_km_hr = get_vehicle_body().fwd_mps*3.6
 	var text = "%03d km/hr" % int(round(abs(speed_km_hr))) + \
@@ -57,7 +57,7 @@ func _on_TimerCheckDestroyedVehicle_timeout():
 	#if get_viewport().has_node("vehicle_body"):
 	#	var vb: VehicleBody = get_viewport().get_node("vehicle_body")
 	#	if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
-	#		print("vb.vehicle_state == ConfigVehicles.AliveState.DEAD: destroying vehicle body")
+	#		Global.debug_print(3, "vb.vehicle_state == ConfigVehicles.AliveState.DEAD: destroying vehicle body")
 	#		#vb.queue_free()  # doing this removes the camera and really screws thigns up
 	#else:
 	# TODO move the camera to the player so we can destroy the VehicleBody and keep seeing the exploded parts
@@ -67,30 +67,30 @@ func _on_TimerCheckDestroyedVehicle_timeout():
 	var vb: VehicleBody
 	
 	if have_vb == false:
-		#print("have_vb == false")
+		#Global.debug_print(3, "have_vb == false")
 		re_spawn = true
 	else:
 		vb = get_vehicle_body()  # get_viewport().get_node("vehicle_body")
 		if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
-			#print("vb.vehicle_state == ConfigVehicles.AliveState.DEAD")
+			#Global.debug_print(3, "vb.vehicle_state == ConfigVehicles.AliveState.DEAD")
 			re_spawn = true
 	
 	if re_spawn:
 		re_spawn = false
 		if not get_parent().is_in_slow_motion():  # wait until the main scene finished any slow motion dying stuff
-			#print("not get_parent().is_in_slow_motion()")
-			#print("vehicle_state ="+str(vb.vehicle_state))
+			#Global.debug_print(3, "not get_parent().is_in_slow_motion()")
+			#Global.debug_print(3, "vehicle_state ="+str(vb.vehicle_state))
 			#if vehicle_state == ConfigVehicles.AliveState.DYING:
-			#print("Engine.time_scale="+str(Engine.time_scale))
+			#Global.debug_print(3, "Engine.time_scale="+str(Engine.time_scale))
 			if StatePlayers.players[player_number]["lives_left"] > 0:
-				#print("player: "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...")
+				#Global.debug_print(3, "player: "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...")
 				re_spawn = true
 				
 	if re_spawn:
-		#print("if re_spawn")
+		#Global.debug_print(3, "if re_spawn")
 		if vb != null:
-			#print("vb != null -> vb.queue_free()")
-			#print("vb.vehicle_state == "+str(vb.vehicle_state))
+			#Global.debug_print(3, "vb != null -> vb.queue_free()")
+			#Global.debug_print(3, "vb.vehicle_state == "+str(vb.vehicle_state))
 			vb.queue_free()
 		init_vehicle_body(last_spawn_point)
 
@@ -119,10 +119,10 @@ func toggle_hud() -> void:
 
 func init(_player_number, pos=null) -> void:
 	last_spawn_point = pos
-	#print("player:init()")
+	#Global.debug_print(3, "player:init()")
 	
 	player_number = _player_number
-	#print("player init(): StatePlayers.num_players()="+str(StatePlayers.num_players()))
+	#Global.debug_print(3, "player init(): StatePlayers.num_players()="+str(StatePlayers.num_players()))
 	
 	
 	# Add a vehicle to the player
@@ -150,20 +150,20 @@ func init_vehicle_body(pos) -> void:
 	get_viewport().add_child(vehicle_body)
 	var retval: bool = vehicle_body.init(pos, player_number, "vehicle_body")
 	if retval == false:
-		print("Error: couldn't initialise vehicle body")
+		Global.debug_print(3, "Error: couldn't initialise vehicle body")
 		get_tree().quit()
 	
 
 func set_viewport_container_one(_player_number) -> void:
-	#print("set_viewport_container_one():")
-	#print("player_number="+str(_player_number))
+	#Global.debug_print(3, "set_viewport_container_one():")
+	#Global.debug_print(3, "player_number="+str(_player_number))
 	if _player_number == 1:
 		set_viewport_container(0, 0, 0, 0, 1920, 1080)
 
 
 func set_viewport_container_two(_player_number) -> void:
-	#print("set_viewport_container_two():")
-	#print("player_number="+str(_player_number))
+	#Global.debug_print(3, "set_viewport_container_two():")
+	#Global.debug_print(3, "player_number="+str(_player_number))
 	if _player_number == 1:
 		set_viewport_container(0, 0, 540, 0, 1920, 540)
 	elif _player_number == 2:
@@ -171,8 +171,8 @@ func set_viewport_container_two(_player_number) -> void:
 
 
 func set_viewport_container_three(_player_number) -> void:
-	#print("set_viewport_container_three():")
-	#print("_player_number="+str(_player_number))
+	#Global.debug_print(3, "set_viewport_container_three():")
+	#Global.debug_print(3, "_player_number="+str(_player_number))
 	if _player_number == 1:
 		set_viewport_container(0, 960, 540, 0, 960, 540)
 	elif _player_number == 2:
@@ -182,8 +182,8 @@ func set_viewport_container_three(_player_number) -> void:
 
 
 func set_viewport_container_four(_player_number) -> void:
-	#print("set_viewport_container_four():")
-	#print("_player_number="+str(_player_number))
+	#Global.debug_print(3, "set_viewport_container_four():")
+	#Global.debug_print(3, "_player_number="+str(_player_number))
 	if _player_number == 1:
 		set_viewport_container(0, 960, 540, 0, 960, 540)
 	elif _player_number == 2:
@@ -212,7 +212,7 @@ func get_viewport_container() -> ViewportContainer:
 	if has_node("VC"):
 		return $VC as ViewportContainer
 	else:
-		print("Warning: no VC, print_tree: ")
+		Global.debug_print(3, "Warning: no VC, print_tree: ")
 		print_tree()
 		return null
 
@@ -234,7 +234,7 @@ func get_viewport() -> Viewport:
 		if get_viewport_container().has_node("V"):
 			return get_viewport_container().get_node("V") as Viewport
 		else:
-			print("Warning: no V, print_tree: ")
+			Global.debug_print(3, "Warning: no V, print_tree: ")
 			print_tree()
 			return null
 	else:
@@ -264,14 +264,14 @@ func set_label_player_name() -> void:
 	if player_number in StatePlayers.players.keys():
 		get_label_player_name().text = StatePlayers.players[player_number]["name"]
 	else:
-		print("Warning: player_number "+str(player_number)+" not in StatePlayers.players.keys()")
+		Global.debug_print(3, "Warning: player_number "+str(player_number)+" not in StatePlayers.players.keys()")
 
 
 func set_label_lives_left() -> void:
 	if player_number in StatePlayers.players.keys():
 		get_label_lives_left().text = str(StatePlayers.players[player_number]["lives_left"])
 	else:
-		print("Warning: player_number "+str(player_number)+" not in StatePlayers.players.keys()")
+		Global.debug_print(3, "Warning: player_number "+str(player_number)+" not in StatePlayers.players.keys()")
 
 
 func set_global_transform_origin(o) -> void:
@@ -292,7 +292,7 @@ func update_other_player_label():
 		
 	for player_num in keys:  #get_parent().get_players():
 		var label = get_hud().get_node("label_player_"+str(player_num)+"_pos")
-		#print("player_num="+str(player_num))
+		#Global.debug_print(3, "player_num="+str(player_num))
 		var player_dst = get_parent().get_player(player_num)
 		if self != player_dst:  # ignore self
 			var player_dst_vehicle_body = player_dst.get_vehicle_body()
@@ -342,12 +342,12 @@ func add_achievement(achievement: int) -> void:
 	if not achievement in achievements.keys():
 		var label = get_canvaslayer().get_node("LabelAchievement")
 		achievements[achievement] = {}
-		#print("player achievements = "+str(achievements))
+		#Global.debug_print(3, "player achievements = "+str(achievements))
 		label.anchor_top = 1.0
 		label.anchor_bottom = 1.0
 		label.show()
-		#print("Global.achievement_config="+str(Global.achievement_config))
-		#print("added achievement="+str(achievement))
+		#Global.debug_print(3, "Global.achievement_config="+str(Global.achievement_config))
+		#Global.debug_print(3, "added achievement="+str(achievement))
 		label.text = "Achievement unlocked: "+str(Global.achievement_config[achievement]["nice_name"])+"\n"+str(Global.achievement_config[achievement]["explanation"])
 		$TimerDisableAchievementLabel.start()
 		$SoundAchievement.playing = true

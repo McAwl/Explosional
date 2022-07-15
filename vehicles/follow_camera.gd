@@ -32,11 +32,11 @@ func _ready():
 			break
 		else:
 			#if node is not null:#
-			#	print("node = "+node.name)
+			#	Global.debug_print(3, "node = "+node.name)
 			if node.name != "Body":
 				node = get_node("../../")
 			#if node:
-			#	print("reparented node = "+node.name)
+			#	Global.debug_print(3, "reparented node = "+node.name)
 
 	# This detaches the camera transform from the parent spatial node.
 	set_as_toplevel(true)
@@ -102,16 +102,16 @@ func _physics_process(delta):
 				iray = get_world().direct_space_state.intersect_ray(global_transform.origin, get_carbody_positions().get_node("CamRaycastTargetRear").global_transform.origin)
 			else:
 				iray = get_world().direct_space_state.intersect_ray(global_transform.origin, get_carbody_positions().get_node("CamRaycastTargetFront").global_transform.origin)
-			#print("iray="+str(iray))
-			#print("get_parent().get_instance_id()="+str(get_parent().get_parent().get_instance_id()))
-			#print("len iray="+str(len(iray)))
+			#Global.debug_print(3, "iray="+str(iray))
+			#Global.debug_print(3, "get_parent().get_instance_id()="+str(get_parent().get_parent().get_instance_id()))
+			#Global.debug_print(3, "len iray="+str(len(iray)))
 			var colliding: bool = false
 			if "collider_id" in iray:
 				if iray["collider_id"] != get_carbody().get_instance_id():
 					# no we can't see the vehicle from the cam, so swap to first-person view
 					# TODO also move the third-person camera closer
 					colliding = true
-					#print("colliding")
+					#Global.debug_print(3, "colliding")
 					self.visible = false
 					self.current = false
 					if fwd_mps >= -2.0:
@@ -127,10 +127,10 @@ func _physics_process(delta):
 						get_parent().get_node("CameraFPFront").visible = false
 						get_parent().get_node("CameraFPFront").current = false
 				#else:
-				#print("colliding with own vehicle body")
+				#Global.debug_print(3, "colliding with own vehicle body")
 			
 			if colliding == false:
-				#print("no collisions - setting third person cam")
+				#Global.debug_print(3, "no collisions - setting third person cam")
 				self.visible = true
 				self.current = true
 				get_parent().get_node("CameraFPBack").visible = false

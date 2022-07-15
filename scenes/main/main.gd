@@ -92,7 +92,7 @@ func _process(delta):
 		$VC/CL/MainMenu.game_active = true
 		$VC/CL/MainMenu.configure()
 		$VC/CL/MainMenu.pause()
-		print("pausing...")
+		Global.debug_print(3, "pausing...")
 		get_tree().paused = true  # pause everything, the MainMenu will continue processing
 		
 	
@@ -107,12 +107,12 @@ func _process(delta):
 		_turn_airstrike_on()
 	elif air_strike_state["on"] == true and air_strike_state["duration_so_far_sec"] > Global.air_strike_config["duration_sec"]:
 		_turn_airstrike_off()
-		#print("Turing airstrike off")
+		#Global.debug_print(3, "Turing airstrike off")
 		#for node in get_tree().root.get_node("TownScene").get_children():  #find_node("*Bomb*":
-			#print("After airstrike finished, found root.get_children() objects: "+str(node.name))
+			#Global.debug_print(3, "After airstrike finished, found root.get_children() objects: "+str(node.name))
 			#if "omb" in node.name:
-			#	print("  Found bomb: stage = "+str(node.bomb_stage))
-			#	print("  type = "+str(node.type))
+			#	Global.debug_print(3, "  Found bomb: stage = "+str(node.bomb_stage))
+			#	Global.debug_print(3, "  type = "+str(node.type))
 			
 		
 	if air_strike_state["on"] == true:
@@ -127,8 +127,8 @@ func _process(delta):
 						weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0), 1, 0)  # player 0 = no player
 						weapon_instance.set_as_bomb()
 						weapon_instance.set_as_toplevel(true)
-						print("Launched bomb during airstrike at Player "+str(player.player_number))
-						print("Bomb name "+str(weapon_instance.name))
+						Global.debug_print(3, "Launched bomb during airstrike at Player "+str(player.player_number))
+						Global.debug_print(3, "Bomb name "+str(weapon_instance.name))
 						#$nuke_mushroom_cloud.emitting = true
 						#$nuke_mushroom_cloud2.emitting = true
 
@@ -158,16 +158,16 @@ func _physics_process(_delta):
 		else:
 			veg_check_raycast = false  # move the raycast on the next physics process
 			#ray.force_raycast_update()
-			#print("ray translation="+str(ray.translation))
+			#Global.debug_print(3, "ray translation="+str(ray.translation))
 			#ray.cast_to = Vector3(0, -1000, 0)
 			if ray.is_colliding():
-				#print(" colliding with "+str(ray.get_collider().name))
+				#Global.debug_print(3, " colliding with "+str(ray.get_collider().name))
 				if "terrain" in ray.get_collider().name.to_lower() and not "lava" in ray.get_collider().name.to_lower():
-					#print("colliding with terrain..")
-					#print("collision point = "+str(ray.get_collision_point()))
+					#Global.debug_print(3, "colliding with terrain..")
+					#Global.debug_print(3, "collision point = "+str(ray.get_collision_point()))
 					if num_trees < num_trees_total:  # place trees first
 						if ray.get_collision_normal().normalized().y > 0.98 and ray.get_collision_normal().normalized().y < 0.99:  # slightly sloping ground for trees
-							#print("tree collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
+							#Global.debug_print(3, "tree collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
 							#var tree = load("res://scenes/tree.tscn").instance()  #
 							var tree = instance_from_id(trees[0])
 							#$Vegetation/Trees.add_child(tree)
@@ -181,7 +181,7 @@ func _physics_process(_delta):
 							last_veg = ["tree", tree.translation]
 					elif num_grasses < num_grasses_total:  # len(grasses)>0:  # grass
 						if ray.get_collision_normal().normalized().y > 0.9999:  # very flat ground for grass
-							#print("grass collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
+							#Global.debug_print(3, "grass collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
 							#tree.global_transform.origin = ray.get_collision_point()
 							#var grass = load("res://scenes/grass.tscn").instance()  # 
 							var grass = instance_from_id(grasses[0])
@@ -200,6 +200,20 @@ func _physics_process(_delta):
 
 # Signal methods
 
+
+func _on_TimerCheckAudioPitch_timeout():
+	_all_audio_pitch(1.0)
+
+
+func _all_audio_pitch(_pitch=null):
+	var set_pitch = _pitch
+	if _pitch == null:
+		set_pitch = Engine.time_scale
+	$Effects/BackgroundMusic.pitch_scale = set_pitch
+	$Effects/Siren.pitch_scale = set_pitch
+	$Effects/Wind.pitch_scale = set_pitch
+
+
 func _on_TimerCheckPowerups_timeout():
 	
 	if not $Powerups/NukeSpawnPoint.has_node("PowerUpNuke") and $Powerups/TimerNukePowerUp.is_stopped():
@@ -216,9 +230,9 @@ func _on_TimerCheckPowerups_timeout():
 
 
 func _on_TimerNukePowerUp_timeout():
-	print("_on_TimerNukePowerUp_timeout")
+	Global.debug_print(3, "_on_TimerNukePowerUp_timeout")
 	if $Powerups/TimerNukePowerUp.is_stopped():
-		print("Respawning new_nuke_powerup")
+		Global.debug_print(3, "Respawning new_nuke_powerup")
 		var new_nuke_powerup = load(Global.power_up_folder).instance()
 		new_nuke_powerup.name = "PowerUpNuke"
 		new_nuke_powerup.type = ConfigWeapons.PowerupType.NUKE
@@ -227,9 +241,9 @@ func _on_TimerNukePowerUp_timeout():
 
 
 func _on_TimerShieldPowerup_timeout():
-	print("_on_TimerShieldPowerup_timeout")
+	Global.debug_print(3, "_on_TimerShieldPowerup_timeout")
 	if $Powerups/TimerShieldPowerup.is_stopped():
-		print("Respawning shield_powerup")
+		Global.debug_print(3, "Respawning shield_powerup")
 		var new_shield_powerup = load(Global.power_up_folder).instance()
 		new_shield_powerup.name = "PowerUpShield1"
 		new_shield_powerup.type = ConfigWeapons.PowerupType.SHIELD
@@ -238,9 +252,9 @@ func _on_TimerShieldPowerup_timeout():
 
 
 func _on_TimerHealthPowerup_timeout():
-	print("_on_TimerHealthPowerup_timeout")
+	Global.debug_print(3, "_on_TimerHealthPowerup_timeout")
 	if $Powerups/TimerHealthPowerup.is_stopped():
-		print("Respawning health_powerup")
+		Global.debug_print(3, "Respawning health_powerup")
 		var new_health_powerup = load(Global.power_up_folder).instance()
 		new_health_powerup.name = "PowerUpHealth1"
 		new_health_powerup.type = ConfigWeapons.PowerupType.HEALTH
@@ -255,7 +269,7 @@ func _turn_airstrike_on() -> void:
 	air_strike_state["interval_so_far_sec"] = 0.0
 	air_strike_state["duration_so_far_sec"] = 0.0
 	#var players = get_tree().get_nodes_in_group("player")  # 
-	#print("len(players)="+str(len(players)))
+	#Global.debug_print(3, "len(players)="+str(len(players)))
 	_air_strike_label().visible = true
 	_air_strike_label().get_node("TextFlash").play("font_blink")
 	$VC/CL/IconRadiation.visible = true
@@ -272,15 +286,27 @@ func _turn_airstrike_off() -> void:
 	$Effects/Siren.playing = false
 	
 
+
 func _check_and_enforce_slow_motion() -> void:
+	Global.debug_print(3, "_check_and_enforce_slow_motion():", "slow motion")
+	Global.debug_print(3, "Engine.time_scale="+str(Engine.time_scale), "slow motion")
+	Global.debug_print(3, "$Effects/Wind.pitch_scale="+str($Effects/Wind.pitch_scale), "slow motion")
 	if $TimerSlowMotion.is_stopped():
-		Engine.time_scale = 1.0
-		_all_audio_pitch(1.0)
-		in_slow_motion = false
+		Global.debug_print(3, "$TimerSlowMotion.is_stopped()", "slow motion")
+		if not Engine.time_scale == 1.0 and not $TweenNormalMotion.is_active():
+			Global.debug_print(3, "not Engine.time_scale == 1.0 and not $TweenNormalMotion.is_active()", "slow motion")
+			#Engine.time_scale = 1.0
+			$TweenNormalMotion.interpolate_property(Engine, "time_scale", 0.1, 1.0, 2.0, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
+			$TweenNormalMotion.start()
+			in_slow_motion = false
 	else:
-		Engine.time_scale = 0.1
-		_all_audio_pitch(0.1)
-		in_slow_motion = true
+		Global.debug_print(3, "not $TimerSlowMotion.is_stopped()", "slow motion")
+		#Engine.time_scale = 0.1
+		if not $TweenSlowMotion.is_active():
+			Global.debug_print(3, "not $TweenSlowMotion.is_active()", "slow motion")
+			$TweenSlowMotion.interpolate_property(Engine, "time_scale", 1.0, 0.1, 2.0, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
+			$TweenSlowMotion.start()
+			in_slow_motion = true
 
 
 func _check_game_over() -> void:
@@ -309,11 +335,6 @@ func _check_game_over() -> void:
 			queue_free()
 
 
-func _all_audio_pitch(pitch) -> void:
-	$Effects/BackgroundMusic.pitch_scale = pitch
-	$Effects/Siren.pitch_scale = pitch
-
-
 func _get_spawn_points() -> Array:
 	# Returns a random-order array of SpawnPoints
 	var shuffled = get_node("SpawnPoints").get_children()
@@ -337,16 +358,16 @@ func _air_strike_label() -> Label:
 # Public methods
 
 func change_weather(weather_change: Dictionary, change_duration_sec) -> void:
-	print("MainScene weather_change.keys()="+str(weather_change.keys()))
+	Global.debug_print(3, "MainScene weather_change.keys()="+str(weather_change.keys()))
 	for weather_item_key in weather_change.keys():
 		if "fog_depth_begin" == weather_item_key:
-			print("MainScene: changing weather: weather_item = fog_depth_begin")
-			print("  old="+str(weather_change["fog_depth_begin"][0])+", new="+str(weather_change["fog_depth_begin"][1]))
+			Global.debug_print(3, "MainScene: changing weather: weather_item = fog_depth_begin")
+			Global.debug_print(3, "  old="+str(weather_change["fog_depth_begin"][0])+", new="+str(weather_change["fog_depth_begin"][1]))
 			$Effects/TweenFogDepthBegin.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_begin", weather_change["fog_depth_begin"][0], weather_change["fog_depth_begin"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Effects/TweenFogDepthBegin.start()
 		elif "fog_depth_curve" == weather_item_key:
-			print("MainScene: changing weather: weather_item = fog_depth_curve")
-			print("  old="+str(weather_change["fog_depth_curve"][0])+", new="+str(weather_change["fog_depth_curve"][1]))
+			Global.debug_print(3, "MainScene: changing weather: weather_item = fog_depth_curve")
+			Global.debug_print(3, "  old="+str(weather_change["fog_depth_curve"][0])+", new="+str(weather_change["fog_depth_curve"][1]))
 			$Effects/TweenFogDepthCurve.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_curve", weather_change["fog_depth_curve"][0], weather_change["fog_depth_curve"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Effects/TweenFogDepthCurve.start()
 
@@ -358,10 +379,11 @@ func wind(active: bool):
 func start_timer_slow_motion() -> void:
 	$TimerSlowMotion.start()
 	_check_and_enforce_slow_motion()
+	# TODO Send a signal to everyone! 
 
 
 func is_in_slow_motion():
-	#print("Engine.time_scale="+str(Engine.time_scale))
+	#Global.debug_print(3, "Engine.time_scale="+str(Engine.time_scale))
 	if Engine.time_scale < 1.0:
 		return true
 	else:
@@ -370,7 +392,7 @@ func is_in_slow_motion():
 
 func get_players(ignore_player_number=false) -> Array:
 	var players_all = get_tree().get_nodes_in_group("player")  # 
-	#print("players_all="+str(players_all))
+	#Global.debug_print(3, "players_all="+str(players_all))
 	var players2 = []
 	for player in players_all:  # range(1, num_players+1):
 		if ignore_player_number == false:
@@ -401,3 +423,4 @@ func _on_PlayArea_body_exited(body):
 	if body is VehicleBody:
 		body.add_damage(body.max_damage, Global.DamageType.OFF_MAP)
 		# body.get_player().add_achievement(Global.Achievements.OUT_OF_THIS_WORLD)
+

@@ -34,8 +34,8 @@ _data = [ Vector2( 0, 0.00834632 ), 0.0, 0.0, 0, 0, Vector2( 0.5, 0.981073 ), 0.
 curve = SubResource( 64 )
 
 [sub_resource type="ParticlesMaterial" id=66]
-emission_shape = 2
-emission_box_extents = Vector3( 10, 10, 10 )
+emission_shape = 1
+emission_sphere_radius = 2.0
 direction = Vector3( 1, 0, 1 )
 spread = 0.0
 gravity = Vector3( 0, -1, 0 )
@@ -211,7 +211,7 @@ far = 200.0
 script = ExtResource( 9 )
 
 [node name="ParticlesSnow" type="Particles" parent="CameraBase/Camera"]
-transform = Transform( -0.998213, 0.00103028, 0.0597529, 0.0172799, 0.962119, 0.272084, -0.0572091, 0.27263, -0.960417, 0.0724818, 3.30988, -4.50111 )
+transform = Transform( -0.998213, 0.00103028, 0.0597529, 0.0172799, 0.962119, 0.272084, -0.0572091, 0.27263, -0.960417, 0.0154151, -0.100172, -1.1574 )
 amount = 100
 lifetime = 2.0
 visibility_aabb = AABB( -4.03329, -4, -4, 8.06658, 8, 8 )
@@ -270,6 +270,10 @@ pitch_scale = 0.3
 
 [node name="SkidSound" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 23 )
+
+[node name="TimerCheckSoundPitch" type="Timer" parent="Effects/Audio"]
+wait_time = 0.1
+autostart = true
 
 [node name="TimerCheckSoundVolume" type="Timer" parent="Effects/Audio"]
 autostart = true
@@ -1972,6 +1976,7 @@ one_shot = true
 [node name="TimerCheckMaxSpeed" type="Timer" parent="."]
 autostart = true
 
+[connection signal="timeout" from="Effects/Audio/TimerCheckSoundPitch" to="Effects/Audio" method="_on_TimerCheckSoundPitch_timeout"]
 [connection signal="timeout" from="Effects/Audio/TimerCheckSoundVolume" to="Effects/Audio" method="_on_TimerCheckSoundVolume_timeout"]
 [connection signal="timeout" from="DynamicGripTimer" to="." method="_on_DynamicGripTimer_timeout"]
 [connection signal="timeout" from="CheckSkidTimer" to="." method="_on_CheckSkidTimer_timeout"]

@@ -31,6 +31,12 @@ func _process(delta):
 			timer_0_1s = 0.1
 			current_position_sec = self.get_playback_position()
 			speed = get_vehicle().fwd_mps_0_1_ewma
+			if get_vehicle() == null:
+				Global.debug_print(1, "Error: engine sound has null vehicle")
+				return
+			if get_vehicle().get_type() == null:
+				Global.debug_print(1, "Error: engine sound has null vehicle type")
+				return
 			pitch_scale = (0.5 + (0.2*((10.0+speed)/10.0))) * ConfigVehicles.engine_sound_pitch[get_vehicle().get_type()]
 			pitch_scale *= Engine.time_scale
 			accel = get_vehicle().acceleration_fwd_0_1_ewma

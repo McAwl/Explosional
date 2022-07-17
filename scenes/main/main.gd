@@ -202,7 +202,8 @@ func _physics_process(_delta):
 
 
 func _on_TimerCheckAudioPitch_timeout():
-	_all_audio_pitch(1.0)
+	$Effects/Siren.pitch_scale = Engine.time_scale
+	$Effects/Wind.pitch_scale = Engine.time_scale
 
 
 func _all_audio_pitch(_pitch=null):

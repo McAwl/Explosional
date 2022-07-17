@@ -226,6 +226,9 @@ func get_lives_left() -> int:
 
 
 func decrement_lives_left() -> void:
+	if not player_number in StatePlayers.players:
+		Global.debug_print(1, "Error: player.gd: not player_number in StatePlayers.players")
+		return
 	StatePlayers.players[player_number]["lives_left"] -= 1
 
 

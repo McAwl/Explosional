@@ -9,6 +9,9 @@ func _ready():
 # We reparent the smoke so the parent explosion can destroy itself
 # without worrying it will stop the smoke
 func reparent(from_parent: Node):
+	if  get_tree() == null:
+		Global.debug_print(2, "Warning: Smoke reparent has null get_tree()")
+		return
 	var old_global_transform_origin = global_transform.origin
 	var new_parent = get_tree().root.get_node("MainScene")
 	from_parent.remove_child(self)

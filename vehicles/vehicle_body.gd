@@ -902,6 +902,8 @@ func add_damage(amount: float, damage_type: int) -> void:
 
 
 func check_engine_force_value() -> void:
+	if get_type() == null:
+		return
 	engine_force_value = ConfigVehicles.config[get_type()]["engine_force_value"]*pow(0.75, total_damage)  # decrease engine power to indicate damage
 
 

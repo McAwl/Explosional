@@ -76,7 +76,9 @@ var log_topics = ["slow motion"]  # eg, include a string here and any log comman
 var main_scene: String = "res://scenes/main/main.tscn"
 var background_music_folder: String = "res://assets/audio/music/background"
 var background_music_volume_db: float = 0.0
+
 const BACKGROUND_MUSIC_MAX_VOLUME_DB: float = 0.0
+const SLOW_MOTION_DURATION_SEC = 5.0
 
 var main_menu_scene: String = "res://scenes/main_menu/main_menu.tscn"
 

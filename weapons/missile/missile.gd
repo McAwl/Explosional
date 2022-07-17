@@ -32,7 +32,7 @@ func _ready():
 		homing_start_timer = ConfigWeapons.HOMING_DELAY[weapon_type]
 		lifetime_seconds = ConfigWeapons.LIFETIME_SECONDS[weapon_type]
 		Global.debug_print(3, "  homing_start_timer="+str(homing_start_timer))
-		Global.debug_print(3, "  TARGET_SPEED="+str(ConfigWeapons.TARGET_SPEED[weapon_type]))
+		Global.debug_print(3, "  FLYING_SPEED="+str(ConfigWeapons.FLYING_SPEED[weapon_type]))
 		Global.debug_print(3, "  MUZZLE_SPEED="+str(ConfigWeapons.MUZZLE_SPEED[weapon_type]))
 	$Body/OmniLight.light_color = Color(0, 1, 0)  # green = not active
 	Global.debug_print(3, "  lifetime_seconds="+str(lifetime_seconds))
@@ -60,7 +60,7 @@ func _process(delta):
 		if has_node("Body"):
 			fwd_speed = abs($Body.transform.basis.xform_inv($Body.linear_velocity).z)
 			#Global.debug_print(3, "fwd_speed="+str(fwd_speed))
-			#Global.debug_print(3, "target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
+			#Global.debug_print(3, "FLYING_SPEED="+str(ConfigWeapons.FLYING_SPEED[weapon_type_name]))
 	
 	if exploded == true or lifetime_seconds < 0.0:
 		
@@ -84,7 +84,7 @@ func _physics_process(delta):
 		fwd_speed = abs($Body.transform.basis.xform_inv($Body.linear_velocity).z)
 		#Global.debug_print(3, "fwd_speed="+str(fwd_speed))
 		#Global.debug_print(3, "transform.basis.z="+str(transform.basis.z))
-		#Global.debug_print(3, "target_speed="+str(ConfigWeapons.TARGET_SPEED[weapon_type_name]))
+		#Global.debug_print(3, "FLYING_SPEED="+str(ConfigWeapons.FLYING_SPEED[weapon_type_name]))
 	
 	
 	if exploded == false:
@@ -159,7 +159,7 @@ func _physics_process(delta):
 			add_random_movement(0.1)
 		
 		# interpolate to the target speed
-		velocity = velocity.linear_interpolate((velocity.normalized())*ConfigWeapons.TARGET_SPEED[weapon_type], delta*speed_up_down_rate) 
+		velocity = velocity.linear_interpolate((velocity.normalized())*ConfigWeapons.FLYING_SPEED[weapon_type], delta*speed_up_down_rate) 
 		
 		transform.origin += velocity * delta  # move the missile
 		look_at(transform.origin + velocity.normalized(), Vector3.UP)  # point the missile in the direction it's moving

@@ -73,19 +73,22 @@ const ICON: Dictionary = {
 	Type.NUKE: "icon_nuke",
 	Type.BALLISTIC: "icon_ballistic",
 	Type.BALLISTIC_MISSILE: "icon_ballistic_missile"}
-	
-const TARGET_SPEED: Dictionary = {
-	Type.ROCKET: 10.0, 
-	Type.MISSILE: 10.0, 
-	Type.BALLISTIC: 20.0,
-	Type.BALLISTIC_MISSILE: 20.0}
 
+# Speed when fired
 const MUZZLE_SPEED: Dictionary = {
 	Type.ROCKET: 10.0, 
 	Type.MISSILE: 10.0, 
 	Type.BALLISTIC: 20.0,
 	Type.BALLISTIC_MISSILE: 0.0}
 
+# Eventual speed after firing
+const FLYING_SPEED: Dictionary = {
+	Type.ROCKET: 10.0, 
+	Type.MISSILE: 10.0, 
+	Type.BALLISTIC: 20.0,
+	Type.BALLISTIC_MISSILE: 20.0}
+
+# Delay from launch before the homing turns on
 const HOMING_DELAY: Dictionary = {
 	Type.MISSILE: 0.5,
 	Type.BALLISTIC_MISSILE: 2.0,

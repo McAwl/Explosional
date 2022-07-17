@@ -296,7 +296,7 @@ func _check_and_enforce_slow_motion() -> void:
 		if not Engine.time_scale == 1.0 and not $TweenNormalMotion.is_active():
 			Global.debug_print(3, "not Engine.time_scale == 1.0 and not $TweenNormalMotion.is_active()", "slow motion")
 			#Engine.time_scale = 1.0
-			$TweenNormalMotion.interpolate_property(Engine, "time_scale", 0.1, 1.0, 2.0, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
+			$TweenNormalMotion.interpolate_property(Engine, "time_scale", 0.1, 1.0, Global.SLOW_MOTION_DURATION_SEC/2.0, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
 			$TweenNormalMotion.start()
 			in_slow_motion = false
 	else:
@@ -304,7 +304,7 @@ func _check_and_enforce_slow_motion() -> void:
 		#Engine.time_scale = 0.1
 		if not $TweenSlowMotion.is_active():
 			Global.debug_print(3, "not $TweenSlowMotion.is_active()", "slow motion")
-			$TweenSlowMotion.interpolate_property(Engine, "time_scale", 1.0, 0.1, 2.0, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
+			$TweenSlowMotion.interpolate_property(Engine, "time_scale", 1.0, 0.1, Global.SLOW_MOTION_DURATION_SEC/2.0, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
 			$TweenSlowMotion.start()
 			in_slow_motion = true
 

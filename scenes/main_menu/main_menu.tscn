@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://scenes/main_menu/main_menu.gd" type="Script" id=1]
 [ext_resource path="res://assets/display/capture1 - blurred.png" type="Texture" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://scenes/main_menu/vehicle_volume.gd" type="Script" id=8]
 [ext_resource path="res://scenes/main_menu/wind_speed.gd" type="Script" id=9]
 [ext_resource path="res://assets/display/theme_big_button.tres" type="Theme" id=10]
+[ext_resource path="res://assets/display/fonts/font_theme_menu.tres" type="DynamicFont" id=11]
 
 [sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
@@ -74,11 +75,14 @@ stretch_mode = 1
 
 [node name="MainContainer" type="VBoxContainer" parent="MainSelection"]
 anchor_bottom = 1.0
-custom_constants/separation = 30
+margin_right = 519.0
+margin_bottom = 446.0
+custom_constants/separation = 55
 
 [node name="TitleContainer" type="VBoxContainer" parent="MainSelection/MainContainer"]
 margin_right = 519.0
 margin_bottom = 101.0
+custom_constants/separation = 18
 
 [node name="TitleText" type="Label" parent="MainSelection/MainContainer/TitleContainer"]
 margin_right = 519.0
@@ -89,27 +93,28 @@ align = 1
 valign = 1
 
 [node name="ButtonsContainer" type="HBoxContainer" parent="MainSelection/MainContainer"]
-margin_top = 131.0
+margin_top = 156.0
 margin_right = 519.0
-margin_bottom = 343.0
+margin_bottom = 403.0
 
 [node name="HBoxContainer2" type="VBoxContainer" parent="MainSelection/MainContainer/ButtonsContainer"]
-margin_right = 137.0
-margin_bottom = 212.0
+margin_right = 185.0
+margin_bottom = 247.0
 custom_constants/separation = 23
 
 [node name="ResumeButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
-margin_right = 137.0
-margin_bottom = 24.0
-custom_fonts/font = ExtResource( 4 )
+margin_right = 185.0
+margin_bottom = 31.0
+theme = ExtResource( 10 )
+custom_fonts/font = ExtResource( 11 )
 text = "Resume"
 
 [node name="StartButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
-margin_top = 47.0
-margin_right = 137.0
-margin_bottom = 71.0
+margin_top = 54.0
+margin_right = 185.0
+margin_bottom = 85.0
 focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 11 )
 text = "Start"
 
 [node name="AddPlayerButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
@@ -121,47 +126,47 @@ custom_fonts/font = ExtResource( 4 )
 text = "Add Player"
 
 [node name="OptionsButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
-margin_top = 94.0
-margin_right = 137.0
-margin_bottom = 118.0
+margin_top = 108.0
+margin_right = 185.0
+margin_bottom = 139.0
 focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 11 )
 text = "Options"
 
 [node name="ResetGameButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
-margin_top = 141.0
-margin_right = 137.0
-margin_bottom = 165.0
-custom_fonts/font = ExtResource( 4 )
+margin_top = 162.0
+margin_right = 185.0
+margin_bottom = 193.0
+custom_fonts/font = ExtResource( 11 )
 text = "Reset Game"
 
 [node name="QuitToDesktop" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
-margin_top = 188.0
-margin_right = 137.0
-margin_bottom = 212.0
+margin_top = 216.0
+margin_right = 185.0
+margin_bottom = 247.0
 focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
 focus_neighbour_bottom = NodePath("../../../../../GameModeSelection/CheckBox1Competitive")
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 11 )
 text = "Quit to Desktop"
 
 [node name="GameModeSelection" type="HBoxContainer" parent="."]
-margin_left = 141.0
-margin_top = 441.0
-margin_right = 753.0
-margin_bottom = 509.0
+margin_left = 117.0
+margin_top = 549.0
+margin_right = 762.0
+margin_bottom = 664.0
 custom_constants/separation = 39
 
 [node name="Label" type="Label" parent="GameModeSelection"]
-margin_top = 24.0
-margin_right = 95.0
-margin_bottom = 44.0
-custom_fonts/font = ExtResource( 4 )
+margin_top = 44.0
+margin_right = 130.0
+margin_bottom = 71.0
+custom_fonts/font = ExtResource( 11 )
 text = "Game mode"
 
 [node name="CheckBox1Competitive" type="CheckBox" parent="GameModeSelection"]
-margin_left = 134.0
-margin_right = 267.0
-margin_bottom = 68.0
+margin_left = 169.0
+margin_right = 320.0
+margin_bottom = 115.0
 grow_horizontal = 2
 grow_vertical = 2
 hint_tooltip = "Normal damage. Last player alive wins. AI is active."
@@ -170,15 +175,15 @@ focus_neighbour_top = NodePath("../../MainSelection/MainContainer/ButtonsContain
 focus_neighbour_right = NodePath("../CheckBox2Peaceful")
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 11 )
 custom_styles/pressed = SubResource( 4 )
 custom_styles/normal = SubResource( 1 )
 text = "Competitive"
 
 [node name="CheckBox2Peaceful" type="CheckBox" parent="GameModeSelection"]
-margin_left = 306.0
-margin_right = 439.0
-margin_bottom = 68.0
+margin_left = 359.0
+margin_right = 482.0
+margin_bottom = 115.0
 grow_horizontal = 2
 grow_vertical = 2
 hint_tooltip = "No damage. No AI. No end of game."
@@ -186,22 +191,22 @@ focus_neighbour_left = NodePath("../CheckBox1Competitive")
 focus_neighbour_right = NodePath("../CheckBox3Tough")
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 11 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 2 )
 text = "Peaceful"
 
 [node name="CheckBox3Tough" type="CheckBox" parent="GameModeSelection"]
-margin_left = 478.0
-margin_right = 612.0
-margin_bottom = 68.0
+margin_left = 521.0
+margin_right = 645.0
+margin_bottom = 115.0
 grow_horizontal = 2
 grow_vertical = 2
 hint_tooltip = "Direct one-hit death, no indirect damage. Last player alive wins. AI is active."
 focus_neighbour_left = NodePath("../CheckBox2Peaceful")
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 11 )
 custom_styles/pressed = SubResource( 6 )
 custom_styles/normal = SubResource( 3 )
 text = "Tough"
@@ -335,31 +340,32 @@ margin_bottom = 205.0
 [node name="GridContainer" type="GridContainer" parent="OptionMenu"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = 340.0
-margin_bottom = 174.0
-custom_constants/vseparation = 30
+margin_top = 32.0
+margin_right = 409.0
+margin_bottom = 283.0
+custom_constants/vseparation = 27
 custom_constants/hseparation = 30
 
 [node name="MusicVolume" type="GridContainer" parent="OptionMenu/GridContainer"]
-margin_right = 340.0
-margin_bottom = 20.0
+margin_right = 409.0
+margin_bottom = 27.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
 
 [node name="MusicVolumeText" type="Label" parent="OptionMenu/GridContainer/MusicVolume"]
-margin_right = 168.0
-margin_bottom = 20.0
+margin_right = 202.0
+margin_bottom = 27.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 11 )
 text = "Music Volume"
 valign = 1
 
 [node name="MusicVolume" type="HSlider" parent="OptionMenu/GridContainer/MusicVolume"]
-margin_left = 172.0
-margin_right = 340.0
-margin_bottom = 20.0
+margin_left = 206.0
+margin_right = 408.0
+margin_bottom = 27.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 min_value = -24.0
@@ -367,24 +373,24 @@ max_value = 0.0
 script = ExtResource( 7 )
 
 [node name="VehicleVolume" type="GridContainer" parent="OptionMenu/GridContainer"]
-margin_top = 50.0
-margin_right = 340.0
-margin_bottom = 70.0
+margin_top = 54.0
+margin_right = 409.0
+margin_bottom = 81.0
 columns = 2
 
 [node name="VehicleVolumeText" type="Label" parent="OptionMenu/GridContainer/VehicleVolume"]
-margin_right = 168.0
-margin_bottom = 20.0
+margin_right = 202.0
+margin_bottom = 27.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 11 )
 text = "Vehicle  Volume"
 valign = 1
 
 [node name="VehicleVolume" type="HSlider" parent="OptionMenu/GridContainer/VehicleVolume"]
-margin_left = 172.0
-margin_right = 340.0
-margin_bottom = 20.0
+margin_left = 206.0
+margin_right = 408.0
+margin_bottom = 27.0
 focus_previous = NodePath("../../MusicVolume/MusicVolume")
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -393,24 +399,24 @@ max_value = 0.0
 script = ExtResource( 8 )
 
 [node name="WindSpeed" type="GridContainer" parent="OptionMenu/GridContainer"]
-margin_top = 100.0
-margin_right = 340.0
-margin_bottom = 120.0
+margin_top = 108.0
+margin_right = 409.0
+margin_bottom = 135.0
 columns = 2
 
 [node name="WindSpeedText" type="Label" parent="OptionMenu/GridContainer/WindSpeed"]
-margin_right = 168.0
-margin_bottom = 20.0
+margin_right = 202.0
+margin_bottom = 27.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 11 )
 text = "Wind Speed"
 valign = 1
 
 [node name="WindSpeed" type="HSlider" parent="OptionMenu/GridContainer/WindSpeed"]
-margin_left = 172.0
-margin_right = 340.0
-margin_bottom = 20.0
+margin_left = 206.0
+margin_right = 408.0
+margin_bottom = 27.0
 focus_previous = NodePath("../../VehicleVolume/VehicleVolume")
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -426,6 +432,7 @@ margin_right = 192.0
 margin_bottom = 76.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource( 10 )
 custom_fonts/font = ExtResource( 4 )
 disabled = true
 text = "Option1"
@@ -464,13 +471,12 @@ disabled = true
 text = "Option 4"
 
 [node name="OptionBackButton" type="Button" parent="OptionMenu/GridContainer"]
-margin_top = 150.0
-margin_right = 64.0
-margin_bottom = 174.0
+margin_top = 162.0
+margin_right = 84.0
+margin_bottom = 193.0
 focus_previous = NodePath("../WindSpeed/WindSpeed")
 size_flags_horizontal = 0
-size_flags_vertical = 0
-custom_fonts/font = ExtResource( 4 )
+custom_fonts/font = ExtResource( 11 )
 text = "[Back]"
 
 [node name="VersionText" type="Control" parent="."]
@@ -492,8 +498,8 @@ size_flags_vertical = 0
 
 [node name="VersionText" type="Label" parent="VersionText/VersionContainer"]
 margin_right = 1920.0
-margin_bottom = 20.0
-custom_fonts/font = ExtResource( 4 )
+margin_bottom = 27.0
+custom_fonts/font = ExtResource( 11 )
 text = "Explosional BETA v0.0.1 Build x 2022 McAwl"
 align = 1
 valign = 1
@@ -505,7 +511,7 @@ margin_left = 562.0
 margin_top = 557.0
 margin_right = 1326.0
 margin_bottom = 619.0
-theme = ExtResource( 10 )
+custom_fonts/font = ExtResource( 11 )
 text = "Loading terrain..."
 align = 1
 valign = 1

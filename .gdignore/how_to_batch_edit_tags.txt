@@ -1,9 +1,18 @@
+test 1 : this successful separate tags with the alpha and those without
+git tag -l | while read t; do echo "Found tag $t:"; if [[ $t = *alpha* ]]; then echo "  ignoring.."; else n=$t-alpha; echo "  renaming to $n"; echo "  not really"; fi; done
+
+this successfully added new tags with the new name, but didn't delete the old tags
+git tag -l | while read t; do echo "Found tag $t:"; if [[ $t = *alpha* ]]; then echo "  ignoring.."; else n=$t-alpha; echo "  renaming to $n"; git tag $n $t; git push --tags; git tag -d $t; fi; done
+
+this deleted the tags on the origin as well as locally
+git tag -l | while read t; do echo "Found tag $t:"; if [[ $t = *alpha* ]]; then echo "  ignoring.."; else n=$t-alpha; echo "  deleting"; git tag -d $t; git push --delete origin $t; fi; done
+
 # Rename tags named foo-bar-#.#.# to v#.#.# and push the tag changes
 git tag -l | while read t; do n="v${t##*-}"; git tag $n $t; git push --tags ; git tag -d $t; git push origin :refs/tags/$t ; done
 
 Renamed all my x.y.z tags to vx.y.z
 
-
+==========================
 
 This changes x.y.z to x/y/z, but won't delete tags that are already in new format
 

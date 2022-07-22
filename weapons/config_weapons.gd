@@ -23,7 +23,8 @@ enum ExplosiveStage {
 enum PowerupType {
 	NUKE=0, 
 	SHIELD=1,
-	HEALTH=2
+	HEALTH=2,
+	FAST_REVERSE=3,
 	}
 	
 const COOLDOWN_TIMER_DEFAULTS: Dictionary = {

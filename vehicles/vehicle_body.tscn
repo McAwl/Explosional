@@ -1104,6 +1104,7 @@ transform = Transform( 1, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0 )
 
 [node name="Tank" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.516244, 0 )
+visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Tank"]
 
@@ -1552,7 +1553,6 @@ transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Truck" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.339322, 0 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Truck"]
 
@@ -1837,17 +1837,17 @@ enabled = true
 collide_with_areas = true
 
 [node name="RayCastFrontRamDamage1" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.280808, -0.808584 )
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, -0.0385303, -0.808584 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
 [node name="RayCastFrontRamDamage2" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, 0.277222, -0.677509 )
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, -0.0563628, -0.677509 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
 [node name="RayCastFrontRamDamage3" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.640673, -0.746656 )
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.217955, -0.746656 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 

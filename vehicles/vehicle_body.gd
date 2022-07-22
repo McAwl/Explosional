@@ -57,7 +57,10 @@ var knock_back_firing_ballistic: bool = false  # knock the vehicle backwards whe
 var vehicle_state: int = ConfigVehicles.AliveState.ALIVE 
 var set_pos: bool = false
 var pos: Vector3
-var powerup_state: Dictionary = {"shield": {"enabled": false, "hits_left": 0, "max_hits": 0}}
+var powerup_state: Dictionary = {
+	"shield": {"enabled": false, "hits_left": 0, "max_hits": 0},
+	"fast_reverse": {"enabled": false},
+	}
 
 
 # Built-in  methods
@@ -283,8 +286,12 @@ func _physics_process(delta):
 			engine_force = 0
 			
 		if Input.is_action_pressed("reverse_player"+str(player_number)):
+			var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
 			# brakes shouldn't be effected by whether the engine is damaged
-			engine_force = -ConfigVehicles.config[ConfigVehicles.Type.TANK]["engine_force_value"]/2.0
+			if powerup_state["fast_reverse"]["enabled"] == true:
+				engine_force = -engine_force_value*10.0
+			else:
+				engine_force = -engine_force_value/2.0
 			if fwd_mps > speed_low_limit:
 				brake = ConfigVehicles.config[get_type()]["brake"] / 5.0
 		else:

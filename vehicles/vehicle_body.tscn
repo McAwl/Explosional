@@ -1378,17 +1378,17 @@ enabled = true
 collide_with_areas = true
 
 [node name="RayCastFrontRamDamage1" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.444297, 0.2569, 1.07205 )
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.507309, 0.0806953, 1.07205 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
 [node name="RayCastFrontRamDamage2" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.444303, 0.2569, 1.15978 )
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, -0.530018, 0.115645, 1.15978 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
 [node name="RayCastFrontRamDamage3" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.345418, 0.88265 )
+transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437, 0.0419025, 0.21847, 0.88265 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 

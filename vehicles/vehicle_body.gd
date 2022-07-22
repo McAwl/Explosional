@@ -766,25 +766,27 @@ func check_accel_damage() -> void:
 		$Effects/Audio/CrashSound.playing = true
 		$Effects/Audio/CrashSound.volume_db = 0.0
 		if $Raycasts/RayCastFrontRamDamage1.is_colliding():
-			var collider_name: String = $Raycasts/RayCastFrontRamDamage1.get_collider().name
-			if "car" in collider_name.to_lower():
-				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider_name))
+			var collider: CollisionObject = $Raycasts/RayCastFrontRamDamage1.get_collider()
+			if collider is VehicleBody:
+				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider.name), "ramming")
 				rammed_another_car = true
 		if $Raycasts/RayCastFrontRamDamage2.is_colliding():
-			var collider_name: String = $Raycasts/RayCastFrontRamDamage2.get_collider().name
-			if "car" in collider_name.to_lower():
-				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider_name))
+			var collider: CollisionObject = $Raycasts/RayCastFrontRamDamage2.get_collider()
+			if collider is VehicleBody:
+				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider.name), "ramming")
 				rammed_another_car = true
 		if $Raycasts/RayCastFrontRamDamage3.is_colliding():
-			var collider_name: String = $Raycasts/RayCastFrontRamDamage3.get_collider().name
-			if "car" in collider_name.to_lower():
-				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider_name))
+			var collider: CollisionObject = $Raycasts/RayCastFrontRamDamage3.get_collider()
+			if collider is VehicleBody:
+				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider.name), "ramming")
 				rammed_another_car = true
 		if rammed_another_car == false:
 			var damage: float = round(acceleration_calc_for_damage / ConfigVehicles.ACCEL_DAMAGE_THRESHOLD)
-			Global.debug_print(3, "adding acceleration damage="+str(damage))
+			Global.debug_print(3,  "player "+str(player_number)+" didn't ram anything: adding acceleration damage="+str(damage), "ramming")
 			add_damage(damage, Global.DamageType.FORCE)
-		# else don't take any damage
+		else:
+			Global.debug_print(3,  "ignoring acceleration damage", "ramming")
+	
 	elif acceleration_calc_for_damage > ConfigVehicles.ACCEL_DAMAGE_THRESHOLD/2.0:
 		$Effects/Audio/CrashSound.playing = true
 		$Effects/Audio/CrashSound.volume_db = -18.0

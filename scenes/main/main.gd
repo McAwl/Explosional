@@ -215,54 +215,6 @@ func _all_audio_pitch(_pitch=null):
 	$Effects/Wind.pitch_scale = set_pitch
 
 
-func _on_TimerCheckPowerups_timeout():
-	
-	if not $Powerups/NukeSpawnPoint.has_node("PowerUpNuke") and $Powerups/TimerNukePowerUp.is_stopped():
-		$Powerups/TimerNukePowerUp.set_paused(false)
-		$Powerups/TimerNukePowerUp.start(10.0)
-		
-	if not $Powerups/ShieldPowerupSpawnPoint.has_node("PowerUpShield1") and $Powerups/TimerShieldPowerup.is_stopped():
-		$Powerups/TimerShieldPowerup.set_paused(false)
-		$Powerups/TimerShieldPowerup.start(10.0)
-	
-	if not $Powerups/HealthPowerupSpawnPoint.has_node("PowerUpHealth1") and $Powerups/TimerHealthPowerup.is_stopped():
-		$Powerups/TimerHealthPowerup.set_paused(false)
-		$Powerups/TimerHealthPowerup.start(10.0)
-
-
-func _on_TimerNukePowerUp_timeout():
-	Global.debug_print(3, "_on_TimerNukePowerUp_timeout")
-	if $Powerups/TimerNukePowerUp.is_stopped():
-		Global.debug_print(3, "Respawning new_nuke_powerup")
-		var new_nuke_powerup = load(Global.power_up_folder).instance()
-		new_nuke_powerup.name = "PowerUpNuke"
-		new_nuke_powerup.type = ConfigWeapons.PowerupType.NUKE
-		$Powerups/NukeSpawnPoint.add_child(new_nuke_powerup)
-		new_nuke_powerup.get_node("ActivationSound").play()
-
-
-func _on_TimerShieldPowerup_timeout():
-	Global.debug_print(3, "_on_TimerShieldPowerup_timeout")
-	if $Powerups/TimerShieldPowerup.is_stopped():
-		Global.debug_print(3, "Respawning shield_powerup")
-		var new_shield_powerup = load(Global.power_up_folder).instance()
-		new_shield_powerup.name = "PowerUpShield1"
-		new_shield_powerup.type = ConfigWeapons.PowerupType.SHIELD
-		$Powerups/ShieldPowerupSpawnPoint.add_child(new_shield_powerup)
-		new_shield_powerup.get_node("ActivationSound").play()
-
-
-func _on_TimerHealthPowerup_timeout():
-	Global.debug_print(3, "_on_TimerHealthPowerup_timeout")
-	if $Powerups/TimerHealthPowerup.is_stopped():
-		Global.debug_print(3, "Respawning health_powerup")
-		var new_health_powerup = load(Global.power_up_folder).instance()
-		new_health_powerup.name = "PowerUpHealth1"
-		new_health_powerup.type = ConfigWeapons.PowerupType.HEALTH
-		$Powerups/HealthPowerupSpawnPoint.add_child(new_health_powerup)
-		new_health_powerup.get_node("ActivationSound").play()
-
-
 # Private methods
 
 func _turn_airstrike_on() -> void:
@@ -285,7 +237,6 @@ func _turn_airstrike_off() -> void:
 	_air_strike_label().get_node("TextFlash").stop()
 	$VC/CL/IconRadiation.visible = false
 	$Effects/Siren.playing = false
-	
 
 
 func _check_and_enforce_slow_motion() -> void:

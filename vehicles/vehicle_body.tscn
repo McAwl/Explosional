@@ -2,7 +2,7 @@
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://vehicles/vehicle_body.gd" type="Script" id=2]
-[ext_resource path="res://assets/audio/sounds/220173__gameaudio__spacey-1up-power-up.wav" type="AudioStream" id=3]
+[ext_resource path="res://assets/audio/sounds/577965__colorscrimsontears__rpgpowerup.wav" type="AudioStream" id=3]
 [ext_resource path="res://assets/textures/dot.png" type="Texture" id=4]
 [ext_resource path="res://assets/materials/shield.tres" type="Material" id=5]
 [ext_resource path="res://vehicles/vehicle_wheel_mesh.tscn" type="PackedScene" id=6]
@@ -251,7 +251,7 @@ draw_pass_1 = SubResource( 37 )
 [node name="Audio" type="Spatial" parent="Effects"]
 script = ExtResource( 25 )
 
-[node name="ActivationSound" type="AudioStreamPlayer" parent="Effects/Audio"]
+[node name="SpecialAbilityActivationSound" type="AudioStreamPlayer" parent="Effects/Audio"]
 stream = ExtResource( 3 )
 
 [node name="CrashSound" type="AudioStreamPlayer" parent="Effects/Audio"]

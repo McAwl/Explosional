@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/204318__juancamiloorjuela__pick-up-health.wav-dcf3fc13887ab897de4ce66eb31eb84c.sample"
+
+[deps]
+
+source_file="res://assets/audio/sounds/204318__juancamiloorjuela__pick-up-health.wav"
+dest_files=[ "res://.import/204318__juancamiloorjuela__pick-up-health.wav-dcf3fc13887ab897de4ce66eb31eb84c.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -474,7 +474,7 @@ func _on_TimerShieldCheckSpecialAbility_timeout():
 				special_ability_state["shield"] = true
 				$Effects/Shield.show()
 				$Effects/Shield/GlowingSphere.show()
-				$Effects/Audio/ActivationSound.play()
+				$Effects/Audio/SpecialAbilityActivationSound.play()
 
 
 func _on_TimerCheckSpeedDemon5Achievement_timeout():
@@ -1056,7 +1056,7 @@ func power_up(type: int) -> void:
 	elif type == ConfigWeapons.PowerupType.SHIELD:
 		$Effects/Shield.show()
 		$Effects/Shield/GlowingSphere.show()
-		$Effects/Audio/ActivationSound.play()
+		#$Effects/Audio/ActivationSound.play()
 		powerup_state["shield"]["enabled"] = true
 		powerup_state["shield"]["hits_left"] = 3
 		powerup_state["shield"]["max_hits"] = 3

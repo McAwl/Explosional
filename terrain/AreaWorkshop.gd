@@ -23,8 +23,8 @@ func _on_TimerCheckInsideWorkshop_timeout():
 				#Global.debug_print(3, "total_damage="+str(ob.total_damage)+". Restoring health...")
 				if ob.total_damage > 0:
 					ob.restore_health(1) 
-					$ActivationSound.play()
-					#Global.debug_print(3, "  Done. Now total_damage="+str(ob.total_damage))
+					$HealthRestoreSound.play()
+					Global.debug_print(1, "  Done. Now total_damage="+str(ob.total_damage))
 
 
 func _on_TimerFlashAreaIfVehicleInArea_timeout():

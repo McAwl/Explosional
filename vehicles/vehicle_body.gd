@@ -193,6 +193,7 @@ func _input(event):
 		if event.is_pressed():
 			if player_number == 1:
 				add_damage(max_damage, Global.DamageType.TEST)
+				#add_damage(max_damage, Global.DamageType.OFF_MAP)
 			# Stop the event from spreading
 			get_tree().set_input_as_handled()
 	elif InputMap.event_is_action (event, "kill_player2"):
@@ -866,6 +867,11 @@ func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z) -> Vector3:
 
 func add_damage(amount: float, damage_type: int) -> void:
 	
+	Global.debug_print(3, "add_damage() type "+str(damage_type), "damage")
+	
+	if not $CheckAccelDamage.is_inside_tree():
+		Global.debug_print(1, "Error: not $CheckAccelDamage.is_inside_tree()", "damage")
+
 	$CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
 	accel_damage_enabled = false
 	
@@ -899,14 +905,14 @@ func add_damage(amount: float, damage_type: int) -> void:
 		_:
 			Global.debug_print(3, "Error: unknown damage type")
 
-	Global.debug_print(3, "accel_damage_enabled="+str(accel_damage_enabled))
+	Global.debug_print(3, "accel_damage_enabled="+str(accel_damage_enabled), "damage")
 	align_effects_with_damage()
 	check_engine_force_value()
 	
 	if total_damage >= max_damage and vehicle_state != ConfigVehicles.AliveState.DYING:
 		if damage_type == Global.DamageType.LAVA:
 			get_player().add_achievement(Global.Achievements.HOT_STUFF)
-		Global.debug_print(3, "damage: total_damage >= max_damage")
+		Global.debug_print(3, "damage: total_damage >= max_damage", "damage")
 		start_vehicle_dying()
 
 
@@ -1100,10 +1106,10 @@ func set_label(new_label) -> void:
 func start_vehicle_dying() -> void:
 	
 	if vehicle_state == ConfigVehicles.AliveState.ALIVE:
-		Global.debug_print(3, "start_vehicle_dying(): vehicle_state = "+str(vehicle_state))
+		Global.debug_print(3, "start_vehicle_dying(): vehicle_state = "+str(vehicle_state), "damage")
 		vehicle_state = ConfigVehicles.AliveState.DYING
 		#Global.debug_print(3, "reset_car()")
-		Global.debug_print(3, "start_vehicle_dying(): total_damage >= max_damage")
+		Global.debug_print(3, "start_vehicle_dying(): total_damage >= max_damage", "damage")
 		total_damage = max_damage
 		
 		for ch in $Effects/Audio.get_children():  # turn off engine sounds
@@ -1126,13 +1132,13 @@ func start_vehicle_dying() -> void:
 		
 		explosion2_timer = 0.25
 		
-		Global.debug_print(3, "vehicle_body: Starting slow_motion_timer")
+		Global.debug_print(3, "vehicle_body: Starting slow_motion_timer", "damage")
 		get_main_scene().start_timer_slow_motion()
 		remove_main_collision_shapes()
 		explode_vehicle_meshes()
 		get_player().decrement_lives_left()
 	else:
-		Global.debug_print(3, "start_vehicle_dying(): error, shouldn't be here. vehicle_state="+str(vehicle_state))
+		Global.debug_print(3, "start_vehicle_dying(): error, shouldn't be here. vehicle_state="+str(vehicle_state), "damage")
 
 
 func remove_nodes_for_dying() -> void:
@@ -1177,9 +1183,9 @@ func remove_main_collision_shapes() -> void:
 func explode_vehicle_meshes() -> void:
 
 	if self.has_node("MeshInstances"):
-		Global.debug_print(3, "Found node MeshInstances: destroying...")
-		Global.debug_print(3, "explode_vehicle_meshes(): self.has_node('MeshInstances')")
-		Global.debug_print(3, "self.translation="+str(self.translation))
+		Global.debug_print(3, "Found node MeshInstances: destroying...", "damage")
+		Global.debug_print(3, "explode_vehicle_meshes(): self.has_node('MeshInstances')", "damage")
+		Global.debug_print(3, "self.translation="+str(self.translation), "damage")
 		vehicle_parts_exploded.set_script(SCRIPT_VEHICLE_DETACH_RIGID_BODIES)
 		vehicle_parts_exploded.set_process(true)
 		vehicle_parts_exploded.set_physics_process(true)
@@ -1201,11 +1207,11 @@ func dying_finished() -> bool:
 	if vehicle_state == ConfigVehicles.AliveState.DYING:
 		if $Effects/Damage.has_node("Explosion"):
 			if $Effects/Damage/Explosion.effects_finished():
-				Global.debug_print(3, "dying_finished(): vehicle_state == DYING' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Effects/Damage/Explosion/AnimationPlayer.current_animation))
+				Global.debug_print(3, "dying_finished(): vehicle_state == DYING' and $Explosion/AnimationPlayer.current_animation != 'explosion' = "+str($Effects/Damage/Explosion/AnimationPlayer.current_animation), "damage")
 				return true
 			return false
 		else:
-			Global.debug_print(3, "dying_finished(): no $Effects/Damage.has_node('Explosion')")
+			Global.debug_print(3, "dying_finished(): no $Effects/Damage.has_node('Explosion')", "damage")
 			return true
 	return false
 

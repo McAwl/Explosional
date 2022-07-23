@@ -78,19 +78,19 @@ func _on_TimerCheckDestroyedVehicle_timeout():
 	if re_spawn:
 		re_spawn = false
 		if not get_parent().is_in_slow_motion():  # wait until the main scene finished any slow motion dying stuff
-			#Global.debug_print(3, "not get_parent().is_in_slow_motion()")
-			#Global.debug_print(3, "vehicle_state ="+str(vb.vehicle_state))
+			Global.debug_print(3, "player:_on_TimerCheckDestroyedVehicle_timeout(): not get_parent().is_in_slow_motion()", "vehicle_respawn")
+			Global.debug_print(3, "player:_on_TimerCheckDestroyedVehicle_timeout(): vehicle_state ="+str(vb.vehicle_state), "vehicle_respawn")
 			#if vehicle_state == ConfigVehicles.AliveState.DYING:
 			#Global.debug_print(3, "Engine.time_scale="+str(Engine.time_scale))
 			if StatePlayers.players[player_number]["lives_left"] > 0:
-				#Global.debug_print(3, "player: "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...")
+				Global.debug_print(3, "player: "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...", "vehicle_respawn")
 				re_spawn = true
 				
 	if re_spawn:
-		#Global.debug_print(3, "if re_spawn")
+		Global.debug_print(3, "player:_on_TimerCheckDestroyedVehicle_timeout(): if re_spawn", "vehicle_respawn")
 		if vb != null:
-			#Global.debug_print(3, "vb != null -> vb.queue_free()")
-			#Global.debug_print(3, "vb.vehicle_state == "+str(vb.vehicle_state))
+			Global.debug_print(3, "player:_on_TimerCheckDestroyedVehicle_timeout(): vb != null -> vb.queue_free()", "vehicle_respawn")
+			Global.debug_print(3, "player:_on_TimerCheckDestroyedVehicle_timeout(): vb.vehicle_state == "+str(vb.vehicle_state), "vehicle_respawn")
 			vb.queue_free()
 		init_vehicle_body(last_spawn_point)
 
@@ -148,9 +148,10 @@ func init(_player_number, pos=null) -> void:
 func init_vehicle_body(pos) -> void:
 	var vehicle_body: VehicleBody = load(Global.vehicle_body_folder).instance()
 	get_viewport().add_child(vehicle_body)
+	Global.debug_print(2, "Player "+str(player_number)+" spawned a new vehicle body", "vehicle_respawn")
 	var retval: bool = vehicle_body.init(pos, player_number, "vehicle_body")
 	if retval == false:
-		Global.debug_print(3, "Error: couldn't initialise vehicle body")
+		Global.debug_print(1, "Error: couldn't initialise vehicle body", "vehicle_respawn")
 		get_tree().quit()
 	
 

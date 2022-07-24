@@ -83,7 +83,8 @@ func _process(delta):
 		
 	if global_transform.origin.y < -50.0:
 		Global.debug_print(3, "global_transform.origin.y < -50.0 -> AliveState.DEAD")
-		vehicle_state = ConfigVehicles.AliveState.DEAD
+		#vehicle_state = ConfigVehicles.AliveState.DEAD
+		add_damage(max_damage, Global.DamageType.OFF_MAP)
 	
 	if vehicle_state == ConfigVehicles.AliveState.DYING:
 		explosion2_timer -= delta
@@ -192,6 +193,7 @@ func _input(event):
 	elif InputMap.event_is_action (event, "kill_player1"):
 		if event.is_pressed():
 			if player_number == 1:
+				Global.debug_print(3, "_input(): adding Global.DamageType.TEST = "+str(Global.DamageType.TEST), "damage")
 				add_damage(max_damage, Global.DamageType.TEST)
 				#add_damage(max_damage, Global.DamageType.OFF_MAP)
 			# Stop the event from spreading
@@ -867,26 +869,26 @@ func get_global_offset_pos(offset_y, mult_y, offset_z, mult_z) -> Vector3:
 
 func add_damage(amount: float, damage_type: int) -> void:
 	
-	Global.debug_print(3, "add_damage() type "+str(damage_type), "damage")
+	Global.debug_print(3, "add_damage() type "+str(damage_type)+"="+str(Global.DamageType.keys()[damage_type]), "damage")
 	
 	if not $CheckAccelDamage.is_inside_tree():
-		Global.debug_print(1, "Error: not $CheckAccelDamage.is_inside_tree()", "damage")
+		Global.debug_print(1, "add_damage(): Error: not $CheckAccelDamage.is_inside_tree()", "damage")
 
 	$CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
 	accel_damage_enabled = false
 	
 	if powerup_state["shield"]["enabled"] == true and not damage_type == Global.DamageType.LAVA and not damage_type == Global.DamageType.OFF_MAP:
 		powerup_state["shield"]["hits_left"] -= 1
-		Global.debug_print(3, "ignoring damage of type "+str(damage_type)+" - shield powerup is on")
+		Global.debug_print(3, "add_damage(): ignoring damage of "+str(damage_type)+"= "+str(Global.DamageType.keys()[damage_type])+" - shield powerup is on")
 		if powerup_state["shield"]["hits_left"] <= 0:
 			powerup_state["shield"]["enabled"] = false
 			if special_ability_state["shield"] == false:
 				$Effects/Shield.hide()
-			Global.debug_print(3, "shield off - max hits reached")
+			Global.debug_print(3, "add_damage(): shield off - max hits reached")
 		return
 	
 	if special_ability_state["shield"] == true and not damage_type == Global.DamageType.LAVA and not damage_type == Global.DamageType.OFF_MAP:
-		Global.debug_print(3, "ignoring damage of type "+str(damage_type)+" - shield special ability is on")
+		Global.debug_print(3, "add_damage(): ignoring damage of "+str(damage_type)+"= "+str(Global.DamageType.keys()[damage_type])+" - shield special ability is on")
 		return
 		
 	match Global.game_mode:
@@ -896,23 +898,24 @@ func add_damage(amount: float, damage_type: int) -> void:
 			if damage_type == Global.DamageType.LAVA or damage_type == Global.DamageType.OFF_MAP:
 				total_damage += amount
 			else:
-				Global.debug_print(3, "Ignoring damage: GameMode.PEACEFUL")  
+				Global.debug_print(3, "add_damage(): Ignoring damage: GameMode.PEACEFUL")  
 		Global.GameMode.TOUGH:
 			if damage_type == Global.DamageType.DIRECT_HIT or damage_type == Global.DamageType.LAVA or damage_type == Global.DamageType.OFF_MAP:
 				total_damage += max_damage  # any direct hit is instant death
 			else:
-				Global.debug_print(3, "Ignoring damage: GameMode.TOUGH and damage_type="+str(damage_type)) 
+				Global.debug_print(3, "add_damage(): Ignoring damage: GameMode.TOUGH and damage_type="+str(damage_type)) 
 		_:
-			Global.debug_print(3, "Error: unknown damage type")
+			Global.debug_print(3, "add_damage(): Error: unknown damage type")
 
-	Global.debug_print(3, "accel_damage_enabled="+str(accel_damage_enabled), "damage")
+	Global.debug_print(3, "add_damage(): accel_damage_enabled="+str(accel_damage_enabled), "damage")
 	align_effects_with_damage()
 	check_engine_force_value()
 	
 	if total_damage >= max_damage and vehicle_state != ConfigVehicles.AliveState.DYING:
+		Global.debug_print(3, "damage: total_damage >= max_damage and vehicle_state != ConfigVehicles.AliveState.DYING", "damage")
 		if damage_type == Global.DamageType.LAVA:
 			get_player().add_achievement(Global.Achievements.HOT_STUFF)
-		Global.debug_print(3, "damage: total_damage >= max_damage", "damage")
+		Global.debug_print(3, "add_damage(): : total_damage >= max_damage", "damage")
 		start_vehicle_dying()
 
 
@@ -1105,8 +1108,9 @@ func set_label(new_label) -> void:
 
 func start_vehicle_dying() -> void:
 	
+	Global.debug_print(3, "start_vehicle_dying(): vehicle_state = "+str(ConfigVehicles.AliveState.keys()[vehicle_state]), "damage")
 	if vehicle_state == ConfigVehicles.AliveState.ALIVE:
-		Global.debug_print(3, "start_vehicle_dying(): vehicle_state = "+str(vehicle_state), "damage")
+		Global.debug_print(3, "start_vehicle_dying(): vehicle_state == ALIVE", "damage")
 		vehicle_state = ConfigVehicles.AliveState.DYING
 		#Global.debug_print(3, "reset_car()")
 		Global.debug_print(3, "start_vehicle_dying(): total_damage >= max_damage", "damage")
@@ -1132,13 +1136,14 @@ func start_vehicle_dying() -> void:
 		
 		explosion2_timer = 0.25
 		
-		Global.debug_print(3, "vehicle_body: Starting slow_motion_timer", "damage")
+		Global.debug_print(3, "start_vehicle_dying(): Starting slow_motion_timer", "damage")
 		get_main_scene().start_timer_slow_motion()
 		remove_main_collision_shapes()
 		explode_vehicle_meshes()
 		get_player().decrement_lives_left()
+		Global.debug_print(3, "start_vehicle_dying(): ..done", "damage")
 	else:
-		Global.debug_print(3, "start_vehicle_dying(): error, shouldn't be here. vehicle_state="+str(vehicle_state), "damage")
+		Global.debug_print(3, "start_vehicle_dying(): error, shouldn't be here. vehicle_state ="+str(vehicle_state), "damage")
 
 
 func remove_nodes_for_dying() -> void:
@@ -1183,9 +1188,9 @@ func remove_main_collision_shapes() -> void:
 func explode_vehicle_meshes() -> void:
 
 	if self.has_node("MeshInstances"):
-		Global.debug_print(3, "Found node MeshInstances: destroying...", "damage")
-		Global.debug_print(3, "explode_vehicle_meshes(): self.has_node('MeshInstances')", "damage")
-		Global.debug_print(3, "self.translation="+str(self.translation), "damage")
+		Global.debug_print(3, "explode_vehicle_meshes(): Found node MeshInstances: destroying...", "damage")
+		Global.debug_print(3, "explode_vehicle_meshes(): explode_vehicle_meshes(): self.has_node('MeshInstances')", "damage")
+		Global.debug_print(3, "explode_vehicle_meshes(): self.translation="+str(self.translation), "damage")
 		vehicle_parts_exploded.set_script(SCRIPT_VEHICLE_DETACH_RIGID_BODIES)
 		vehicle_parts_exploded.set_process(true)
 		vehicle_parts_exploded.set_physics_process(true)
@@ -1213,6 +1218,7 @@ func dying_finished() -> bool:
 		else:
 			Global.debug_print(3, "dying_finished(): no $Effects/Damage.has_node('Explosion')", "damage")
 			return true
+	Global.debug_print(3, "vehicle_state not == ConfigVehicles.AliveState.DYING", "damage")
 	return false
 
 

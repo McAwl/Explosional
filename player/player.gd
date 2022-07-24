@@ -67,30 +67,31 @@ func _on_TimerCheckDestroyedVehicle_timeout():
 	var vb: VehicleBody
 	
 	if have_vb == false:
-		#Global.debug_print(3, "have_vb == false")
+		Global.debug_print(3, "_on_TimerCheckDestroyedVehicle_timeout(): have_vb == false, setting re_spawn = true", "vehicle_respawn")
 		re_spawn = true
 	else:
+		Global.debug_print(5, "_on_TimerCheckDestroyedVehicle_timeout(): have_vb == true", "vehicle_respawn")
 		vb = get_vehicle_body()  # get_viewport().get_node("vehicle_body")
 		if vb.vehicle_state == ConfigVehicles.AliveState.DEAD:
-			#Global.debug_print(3, "vb.vehicle_state == ConfigVehicles.AliveState.DEAD")
+			Global.debug_print(3, "vb.vehicle_state == ConfigVehicles.AliveState.DEAD, setting re_spawn = true", "vehicle_respawn")
 			re_spawn = true
 	
 	if re_spawn:
 		re_spawn = false
 		if not get_parent().is_in_slow_motion():  # wait until the main scene finished any slow motion dying stuff
-			Global.debug_print(3, "player:_on_TimerCheckDestroyedVehicle_timeout(): not get_parent().is_in_slow_motion()", "vehicle_respawn")
-			Global.debug_print(3, "player:_on_TimerCheckDestroyedVehicle_timeout(): vehicle_state ="+str(vb.vehicle_state), "vehicle_respawn")
+			Global.debug_print(3, "player "+str(player_number)+":_on_TimerCheckDestroyedVehicle_timeout(): not get_parent().is_in_slow_motion()", "vehicle_respawn")
+			Global.debug_print(3, "player "+str(player_number)+":_on_TimerCheckDestroyedVehicle_timeout(): vehicle_state ="+str(vb.vehicle_state)+"="+str(ConfigVehicles.AliveState.keys()[vb.vehicle_state]), "vehicle_respawn")
 			#if vehicle_state == ConfigVehicles.AliveState.DYING:
 			#Global.debug_print(3, "Engine.time_scale="+str(Engine.time_scale))
 			if StatePlayers.players[player_number]["lives_left"] > 0:
-				Global.debug_print(3, "player: "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...", "vehicle_respawn")
+				Global.debug_print(3, "player "+str(player_number)+": "+str(StatePlayers.players[player_number]["lives_left"])+" lives left, spawning...", "vehicle_respawn")
 				re_spawn = true
 				
 	if re_spawn:
-		Global.debug_print(3, "player:_on_TimerCheckDestroyedVehicle_timeout(): if re_spawn", "vehicle_respawn")
+		Global.debug_print(3, "player "+str(player_number)+":_on_TimerCheckDestroyedVehicle_timeout(): if re_spawn", "vehicle_respawn")
 		if vb != null:
-			Global.debug_print(3, "player:_on_TimerCheckDestroyedVehicle_timeout(): vb != null -> vb.queue_free()", "vehicle_respawn")
-			Global.debug_print(3, "player:_on_TimerCheckDestroyedVehicle_timeout(): vb.vehicle_state == "+str(vb.vehicle_state), "vehicle_respawn")
+			Global.debug_print(3, "player "+str(player_number)+":_on_TimerCheckDestroyedVehicle_timeout(): vb != null -> vb.queue_free()", "vehicle_respawn")
+			Global.debug_print(3, "player "+str(player_number)+":_on_TimerCheckDestroyedVehicle_timeout(): vb.vehicle_state == "+str(vb.vehicle_state), "vehicle_respawn")
 			vb.queue_free()
 		init_vehicle_body(last_spawn_point)
 

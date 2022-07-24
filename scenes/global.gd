@@ -69,8 +69,10 @@ var title_screen_folder: String = "res://scenes/title_screen/title_screen.tscn"
 
 var start_scene: String = "res://scenes/start/start.tscn"
 
-var log_level = 1  # 1=error, 2=warning, etc up to 10 for very nested loops
-var log_topics = ["damage", "vehicle_respawn"]  # eg, include a string here and any log command (regardless of log_level) with this as 3rd argument will print
+var log_level = 2  # 1=error, 2=warning, etc up to 10 for very nested loops
+
+# include a string here and any log command (regardless of log_level) with this as 3rd argument will print
+var log_topics = []  # eg, "damage", "vehicle_respawn"
 
 # main scene
 var main_scene: String = "res://scenes/main/main.tscn"

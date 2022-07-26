@@ -984,7 +984,15 @@ func fire_mine_or_nuke() -> void:
 	#weapons_state[weapon_select]["active"] = true
 	if weapon_select == ConfigWeapons.Type.MINE:
 		weapon_instance.set_as_mine()
-		weapon_instance.activate($Positions/Weapons/BombPosition.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
+		var ray : RayCast = $Raycasts/RayCastMinePlacement
+		if ray.is_colliding():
+			Global.debug_print(5, "ray.is_colliding()", "mine")
+			var mine_pos = ray.get_collision_point()
+			mine_pos[1] += 0.5  # place above ground
+			weapon_instance.activate(mine_pos, linear_velocity, angular_velocity, 1, player_number, get_player())
+		else:  # place at the origin of each vehicle's raycast, e.g. we may be near a cliff etc
+			Global.debug_print(5, "ray.is_colliding()", "mine")
+			weapon_instance.activate(ray.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
 	elif weapon_select == ConfigWeapons.Type.NUKE:
 		#Global.debug_print(3, "activating nuke")
 		weapon_instance.set_as_nuke()

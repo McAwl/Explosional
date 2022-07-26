@@ -582,6 +582,11 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.015223, 0.42949, 1.01244 )
 [node name="Raycasts" type="Spatial" parent="VehicleTypes/Racer"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
 
+[node name="RayCastMinePlacement" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.84608, -1.56346 )
+enabled = true
+cast_to = Vector3( 0, -3, 0 )
+
 [node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.204935, 0 )
 enabled = true
@@ -975,6 +980,11 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0684594, 0.58042, -0.708691 
 
 [node name="Raycasts" type="Spatial" parent="VehicleTypes/Rally"]
 
+[node name="RayCastMinePlacement" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.68332, -1.87893 )
+enabled = true
+cast_to = Vector3( 0, -3, 0 )
+
 [node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.027562, 0 )
 enabled = true
@@ -1346,6 +1356,11 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.922115, 1.04335 )
 
 [node name="Raycasts" type="Spatial" parent="VehicleTypes/Tank"]
 
+[node name="RayCastMinePlacement" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.78401, -1.79689 )
+enabled = true
+cast_to = Vector3( 0, -3, 0 )
+
 [node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.027562, 0 )
 enabled = true
@@ -1553,6 +1568,7 @@ transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Truck" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.339322, 0 )
+visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Truck"]
 
@@ -1780,9 +1796,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.84618, 0.101055 
 
 [node name="Weapons" type="Spatial" parent="VehicleTypes/Truck/Positions"]
 
-[node name="BombPosition" type="Position3D" parent="VehicleTypes/Truck/Positions/Weapons"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.11065 )
-
 [node name="MissilePosition" type="Position3D" parent="VehicleTypes/Truck/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 2.29528 )
 
@@ -1803,6 +1816,11 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00535774, 0.58042, -1.84253
 
 [node name="Raycasts" type="Spatial" parent="VehicleTypes/Truck"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.33902 )
+
+[node name="RayCastMinePlacement" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.031609, 1.85981, -4.24858 )
+enabled = true
+cast_to = Vector3( 0, -3, 0 )
 
 [node name="RayCastCentreDown" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.169064, -2.29914 )

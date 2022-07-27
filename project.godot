@@ -138,6 +138,11 @@ _global_script_classes=[ {
 "class": "Speedometer",
 "language": "GDScript",
 "path": "res://player/speedometer.gd"
+}, {
+"base": "VehicleBody",
+"class": "VehicleBodyExplosional",
+"language": "GDScript",
+"path": "res://vehicles/vehicle_body.gd"
 } ]
 _global_script_class_icons={
 "AnimatedGrass": "",
@@ -165,7 +170,8 @@ _global_script_class_icons={
 "Shield": "",
 "Smoke": "",
 "SmokeTrail": "",
-"Speedometer": ""
+"Speedometer": "",
+"VehicleBodyExplosional": ""
 }
 
 [application]

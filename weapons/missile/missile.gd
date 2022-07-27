@@ -263,7 +263,7 @@ func explode(body=null) -> void:  # null if lifetime has expired
 		var direction: Vector3 = global_transform.origin - target.global_transform.origin
 		var distance: float = global_transform.origin.distance_to(target.global_transform.origin)
 		Global.debug_print(3, "distance = "+str(distance))
-		if distance < ConfigWeapons.DAMAGE_INDIRECT[weapon_type]["range"] and target != body:
+		if distance < ConfigWeapons.EXPLOSION_RANGE[weapon_type] and target != body:
 			Global.debug_print(3, "Missile indirect damage to "+str(target.name))
 			target.hit_by_missile["active"] = true
 			target.hit_by_missile["origin"] = transform.origin

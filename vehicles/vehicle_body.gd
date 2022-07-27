@@ -1,5 +1,5 @@
 extends VehicleBody
-
+class_name VehicleBodyExplosional
 
 const SCRIPT_VEHICLE_DETACH_RIGID_BODIES = preload("res://vehicles/vehicle_detach_rigid_bodies.gd")  # Global.vehicle_detach_rigid_bodies_folder)
 const CHECK_ACCEL_DAMAGE_INTERVAL: float = 0.5
@@ -376,8 +376,8 @@ func _physics_process(delta):
 			var indirect_explosion_force: float = hit_by_missile["force"]/hit_by_missile["distance"]
 			Global.debug_print(3, "force="+str(hit_by_missile["force"])+" at distance="+str(hit_by_missile["distance"])+" -> indirect_explosion_force="+str(indirect_explosion_force))
 			apply_impulse( Vector3(0,0,0), indirect_explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
-			if hit_by_missile["distance"] <= ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["range"]:
-				add_damage(ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE]["damage"], Global.DamageType.INDIRECT_HIT)
+			if hit_by_missile["distance"] <= ConfigWeapons.EXPLOSION_RANGE[ConfigWeapons.Type.MISSILE]:
+				add_damage(ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE], Global.DamageType.INDIRECT_HIT)
 		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
 			
 		hit_by_missile["active"] = false

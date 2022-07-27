@@ -154,8 +154,8 @@ func _physics_process(_delta):
 			#print(" type == ConfigWeapons.Type.BOMB setting $ParticlesExplosion.emitting = true")
 			$Explosion.start_effects(self)
 		var targets = []
-		for target in get_players():  # i in range(1,5): # explosion toward all players
-			var target_body = target.get_vehicle_body()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
+		for player in get_players():  # i in range(1,5): # explosion toward all players
+			var target_body : VehicleBodyExplosional = player.get_vehicle_body()  # get_node("../InstancePos"+str(i)+"/VC/V/CarBase/Body")
 			targets.append(target_body)
 		#for bomb in get_bombs():  # i in range(1,5):  # explosion toward all bombs
 		#	# if i != player_number:
@@ -164,13 +164,13 @@ func _physics_process(_delta):
 		for target in targets:
 			var distance = global_transform.origin.distance_to(target.global_transform.origin)
 			print("target.name="+str(target.name))
-			if distance < ConfigWeapons.explosion_range[type] and target is VehicleBody:
+			if distance < ConfigWeapons.EXPLOSION_RANGE[type] and target is VehicleBody:
 				var direction = target.transform.origin - transform.origin  
 				# direction[2]+=5.0  # slight upward force as well - isn't [1] up/down?
 				# remove downwards force - as vehicles can be blown through the terrain
 				if direction[1] < 0:
 					direction[1] = 0
-				var explosion_force = ConfigWeapons.EXPLOSION_STRENGTH[type]/pow((ConfigWeapons.explosion_decrease[type]*distance)+1.0, ConfigWeapons.explosion_exponent[type])  # inverse square of distance
+				var explosion_force = ConfigWeapons.EXPLOSION_STRENGTH[type]/pow((ConfigWeapons.EXPLOSION_DECREASE[type]*distance)+1.0, ConfigWeapons.EXPLOSION_EXPONENT[type])  # inverse square of distance
 				if type == ConfigWeapons.Type.NUKE:
 					if target.player_number == launched_by_player_number:
 						explosion_force = 0.0  # no damage from player which launched the nuke
@@ -180,16 +180,9 @@ func _physics_process(_delta):
 				target.apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 				target.angular_velocity  = Vector3(5.0*randf(),5.0*randf(),5.0*randf())
 				
-				#if target.take_damage == true:
-				#	if type == Type.NUKE:
-				#		if target.player_number != var _number:
-				#			target.damage(10)
-				#			#print("target took nuke damage launched_by_player_number "+str(launched_by_player_number))
-				#		# else don't take damage from player that launched it
-				#	else:
-				#		target.damage(2)
-				#		#print("target took damage launched_by_player_number "+str(launched_by_player_number))
-				#		#print("direction="+str(direction))
+				# calc any specific indirect damage to vehicles nearby, if defined
+				target.add_damage(ConfigWeapons.DAMAGE_INDIRECT[type], Global.DamageType.INDIRECT_HIT)
+				print("target took "+str(ConfigWeapons.DAMAGE_INDIRECT[type])+" indirect damage launched_by_player_number "+str(launched_by_player_number))
 				
 
 		#print("setting explosive_stage = 5")
@@ -231,7 +224,7 @@ func no_animations_or_sound_playing() -> bool:
 
 
 func get_players():
-	return get_node("/root/MainScene").get_players()
+	return get_node("/root/MainScene").get_players() as Array
 
 
 func get_bombs():

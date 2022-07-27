@@ -49,14 +49,14 @@ const DAMAGE: Dictionary = {
 	Type.BALLISTIC: 5.0,
 	Type.BALLISTIC_MISSILE: 10.0}
 
-# TODO remove this, if we want to completely move to damage due to force (acceleration)
+# TODO: Do we want to keep this, or do we want to completely move to damage due to force (acceleration)
 const DAMAGE_INDIRECT: Dictionary = {
-	Type.MINE: {"damage": 0, "range": 10.0},  # does this make sense? no
-	Type.ROCKET: {"damage": 1, "range": 10.0}, 
-	Type.MISSILE: {"damage": 1, "range": 10.0}, 
-	Type.NUKE: {"damage": 5, "range": 500.0}, 
-	Type.BALLISTIC: {"damage": 0, "range": 10.0},
-	Type.BALLISTIC_MISSILE: {"damage": 3, "range": 20.0},
+	Type.MINE:  1,  
+	Type.ROCKET: 1, 
+	Type.MISSILE: 1,
+	Type.NUKE: 5, 
+	Type.BALLISTIC: 0,
+	Type.BALLISTIC_MISSILE: 3,
 	}
 	
 const SCENE: Dictionary = {
@@ -124,7 +124,7 @@ var vehicle_weapons: Dictionary = {
 	Type.BALLISTIC_MISSILE: [ConfigVehicles.Type.TANK],
 	}
 
-var explosion_range: Dictionary = {
+const EXPLOSION_RANGE: Dictionary = {
 	Type.MINE: 10.0, 
 	Type.BOMB: 10.0, 
 	Type.MISSILE: 10.0,
@@ -132,12 +132,12 @@ var explosion_range: Dictionary = {
 	Type.BALLISTIC_MISSILE: 20.0,
 	Type.NUKE: 1000.0}
 
-var explosion_exponent: Dictionary = {
+const EXPLOSION_EXPONENT: Dictionary = {
 	Type.MINE: 1.5, 
 	Type.BOMB: 1.5, 
 	Type.NUKE: 1.05}
 
-var explosion_decrease: Dictionary = {
+const EXPLOSION_DECREASE: Dictionary = {
 	Type.MINE: 1.0, 
 	Type.BOMB: 1.0, 
 	Type.NUKE: 0.05}

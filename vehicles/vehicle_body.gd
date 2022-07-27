@@ -3,6 +3,7 @@ class_name VehicleBodyExplosional
 
 const SCRIPT_VEHICLE_DETACH_RIGID_BODIES = preload("res://vehicles/vehicle_detach_rigid_bodies.gd")  # Global.vehicle_detach_rigid_bodies_folder)
 const CHECK_ACCEL_DAMAGE_INTERVAL: float = 0.5
+const MIN_SPEED_POWERUP_KM_HR = 90.0
 
 export var engine_force_value: float = ConfigVehicles.ENGINE_FORCE_VALUE_DEFAULT  #40
 export var speed: float = 0.0
@@ -478,13 +479,23 @@ func _on_CheckAccelDamage_timeout():
 
 func _on_TimerShieldCheckSpecialAbility_timeout():
 	if get_type() == ConfigVehicles.Type.RACER:
-		if fwd_mps > (80.0/200) * (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]:
+		if fwd_mps > (MIN_SPEED_POWERUP_KM_HR/200) * (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]:
 			$TimerDisableShieldAbility.start(5.0)
 			if special_ability_state["shield"] == false:
 				special_ability_state["shield"] = true
 				$Effects/Shield.show()
 				$Effects/Shield/GlowingSphere.show()
 				$Effects/Audio/SpecialAbilityActivationSound.play()
+
+
+func _on_TimerCheckSoundPitch_timeout():
+	pass # Replace with function body.
+
+
+func _on_TimerDisableShieldPowerup_timeout():
+	powerup_state["shield"]["enabled"] == false
+	$Effects/Shield.hide()
+	$Effects/Shield/GlowingSphere.hide()
 
 
 func _on_TimerCheckSpeedDemon5Achievement_timeout():
@@ -986,12 +997,12 @@ func fire_mine_or_nuke() -> void:
 		weapon_instance.set_as_mine()
 		var ray : RayCast = $Raycasts/RayCastMinePlacement
 		if ray.is_colliding():
-			Global.debug_print(5, "ray.is_colliding()", "mine")
+			Global.debug_print(5, "fire_mine_or_nuke(): ray.is_colliding()", "mine")
 			var mine_pos = ray.get_collision_point()
 			mine_pos[1] += 0.5  # place above ground
 			weapon_instance.activate(mine_pos, linear_velocity, angular_velocity, 1, player_number, get_player())
 		else:  # place at the origin of each vehicle's raycast, e.g. we may be near a cliff etc
-			Global.debug_print(5, "ray.is_colliding()", "mine")
+			Global.debug_print(5, "fire_mine_or_nuke(): ray.is_colliding()", "mine")
 			weapon_instance.activate(ray.global_transform.origin, linear_velocity, angular_velocity, 1, player_number, get_player())
 	elif weapon_select == ConfigWeapons.Type.NUKE:
 		#Global.debug_print(3, "activating nuke")
@@ -1004,7 +1015,7 @@ func fire_mine_or_nuke() -> void:
 			weapons_state[3]["enabled"] = false  # so powerup is needed again
 			cycle_weapon()  # de-select nuke, as it's not available any more
 	else:
-		Global.debug_print(3, "fire_mine_or_nuke(): Error! Shouldn't be here")
+		Global.debug_print(3, "fire_mine_or_nuke(): fire_mine_or_nuke(): Error! Shouldn't be here")
 	#Global.debug_print(3, "weapons_state[weapon_select]="+str(weapons_state[weapon_select]))
 	weapon_instance.set_as_toplevel(true)
 
@@ -1086,6 +1097,7 @@ func power_up(type: int) -> void:
 		powerup_state["shield"]["enabled"] = true
 		powerup_state["shield"]["hits_left"] = 3
 		powerup_state["shield"]["max_hits"] = 3
+		$TimerDisableShieldPowerup.start(30.0)
 	elif type == ConfigWeapons.PowerupType.HEALTH:
 		if total_damage > 0:
 			reset_total_damage()
@@ -1270,7 +1282,3 @@ func change_weather(weather_change: Dictionary, change_duration_sec) -> void:
 		if "snow_visible" == weather_item_key:
 			$CameraBase/Camera/ParticlesSnow.visible = weather_change["snow_visible"]
 
-
-
-func _on_TimerCheckSoundPitch_timeout():
-	pass # Replace with function body.

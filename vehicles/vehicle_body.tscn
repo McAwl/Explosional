@@ -1994,6 +1994,9 @@ one_shot = true
 [node name="TimerCheckMaxSpeed" type="Timer" parent="."]
 autostart = true
 
+[node name="TimerDisableShieldPowerup" type="Timer" parent="."]
+wait_time = 30.0
+
 [connection signal="timeout" from="Effects/Audio/TimerCheckSoundPitch" to="Effects/Audio" method="_on_TimerCheckSoundPitch_timeout"]
 [connection signal="timeout" from="Effects/Audio/TimerCheckSoundVolume" to="Effects/Audio" method="_on_TimerCheckSoundVolume_timeout"]
 [connection signal="timeout" from="DynamicGripTimer" to="." method="_on_DynamicGripTimer_timeout"]
@@ -2006,3 +2009,4 @@ autostart = true
 [connection signal="timeout" from="TimerFlickerShield" to="." method="_on_TimerFlickerShield_timeout"]
 [connection signal="timeout" from="TimerCheckSpeedDemon5Achievement" to="." method="_on_TimerCheckSpeedDemon5Achievement_timeout"]
 [connection signal="timeout" from="TimerCheckMaxSpeed" to="." method="_on_TimerCheckMaxSpeed_timeout"]
+[connection signal="timeout" from="TimerDisableShieldPowerup" to="." method="_on_TimerDisableShieldPowerup_timeout"]

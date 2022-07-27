@@ -55,6 +55,7 @@ const DAMAGE_INDIRECT: Dictionary = {
 	Type.ROCKET: 1, 
 	Type.MISSILE: 1,
 	Type.NUKE: 5, 
+	Type.BOMB: 1, 
 	Type.BALLISTIC: 0,
 	Type.BALLISTIC_MISSILE: 3,
 	}

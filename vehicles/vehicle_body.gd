@@ -21,7 +21,15 @@ var timer_0_1_sec: float = 0.1
 var timer_1_sec: float = 1.0  # timer to eg: check if car needs to turn light on 
 var timer_1_sec_physics: float = 1.0  # to check and correct clipping, etc
 var lifetime_so_far_sec: float = 0.0  # to eg disable air strikes for a bit after re-spawn
-var hit_by_missile: Dictionary = {"active": false, "homing": null, "origin": null, "velocity": null, "direct_hit": null, "distance": null}
+var hit_by_missile: Dictionary = {
+	"active": false, 
+	"homing": null, 
+	"origin": null, 
+	"velocity": null,
+	"direct_hit": null, 
+	"distance": null,
+	"weapon_type": null
+	}
 var max_damage: float = 10.0
 var total_damage: float = 0.0
 var take_damage: bool = true
@@ -39,6 +47,7 @@ var weapons_state: Dictionary = {
 	ConfigWeapons.Type.BALLISTIC: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.BALLISTIC], "enabled": true},
 	ConfigWeapons.Type.BOMB: {"active": false, "enabled": false, "test_mode": false},
 	ConfigWeapons.Type.BALLISTIC_MISSILE: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.BALLISTIC_MISSILE], "enabled": true},
+	ConfigWeapons.Type.TRUCK_BOMB: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.TRUCK_BOMB], "enabled": true},
 	}
 
 var weapon_select: int = ConfigWeapons.Type.MINE
@@ -189,6 +198,10 @@ func _input(event):
 				fire_missile_or_rocket()
 			elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
 				fire_missile_or_rocket()
+			elif weapon_select == ConfigWeapons.Type.TRUCK_BOMB:
+				fire_missile_or_rocket()
+			else:
+				Global.debug_print(1, "Warning: player "+str(player_number)+" fired unknown weapon "+str(weapon_select))
 			# Stop the event from spreading
 			get_tree().set_input_as_handled()
 	elif InputMap.event_is_action (event, "kill_player1"):
@@ -358,7 +371,9 @@ func _physics_process(delta):
 			special_ability_state["climb_walls"] = false
 		
 	if hit_by_missile["active"] == true:
-		Global.debug_print(3, "Player "+str(player_number)+ " hit by missile!")
+		var weapon_type = hit_by_missile["weapon_type"]
+		var weapon_type_name = ConfigWeapons.Type.keys()[weapon_type]
+		Global.debug_print(3, "Player "+str(player_number)+ " hit by "+str(weapon_type_name), "missile")
 		#var direction = hit_by_missile_origin - $Body.transform.origin  
 		var direction: Vector3 = hit_by_missile["direction_for_explosion"]  # $Body.transform.origin - hit_by_missile_origin 
 		direction[1] += 5.0
@@ -366,19 +381,19 @@ func _physics_process(delta):
 			direction[1] = 0  # remove downwards force - as vehicles can be blown through the terrain
 		#var explosion_force: float = 200.0  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
 		if hit_by_missile["direct_hit"] == true:
-			Global.debug_print(3, "(direct hit) explosion_force="+str(hit_by_missile["force"]))
-			apply_impulse( Vector3(0,0,0), hit_by_missile["force"]*direction.normalized() )   # offset, impulse(=direction*force)
-			#if hit_by_missile["homing"]:
-			#damage(weapons[2].damage)
-			#else:
-			#damage(weapons[1].damage)
-			add_damage(ConfigWeapons.DAMAGE[ConfigWeapons.Type.MISSILE], Global.DamageType.DIRECT_HIT)
+			var force = ConfigWeapons.DAMAGE[weapon_type]
+			Global.debug_print(3, "(direct hit) explosion_force="+str(force), "missile")
+			apply_impulse( Vector3(0,0,0), force*direction.normalized() )   # offset, impulse(=direction*force)
+			# and add any direct hit-specific damage (may be 0)
+			add_damage(ConfigWeapons.DAMAGE[weapon_type], Global.DamageType.DIRECT_HIT)
 		else:
-			var indirect_explosion_force: float = hit_by_missile["force"]/hit_by_missile["distance"]
-			Global.debug_print(3, "force="+str(hit_by_missile["force"])+" at distance="+str(hit_by_missile["distance"])+" -> indirect_explosion_force="+str(indirect_explosion_force))
+			var force = ConfigWeapons.EXPLOSION_STRENGTH[weapon_type]
+			var indirect_explosion_force: float = ConfigWeapons.EXPLOSION_STRENGTH[weapon_type]/hit_by_missile["distance"]
+			Global.debug_print(3, "force="+str(force)+" at distance="+str(hit_by_missile["distance"])+" -> indirect_explosion_force="+str(indirect_explosion_force), "missile")
 			apply_impulse( Vector3(0,0,0), indirect_explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
-			if hit_by_missile["distance"] <= ConfigWeapons.EXPLOSION_RANGE[ConfigWeapons.Type.MISSILE]:
-				add_damage(ConfigWeapons.DAMAGE_INDIRECT[ConfigWeapons.Type.MISSILE], Global.DamageType.INDIRECT_HIT)
+			if hit_by_missile["distance"] <= ConfigWeapons.EXPLOSION_RANGE[weapon_type]:
+				Global.debug_print(3, "Also adding indirect damage "+str(ConfigWeapons.DAMAGE_INDIRECT[weapon_type]), "missile")
+				add_damage(ConfigWeapons.DAMAGE_INDIRECT[weapon_type], Global.DamageType.INDIRECT_HIT)
 		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
 			
 		hit_by_missile["active"] = false
@@ -493,7 +508,7 @@ func _on_TimerCheckSoundPitch_timeout():
 
 
 func _on_TimerDisableShieldPowerup_timeout():
-	powerup_state["shield"]["enabled"] == false
+	powerup_state["shield"]["enabled"] = false
 	$Effects/Shield.hide()
 	$Effects/Shield/GlowingSphere.hide()
 
@@ -1037,12 +1052,15 @@ func fire_missile_or_rocket() -> void:
 	elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
 		weapon_instance.velocity[1] += 10.0   # angle it up a lot
 		weapon_instance.global_transform.origin = $Positions/Weapons/BallisticMissilePosition.global_transform.origin
+	elif weapon_select == ConfigWeapons.Type.TRUCK_BOMB:
+		weapon_instance.velocity[1] += 10.0   # angle it up a lot
+		weapon_instance.global_transform.origin = $Positions/Weapons/TruckBombPosition.global_transform.origin
 	else:
 		weapon_instance.global_transform.origin = $Positions/Weapons/RocketPosition.global_transform.origin
 		#weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
 		#weapon_instance.velocity[1] += 1.0   # angle it up a bit
 	#Global.debug_print(3, "weapon velocity="+str(weapon_instance.velocity))
-	if weapon_select == ConfigWeapons.Type.ROCKET:
+	if weapon_select == ConfigWeapons.Type.ROCKET or weapon_select == ConfigWeapons.Type.TRUCK_BOMB:
 		weapon_instance.activate(player_number, false)  # homing = false
 	elif weapon_select == ConfigWeapons.Type.BALLISTIC:
 		knock_back_firing_ballistic = true

@@ -12,21 +12,21 @@ func _ready():
 
 
 func _process(_delta):
-	var num_health_powerups = 0
-	var num_shield_powerups = 0
-	var num_nuke_powerups = 0
+	var _num_health_powerups = 0
+	var _num_shield_powerups = 0
+	var _num_nuke_powerups = 0
 	for ch in get_children():
 		if ch is PowerUp:
 			if ch.type == ConfigWeapons.PowerupType.HEALTH:
-				num_health_powerups += 1
+				_num_health_powerups += 1
 			elif ch.type == ConfigWeapons.PowerupType.SHIELD:
-				num_shield_powerups += 1
+				_num_shield_powerups += 1
 			elif ch.type == ConfigWeapons.PowerupType.NUKE:
-				num_nuke_powerups += 1
+				_num_nuke_powerups += 1
 
 	for npu in [
-		[num_health_powerups, ConfigWeapons.PowerupType.HEALTH, total_num_health_powerups], 
-		[num_shield_powerups, ConfigWeapons.PowerupType.SHIELD, total_num_shield_powerups]]:
+		[_num_health_powerups, ConfigWeapons.PowerupType.HEALTH, total_num_health_powerups], 
+		[_num_shield_powerups, ConfigWeapons.PowerupType.SHIELD, total_num_shield_powerups]]:
 		if npu[0] < npu[2]:
 			#Global.debug_print(3, "PowerupType.keys() = "+str(ConfigWeapons.PowerupType.keys()), "powerups")
 			var type_str = ConfigWeapons.PowerupType.keys()[npu[1]]

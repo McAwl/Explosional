@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://assets/display/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://player/player.gd" type="Script" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://player/speedometer.tscn" type="PackedScene" id=14]
 [ext_resource path="res://assets/audio/sounds/619834__eponn__correct-menu-game-android.wav" type="AudioStream" id=15]
 [ext_resource path="res://assets/display/fonts/hud_text.tres" type="StyleBox" id=16]
+[ext_resource path="res://assets/display/icons/icon_truck_bomb.png" type="Texture" id=17]
 
 [sub_resource type="DynamicFontData" id=7]
 font_path = "res://assets/display/fonts/Xolonium-Regular.ttf"
@@ -212,6 +213,15 @@ stretch_mode = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="icon_truck_bomb" type="TextureRect" parent="VC/V/CanvasLayer/HeadUpDisplay"]
+visible = false
+margin_left = 128.0
+margin_top = 28.0
+margin_right = 512.0
+margin_bottom = 512.0
+rect_scale = Vector2( 0.11, 0.11 )
+texture = ExtResource( 17 )
 
 [node name="cooldown" type="TextureProgress" parent="VC/V/CanvasLayer/HeadUpDisplay"]
 margin_left = 127.0

@@ -72,7 +72,7 @@ var start_scene: String = "res://scenes/start/start.tscn"
 var log_level = 2  # 1=error, 2=warning, etc up to 10 for very nested loops
 
 # include a string here and any log command (regardless of log_level) with this as 3rd argument will print
-var log_topics = []  # eg, "mine", "damage", "vehicle_respawn"
+var log_topics = []  # eg, "missile", "mine", "damage", "vehicle_respawn"
 
 # main scene
 var main_scene: String = "res://scenes/main/main.tscn"
@@ -186,8 +186,14 @@ func toggle_weather() -> void:
 
 func debug_print(_log_level: int, message: String, _log_topic=null) -> void:
 	if _log_level <= log_level:
-		print(str(message))
+		var space_str = ""
+		for s in _log_level:
+			space_str += " "
+		print(space_str+str(message))
 	elif _log_topic != null:
 		if _log_topic in log_topics:
-			print(str(message))
+			var space_str = ""
+			for s in _log_level:
+				space_str += " "
+			print(space_str+str(message))
 

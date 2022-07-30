@@ -447,6 +447,9 @@ material/0 = null
 transform = Transform( 0.902692, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.715644, -0.123573 )
 shape = SubResource( 51 )
 
+[node name="CentreOfACollisionShape" type="Spatial" parent="VehicleTypes/Racer/CollisionShapes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.728945, -0.133028 )
+
 [node name="Effects" type="Spatial" parent="VehicleTypes/Racer"]
 
 [node name="Damage" type="Spatial" parent="VehicleTypes/Racer/Effects"]
@@ -850,6 +853,9 @@ material/0 = null
 transform = Transform( 1.2108, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.29465, 0.0492305 )
 shape = SubResource( 51 )
 
+[node name="CentreOfACollisionShape" type="Spatial" parent="VehicleTypes/Rally/CollisionShapes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.286584, 0.034313 )
+
 [node name="Effects" type="Spatial" parent="VehicleTypes/Rally"]
 
 [node name="Damage" type="Spatial" parent="VehicleTypes/Rally/Effects"]
@@ -1114,7 +1120,6 @@ transform = Transform( 1, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0 )
 
 [node name="Tank" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.516244, 0 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Tank"]
 
@@ -1223,6 +1228,9 @@ material/0 = null
 [node name="CollisionShape" type="CollisionShape" parent="VehicleTypes/Tank/CollisionShapes"]
 transform = Transform( 1.63905, 0, 0, 0, 1.32892, 0, 0, 0, 1, -0.00339114, 0.265176, 0.0492305 )
 shape = SubResource( 51 )
+
+[node name="CentreOfACollisionShape" type="Spatial" parent="VehicleTypes/Tank/CollisionShapes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.274215, 0.041563 )
 
 [node name="Effects" type="Spatial" parent="VehicleTypes/Tank"]
 
@@ -1678,6 +1686,9 @@ material/0 = null
 transform = Transform( 1.24814, 0, 0, 0, 1.76234, 0, 0, 0, 1.71061, -0.00339114, 0.500272, 0.26958 )
 shape = SubResource( 51 )
 
+[node name="CentreOfACollisionShape" type="Spatial" parent="VehicleTypes/Truck/CollisionShapes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.500239, 0.250015 )
+
 [node name="CollisionShape2" type="CollisionShape" parent="VehicleTypes/Truck/CollisionShapes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.468329, 0.0737634, 0.154738 )
 
@@ -1802,8 +1813,11 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.461439, 2.29528 
 [node name="RocketPosition" type="Position3D" parent="VehicleTypes/Truck/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 1.09402, 2.36637 )
 
+[node name="TruckBombPosition" type="Position3D" parent="VehicleTypes/Truck/Positions/Weapons"]
+transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 1.09402, 2.36637 )
+
 [node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/Truck/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.790728, -1.90322 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65768, -0.173028 )
 
 [node name="CamRaycastTargetFront" type="Spatial" parent="VehicleTypes/Truck/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.02189, 1.895 )

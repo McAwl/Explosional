@@ -76,8 +76,10 @@ var powerup_state: Dictionary = {
 # Built-in  methods
 
 func _ready():
+	Global.debug_print(5, "vehicle_body: _ready() global_transform.origin= "+str(self.global_transform.origin), "camera")
 	var _connect_change_weather = Global.connect("change_weather", self, "change_weather")
 	vehicle_state = ConfigVehicles.AliveState.ALIVE
+	#Global.debug_print(3, "vehicle_body: _ready(): Camera target pos="+str($CameraBase/Camera.target.global_transform.origin), "camera")
 
 
 func _process(delta):
@@ -86,7 +88,7 @@ func _process(delta):
 		return
 
 	if set_pos == false:
-		Global.debug_print(3, "Exiting _process: set_pos == false")
+		Global.debug_print(1, "Exiting _process: set_pos == false", "camera")
 		set_global_transform_origin()
 
 	print_timer += delta
@@ -530,7 +532,7 @@ func _on_TimerCheckMaxSpeed_timeout():
 
 func init(_pos=null, _player_number=null, _name=null) -> bool:
 	
-	#Global.debug_print(3, "VehicleBody:init()")
+	Global.debug_print(5, "vehicle_body: init() _pos="+str(_pos)+", global_transform.origin= "+str(self.global_transform.origin), "camera")
 	
 	lifetime_so_far_sec = 0.0
 	cooldown_timer = weapons_state[weapon_select]["cooldown_timer"]
@@ -542,6 +544,7 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 		name = _name
 	
 	pos = _pos
+	Global.debug_print(5, "vehicle_body: _ready(): global_transform.origin= "+str(self.global_transform.origin), "camera")
 	#Global.debug_print(3, "VehicleBody() init: StatePlayers.num_players()="+str(StatePlayers.num_players()))
 	
 	#Global.debug_print(3, "vehicle="+str(get_type()))
@@ -591,9 +594,12 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	#$CheckAccelDamage.wait_time = CHECK_ACCEL_DAMAGE_INTERVAL*8.0  # so the vehicle doesn't take damage with initial spawn fall
 	$CheckAccelDamage.start(4.0)
 	
-	init_camera(StatePlayers.num_players())
+	Global.debug_print(3, "Initialising camera using pos="+str(_pos), "camera")
+	init_camera(StatePlayers.num_players(), _pos)
+	Global.debug_print(3, "..done $CameraBase/Camera.global_transform="+str($CameraBase/Camera.global_transform), "camera")
 	
 	vehicle_parts_exploded = get_node("MeshInstances")
+	Global.debug_print(5, "vehicle_body: _ready() end: global_transform.origin= "+str(self.global_transform.origin), "camera")
 	
 	return true
 
@@ -645,8 +651,10 @@ func engine_sound_off() -> void:
 	$Effects/Audio/EngineSound.playing = false
 
 
-func init_camera(_num_players) -> void:
-	$CameraBase/Camera.number_of_players = StatePlayers.num_players()
+func init_camera(_num_players, _pos) -> void:
+	$CameraBase/Camera.init(_num_players, _pos, _pos)
+	#$CameraBase/Camera.target.origin = _pos
+	#$CameraBase/Camera.number_of_players = StatePlayers.num_players()
 
 
 func init_visual_effects(start) -> void:
@@ -1099,7 +1107,7 @@ func set_global_transform_origin() -> void:
 		global_transform.origin = pos
 		set_pos = true
 	else:
-		Global.debug_print(3, "_process(): warning: vehicle not is_inside_tree()")
+		Global.debug_print(1, "_process(): warning: vehicle not is_inside_tree()", "camera")
 
 
 func power_up(type: int) -> void:

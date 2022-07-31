@@ -61,10 +61,11 @@ func _ready():
 		var player_instance: Player = load(Global.player_folder).instance()
 		add_child(player_instance)
 		player_instance.name = "Player"+StatePlayers.players[player_number]["name"]
-		var pos: Vector3 = spawn_points[player_number-1].global_transform.origin
-		player_instance.init(player_number, pos)
+		var vehicle_body_pos: Vector3 = spawn_points[player_number-1].global_transform.origin
+		player_instance.init(player_number, vehicle_body_pos)
 		player_instance.get_vehicle_body().weapons_state[3].enabled = test_nuke
 		player_instance.get_vehicle_body().weapons_state[3].test_mode = test_nuke
+		Global.debug_print(3, "main: player_instance.get_vehicle_body().global_transform.origin after vb init="+str(player_instance.get_vehicle_body().global_transform.origin), "camera")
 	var anim_time: float = start_clock_hrs + 12.0
 	if anim_time > 24.0:
 		anim_time -= 12.0

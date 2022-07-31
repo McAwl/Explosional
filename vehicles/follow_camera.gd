@@ -13,7 +13,7 @@ export var height: float = 1.5
 
 var collision_exception: Array = []
 var lerp_val: float = 0.5
-var target
+var target = null
 var timer_0_5s: float = 0.5
 var number_of_players: int
 var view: int = View.THIRD_PERSON
@@ -24,8 +24,19 @@ var raycast_vehicle_to_cam: RayCast
 # Built-in methods
 
 func _ready():
+	Global.debug_print(5, "follow_camera: _ready() global_transform.origin= "+str(self.global_transform.origin), "camera")
+	pass
+
+
+func init(_number_of_players, _base_origin, _target_origin):
+	Global.debug_print(5, "follow_camera: init() global_transform.origin= "+str(self.global_transform.origin), "camera")
 	var node = self
+	global_transform.origin = _base_origin
+	Global.debug_print(5, "follow_camera: init() recalc: global_transform.origin= "+str(self.global_transform.origin), "camera")
 	target = global_transform
+	target.origin = _target_origin
+	Global.debug_print(5, "follow_camera: init() recalc: target.origin= "+str(self.target.origin), "camera")
+	
 	while(node):
 		if (node is RigidBody):
 			collision_exception.append(node.get_rid())
@@ -40,9 +51,10 @@ func _ready():
 
 	# This detaches the camera transform from the parent spatial node.
 	set_as_toplevel(true)
-
-
-func init(_number_of_players):
+	#Global.debug_print(5, "follow_camera: _ready() target.origin starting at position "+str(self.target.origin), "camera")
+	Global.debug_print(5, "follow_camera: init() global_transform.origin starting at global_transform.origin= "+str(self.global_transform.origin), "camera")
+	Global.debug_print(5, "follow_camera: init() parent has global_transform.origin= "+str(get_parent().global_transform.origin), "camera")
+	
 	number_of_players= _number_of_players
 
 
@@ -64,10 +76,21 @@ func _physics_process(delta):
 	timer_0_5s -= delta
 	
 	var cbts: Spatial = get_parent().get_node("CameraBasesTargets")
+	
+	if cbts == null:
+		Global.debug_print(1, "follow_camera: _physics_process(): Warning cbts == null", "camera")
+		return
+		
 	var target_forward_third_person: Transform = cbts.get_node("CamTargetForward").get_global_transform()
 	var target_reverse_third_person: Transform = cbts.get_node("CamTargetReverse").get_global_transform()
 	var cam_base_forward_third_person: Transform = cbts.get_node("CamBaseForward").get_global_transform()
 	var cam_base_reverse_third_person: Transform = cbts.get_node("CamBaseReverse").get_global_transform()
+	
+	if target == null:
+		Global.debug_print(1, "follow_camera: _physics_process(): Warning target == null", "camera")
+		target = target_forward_third_person
+		Global.debug_print(1, "follow_camera: _physics_process(): Reset to CamTargetForward", "camera")
+		return
 	
 	var linear_velocity: Vector3 = get_carbody().linear_velocity
 	var fwd_mps: float = get_carbody().transform.basis.xform_inv(linear_velocity).z
@@ -95,6 +118,7 @@ func _physics_process(delta):
 		target = target.interpolate_with(target_reverse_third_person, modify_by_num_players * delta * FOLLOW_SPEED * follow_speed_multiplier)
 		
 	if timer_0_5s < 0:
+		Global.debug_print(3, "follow_camera: _physics_process(): global_transform="+str(global_transform.origin)+", target="+str(target.origin), "camera")
 		if get_carbody().vehicle_state == ConfigVehicles.AliveState.ALIVE:  # else if the car has started exploding leave it at 3rd person for now TODO fix later? 
 			var iray
 			# check the camera can see the vehicle

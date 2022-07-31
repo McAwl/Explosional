@@ -43,6 +43,7 @@ func _on_TimerUpdateHUD_timeout():
 	set_label_lives_left()
 	var health_display: TextureProgress = get_hud().get_node("health")
 	if get_vehicle_body() != null:
+		health_display.max_value = get_vehicle_body().max_damage
 		health_display.value = get_vehicle_body().max_damage-get_vehicle_body().total_damage
 		if get_vehicle_body().max_damage-get_vehicle_body().total_damage >= 7.0:
 			health_display.tint_progress = "#7e00ff00"  # green

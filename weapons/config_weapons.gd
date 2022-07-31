@@ -148,6 +148,7 @@ const EXPLOSION_RANGE: Dictionary = {
 	Type.MISSILE: 10.0,
 	Type.ROCKET: 10.0, 
 	Type.BALLISTIC_MISSILE: 20.0,
+	Type.BALLISTIC: 10.0, 
 	Type.NUKE: 1000.0,
 	Type.TRUCK_BOMB: 1000.0,  # Infinite, but only line of sight
 	}

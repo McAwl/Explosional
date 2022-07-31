@@ -305,7 +305,7 @@ func _physics_process(delta):
 			engine_force = 0
 			
 		if Input.is_action_pressed("reverse_player"+str(player_number)):
-			var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
+			var _max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
 			# brakes shouldn't be effected by whether the engine is damaged
 			if powerup_state["fast_reverse"]["enabled"] == true:
 				engine_force = -engine_force_value*10.0
@@ -383,11 +383,12 @@ func _physics_process(delta):
 			direction[1] = 0  # remove downwards force - as vehicles can be blown through the terrain
 		#var explosion_force: float = 200.0  # 100.0/pow(distance+1.0, 1.5)  # inverse square of distance
 		if hit_by_missile["direct_hit"] == true:
-			var force = ConfigWeapons.DAMAGE[weapon_type]
+			var force: float = ConfigWeapons.EXPLOSION_STRENGTH[weapon_type]/1.0
 			Global.debug_print(3, "(direct hit) explosion_force="+str(force), "missile")
 			apply_impulse( Vector3(0,0,0), force*direction.normalized() )   # offset, impulse(=direction*force)
 			# and add any direct hit-specific damage (may be 0)
 			add_damage(ConfigWeapons.DAMAGE[weapon_type], Global.DamageType.DIRECT_HIT)
+			Global.debug_print(3, "total_damage now = "+str(total_damage), "missile")
 		else:
 			var force = ConfigWeapons.EXPLOSION_STRENGTH[weapon_type]
 			var indirect_explosion_force: float = ConfigWeapons.EXPLOSION_STRENGTH[weapon_type]/hit_by_missile["distance"]
@@ -396,6 +397,7 @@ func _physics_process(delta):
 			if hit_by_missile["distance"] <= ConfigWeapons.EXPLOSION_RANGE[weapon_type]:
 				Global.debug_print(3, "Also adding indirect damage "+str(ConfigWeapons.DAMAGE_INDIRECT[weapon_type]), "missile")
 				add_damage(ConfigWeapons.DAMAGE_INDIRECT[weapon_type], Global.DamageType.INDIRECT_HIT)
+				Global.debug_print(3, "total_damage now = "+str(total_damage), "missile")
 		angular_velocity =  Vector3(rng.randf_range(-10, 10), rng.randf_range(-10, 10), rng.randf_range(-10, 10)) 
 			
 		hit_by_missile["active"] = false
@@ -544,7 +546,7 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 		name = _name
 	
 	pos = _pos
-	Global.debug_print(5, "vehicle_body: _ready(): global_transform.origin= "+str(self.global_transform.origin), "camera")
+	Global.debug_print(5, "vehicle_body: init(): global_transform.origin= "+str(self.global_transform.origin), "camera")
 	#Global.debug_print(3, "VehicleBody() init: StatePlayers.num_players()="+str(StatePlayers.num_players()))
 	
 	#Global.debug_print(3, "vehicle="+str(get_type()))
@@ -582,7 +584,7 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	
 	Global.debug_print(3, "StatePlayers.players[player_number]['vehicle']="+str(get_type()))
 	if get_type() < 0:  # in ConfigVehicles.Type:
-		Global.debug_print(3, "vehicle_type "+str(get_type())+" not found in ConfigVehicles.Type="+str(ConfigVehicles.Type))
+		Global.debug_print(3, "init: vehicle_type "+str(get_type())+" not found in ConfigVehicles.Type="+str(ConfigVehicles.Type))
 		return false
 		
 	configure_vehicle_properties()
@@ -599,7 +601,10 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	Global.debug_print(3, "..done $CameraBase/Camera.global_transform="+str($CameraBase/Camera.global_transform), "camera")
 	
 	vehicle_parts_exploded = get_node("MeshInstances")
-	Global.debug_print(5, "vehicle_body: _ready() end: global_transform.origin= "+str(self.global_transform.origin), "camera")
+	Global.debug_print(5, "vehicle_body: init() end: global_transform.origin= "+str(self.global_transform.origin), "camera")
+	
+	max_damage = ConfigVehicles.MAX_DAMAGE[get_type()]
+	Global.debug_print(5, "vehicle_body: init() setting max_damage= "+str(max_damage), "max_damage")
 	
 	return true
 
@@ -751,7 +756,7 @@ func flicker_lights() -> void:
 		if rng.randf() < 0.1:
 			$Effects/Damage/LightsOnFire.get_node("OnFireLight"+str(l)).light_energy = 0.0
 		else:
-			$Effects/Damage/LightsOnFire.get_node("OnFireLight"+str(l)).light_energy = total_damage/10.0
+			$Effects/Damage/LightsOnFire.get_node("OnFireLight"+str(l)).light_energy = total_damage/max_damage
 
 	if rng.randf() < 0.1*total_damage/max_damage:
 		#Global.debug_print(3, "damaged LightFrontLeft flickering off")
@@ -956,7 +961,8 @@ func add_damage(amount: float, damage_type: int) -> void:
 func check_engine_force_value() -> void:
 	if get_type() == null:
 		return
-	engine_force_value = ConfigVehicles.config[get_type()]["engine_force_value"]*pow(0.75, total_damage)  # decrease engine power to indicate damage
+	engine_force_value = ConfigVehicles.config[get_type()]["engine_force_value"]*pow(0.75, 10.0*(total_damage/max_damage))  # decrease engine power to indicate damage
+	#engine_force_value = ConfigVehicles.config[get_type()]["engine_force_value"]*pow(0.75, total_damage)  # decrease engine power to indicate damage
 
 
 func restore_health(amount):
@@ -985,10 +991,10 @@ func align_effects_with_damage():
 		$Effects/Damage/ParticlesSmoke.amount *= 2  # increase engine smoke indicating damage
 		$Effects/Damage/Flames3D.visible = true
 		$Effects/Damage/Flames3D.amount = 1 + int(50*total_damage/max_damage)
-		$Effects/Damage/LightsOnFire/OnFireLight1.light_energy = total_damage/20.0
-		$Effects/Damage/LightsOnFire/OnFireLight2.light_energy = total_damage/20.0
-		$Effects/Damage/LightsOnFire/OnFireLight4.light_energy = total_damage/20.0
-		$Effects/Damage/LightsOnFire/OnFireLight5.light_energy = total_damage/20.0
+		$Effects/Damage/LightsOnFire/OnFireLight1.light_energy = (total_damage/max_damage)/2.0
+		$Effects/Damage/LightsOnFire/OnFireLight2.light_energy = (total_damage/max_damage)/2.0
+		$Effects/Damage/LightsOnFire/OnFireLight4.light_energy = (total_damage/max_damage)/2.0
+		$Effects/Damage/LightsOnFire/OnFireLight5.light_energy = (total_damage/max_damage)/2.0
 	else:
 		$Effects/Damage/ParticlesSmoke.emitting = false
 		$Effects/Damage/ParticlesSmoke.amount = 1

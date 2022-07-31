@@ -30,6 +30,13 @@ var engine_sound_pitch: Dictionary = {
 	Type.TRUCK: 0.8,
 }
 
+const MAX_DAMAGE: Dictionary = {
+	Type.RACER: 10,
+	Type.RALLY: 8,
+	Type.TANK: 30,
+	Type.TRUCK: 20,
+}
+
 var config: Dictionary = {
 	Type.RACER:
 		{"engine_force_value": 220,  # keep this at 3x mass

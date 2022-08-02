@@ -20,7 +20,7 @@ var weapon_type: int
 var flicker_thrust_timer: float = 0.1
 var lifetime_seconds: float = 10.0
 var homing_start_timer: float
-var checked_line_of_sight_truck_bomb: bool = false
+var checked_line_of_sight_air_burst: bool = false
 
 # Built-in methods
 
@@ -34,7 +34,7 @@ func _ready():
 		Global.debug_print(3, "  homing_start_timer="+str(homing_start_timer))
 		Global.debug_print(3, "  FLYING_SPEED="+str(ConfigWeapons.FLYING_SPEED[weapon_type]))
 		Global.debug_print(3, "  MUZZLE_SPEED="+str(ConfigWeapons.MUZZLE_SPEED[weapon_type]))
-	elif weapon_type == ConfigWeapons.Type.TRUCK_BOMB:
+	elif weapon_type == ConfigWeapons.Type.AIR_BURST:
 		scale = Vector3(2.0, 2.0, 2.0)
 	$Body/OmniLight.light_color = Color(0, 1, 0)  # green = not active
 	Global.debug_print(3, "  lifetime_seconds="+str(lifetime_seconds))
@@ -66,7 +66,7 @@ func _process(delta):
 	
 	if exploded == true or lifetime_seconds < 0.0:
 		
-		if weapon_type != ConfigWeapons.Type.TRUCK_BOMB or (weapon_type == ConfigWeapons.Type.TRUCK_BOMB and checked_line_of_sight_truck_bomb == true): 
+		if weapon_type != ConfigWeapons.Type.AIR_BURST or (weapon_type == ConfigWeapons.Type.AIR_BURST and checked_line_of_sight_air_burst == true): 
 			if has_node("Explosion"):
 				if $Explosion.effects_finished() == true:
 					queue_free()
@@ -80,12 +80,12 @@ func _process(delta):
 
 func _physics_process(delta):
 	
-	if exploded == true and checked_line_of_sight_truck_bomb == false:
+	if exploded == true and checked_line_of_sight_air_burst == false:
 		# intersect a ray between all VehicleBody in the scene (exept parent) and self
 		for player in get_node("/root/MainScene").get_players():  # in range(1, 5): # explosion toward all players
 			#Global.debug_print(3, "Found a target for line of sight player = "+str(player.name), "missile")
-			if weapon_type == ConfigWeapons.Type.TRUCK_BOMB and player.player_number == parent_player_number:
-				Global.debug_print(3, "Ignoring line of sight to player "+str(player.player_number)+" that launched the truck bomb", "missile")
+			if weapon_type == ConfigWeapons.Type.AIR_BURST and player.player_number == parent_player_number:
+				Global.debug_print(3, "Ignoring line of sight to player "+str(player.player_number)+" that launched the air burst", "missile")
 			else:
 				var target: VehicleBody = player.get_vehicle_body()  
 				var target_global_transform_origin = target.global_transform.origin
@@ -97,9 +97,9 @@ func _physics_process(delta):
 					target_global_transform_origin = target.global_transform.origin
 				#Global.debug_print(4, "target id="+str(target.get_instance_id()), "missile")
 				Global.debug_print(4, "target position="+str(target_global_transform_origin), "missile")
-				Global.debug_print(4, "source from "+str($LineOfSightCheckTruckBomb.global_transform.origin), "missile")
-				var result_to_target = get_world().direct_space_state.intersect_ray($LineOfSightCheckTruckBomb.global_transform.origin, target_global_transform_origin, [self])
-				#var result_fr_target = get_world().direct_space_state.intersect_ray(target_global_transform_origin, $LineOfSightCheckTruckBomb.global_transform.origin, [target])
+				Global.debug_print(4, "source from "+str($LineOfSightCheckAirBurst.global_transform.origin), "missile")
+				var result_to_target = get_world().direct_space_state.intersect_ray($LineOfSightCheckAirBurst.global_transform.origin, target_global_transform_origin, [self])
+				#var result_fr_target = get_world().direct_space_state.intersect_ray(target_global_transform_origin, $LineOfSightCheckAirBurst.global_transform.origin, [target])
 				Global.debug_print(7, "result_to_target="+str(result_to_target), "missile")
 				#Global.debug_print(7, "result_fr_target="+str(result_fr_target), "missile")
 				var dist_from_target_low = false
@@ -115,7 +115,7 @@ func _physics_process(delta):
 					var distance: float = global_transform.origin.distance_to(target_global_transform_origin)
 					Global.debug_print(8, "distance = "+str(distance), "missile")
 					if distance < ConfigWeapons.EXPLOSION_RANGE[weapon_type]:
-						Global.debug_print(9, "Truck bomb indirect damage to "+str(target.name), "missile")
+						Global.debug_print(9, "Air burst indirect damage to "+str(target.name), "missile")
 						target.hit_by_missile["active"] = true
 						target.hit_by_missile["origin"] = transform.origin
 						target.hit_by_missile["direction_for_explosion"] = direction
@@ -125,7 +125,7 @@ func _physics_process(delta):
 						target.hit_by_missile["weapon_type"] = weapon_type
 				else:
 					Global.debug_print(8, "No line of sight to player "+str(player.player_number)+" VehicleBody", "missile")
-		checked_line_of_sight_truck_bomb = true
+		checked_line_of_sight_air_burst = true
 
 	if not has_node("Body"):
 		return
@@ -274,7 +274,7 @@ func add_random_movement(strength) -> void:
 func activate(_parent_player_number, _homing) -> void:
 	homing = _homing
 	parent_player_number = _parent_player_number
-	if weapon_type == ConfigWeapons.Type.ROCKET or weapon_type == ConfigWeapons.Type.MISSILE or weapon_type == ConfigWeapons.Type.BALLISTIC_MISSILE or weapon_type == ConfigWeapons.Type.TRUCK_BOMB: 
+	if weapon_type == ConfigWeapons.Type.ROCKET or weapon_type == ConfigWeapons.Type.MISSILE or weapon_type == ConfigWeapons.Type.BALLISTIC_MISSILE or weapon_type == ConfigWeapons.Type.AIR_BURST: 
 		$LaunchSound.playing = true
 		$FlyingSound.playing = true
 		$ThrustLight.show()
@@ -308,7 +308,7 @@ func explode(body=null) -> void:  # null if lifetime has expired
 	# regardless of what it hit, calc indirect damage to vehicle nearby, except for the one hit directly
 	for player in get_node("/root/MainScene").get_players():  # in range(1, 5): # explosion toward all players
 		Global.debug_print(3, "Found a target for missile indirect damage = "+str(player.name), "missile")
-		if weapon_type != ConfigWeapons.Type.TRUCK_BOMB:  # we need to check line of sight in the physics_process to do this
+		if weapon_type != ConfigWeapons.Type.AIR_BURST:  # we need to check line of sight in the physics_process to do this
 			var target: VehicleBody = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 			#var target = get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
 			var direction: Vector3 = global_transform.origin - target.global_transform.origin

@@ -42,6 +42,7 @@ spot_angle = 11.97
 visible = false
 
 [node name="BombMeshes" type="Spatial" parent="."]
+visible = false
 
 [node name="Body" type="MeshInstance" parent="BombMeshes"]
 transform = Transform( 0.291023, 0, 0, 0, -0.00910172, -0.3325, 0, 0.295343, -0.00808462, 0, 0.341193, 0 )
@@ -81,5 +82,8 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.278049, 0 )
 light_color = Color( 1, 0, 0, 1 )
 
 [node name="ExplosionNuke" parent="." instance=ExtResource( 2 )]
+
+[node name="LineOfSightCheckTruckMine" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55315, 0 )
 
 [connection signal="body_entered" from="." to="." method="_on_Bomb_body_entered"]

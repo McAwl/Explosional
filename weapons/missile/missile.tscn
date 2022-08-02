@@ -124,7 +124,7 @@ shadow_enabled = true
 [node name="TimerCheckActiveLight" type="Timer" parent="."]
 autostart = true
 
-[node name="LineOfSightCheckTruckBomb" type="Position3D" parent="."]
+[node name="LineOfSightCheckAirBurst" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.02346 )
 
 [connection signal="body_entered" from="Body" to="." method="_on_Body_body_entered"]

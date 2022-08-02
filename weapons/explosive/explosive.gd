@@ -109,7 +109,7 @@ func _process(delta):
 			axis_lock_linear_z = true
 			
 		$SpotLight.hide()
-		if no_animations_or_sound_playing() or (type == ConfigWeapons.Type.MINE and explosive_proximity_timer_limit < 0.0):
+		if no_animations_or_sound_playing() or ((type == ConfigWeapons.Type.MINE or type == ConfigWeapons.Type.TRUCK_MINE) and explosive_proximity_timer_limit < 0.0):
 			# explosion particles have finished, explosion sound has finished, so disable the bomb
 			#print("explosive_stage == ConfigWeapons.ExplosiveStage.5 no_animations_or_sound_playing() or (type == Type.MINE and explosive_proximity_timer_limit < 0.0) or or (type == Type.BOMB and explosive_proximity_timer_limit < 0.0)")
 			#explosive_stage = 0
@@ -147,6 +147,13 @@ func _physics_process(_delta):
 			$Explosion.global_transform.origin = global_transform.origin
 			#print("type == ConfigWeapons.ConfigWeapons.Type.MINE setting $ParticlesExplosion.emitting = true")
 			$Explosion.start_effects(self)
+		elif type == ConfigWeapons.Type.TRUCK_MINE:
+			var explosion: Explosion = load(Global.explosion_folder).instance()
+			explosion.name = "Explosion"
+			self.add_child(explosion)
+			$Explosion.global_transform.origin = global_transform.origin
+			#print("type == ConfigWeapons.ConfigWeapons.Type.MINE setting $ParticlesExplosion.emitting = true")
+			$Explosion.start_effects(self)
 		elif type == ConfigWeapons.Type.BOMB:
 			var explosion: Explosion = load(Global.explosion_folder).instance()
 			explosion.name = "Explosion"
@@ -164,26 +171,31 @@ func _physics_process(_delta):
 		for target in targets:
 			var distance = global_transform.origin.distance_to(target.global_transform.origin)
 			print("target.name="+str(target.name))
-			if distance < ConfigWeapons.EXPLOSION_RANGE[type] and target is VehicleBody:
+			if distance < ConfigWeapons.EXPLOSION_RANGE.get(type) and target is VehicleBody:
 				var direction = target.transform.origin - transform.origin  
 				# direction[2]+=5.0  # slight upward force as well - isn't [1] up/down?
 				# remove downwards force - as vehicles can be blown through the terrain
 				if direction[1] < 0:
 					direction[1] = 0
-				var explosion_force = ConfigWeapons.EXPLOSION_STRENGTH[type]/pow((ConfigWeapons.EXPLOSION_DECREASE[type]*distance)+1.0, ConfigWeapons.EXPLOSION_EXPONENT[type])  # inverse square of distance
+				var s = ConfigWeapons.EXPLOSION_STRENGTH.get(type)
+				var d = ConfigWeapons.EXPLOSION_DECREASE.get(type)
+				var e = ConfigWeapons.EXPLOSION_EXPONENT.get(type)
+				var explosion_force = s/pow((d*distance)+1.0, e)  # inverse square of distance
 				if type == ConfigWeapons.Type.NUKE:
 					if target.player_number == launched_by_player_number:
 						explosion_force = 0.0  # no damage from player which launched the nuke
 					else:
 						distance = 50.0  # ensure a specific force is experiences by all other players
-				print("applying force "+str(explosion_force)+" to target "+str(target.name)+" from weapon type "+str(type))
-				target.apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
-				target.angular_velocity  = Vector3(5.0*randf(),5.0*randf(),5.0*randf())
-				
-				# calc any specific indirect damage to vehicles nearby, if defined
-				target.add_damage(ConfigWeapons.DAMAGE_INDIRECT[type], Global.DamageType.INDIRECT_HIT)
-				print("target took "+str(ConfigWeapons.DAMAGE_INDIRECT[type])+" indirect damage launched_by_player_number "+str(launched_by_player_number))
-				
+				if not type == ConfigWeapons.Type.TRUCK_MINE or (type == ConfigWeapons.Type.TRUCK_MINE and line_of_sight(target) == true):
+					print("applying force "+str(explosion_force)+" to target "+str(target.name)+" from weapon type "+str(type))
+					target.apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
+					target.angular_velocity  = Vector3(5.0*randf(),5.0*randf(),5.0*randf())
+					
+					# calc any specific indirect damage to vehicles nearby, if defined
+					target.add_damage(ConfigWeapons.DAMAGE_INDIRECT.get(type), Global.DamageType.INDIRECT_HIT)
+					print("target took "+str(ConfigWeapons.DAMAGE_INDIRECT.get(type))+" indirect damage launched_by_player_number "+str(launched_by_player_number))
+				else:
+					Global.debug_print(3, "ignoring explosion damge to target player_num "+str(target.player_number), "truck_mine")
 
 		#print("setting explosive_stage = 5")
 		explosive_stage = ConfigWeapons.ExplosiveStage.EFFECTS
@@ -193,6 +205,39 @@ func _physics_process(_delta):
 		# linear_velocity = Vector3(0.0, 0.0, 0.0)
 		# angular_velocity = Vector3(0.0, 0.0, 0.0)
 		rotation_degrees = Vector3(0.0, 0.0, 0.0)
+
+
+func line_of_sight(_vehicle_body_target) -> bool:
+	if _vehicle_body_target.player_number == launched_by_player_number:
+		Global.debug_print(3, "Ignoring line of sight to player "+str(_vehicle_body_target.player_number)+" that launched the air burst", "truck_mine")
+	else:
+		var target_global_transform_origin = _vehicle_body_target.global_transform.origin
+		if _vehicle_body_target.has_node("CentreOfACollisionShape"):
+			#Global.debug_print(3, "Found a CollisionShape centre", "truck_mine")
+			target_global_transform_origin = _vehicle_body_target.get_node("CentreOfACollisionShape").global_transform.origin
+		else:
+			#Global.debug_print(3, "No CollisionShape centre", "truck_mine")
+			target_global_transform_origin = _vehicle_body_target.global_transform.origin
+		#Global.debug_print(4, "_vehicle_body_target id="+str(_vehicle_body_target.get_instance_id()), "truck_mine")
+		Global.debug_print(4, "_vehicle_body_target position="+str(target_global_transform_origin), "truck_mine")
+		Global.debug_print(4, "source from "+str($LineOfSightCheckTruckMine.global_transform.origin), "truck_mine")
+		var result_to_target = get_world().direct_space_state.intersect_ray($LineOfSightCheckTruckMine.global_transform.origin, target_global_transform_origin, [self])
+		#var result_fr_target = get_world().direct_space_state.intersect_ray(target_global_transform_origin, $LineOfSightCheckTruckMine.global_transform.origin, [target])
+		Global.debug_print(7, "result_to_target="+str(result_to_target), "truck_mine")
+		#Global.debug_print(7, "result_fr_target="+str(result_fr_target), "truck_mine")
+		var dist_from_target_low = false
+		if not result_to_target.empty():
+			var dist_from_target = sqrt( pow(result_to_target["position"][0]-target_global_transform_origin.x, 2) + pow(result_to_target["position"][1]-target_global_transform_origin.y, 2) + pow(result_to_target["position"][2]-target_global_transform_origin.z, 2) )
+			Global.debug_print(7, "distance from target to intersect_ray() ="+str(dist_from_target), "truck_mine")
+			if dist_from_target < 1.0:
+				dist_from_target_low = true
+		if result_to_target.empty() or dist_from_target_low == true: # close miss into space or close enough
+			#Global.debug_print(7, "result_to_target['position'][0] ="+str(result_to_target["position"][0]), "truck_mine")
+			Global.debug_print(8, "Found a line of sight to the target", "truck_mine")
+			return true
+		else:
+			Global.debug_print(8, "No line of sight to the target", "truck_mine")
+	return false
 
 
 # Signal methods
@@ -255,6 +300,16 @@ func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player
 		launched_by_player = _launched_by_player
 		player_str = " (player "+str(launched_by_player.get_player_name())+")"
 	print("weapon of type "+str(ConfigWeapons.Type.keys()[type]) + " launched by player_number "+str(launched_by_player_number)+player_str)
+
+
+func set_as_truck_mine() -> void:
+	#print("set_as_mine()")
+	hit_on_contact = false
+	mine_meshes(true)
+	bomb_meshes(false)
+	nuke_meshes(false)
+	type = ConfigWeapons.Type.TRUCK_MINE
+	$SpotLight.hide()
 
 
 func set_as_mine() -> void:

@@ -9,7 +9,8 @@ enum Type {
 	BALLISTIC=4,
 	BOMB=5,  # used for air-raids only
 	BALLISTIC_MISSILE=6,
-	TRUCK_BOMB=7,
+	TRUCK_MINE=7,
+	AIR_BURST=8,
 	}
 
 enum ExplosiveStage {
@@ -35,7 +36,9 @@ const COOLDOWN_TIMER_DEFAULTS: Dictionary = {
 	Type.NUKE: 60.0, 
 	Type.BALLISTIC: 10.0,
 	Type.BALLISTIC_MISSILE: 30.0,
-	Type.TRUCK_BOMB: 6.0}
+	Type.TRUCK_MINE: 5.0,
+	Type.AIR_BURST: 5.0,
+	}
 
 const EXPLOSIVE_START_WAIT: float = 3.0  # wait time when first turned on to activation
 const EXPLOSIVE_ACTIVE_WAIT: float = 1.0
@@ -51,7 +54,8 @@ const DAMAGE: Dictionary = {
 	Type.NUKE: 10,
 	Type.BALLISTIC: 5.0,
 	Type.BALLISTIC_MISSILE: 10.0,
-	Type.TRUCK_BOMB: 1.0,
+	Type.TRUCK_MINE: 5.0,
+	Type.AIR_BURST: 5.0,  # this won't happen though
 	}
 
 # TODO: Do we want to keep this, or do we want to completely move to damage due to force (acceleration)
@@ -63,7 +67,8 @@ const DAMAGE_INDIRECT: Dictionary = {
 	Type.BOMB: 1, 
 	Type.BALLISTIC: 0,
 	Type.BALLISTIC_MISSILE: 3,
-	Type.TRUCK_BOMB: 5,
+	Type.TRUCK_MINE: 5,
+	Type.AIR_BURST: 5.0,
 	}
 	
 const SCENE: Dictionary = {
@@ -73,7 +78,8 @@ const SCENE: Dictionary = {
 	Type.NUKE: "res://weapons/explosive/explosive.tscn",
 	Type.BALLISTIC: "res://weapons/missile/missile.tscn",
 	Type.BALLISTIC_MISSILE: "res://weapons/missile/missile.tscn",
-	Type.TRUCK_BOMB: "res://weapons/missile/missile.tscn",
+	Type.TRUCK_MINE: "res://weapons/explosive/explosive.tscn",
+	Type.AIR_BURST: "res://weapons/missile/missile.tscn",
 	}
 	
 const ICON: Dictionary = {
@@ -83,7 +89,8 @@ const ICON: Dictionary = {
 	Type.NUKE: "icon_nuke",
 	Type.BALLISTIC: "icon_ballistic",
 	Type.BALLISTIC_MISSILE: "icon_ballistic_missile",
-	Type.TRUCK_BOMB: "icon_truck_bomb",
+	Type.AIR_BURST: "icon_air_burst",
+	Type.TRUCK_MINE: "icon_truck_mine",
 	}
 
 # Speed when fired
@@ -92,7 +99,7 @@ const MUZZLE_SPEED: Dictionary = {
 	Type.MISSILE: 10.0, 
 	Type.BALLISTIC: 20.0,
 	Type.BALLISTIC_MISSILE: 0.0,
-	Type.TRUCK_BOMB: 1.0,
+	Type.AIR_BURST: 1.0,
 	}
 
 # Eventual speed after firing
@@ -101,7 +108,7 @@ const FLYING_SPEED: Dictionary = {
 	Type.MISSILE: 10.0, 
 	Type.BALLISTIC: 20.0,
 	Type.BALLISTIC_MISSILE: 20.0,
-	Type.TRUCK_BOMB: 2.0,
+	Type.AIR_BURST: 2.0,
 	}
 
 # Delay from launch before the homing turns on
@@ -114,7 +121,8 @@ const LIFETIME_SECONDS: Dictionary = {
 	Type.ROCKET: 10.0, 
 	Type.MISSILE: 10.0,
 	Type.BALLISTIC_MISSILE: 20.0,
-	Type.TRUCK_BOMB: 5.0,
+	Type.AIR_BURST: 5.0,
+	Type.TRUCK_MINE: 5.0,
 }
 
 # TODO combine with indirect damage above
@@ -127,7 +135,8 @@ const EXPLOSION_STRENGTH: Dictionary = {
 	Type.BALLISTIC: 1000.0,
 	Type.BALLISTIC_MISSILE: 1000.0,
 	Type.NUKE: 10000.0,
-	Type.TRUCK_BOMB: 20000.0
+	Type.AIR_BURST: 2000.0,
+	Type.TRUCK_MINE: 2000.0,
 	}
 
 # TODO move to vehicle config
@@ -139,7 +148,8 @@ var vehicle_weapons: Dictionary = {
 	Type.BALLISTIC: [ConfigVehicles.Type.TANK, ConfigVehicles.Type.TRUCK],
 	Type.BOMB: [],
 	Type.BALLISTIC_MISSILE: [ConfigVehicles.Type.TANK],
-	Type.TRUCK_BOMB: [ConfigVehicles.Type.TRUCK],
+	Type.TRUCK_MINE: [ConfigVehicles.Type.TRUCK],
+	Type.AIR_BURST: [ConfigVehicles.Type.TRUCK],
 	}
 
 const EXPLOSION_RANGE: Dictionary = {
@@ -150,7 +160,8 @@ const EXPLOSION_RANGE: Dictionary = {
 	Type.BALLISTIC_MISSILE: 20.0,
 	Type.BALLISTIC: 10.0, 
 	Type.NUKE: 1000.0,
-	Type.TRUCK_BOMB: 1000.0,  # Infinite, but only line of sight
+	Type.TRUCK_MINE: 1000.0,  # Infinite, but only line of sight
+	Type.AIR_BURST: 1000.0,  # Infinite, but only line of sight
 	}
 
 # TODO enforce these for indirect missile explosions
@@ -158,6 +169,8 @@ const EXPLOSION_EXPONENT: Dictionary = {
 	Type.MINE: 1.5, 
 	Type.BOMB: 1.5, 
 	Type.NUKE: 1.05,
+	Type.TRUCK_MINE: 1.05,
+	Type.AIR_BURST: 1.05,
 	}
 
 # TODO enforce these for indirect missile explosions
@@ -165,6 +178,8 @@ const EXPLOSION_DECREASE: Dictionary = {
 	Type.MINE: 1.0, 
 	Type.BOMB: 1.0, 
 	Type.NUKE: 0.05,
+	Type.TRUCK_MINE: 0.05,
+	Type.AIR_BURST: 0.05,
 	}
 
 

@@ -47,7 +47,8 @@ var weapons_state: Dictionary = {
 	ConfigWeapons.Type.BALLISTIC: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.BALLISTIC], "enabled": true},
 	ConfigWeapons.Type.BOMB: {"active": false, "enabled": false, "test_mode": false},
 	ConfigWeapons.Type.BALLISTIC_MISSILE: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.BALLISTIC_MISSILE], "enabled": true},
-	ConfigWeapons.Type.TRUCK_BOMB: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.TRUCK_BOMB], "enabled": true},
+	ConfigWeapons.Type.AIR_BURST: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.AIR_BURST], "enabled": true},
+	ConfigWeapons.Type.TRUCK_MINE: {"active": false, "cooldown_timer": ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[ConfigWeapons.Type.TRUCK_MINE], "enabled": true},
 	}
 
 var weapon_select: int = ConfigWeapons.Type.MINE
@@ -190,7 +191,7 @@ func _input(event):
 			weapons_state[weapon_select]["cooldown_timer"] = ConfigWeapons.COOLDOWN_TIMER_DEFAULTS[weapon_select]
 			get_player().set_label_player_name()
 			get_player().set_label_lives_left()
-			if weapon_select == ConfigWeapons.Type.MINE or weapon_select == ConfigWeapons.Type.NUKE:  # mine or nuke
+			if weapon_select == ConfigWeapons.Type.MINE or weapon_select == ConfigWeapons.Type.NUKE or weapon_select == ConfigWeapons.Type.TRUCK_MINE:  # mine or nuke
 				fire_mine_or_nuke()
 			elif weapon_select == ConfigWeapons.Type.ROCKET:
 				fire_missile_or_rocket()
@@ -200,7 +201,7 @@ func _input(event):
 				fire_missile_or_rocket()
 			elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
 				fire_missile_or_rocket()
-			elif weapon_select == ConfigWeapons.Type.TRUCK_BOMB:
+			elif weapon_select == ConfigWeapons.Type.AIR_BURST:
 				fire_missile_or_rocket()
 			else:
 				Global.debug_print(1, "Warning: player "+str(player_number)+" fired unknown weapon "+str(weapon_select))
@@ -1017,13 +1018,19 @@ func get_wheel(num) -> VehicleWheel:
 
 
 func fire_mine_or_nuke() -> void:
-	#Global.debug_print(3, "Firing weapon="+str(weapon_select))
+	Global.debug_print(3, "Firing weapon="+str(weapon_select), "weapon")
 	var weapon_instance = load(ConfigWeapons.SCENE[weapon_select]).instance()
 	add_child(weapon_instance) 
 	weapon_instance.rotation_degrees = rotation_degrees
 	#weapons_state[weapon_select]["active"] = true
-	if weapon_select == ConfigWeapons.Type.MINE:
-		weapon_instance.set_as_mine()
+	if weapon_select == ConfigWeapons.Type.MINE or weapon_select == ConfigWeapons.Type.TRUCK_MINE:
+		if weapon_select == ConfigWeapons.Type.MINE:
+			weapon_instance.set_as_mine()
+		elif weapon_select == ConfigWeapons.Type.TRUCK_MINE:
+			weapon_instance.set_as_truck_mine()
+			weapon_instance.scale = Vector3(2.0, 2.0, 2.0)
+		else:
+			Global.debug_print(0, "Error: unknown weapon type", "weapon")
 		var ray : RayCast = $Raycasts/RayCastMinePlacement
 		if ray.is_colliding():
 			Global.debug_print(5, "fire_mine_or_nuke(): ray.is_colliding()", "mine")
@@ -1066,7 +1073,7 @@ func fire_missile_or_rocket() -> void:
 	elif weapon_select == ConfigWeapons.Type.BALLISTIC_MISSILE:
 		weapon_instance.velocity[1] += 10.0   # angle it up a lot
 		weapon_instance.global_transform.origin = $Positions/Weapons/BallisticMissilePosition.global_transform.origin
-	elif weapon_select == ConfigWeapons.Type.TRUCK_BOMB:
+	elif weapon_select == ConfigWeapons.Type.AIR_BURST:
 		weapon_instance.velocity[1] += 10.0   # angle it up a lot
 		weapon_instance.global_transform.origin = $Positions/Weapons/TruckBombPosition.global_transform.origin
 	else:
@@ -1074,7 +1081,7 @@ func fire_missile_or_rocket() -> void:
 		#weapon_instance.velocity[1] -= 0.5  # angle the rocket down a bit
 		#weapon_instance.velocity[1] += 1.0   # angle it up a bit
 	#Global.debug_print(3, "weapon velocity="+str(weapon_instance.velocity))
-	if weapon_select == ConfigWeapons.Type.ROCKET or weapon_select == ConfigWeapons.Type.TRUCK_BOMB:
+	if weapon_select == ConfigWeapons.Type.ROCKET or weapon_select == ConfigWeapons.Type.AIR_BURST:
 		weapon_instance.activate(player_number, false)  # homing = false
 	elif weapon_select == ConfigWeapons.Type.BALLISTIC:
 		knock_back_firing_ballistic = true

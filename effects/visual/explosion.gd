@@ -35,7 +35,7 @@ func start_effects(from_parent, hide_main=false) -> void:
 # We reparent the explosion so the parent weapon can destroy itself
 # without worrying it will stop any effects
 func reparent(from_parent: Node):
-	if get_tree() == null:
+	if not is_inside_tree():
 		Global.debug_print(1, "Error: explosion.gd: get_tree() == null in reparent()")
 		return
 	var old_global_transform_origin = global_transform.origin

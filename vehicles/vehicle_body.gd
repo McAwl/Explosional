@@ -247,6 +247,8 @@ func _physics_process(delta):
 	if not player_number in StatePlayers.players.keys():
 		return  # in process of being reset?
 	
+	timer_1_sec_physics -= delta
+	
 	# Add forces due to weather
 	var weather_force_modifier_per_vehicle: float = pow(ConfigVehicles.config[get_type()]["mass_kg/100"]/70.0, 1.5)
 	add_central_force(weather_force_modifier_per_vehicle*Global.weather_state["wind_direction"] * Global.weather_state["wind_strength"])
@@ -289,6 +291,22 @@ func _physics_process(delta):
 
 		#var old_engine_force: float = engine_force
 	
+		var engine_force_adjustment_4wd: float = 1.0
+		if is_4wd():
+			# Adjust power to each wheel for 4WD vehicles
+			# e.g. if only 1 wheel of 4 is in contact, add the force from other wheels to that one wheel (x4)
+			var num_wheels_in_contact: int = 0
+			var total_num_wheels: int = 0
+			for wh in get_children():
+					if wh is VehicleWheel:
+						total_num_wheels += 1
+						if wh.is_in_contact():
+							num_wheels_in_contact += 1
+			if num_wheels_in_contact > 0 and num_wheels_in_contact < total_num_wheels:
+				engine_force_adjustment_4wd = 1.0 + ((float(total_num_wheels) / float(num_wheels_in_contact))/2.0)
+			if timer_1_sec_physics < 0.0:
+				Global.debug_print(8, str(num_wheels_in_contact)+" of "+str(total_num_wheels)+" in contact. engine_force_adjustment_4wd="+str(engine_force_adjustment_4wd), "vehicle_traction")
+
 		if Input.is_action_pressed("accelerate_player"+str(player_number)):
 			# Increase engine force at low speeds to make the initial acceleration faster.
 			var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
@@ -316,7 +334,7 @@ func _physics_process(delta):
 				brake = ConfigVehicles.config[get_type()]["brake"] / 5.0
 		else:
 			brake = 0.0
-			
+		
 		if delta < 1.0:
 			engine_force_ewma = (engine_force*delta) + (engine_force_ewma*(1-delta))
 		else:
@@ -332,7 +350,7 @@ func _physics_process(delta):
 						wh.engine_force = 6.0*ConfigVehicles.config[ConfigVehicles.Type.TANK]["engine_force_value"]
 						#Global.debug_print(3, "turning at rest wh.engine_force="+str(wh.engine_force))
 					elif engine_force > 0.0 and (left > 0.0 or right > 0.0):  # turning at speed
-						wh.engine_force = 4.0*engine_force
+						wh.engine_force = 6.0*engine_force
 						#Global.debug_print(3, "turning at speed wh.engine_force="+str(wh.engine_force))
 					elif engine_force > 0.0: # moving straight forward, no turing
 						wh.engine_force = engine_force
@@ -355,7 +373,9 @@ func _physics_process(delta):
 					#	Global.debug_print(3, "turing wh.engine_force="+str(wh.engine_force))
 					#	if wh.engine_force == 0.0:
 					#		Global.debug_print(3, "Warning: wheel "+str(wh.name)+" force=0 and user is turning")
+					wh.engine_force *= engine_force_adjustment_4wd
 		else:  # steer wheels normally
+			engine_force *= engine_force_adjustment_4wd
 			steer_target = left - right
 			steer_target *= ConfigVehicles.STEER_LIMIT
 		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta)
@@ -410,7 +430,6 @@ func _physics_process(delta):
 		apply_impulse( Vector3(0,0,0), -100.0*transform.basis.z )   # offset, impulse(=direction*force)
 		apply_impulse( Vector3(0,0,0), 50.0*transform.basis.y )   # offset, impulse(=direction*force)
 
-	timer_1_sec_physics -= delta
 	if timer_1_sec_physics < 0.0:
 		timer_1_sec_physics = 1.0
 		check_for_clipping()
@@ -560,9 +579,8 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 		#var ctm = ch.get_node(ch.name)
 		if ch.name in ["Raycasts", "Positions", "MeshInstances", "Lights", "CameraBasesTargets"]:  # move from 1 level down
 			vehicle_type_node.remove_child(ch)
+			Global.debug_print(3, "vehicle_body: init(): ch="+str(ch), "camera")
 			if ch.name == "CameraBasesTargets":
-				#Global.debug_print(3, "ctm="+str(ctm))
-				#Global.debug_print(3, "ch="+str(ch))
 				if has_node("CameraBase"):
 					$CameraBase.add_child(ch)
 				else:
@@ -1246,7 +1264,7 @@ func remove_main_collision_shapes() -> void:
 
 
 func explode_vehicle_meshes() -> void:
-
+	print("explode_vehicle_meshes")
 	if self.has_node("MeshInstances"):
 		Global.debug_print(3, "explode_vehicle_meshes(): Found node MeshInstances: destroying...", "damage")
 		Global.debug_print(3, "explode_vehicle_meshes(): explode_vehicle_meshes(): self.has_node('MeshInstances')", "damage")

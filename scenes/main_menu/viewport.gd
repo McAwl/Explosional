@@ -8,10 +8,11 @@ func _ready():
 	pass # Replace with function body.
 
 
-func _process(delta):
-	if check == false:
-		#print("check false")
-		check = true
-	$vehicle.rotate_y(delta * 0.7)
+func _process(_delta):
+	pass
+	#if check == false:
+	#	#print("check false")
+	#	check = true
+	#$vehicle.rotate_y(delta * 0.7)
 
 

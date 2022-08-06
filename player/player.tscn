@@ -47,7 +47,6 @@ font_data = ExtResource( 1 )
 font_data = ExtResource( 1 )
 
 [node name="Player" type="Spatial" groups=["player"]]
-pause_mode = 2
 script = ExtResource( 2 )
 
 [node name="VC" type="ViewportContainer" parent="."]

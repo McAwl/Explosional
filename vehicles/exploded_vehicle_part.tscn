@@ -22,6 +22,10 @@ resource_local_to_scene = true
 material = SubResource( 36 )
 
 [node name="ExplodedVehiclePart" type="RigidBody"]
+continuous_cd = true
+contacts_reported = 1
+contact_monitor = true
+can_sleep = false
 linear_damp = 0.0
 script = ExtResource( 1 )
 
@@ -36,3 +40,14 @@ script = null
 amount = 10
 visibility_aabb = AABB( -0.27122, -0.265728, -0.0894033, 0.542441, 0.531456, 0.178806 )
 local_coords = false
+
+[node name="TimerMaxLifetime" type="Timer" parent="."]
+wait_time = 60.0
+one_shot = true
+autostart = true
+
+[node name="TimerCheckDestroy" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="TimerMaxLifetime" to="." method="_on_TimerMaxLifetime_timeout"]
+[connection signal="timeout" from="TimerCheckDestroy" to="." method="_on_TimerCheckDestroy_timeout"]

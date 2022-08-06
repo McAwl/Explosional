@@ -375,6 +375,8 @@ func reset_game() -> void:
 func _on_PlayArea_body_exited(body):
 	if body is VehicleBody:
 		Global.debug_print(3, "main(): detected VehicleBody leaving the playing area", "damage")
+		Global.debug_print(3, "main(): body location = "+str(body.global_transform.origin), "damage")
+		Global.debug_print(3, "main(): body name = "+str(body.name), "damage")
 		if body.vehicle_state == ConfigVehicles.AliveState.ALIVE:
 			body.add_damage(body.max_damage, Global.DamageType.OFF_MAP)
 			# body.get_player().add_achievement(Global.Achievements.OUT_OF_THIS_WORLD)

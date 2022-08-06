@@ -1,3 +1,4 @@
+class_name VehicleDetachRigidBodies
 extends Spatial
 
 
@@ -19,14 +20,14 @@ var timer_centre_of_meshes: float = 0.1
 # Built-in methods
 
 func _ready():
-	Global.debug_print(3, "limit_meshes_to_explode="+str(limit_meshes_to_explode))
+	Global.debug_print(3, "vehicle_detach_rigid_body: limit_meshes_to_explode="+str(limit_meshes_to_explode), "exploding parts")
 
 
 func _process(delta):
-	
+
 	max_lifetime_sec -= delta
 	if max_lifetime_sec <= 0.0:
-		Global.debug_print(3, "max_lifetime_sec <= 0.0: vehicle mesh queue_free")
+		Global.debug_print(3, "vehicle_detach_rigid_body: max_lifetime_sec <= 0.0: vehicle mesh queue_free", "exploding parts")
 		queue_free()
 
 	timer_centre_of_meshes -= delta
@@ -38,8 +39,8 @@ func _process(delta):
 func _physics_process(_delta):
 
 	if apply_forces == true:
-		Global.debug_print(3, "_physics_process: apply_forces = true")
-		Global.debug_print(3, "force = "+str(force))
+		Global.debug_print(3, "vehicle_detach_rigid_body: _physics_process: apply_forces = true", "exploding parts")
+		Global.debug_print(3, "vehicle_detach_rigid_body: force = "+str(force), "exploding parts")
 		var num_meshes:int = 0
 		var total_volume: float = 0
 		for ch in get_children():
@@ -49,9 +50,9 @@ func _physics_process(_delta):
 				num_meshes += 1
 				#Global.debug_print(3, "ch.get_aabb()= "+str(ch.get_aabb())+" mesh_volume = "+str(ch.name)+"="+str(mesh_volume))
 		#Global.debug_print(3, "total_volume="+str(total_volume))
-		Global.debug_print(3, "num_meshes="+str(num_meshes))
+		Global.debug_print(3, "vehicle_detach_rigid_body: num_meshes="+str(num_meshes), "exploding parts")
 		var prob_exploded: float = float(limit_meshes_to_explode) / float(num_meshes)
-		Global.debug_print(3, "prob_exploded="+str(prob_exploded))
+		Global.debug_print(3, "vehicle_detach_rigid_body: prob_exploded="+str(prob_exploded), "exploding parts")
 		for ch in get_children():
 			if ch is MeshInstance and (rng.randf() < prob_exploded or num_meshes_exploded==0):  # make sure we always explode at least 1
 				num_meshes_exploded += 1
@@ -66,14 +67,13 @@ func _physics_process(_delta):
 				#var new_exploded_vehicle_part_instance = load("res://scenes/car_rigid_body_part.tscn").instance()
 				#var new_exploded_vehicle_part_instance = RigidBody.new()
 				var new_exploded_vehicle_part_instance: ExplodedVehiclePart = new_exploded_vehicle_part.instance()
-				new_exploded_vehicle_part_instance.set_lifetime(max_lifetime_sec)
 				new_exploded_vehicle_part_instance.get_node("SmokeTrail").emitting = true
 				#new_exploded_vehicle_part_instance.get_node("CollisionShape").translation = self.get_node("mesh_instances").translation
 				#new_exploded_vehicle_part_instance.translation = self.get_node("mesh_instances").translation
 				#new_exploded_vehicle_part_instance.translation = ch.translation
 				#new_exploded_vehicle_part_instance.get_node("CollisionShape").scale = self.get_node("mesh_instances").scale
 				self.add_child(new_exploded_vehicle_part_instance)
-				new_exploded_vehicle_part_instance.name = "RigidBody_"+ch.name
+				new_exploded_vehicle_part_instance.name = "ExplodedVehiclePart_"+ch.name
 				#var mesh_centre = (aabb_position + aabb_size) / 2.0
 				var mesh_centre: Vector3 = (aabb_position + aabb_end) / 2.0
 				
@@ -91,16 +91,22 @@ func _physics_process(_delta):
 				new_exploded_vehicle_part_instance.add_child(ch)
 				new_exploded_vehicle_part_instance.set_as_toplevel(true)
 				new_exploded_vehicle_part_instance.global_transform.origin = global_transform_origin_parent  # ch.global_transform.origin
-				#new_exploded_vehicle_part_instance.global_transform.origin.y += 1.0
+				
 				new_exploded_vehicle_part_instance.linear_velocity = linear_velocity/2.0  # slow down the exploded meshes
-				Global.debug_print(3, "before new_exploded_vehicle_part_instance.linear_velocity="+str(new_exploded_vehicle_part_instance.linear_velocity))
+				Global.debug_print(3, "vehicle_detach_rigid_body: before new_exploded_vehicle_part_instance.linear_velocity="+str(new_exploded_vehicle_part_instance.linear_velocity), "exploding parts")
 				# any rigid body moving downwards, replace with upwards movement
 				if new_exploded_vehicle_part_instance.linear_velocity.y < 1.0:
 					if new_exploded_vehicle_part_instance.linear_velocity.y < 0.0:
 						new_exploded_vehicle_part_instance.linear_velocity.y = -new_exploded_vehicle_part_instance.linear_velocity.y
 					else:
 						new_exploded_vehicle_part_instance.linear_velocity.y = 1.0
-				Global.debug_print(3, "  after new_exploded_vehicle_part_instance.linear_velocity="+str(new_exploded_vehicle_part_instance.linear_velocity))
+				Global.debug_print(3, "vehicle_detach_rigid_body: after new_exploded_vehicle_part_instance.linear_velocity="+str(new_exploded_vehicle_part_instance.linear_velocity), "exploding parts")
+				Global.debug_print(3, "vehicle_detach_rigid_body: new_exploded_vehicle_part_instance location="+str(new_exploded_vehicle_part_instance.global_transform.origin), "exploding parts")
+				Global.debug_print(3, "vehicle_detach_rigid_body: ch location="+str(ch.global_transform.origin), "exploding parts")
+			
+				Global.debug_print(3, "vehicle_detach_rigid_body: new_exploded_vehicle_part_instance location="+str(new_exploded_vehicle_part_instance.global_transform.origin), "exploding parts")
+				Global.debug_print(3, "vehicle_detach_rigid_body: ch location="+str(ch.global_transform.origin), "exploding parts")
+			
 				#var collision = ch.get_node("CollisionShape")
 				#$var shape = BoxShape.new()
 				#var ch_aabb_size = ch.get_aabb().size
@@ -151,11 +157,11 @@ func detach_rigid_bodies(force_, total_mass_, _linear_velocity, _global_transfor
 	linear_velocity = _linear_velocity
 	global_transform_origin_parent = _global_transform_origin_parent
 	apply_forces = true  # one time only impulse
-	Global.debug_print(3, "detach_rigid_bodies")
+	Global.debug_print(3, "vehicle_detach_rigid_body: detach_rigid_bodies")
 
 
 func calc_centre_of_meshes():
-	Global.debug_print(3, "_on_timer_centre_of_meshes_timeout()")
+	Global.debug_print(3, "vehicle_detach_rigid_body: _on_timer_centre_of_meshes_timeout()")
 	centre_of_meshes = Vector3(0,0,0)
 	var num_meshes:int = 0
 	for ch in get_children():
@@ -163,5 +169,5 @@ func calc_centre_of_meshes():
 			centre_of_meshes += ch.translation
 			num_meshes += 1
 	centre_of_meshes /= float(num_meshes)
-	Global.debug_print(3, "centre_of_meshes="+str(centre_of_meshes))
+	Global.debug_print(3, "vehicle_detach_rigid_body: centre_of_meshes="+str(centre_of_meshes))
 

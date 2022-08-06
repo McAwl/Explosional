@@ -4,6 +4,7 @@ class_name VehicleBodyExplosional
 const SCRIPT_VEHICLE_DETACH_RIGID_BODIES = preload("res://vehicles/vehicle_detach_rigid_bodies.gd")  # Global.vehicle_detach_rigid_bodies_folder)
 const CHECK_ACCEL_DAMAGE_INTERVAL: float = 0.5
 const MIN_SPEED_POWERUP_KM_HR = 90.0
+var new_exploded_vehicle_part: Resource = load(Global.exploded_vehicle_part_folder)
 
 export var engine_force_value: float = ConfigVehicles.ENGINE_FORCE_VALUE_DEFAULT  #40
 export var speed: float = 0.0
@@ -207,6 +208,14 @@ func _input(event):
 				Global.debug_print(1, "Warning: player "+str(player_number)+" fired unknown weapon "+str(weapon_select))
 			# Stop the event from spreading
 			get_tree().set_input_as_handled()
+	elif InputMap.event_is_action (event, "damage_player1"):
+		if event.is_pressed():
+			if player_number == 1:
+				Global.debug_print(3, "_input(): adding Global.DamageType.TEST = "+str(Global.DamageType.TEST), "damage")
+				add_damage(1, Global.DamageType.TEST)
+				#add_damage(max_damage, Global.DamageType.OFF_MAP)
+			# Stop the event from spreading
+			get_tree().set_input_as_handled()
 	elif InputMap.event_is_action (event, "kill_player1"):
 		if event.is_pressed():
 			if player_number == 1:
@@ -302,6 +311,8 @@ func _physics_process(delta):
 						total_num_wheels += 1
 						if wh.is_in_contact():
 							num_wheels_in_contact += 1
+							if timer_1_sec_physics < 0.0:
+								Global.debug_print(8, "Wheel "+str(wh)+" in contact with "+str(wh.get_contact_body().name), "vehicle_traction")
 			if num_wheels_in_contact > 0 and num_wheels_in_contact < total_num_wheels:
 				engine_force_adjustment_4wd = 1.0 + ((float(total_num_wheels) / float(num_wheels_in_contact))/2.0)
 			if timer_1_sec_physics < 0.0:
@@ -975,6 +986,26 @@ func add_damage(amount: float, damage_type: int) -> void:
 			get_player().add_achievement(Global.Achievements.HOT_STUFF)
 		Global.debug_print(3, "add_damage(): : total_damage >= max_damage", "damage")
 		start_vehicle_dying()
+	
+	# explode one mesh from the vehicle body
+	if has_node("MeshInstances"):
+		var base_scale = $MeshInstances.scale
+		for vehicle_part in $MeshInstances.get_children():
+			var new_exploded_vehicle_part_instance: ExplodedVehiclePart = new_exploded_vehicle_part.instance()
+			$MeshInstances.remove_child(vehicle_part)  # move the part from the vehicle to an exploded part
+			vehicle_part.visible = true  # some meshes start off invisible
+			vehicle_part.translation = Vector3(0.0, 0.0, 0.0)  # start them all at 0,0,0?
+			new_exploded_vehicle_part_instance.get_node("SmokeTrail").emitting = true
+			new_exploded_vehicle_part_instance.add_child(vehicle_part)
+			new_exploded_vehicle_part_instance.set_as_toplevel(true)
+			new_exploded_vehicle_part_instance.global_transform.origin = global_transform.origin
+			new_exploded_vehicle_part_instance.global_transform.origin.y += 1
+			new_exploded_vehicle_part_instance.linear_velocity = linear_velocity/2.0
+			vehicle_part.scale *= base_scale
+			add_child(new_exploded_vehicle_part_instance)
+			new_exploded_vehicle_part_instance.name = "ExplodedVehiclePart_"+str(vehicle_part.name)
+			break # only consider one mesh for now
+			#explode_vehicle_meshes(true)  # test to expldoe one mesh from the vehicle only
 
 
 func check_engine_force_value() -> void:
@@ -1263,27 +1294,32 @@ func remove_main_collision_shapes() -> void:
 			self.linear_velocity.y = 1.0
 
 
-func explode_vehicle_meshes() -> void:
-	print("explode_vehicle_meshes")
+func explode_vehicle_meshes(one_only: bool = false) -> void:
+	Global.debug_print(3, "explode_vehicle_meshes(): one_only="+str(one_only), "exploding parts")
 	if self.has_node("MeshInstances"):
-		Global.debug_print(3, "explode_vehicle_meshes(): Found node MeshInstances: destroying...", "damage")
+		Global.debug_print(3, "explode_vehicle_meshes(): Found node MeshInstances", "damage")
 		Global.debug_print(3, "explode_vehicle_meshes(): explode_vehicle_meshes(): self.has_node('MeshInstances')", "damage")
 		Global.debug_print(3, "explode_vehicle_meshes(): self.translation="+str(self.translation), "damage")
 		vehicle_parts_exploded.set_script(SCRIPT_VEHICLE_DETACH_RIGID_BODIES)
 		vehicle_parts_exploded.set_process(true)
 		vehicle_parts_exploded.set_physics_process(true)
-		vehicle_parts_exploded.detach_rigid_bodies(0.00, self.mass, self.linear_velocity, self.global_transform.origin)
+		if one_only:
+			vehicle_parts_exploded.num_meshes_exploded = 0  
+		vehicle_parts_exploded.detach_rigid_bodies(0.00, self.mass, self.linear_velocity, self.global_transform.origin, one_only)
 		#self.remove_child(ch)
 		#ch.set_as_toplevel(true)
-		# move the exploded mesh to the player, as the VehicleBody will be deleted after the explosion
-		remove_child(vehicle_parts_exploded)
-		get_player().add_child(vehicle_parts_exploded)
-		vehicle_parts_exploded.name = "vehicle_parts_exploded"
-		# Move the target cameras to the centre of the body
-		$CameraBase/CameraBasesTargets/CamTargetForward.translation = Vector3(0.0, 0.0, 0.0)
-		$CameraBase/CameraBasesTargets/CamTargetForward_UD.translation = Vector3(0.0, 0.0, 0.0)
-		$CameraBase/CameraBasesTargets/CamTargetReverse.translation = Vector3(0.0, 0.0, 0.0)
-		$CameraBase/CameraBasesTargets/CamTargetReverse_UD.translation = Vector3(0.0, 0.0, 0.0)
+		# move the exploded mesh to the player, in case the VehicleBody is be deleted due to death (or we might be exploding only one mesh due to damage)
+		if not one_only:
+			remove_child(vehicle_parts_exploded)
+			get_player().add_child(vehicle_parts_exploded)
+			vehicle_parts_exploded.name = "vehicle_parts_exploded"
+			# Move the target cameras to the centre of the body
+			$CameraBase/CameraBasesTargets/CamTargetForward.translation = Vector3(0.0, 0.0, 0.0)
+			$CameraBase/CameraBasesTargets/CamTargetForward_UD.translation = Vector3(0.0, 0.0, 0.0)
+			$CameraBase/CameraBasesTargets/CamTargetReverse.translation = Vector3(0.0, 0.0, 0.0)
+			$CameraBase/CameraBasesTargets/CamTargetReverse_UD.translation = Vector3(0.0, 0.0, 0.0)
+		Global.debug_print(3, "explode_vehicle_meshes(): vehicle_parts_exploded position="+str(vehicle_parts_exploded.global_transform.origin), "damage")
+		Global.debug_print(3, "explode_vehicle_meshes(): our position="+str(self.global_transform.origin), "damage")
 
 
 func dying_finished() -> bool:

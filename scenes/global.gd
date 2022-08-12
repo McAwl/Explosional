@@ -72,7 +72,7 @@ var start_scene: String = "res://scenes/start/start.tscn"
 var log_level = 2  # 1=error, 2=warning, etc up to 10 for very nested loops
 
 # include a string here and any log command (regardless of log_level) with this as 3rd argument will print
-var log_topics = ["exploding parts", "damage"]  # eg, "truck_mine", "weapon", "missile""max_damage" "camera" "missile" "mine" "damage" "vehicle_respawn"
+var log_topics = ["weather", "damage"]  # eg, "truck_mine", "weapon", "missile""max_damage" "camera" "missile" "mine" "damage" "vehicle_respawn"
 
 # main scene
 var main_scene: String = "res://scenes/main/main.tscn"
@@ -125,7 +125,7 @@ func _ready():
 func _process(delta):
 	weather_state["time_left_s"] -= delta
 	if weather_state["time_left_s"] < 0.0:
-		Global.debug_print(3, "weather_state['time_left_s'] < 0.0")
+		Global.debug_print(3, "weather_state['time_left_s'] < 0.0", "weather")
 		toggle_weather()
 	
 	# Once a second, recalc the weather conditions
@@ -156,9 +156,9 @@ func _process(delta):
 # Private methods
 
 func _set_weather(weather_change_dict: Dictionary) -> void:
-	Global.debug_print(3, "set_weather()")
+	Global.debug_print(3, "set_weather()", "weather")
 	#weather_state["wind_strength"] = 0.0  # weather_model[weather_state["index"]]["max_wind_strength"] / 2.0
-	#Global.debug_print(3, "Setting wind_strength to "+str(weather_state["wind_strength"]))
+	Global.debug_print(3, "Setting wind_strength to "+str(weather_state["wind_strength"]), "weather")
 	emit_signal("change_weather", weather_change_dict, weather_change_duration_sec)
 
 
@@ -173,8 +173,8 @@ func toggle_weather() -> void:
 		weather_state["index"] = 0
 	weather_state["time_left_s"] = weather_model[weather_state["index"]]["duration_s"]
 	weather_state["type"] = weather_state["index"]
-	Global.debug_print(3, "toggle_weather() to index "+str(weather_state["index"]))
-	Global.debug_print(3, "type is now "+str(weather_state["type"]))
+	Global.debug_print(3, "toggle_weather() to index "+str(weather_state["index"]), "weather")
+	Global.debug_print(3, "type is now "+str(weather_state["type"]), "weather")
 	_set_weather(
 		{
 			"fog_depth_curve": [weather_model[old_index]["fog_depth_curve"], weather_model[weather_state["index"]]["fog_depth_curve"]], 

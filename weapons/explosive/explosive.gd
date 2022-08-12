@@ -116,7 +116,7 @@ func _process(delta):
 			visible = false
 			# if explosive_proximity_timer_limit < 0.0:
 			#	print("explosive_proximity_timer_limit < 0.0")
-			print("Explosive: destroyed using normal queue_free: "+str(name))
+			Global.debug_print(5, "Explosive: destroyed using normal queue_free: "+str(name), "weapon")
 			queue_free()
 
 	if timer_1s < 0.0:
@@ -187,13 +187,13 @@ func _physics_process(_delta):
 					else:
 						distance = 50.0  # ensure a specific force is experiences by all other players
 				if not type == ConfigWeapons.Type.TRUCK_MINE or (type == ConfigWeapons.Type.TRUCK_MINE and line_of_sight(target) == true):
-					print("applying force "+str(explosion_force)+" to target "+str(target.name)+" from weapon type "+str(type))
+					Global.debug_print(5, "applying force "+str(explosion_force)+" to target "+str(target.name)+" from weapon type "+str(type), "weapon")
 					target.apply_impulse( Vector3(0,0,0), explosion_force*direction.normalized() )   # offset, impulse(=direction*force)
 					target.angular_velocity  = Vector3(5.0*randf(),5.0*randf(),5.0*randf())
 					
 					# calc any specific indirect damage to vehicles nearby, if defined
 					target.add_damage(ConfigWeapons.DAMAGE_INDIRECT.get(type), Global.DamageType.INDIRECT_HIT)
-					print("target took "+str(ConfigWeapons.DAMAGE_INDIRECT.get(type))+" indirect damage launched_by_player_number "+str(launched_by_player_number))
+					Global.debug_print(5, "target took "+str(ConfigWeapons.DAMAGE_INDIRECT.get(type))+" indirect damage launched_by_player_number "+str(launched_by_player_number), "weapon")
 				else:
 					Global.debug_print(3, "ignoring explosion damge to target player_num "+str(target.player_number), "truck_mine")
 
@@ -299,7 +299,7 @@ func activate(pos, linear_velocity, angular_velocity, stage, _launched_by_player
 	if _launched_by_player != null:
 		launched_by_player = _launched_by_player
 		player_str = " (player "+str(launched_by_player.get_player_name())+")"
-	print("weapon of type "+str(ConfigWeapons.Type.keys()[type]) + " launched by player_number "+str(launched_by_player_number)+player_str)
+	Global.debug_print(5, "weapon of type "+str(ConfigWeapons.Type.keys()[type]) + " launched by player_number "+str(launched_by_player_number)+player_str, "weapon")
 
 
 func set_as_truck_mine() -> void:

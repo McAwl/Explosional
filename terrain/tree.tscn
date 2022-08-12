@@ -4,7 +4,7 @@
 [ext_resource path="res://assets/textures/bark_albedo.png" type="Texture" id=2]
 [ext_resource path="res://assets/textures/bark_normal.png" type="Texture" id=3]
 [ext_resource path="res://assets/textures/elm_leaf_normal.png" type="Texture" id=4]
-[ext_resource path="res://assets/textures/elm leaf.png" type="Texture" id=5]
+[ext_resource path="res://assets/textures/elm leaf-drab.png" type="Texture" id=5]
 [ext_resource path="res://assets/textures/elm_leaf_transmission.png" type="Texture" id=6]
 [ext_resource path="res://assets/textures/3d_noise.png" type="Texture3D" id=7]
 [ext_resource path="res://assets/shaders/foliage_wind_tree_trunk.gdshader" type="Shader" id=8]

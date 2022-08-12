@@ -314,13 +314,17 @@ func change_weather(weather_change: Dictionary, change_duration_sec) -> void:
 	Global.debug_print(3, "MainScene weather_change.keys()="+str(weather_change.keys()))
 	for weather_item_key in weather_change.keys():
 		if "fog_depth_begin" == weather_item_key:
-			Global.debug_print(3, "MainScene: changing weather: weather_item = fog_depth_begin")
-			Global.debug_print(3, "  old="+str(weather_change["fog_depth_begin"][0])+", new="+str(weather_change["fog_depth_begin"][1]))
+			Global.debug_print(3, "MainScene: changing weather: weather_item = fog_depth_begin", "weather")
+			Global.debug_print(3, "  old="+str(weather_change["fog_depth_begin"][0])+", new="+str(weather_change["fog_depth_begin"][1]), "weather")
+			if $Effects/TweenFogDepthBegin.is_active():
+				Global.debug_print(3, "VehicleBody: warning: starting $Effects/TweenFogDepthBegin but it's still active", "weather")
 			$Effects/TweenFogDepthBegin.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_begin", weather_change["fog_depth_begin"][0], weather_change["fog_depth_begin"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Effects/TweenFogDepthBegin.start()
 		elif "fog_depth_curve" == weather_item_key:
-			Global.debug_print(3, "MainScene: changing weather: weather_item = fog_depth_curve")
-			Global.debug_print(3, "  old="+str(weather_change["fog_depth_curve"][0])+", new="+str(weather_change["fog_depth_curve"][1]))
+			Global.debug_print(3, "MainScene: changing weather: weather_item = fog_depth_curve", "weather")
+			Global.debug_print(3, "  old="+str(weather_change["fog_depth_curve"][0])+", new="+str(weather_change["fog_depth_curve"][1]), "weather")
+			if $Effects/TweenFogDepthCurve.is_active():
+				Global.debug_print(3, "VehicleBody: warning: starting $Effects/TweenFogDepthCurve but it's still active", "weather")
 			$Effects/TweenFogDepthCurve.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_curve", weather_change["fog_depth_curve"][0], weather_change["fog_depth_curve"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Effects/TweenFogDepthCurve.start()
 

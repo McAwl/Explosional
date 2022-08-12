@@ -1305,7 +1305,7 @@ func explode_vehicle_meshes(one_only: bool = false) -> void:
 		vehicle_parts_exploded.set_physics_process(true)
 		if one_only:
 			vehicle_parts_exploded.num_meshes_exploded = 0  
-		vehicle_parts_exploded.detach_rigid_bodies(0.00, self.mass, self.linear_velocity, self.global_transform.origin, one_only)
+		vehicle_parts_exploded.detach_rigid_bodies(0.00, self.mass, self.linear_velocity, self.global_transform.origin)
 		#self.remove_child(ch)
 		#ch.set_as_toplevel(true)
 		# move the exploded mesh to the player, in case the VehicleBody is be deleted due to death (or we might be exploding only one mesh due to damage)
@@ -1369,8 +1369,10 @@ func change_weather(weather_change: Dictionary, change_duration_sec) -> void:
 	Global.debug_print(3, "VehicleBody: weather_change.keys()="+str(weather_change.keys()))
 	for weather_item_key in weather_change.keys():
 		if "visibility" == weather_item_key:
-			Global.debug_print(3, "VehicleBody: changing weather: visibility")
-			Global.debug_print(3, "  old="+str(weather_change["visibility"][0])+", new="+str(weather_change["visibility"][1]))
+			Global.debug_print(3, "VehicleBody: changing weather: visibility", "weather")
+			Global.debug_print(3, "  old="+str(weather_change["visibility"][0])+", new="+str(weather_change["visibility"][1]), "weather")
+			if $CameraBase/Camera/TweenFar.is_active():
+				Global.debug_print(3, "VehicleBody: warning: starting $CameraBase/Camera/TweenFar but it's still active", "weather")
 			$CameraBase/Camera/TweenFar.interpolate_property($CameraBase/Camera, "far", weather_change["visibility"][0], weather_change["visibility"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$CameraBase/Camera/TweenFar.start()
 		if "snow_visible" == weather_item_key:

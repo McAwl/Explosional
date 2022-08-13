@@ -162,9 +162,9 @@ func _physics_process(_delta):
 			#Global.debug_print(3, "ray translation="+str(ray.translation))
 			#ray.cast_to = Vector3(0, -1000, 0)
 			if ray.is_colliding():
-				#Global.debug_print(3, " colliding with "+str(ray.get_collider().name))
+				Global.debug_print(3, " colliding with "+str(ray.get_collider().name), "procedural veg")
 				if "terrain" in ray.get_collider().name.to_lower() and not "lava" in ray.get_collider().name.to_lower():
-					#Global.debug_print(3, "colliding with terrain..")
+					Global.debug_print(5, "colliding with terrain..", "procedural veg")
 					#Global.debug_print(3, "collision point = "+str(ray.get_collision_point()))
 					if num_trees < num_trees_total:  # place trees first
 						if ray.get_collision_normal().normalized().y > 0.98 and ray.get_collision_normal().normalized().y < 0.99:  # slightly sloping ground for trees
@@ -381,6 +381,7 @@ func _on_PlayArea_body_exited(body):
 		Global.debug_print(3, "main(): detected VehicleBody leaving the playing area", "damage")
 		Global.debug_print(3, "main(): body location = "+str(body.global_transform.origin), "damage")
 		Global.debug_print(3, "main(): body name = "+str(body.name), "damage")
+		Global.debug_print(3, "main(): lifetime_so_far_sec="+str(body.lifetime_so_far_sec), "damage")
 		if body.vehicle_state == ConfigVehicles.AliveState.ALIVE:
 			body.add_damage(body.max_damage, Global.DamageType.OFF_MAP)
 			# body.get_player().add_achievement(Global.Achievements.OUT_OF_THIS_WORLD)

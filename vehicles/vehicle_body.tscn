@@ -501,10 +501,10 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.799254, 1.56261 
 transform = Transform( 1, 0, 0, 0, 0.999391, -0.0348995, 0, 0.0348995, 0.999391, 0.00169557, 0.82358, 1.58083 )
 
 [node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/Racer/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0728733, 0.533305, 0.273624 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0202891, 0.751138, 0.0702311 )
 
 [node name="FirstPersonViewRear" type="Spatial" parent="VehicleTypes/Racer/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0684594, 0.58042, -0.0160496 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0166355, 0.706264, 0.152267 )
 
 [node name="CamRaycastTargetRear" type="Spatial" parent="VehicleTypes/Racer/Positions"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.650181, -1.17816 )
@@ -897,10 +897,10 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.768255, -1.42907 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.458232, 1.04335 )
 
 [node name="FirstPersonViewFront" type="Spatial" parent="VehicleTypes/Rally/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.571755, 0.261212 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.758478, -0.0308148 )
 
 [node name="FirstPersonViewRear" type="Spatial" parent="VehicleTypes/Rally/Positions"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0684594, 0.58042, -0.708691 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0684594, 0.76378, -0.342183 )
 
 [node name="Raycasts" type="Spatial" parent="VehicleTypes/Rally"]
 
@@ -1485,7 +1485,6 @@ transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Truck" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.339322, 0 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Truck"]
 

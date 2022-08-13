@@ -233,7 +233,7 @@ columns = 2
 
 [node name="Player1SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
 margin_right = 698.0
-margin_bottom = 473.0
+margin_bottom = 474.0
 focus_neighbour_left = NodePath("../../../MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToDesktop")
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -243,7 +243,7 @@ text = "Player 1"
 [node name="Player2SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
 margin_left = 718.0
 margin_right = 1416.0
-margin_bottom = 473.0
+margin_bottom = 474.0
 focus_neighbour_left = NodePath("../Player1SelectButton")
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -251,9 +251,9 @@ custom_fonts/font = ExtResource( 3 )
 text = "Player 2"
 
 [node name="Player3SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
-margin_top = 493.0
+margin_top = 494.0
 margin_right = 698.0
-margin_bottom = 966.0
+margin_bottom = 967.0
 focus_neighbour_left = NodePath("../Player2SelectButton")
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -263,9 +263,9 @@ text = "Player 3"
 
 [node name="Player4SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
 margin_left = 718.0
-margin_top = 493.0
+margin_top = 494.0
 margin_right = 1416.0
-margin_bottom = 966.0
+margin_bottom = 967.0
 focus_neighbour_left = NodePath("../Player3SelectButton")
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -289,39 +289,102 @@ custom_constants/hseparation = 30
 columns = 4
 
 [node name="RacerButton" type="Button" parent="VehicleSelection/GridContainer"]
-margin_right = 357.0
-margin_bottom = 480.0
+margin_right = 260.0
+margin_bottom = 105.0
+hint_tooltip = "High-speed
+Special ability: shield at high speed"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
 text = "Racer"
 
 [node name="RallyButton" type="Button" parent="VehicleSelection/GridContainer"]
-margin_left = 387.0
-margin_right = 744.0
-margin_bottom = 480.0
+margin_left = 290.0
+margin_right = 510.0
+margin_bottom = 105.0
+hint_tooltip = "Light 4WD
+Special ability: climbs steep terrain"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
 text = "Rally"
 
 [node name="TankButton" type="Button" parent="VehicleSelection/GridContainer"]
-margin_left = 774.0
-margin_right = 1131.0
-margin_bottom = 480.0
+margin_left = 540.0
+margin_right = 761.0
+margin_bottom = 105.0
+hint_tooltip = "Heavy armour
+Special ability: guided ballistic missile"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
 text = "Tank"
 
 [node name="TruckButton" type="Button" parent="VehicleSelection/GridContainer"]
-margin_left = 1161.0
-margin_right = 1518.0
-margin_bottom = 480.0
+margin_left = 791.0
+margin_right = 1041.0
+margin_bottom = 105.0
+hint_tooltip = "Slow and heavy
+Special ability: truck bomb with long range"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
 text = "Truck"
+
+[node name="RacerInfoText" type="Label" parent="VehicleSelection"]
+margin_top = 125.0
+margin_right = 260.0
+margin_bottom = 248.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 11 )
+text = "High-speed
+Special ability: shield at high speed"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="RallyInfoText" type="Label" parent="VehicleSelection"]
+margin_left = 291.0
+margin_top = 132.0
+margin_right = 511.0
+margin_bottom = 249.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 11 )
+text = "Light 4WD
+Special ability: climbs steep terrain"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="TankInfoText" type="Label" parent="VehicleSelection"]
+margin_left = 542.0
+margin_top = 125.0
+margin_right = 763.0
+margin_bottom = 283.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 11 )
+text = "Heavy armour
+Special ability: guided ballistic missile"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="TruckInfoText" type="Label" parent="VehicleSelection"]
+margin_left = 792.0
+margin_top = 125.0
+margin_right = 1042.0
+margin_bottom = 256.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 11 )
+text = "Slow and heavy
+Special ability: truck bomb with long range"
+align = 1
+valign = 1
+autowrap = true
 
 [node name="OptionMenu" type="Control" parent="."]
 anchor_left = 0.124
@@ -350,7 +413,7 @@ size_flags_vertical = 3
 columns = 2
 
 [node name="MusicVolumeText" type="Label" parent="OptionMenu/GridContainer/MusicVolume"]
-margin_right = 202.0
+margin_right = 203.0
 margin_bottom = 27.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -359,8 +422,8 @@ text = "Music Volume"
 valign = 1
 
 [node name="MusicVolume" type="HSlider" parent="OptionMenu/GridContainer/MusicVolume"]
-margin_left = 206.0
-margin_right = 408.0
+margin_left = 207.0
+margin_right = 409.0
 margin_bottom = 27.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -375,7 +438,7 @@ margin_bottom = 81.0
 columns = 2
 
 [node name="VehicleVolumeText" type="Label" parent="OptionMenu/GridContainer/VehicleVolume"]
-margin_right = 202.0
+margin_right = 203.0
 margin_bottom = 27.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -384,8 +447,8 @@ text = "Vehicle  Volume"
 valign = 1
 
 [node name="VehicleVolume" type="HSlider" parent="OptionMenu/GridContainer/VehicleVolume"]
-margin_left = 206.0
-margin_right = 408.0
+margin_left = 207.0
+margin_right = 409.0
 margin_bottom = 27.0
 focus_previous = NodePath("../../MusicVolume/MusicVolume")
 size_flags_horizontal = 3
@@ -401,7 +464,7 @@ margin_bottom = 135.0
 columns = 2
 
 [node name="WindSpeedText" type="Label" parent="OptionMenu/GridContainer/WindSpeed"]
-margin_right = 202.0
+margin_right = 203.0
 margin_bottom = 27.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -410,8 +473,8 @@ text = "Wind Speed"
 valign = 1
 
 [node name="WindSpeed" type="HSlider" parent="OptionMenu/GridContainer/WindSpeed"]
-margin_left = 206.0
-margin_right = 408.0
+margin_left = 207.0
+margin_right = 409.0
 margin_bottom = 27.0
 focus_previous = NodePath("../../VehicleVolume/VehicleVolume")
 size_flags_horizontal = 3

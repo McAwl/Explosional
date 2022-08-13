@@ -845,17 +845,17 @@ func check_accel_damage() -> void:
 		$Effects/Audio/CrashSound.playing = true
 		$Effects/Audio/CrashSound.volume_db = 0.0
 		if $Raycasts/RayCastFrontRamDamage1.is_colliding():
-			var collider: CollisionObject = $Raycasts/RayCastFrontRamDamage1.get_collider()
+			var collider = $Raycasts/RayCastFrontRamDamage1.get_collider()
 			if collider is VehicleBody:
 				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider.name), "ramming")
 				rammed_another_car = true
 		if $Raycasts/RayCastFrontRamDamage2.is_colliding():
-			var collider: CollisionObject = $Raycasts/RayCastFrontRamDamage2.get_collider()
+			var collider = $Raycasts/RayCastFrontRamDamage2.get_collider()
 			if collider is VehicleBody:
 				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider.name), "ramming")
 				rammed_another_car = true
 		if $Raycasts/RayCastFrontRamDamage3.is_colliding():
-			var collider: CollisionObject = $Raycasts/RayCastFrontRamDamage3.get_collider()
+			var collider = $Raycasts/RayCastFrontRamDamage3.get_collider()
 			if collider is VehicleBody:
 				Global.debug_print(3, "player "+str(player_number)+" rammed "+str(collider.name), "ramming")
 				rammed_another_car = true

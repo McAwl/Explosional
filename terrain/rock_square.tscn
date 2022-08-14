@@ -1,0 +1,31 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://assets/textures/ground_12-1K/1K-ground_12_metallic.png" type="Texture" id=1]
+[ext_resource path="res://assets/textures/ground_12-1K/1K-ground_12_height.png" type="Texture" id=2]
+[ext_resource path="res://assets/textures/ground_12-1K/1K-ground_12_roughness.png" type="Texture" id=3]
+[ext_resource path="res://assets/textures/ground_12-1K/1K-ground_12_ambientocclusion.png" type="Texture" id=4]
+[ext_resource path="res://assets/textures/ground_12-1K/1K-ground_12_normal.png" type="Texture" id=5]
+[ext_resource path="res://assets/textures/ground_12-1K/1K-ground_12_basecolor.png" type="Texture" id=6]
+
+[sub_resource type="SpatialMaterial" id=1]
+albedo_texture = ExtResource( 6 )
+metallic_texture = ExtResource( 1 )
+roughness_texture = ExtResource( 3 )
+normal_enabled = true
+normal_scale = 1.0
+normal_texture = ExtResource( 5 )
+ao_enabled = true
+ao_light_affect = 0.0
+ao_texture = ExtResource( 4 )
+ao_on_uv2 = false
+ao_texture_channel = 0
+depth_enabled = true
+depth_scale = 0.05
+depth_deep_parallax = false
+depth_flip_tangent = false
+depth_flip_binormal = false
+depth_texture = ExtResource( 2 )
+
+[node name="RockSquare" type="CSGBox"]
+use_collision = true
+material = SubResource( 1 )

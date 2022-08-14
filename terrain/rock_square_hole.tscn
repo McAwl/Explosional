@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://assets/materials/rock.tres" type="Material" id=1]
+
+[node name="RockSquareHole" type="CSGBox"]
+use_collision = true
+material = ExtResource( 1 )
+
+[node name="CSGBox" type="CSGBox" parent="."]
+transform = Transform( 1.75966, 0.378983, 0, -0.950573, 0.701558, 0, 0, 0, 1.11599, 0, 1.36787, 0 )
+operation = 2
+material = ExtResource( 1 )

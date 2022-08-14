@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://assets/materials/rock.tres" type="Material" id=1]
+
+[node name="RockSquare" type="CSGBox"]
+material = ExtResource( 1 )

@@ -79,7 +79,8 @@ var powerup_state: Dictionary = {
 
 func _ready():
 	Global.debug_print(5, "vehicle_body: _ready() global_transform.origin= "+str(self.global_transform.origin), "camera")
-	var _connect_change_weather = Global.connect("change_weather", self, "change_weather")
+	var _connect_change_weather = Global.connect("change_weather", self, "on_change_weather")
+	var _connect_update_weather = Global.connect("update_weather", self, "on_update_weather")
 	vehicle_state = ConfigVehicles.AliveState.ALIVE
 	#Global.debug_print(3, "vehicle_body: _ready(): Camera target pos="+str($CameraBase/Camera.target.global_transform.origin), "camera")
 
@@ -447,6 +448,43 @@ func _physics_process(delta):
 
 
 # Signal methods
+
+
+func on_change_weather(weather_change: Dictionary, change_duration_sec) -> void:
+	
+	Global.debug_print(3, "VehicleBody: received change_weather signal="+str(weather_change), "weather")
+	Global.debug_print(3, "VehicleBody: weather_change.keys()="+str(weather_change.keys()), "weather")
+	
+	for weather_item_key in weather_change.keys():
+		if "visibility" == weather_item_key:
+			Global.debug_print(3, "VehicleBody: changing weather: visibility", "weather")
+			Global.debug_print(3, "  old="+str(weather_change["visibility"][0])+", new="+str(weather_change["visibility"][1]), "weather")
+			if $CameraBase/Camera/TweenFar.is_active():
+				Global.debug_print(3, "VehicleBody: warning: starting $CameraBase/Camera/TweenFar but it's still active", "weather")
+			$CameraBase/Camera/TweenFar.interpolate_property($CameraBase/Camera, "far", weather_change["visibility"][0], weather_change["visibility"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$CameraBase/Camera/TweenFar.start()
+		if "snow_visible" == weather_item_key:
+			$CameraBase/Camera/ParticlesSnow.visible = weather_change["snow_visible"]
+
+
+func on_update_weather(weather_state) -> void:
+	
+	Global.debug_print(3, "VehicleBody: received update_weather signal="+str(weather_state), "weather")
+	
+	# Check visibility matches weather model and correct if needed. This can happen when vehicle respawns and the weather has changed
+	if not $CameraBase/Camera/TweenFar.is_active():  # only check if we're not already trying to change it via the Tween
+		if not Global.weather_model[weather_state["type"]]["visibility"] == $CameraBase/Camera.far:
+			Global.debug_print(3, "VehicleBody: update_weather(): error! visibility doesn't match weather model! Correcting...", "weather")
+			$CameraBase/Camera.far = Global.weather_model[weather_state["type"]]["visibility"]
+		
+	# Check snow visibility matches weather model and correct if needed. This can happen when vehicle respawns and the weather has changed 
+	if weather_state["type"] != Global.Weather.SNOW and $CameraBase/Camera/ParticlesSnow.visible:
+		Global.debug_print(3, "VehicleBody: error! ParticlesSnow.visible but weather is not SNOW. Correcting...", "weather")
+		$CameraBase/Camera/ParticlesSnow.hide()
+	elif weather_state["type"] == Global.Weather.SNOW and not $CameraBase/Camera/ParticlesSnow.visible:
+		Global.debug_print(3, "VehicleBody: error! ParticlesSnow not visible but weather is SNOW. Correcting...", "weather")
+		$CameraBase/Camera/ParticlesSnow.show()
+
 
 func _on_CarBody_body_entered(body):
 	if "Lava" in body.name:
@@ -1363,18 +1401,4 @@ func get_av_wheel_friction_slip():
 
 func power_up_effect(enable):
 	$Effects/Powerup.visible = enable
-
-
-func change_weather(weather_change: Dictionary, change_duration_sec) -> void:
-	Global.debug_print(3, "VehicleBody: weather_change.keys()="+str(weather_change.keys()))
-	for weather_item_key in weather_change.keys():
-		if "visibility" == weather_item_key:
-			Global.debug_print(3, "VehicleBody: changing weather: visibility", "weather")
-			Global.debug_print(3, "  old="+str(weather_change["visibility"][0])+", new="+str(weather_change["visibility"][1]), "weather")
-			if $CameraBase/Camera/TweenFar.is_active():
-				Global.debug_print(3, "VehicleBody: warning: starting $CameraBase/Camera/TweenFar but it's still active", "weather")
-			$CameraBase/Camera/TweenFar.interpolate_property($CameraBase/Camera, "far", weather_change["visibility"][0], weather_change["visibility"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$CameraBase/Camera/TweenFar.start()
-		if "snow_visible" == weather_item_key:
-			$CameraBase/Camera/ParticlesSnow.visible = weather_change["snow_visible"]
 

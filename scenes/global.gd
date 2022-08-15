@@ -2,6 +2,7 @@ extends Node
 
 
 signal change_weather
+signal update_weather
 
 enum Weather {
 	NORMAL=0,
@@ -151,7 +152,7 @@ func _process(delta):
 		weather_state["wind_strength"] = clamp(weather_state["wind_strength"], 0.0, mws)
 
 		weather_state["wind_volume_db"] = clamp(-21.0+(28.0*weather_state["wind_strength"]/500.0), -21.0, 12.0)
-
+		emit_signal("update_weather", weather_state)
 
 # Private methods
 

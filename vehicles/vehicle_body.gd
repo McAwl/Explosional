@@ -452,8 +452,8 @@ func _physics_process(delta):
 
 func on_change_weather(weather_change: Dictionary, change_duration_sec) -> void:
 	
-	Global.debug_print(3, "VehicleBody: received change_weather signal="+str(weather_change), "weather")
-	Global.debug_print(3, "VehicleBody: weather_change.keys()="+str(weather_change.keys()), "weather")
+	Global.debug_print(5, "VehicleBody: received change_weather signal="+str(weather_change), "weather")
+	#Global.debug_print(3, "VehicleBody: weather_change.keys()="+str(weather_change.keys()), "weather")
 	
 	for weather_item_key in weather_change.keys():
 		if "visibility" == weather_item_key:
@@ -469,20 +469,20 @@ func on_change_weather(weather_change: Dictionary, change_duration_sec) -> void:
 
 func on_update_weather(weather_state) -> void:
 	
-	Global.debug_print(3, "VehicleBody: received update_weather signal="+str(weather_state), "weather")
+	Global.debug_print(5, "VehicleBody: received update_weather signal="+str(weather_state), "weather")
 	
 	# Check visibility matches weather model and correct if needed. This can happen when vehicle respawns and the weather has changed
 	if not $CameraBase/Camera/TweenFar.is_active():  # only check if we're not already trying to change it via the Tween
 		if not Global.weather_model[weather_state["type"]]["visibility"] == $CameraBase/Camera.far:
-			Global.debug_print(3, "VehicleBody: update_weather(): error! visibility doesn't match weather model! Correcting...", "weather")
+			Global.debug_print(1, "VehicleBody: update_weather(): error! visibility doesn't match weather model! Correcting...", "weather")
 			$CameraBase/Camera.far = Global.weather_model[weather_state["type"]]["visibility"]
 		
 	# Check snow visibility matches weather model and correct if needed. This can happen when vehicle respawns and the weather has changed 
 	if weather_state["type"] != Global.Weather.SNOW and $CameraBase/Camera/ParticlesSnow.visible:
-		Global.debug_print(3, "VehicleBody: error! ParticlesSnow.visible but weather is not SNOW. Correcting...", "weather")
+		Global.debug_print(1, "VehicleBody: error! ParticlesSnow.visible but weather is not SNOW. Correcting...", "weather")
 		$CameraBase/Camera/ParticlesSnow.hide()
 	elif weather_state["type"] == Global.Weather.SNOW and not $CameraBase/Camera/ParticlesSnow.visible:
-		Global.debug_print(3, "VehicleBody: error! ParticlesSnow not visible but weather is SNOW. Correcting...", "weather")
+		Global.debug_print(1, "VehicleBody: error! ParticlesSnow not visible but weather is SNOW. Correcting...", "weather")
 		$CameraBase/Camera/ParticlesSnow.show()
 
 

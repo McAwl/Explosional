@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://vehicles/vehicle_body.gd" type="Script" id=2]
@@ -96,6 +96,9 @@ material = ExtResource( 11 )
 [sub_resource type="CapsuleShape" id=51]
 radius = 0.308364
 height = 1.43153
+
+[sub_resource type="BoxShape" id=69]
+extents = Vector3( 1.08814, 1, 1 )
 
 [sub_resource type="Gradient" id=3]
 offsets = PoolRealArray( 0, 0.245327, 0.714953, 1 )
@@ -337,7 +340,6 @@ draw_pass_1 = SubResource( 58 )
 
 [node name="Racer" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184 )
-visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Racer"]
 
@@ -379,6 +381,14 @@ shape = SubResource( 51 )
 
 [node name="CentreOfACollisionShape" type="Spatial" parent="VehicleTypes/Racer/CollisionShapes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.728945, -0.133028 )
+
+[node name="CollisionShape2" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
+transform = Transform( 0.366768, 0, 0, 0, 0.105462, 0, 0, 0, 0.17041, 0, 0.352972, -0.982356 )
+shape = SubResource( 69 )
+
+[node name="CollisionShape3" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
+transform = Transform( 0.326945, 0, 0, 0, 0.105462, 0, 0, 0, 0.17041, 0, 0.33334, 0.901072 )
+shape = SubResource( 69 )
 
 [node name="Effects" type="Spatial" parent="VehicleTypes/Racer"]
 
@@ -1485,6 +1495,7 @@ transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
 [node name="Truck" type="Spatial" parent="VehicleTypes"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.339322, 0 )
+visible = false
 
 [node name="CameraBasesTargets" type="Spatial" parent="VehicleTypes/Truck"]
 

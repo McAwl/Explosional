@@ -451,7 +451,7 @@ func _physics_process(delta):
 		else:
 			consecutive_clipping = 0
 		if consecutive_clipping > CONSECUTIVE_CLIPPING_ALERT:
-			Global.debug_print(09, "Error: "+str(consecutive_clipping) + " consecutive vehicle clipping detected..")
+			Global.debug_print(2, "Error: "+str(consecutive_clipping) + " consecutive vehicle clipping detected..")
 
 
 # Signal methods
@@ -956,7 +956,7 @@ func check_for_clipping() -> bool:
 				#else:
 				#	Global.debug_print(3, "raycast "+raycast.name+" is colliding with "+str(raycast.get_collider().name))
 		if num_wheels_clipped > 0:
-			#Global.debug_print(3, "applying impulse - wheel(s) are clipped")
+			Global.debug_print(3, "applying impulse - wheel(s) are clipped")
 			apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.05, rng.randf()*2.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.05) )   # from underneath, upwards force
 			$CheckAccelDamage.start(2.0)  # disable damage for temporarily
 			return true

@@ -48,7 +48,6 @@ data = PoolVector3Array( 1, 0, 1, 0.9692, 0, 1, 1, 0, 0.9692, 0.9692, 0, 1, 0.96
 [node name="Spatial" type="MeshInstance"]
 transform = Transform( 64, 0, 0, 0, 64, 0, 0, 0, 64, 0, 0, 0 )
 mesh = SubResource( 7 )
-material/0 = null
 
 [node name="OmniLight" type="OmniLight" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0666872, 0.318412, -0.0368273 )

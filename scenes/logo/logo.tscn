@@ -110,9 +110,6 @@ margin_right = 1918.0
 margin_bottom = 1081.0
 texture = ExtResource( 6 )
 expand = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Tree" type="TextureRect" parent="."]
 visible = false

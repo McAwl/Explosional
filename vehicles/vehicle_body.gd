@@ -4,6 +4,7 @@ class_name VehicleBodyExplosional
 const SCRIPT_VEHICLE_DETACH_RIGID_BODIES = preload("res://vehicles/vehicle_detach_rigid_bodies.gd")  # Global.vehicle_detach_rigid_bodies_folder)
 const CHECK_ACCEL_DAMAGE_INTERVAL: float = 0.5
 const MIN_SPEED_POWERUP_KM_HR = 90.0
+const CONSECUTIVE_CLIPPING_ALERT: int = 10
 var new_exploded_vehicle_part: Resource = load(Global.exploded_vehicle_part_folder)
 
 export var engine_force_value: float = ConfigVehicles.ENGINE_FORCE_VALUE_DEFAULT  #40
@@ -60,6 +61,7 @@ var acceleration_fwd_0_1_ewma: float = 0.0
 var acceleration_fwd_0_1: float = 0.0
 var vel: Vector3
 var accel_damage_enabled: bool = false
+var consecutive_clipping: int = 0
 var fwd_mps: float = 0.0
 var old_fwd_mps_0_1: float = 0.0
 var fwd_mps_0_1_ewma: float = 0.0
@@ -312,8 +314,8 @@ func _physics_process(delta):
 						total_num_wheels += 1
 						if wh.is_in_contact():
 							num_wheels_in_contact += 1
-							if timer_1_sec_physics < 0.0:
-								Global.debug_print(8, "Wheel "+str(wh)+" in contact with "+str(wh.get_contact_body().name), "vehicle_traction")
+							#if timer_1_sec_physics < 0.0:
+							#	Global.debug_print(8, "Wheel "+str(wh)+" in contact with "+str(wh.get_contact_body().name), "vehicle_traction")
 			if num_wheels_in_contact > 0 and num_wheels_in_contact < total_num_wheels:
 				engine_force_adjustment_4wd = 1.0 + ((float(total_num_wheels) / float(num_wheels_in_contact))/2.0)
 			if timer_1_sec_physics < 0.0:
@@ -444,7 +446,12 @@ func _physics_process(delta):
 
 	if timer_1_sec_physics < 0.0:
 		timer_1_sec_physics = 1.0
-		check_for_clipping()
+		if check_for_clipping():
+			consecutive_clipping += 1
+		else:
+			consecutive_clipping = 0
+		if consecutive_clipping > CONSECUTIVE_CLIPPING_ALERT:
+			Global.debug_print(09, "Error: "+str(consecutive_clipping) + " consecutive vehicle clipping detected..")
 
 
 # Signal methods
@@ -937,7 +944,7 @@ func set_icon() -> void:
 	get_player().get_hud().get_node("icon_"+ConfigWeapons.Type.keys()[weapon_select].to_lower()).show()
 
 
-func check_for_clipping() -> void:
+func check_for_clipping() -> bool:
 	if abs(fwd_mps_0_1) < 0.1:  # stationary
 		#Global.debug_print(3, "Checking for clipping")
 		var num_wheels_clipped: int = 0
@@ -952,6 +959,8 @@ func check_for_clipping() -> void:
 			#Global.debug_print(3, "applying impulse - wheel(s) are clipped")
 			apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.05, rng.randf()*2.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.05) )   # from underneath, upwards force
 			$CheckAccelDamage.start(2.0)  # disable damage for temporarily
+			return true
+	return false
 	
 
 func update_speed() -> void:

@@ -2,12 +2,12 @@
 
 importer="ogg_vorbis"
 type="AudioStreamOGGVorbis"
-path="res://.import/587193__derplayer__explosion-big-02 - Copy.ogg-ea31b138bb829a154e0734e9fab7f43f.oggstr"
+path="res://.import/587193__derplayer__explosion-big-02 - Copy.ogg-f4f89a5514985dd92d3578ec2ae8bf10.oggstr"
 
 [deps]
 
-source_file="res://assets/audio/sounds/587193__derplayer__explosion-big-02 - Copy.ogg"
-dest_files=[ "res://.import/587193__derplayer__explosion-big-02 - Copy.ogg-ea31b138bb829a154e0734e9fab7f43f.oggstr" ]
+source_file="res://assets/Audio/sounds/587193__derplayer__explosion-big-02 - Copy.ogg"
+dest_files=[ "res://.import/587193__derplayer__explosion-big-02 - Copy.ogg-f4f89a5514985dd92d3578ec2ae8bf10.oggstr" ]
 
 [params]
 

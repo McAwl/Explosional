@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/371041__morganpurkis__single-gunshot-3.wav-b70b47dc30edfdc12c19b45877c1e828.sample"
+path="res://.import/371041__morganpurkis__single-gunshot-3.wav-8f912c3cd94108e7813411d32206156b.sample"
 
 [deps]
 
-source_file="res://assets/audio/sounds/371041__morganpurkis__single-gunshot-3.wav"
-dest_files=[ "res://.import/371041__morganpurkis__single-gunshot-3.wav-b70b47dc30edfdc12c19b45877c1e828.sample" ]
+source_file="res://assets/Audio/sounds/371041__morganpurkis__single-gunshot-3.wav"
+dest_files=[ "res://.import/371041__morganpurkis__single-gunshot-3.wav-8f912c3cd94108e7813411d32206156b.sample" ]
 
 [params]
 
@@ -17,5 +17,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

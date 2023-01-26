@@ -2,12 +2,12 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/84914__swiftoid__wind-howl.mp3-80c29d79dd60e6805e6592f7accae9bb.mp3str"
+path="res://.import/84914__swiftoid__wind-howl.mp3-15cea7a06a0c0adf77fb66f5f7967753.mp3str"
 
 [deps]
 
-source_file="res://assets/audio/sounds/84914__swiftoid__wind-howl.mp3"
-dest_files=[ "res://.import/84914__swiftoid__wind-howl.mp3-80c29d79dd60e6805e6592f7accae9bb.mp3str" ]
+source_file="res://assets/Audio/sounds/84914__swiftoid__wind-howl.mp3"
+dest_files=[ "res://.import/84914__swiftoid__wind-howl.mp3-15cea7a06a0c0adf77fb66f5f7967753.mp3str" ]
 
 [params]
 

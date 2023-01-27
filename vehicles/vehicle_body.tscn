@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=2]
+[gd_scene load_steps=50 format=2]
 
 [ext_resource path="res://assets/audio/sounds/420356__eponn__crash.wav" type="AudioStream" id=1]
 [ext_resource path="res://vehicles/vehicle_body.gd" type="Script" id=2]
@@ -99,6 +99,9 @@ height = 1.43153
 
 [sub_resource type="BoxShape" id=69]
 extents = Vector3( 0.222216, 1, 0.419351 )
+
+[sub_resource type="BoxShape" id=70]
+extents = Vector3( 0.691594, 0.148854, 0.588728 )
 
 [sub_resource type="Gradient" id=3]
 offsets = PoolRealArray( 0, 0.245327, 0.714953, 1 )
@@ -413,6 +416,10 @@ shape = SubResource( 69 )
 [node name="CollisionShape9" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
 transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.000904164, -0.628671, 0.475714, -0.0174038 )
 shape = SubResource( 69 )
+
+[node name="CollisionShape10" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.414655, 0 )
+shape = SubResource( 70 )
 
 [node name="Effects" type="Spatial" parent="VehicleTypes/Racer"]
 

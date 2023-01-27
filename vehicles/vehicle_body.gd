@@ -969,6 +969,15 @@ func check_for_clipping() -> bool:
 				transform.origin += Vector3.RIGHT*0.5
 			if left_wheels_clipped == false and right_wheels_clipped == true:
 				transform.origin += Vector3.LEFT*0.5
+			# Apply some random sideways movements as well
+			if rng.randf() < 0.5:
+				transform.origin += Vector3.LEFT*0.5
+			else:
+				transform.origin += Vector3.RIGHT*0.5
+			if rng.randf() < 0.5:
+				transform.origin += Vector3.FORWARD*0.5
+			else:
+				transform.origin += Vector3.BACK*0.5
 			#Global.debug_print(3, "vehicle_body: check-for_clipping(): applying impulse - wheel(s) are clipped")
 			#apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.05, rng.randf()*2.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.05) )   # from underneath, upwards force
 			$CheckAccelDamage.start(2.0)  # disable damage for temporarily

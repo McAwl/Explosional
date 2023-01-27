@@ -98,7 +98,7 @@ radius = 0.308364
 height = 1.43153
 
 [sub_resource type="BoxShape" id=69]
-extents = Vector3( 1.08814, 1, 1 )
+extents = Vector3( 0.222216, 1, 0.419351 )
 
 [sub_resource type="Gradient" id=3]
 offsets = PoolRealArray( 0, 0.245327, 0.714953, 1 )
@@ -390,6 +390,30 @@ shape = SubResource( 69 )
 transform = Transform( 0.326945, 0, 0, 0, 0.105462, 0, 0, 0, 0.17041, 0, 0.33334, 0.901072 )
 shape = SubResource( 69 )
 
+[node name="CollisionShape4" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
+transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.000904164, 0.595526, 0.475714, 1.33811 )
+shape = SubResource( 69 )
+
+[node name="CollisionShape6" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
+transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.000904164, -0.602009, 0.475714, 1.33811 )
+shape = SubResource( 69 )
+
+[node name="CollisionShape5" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
+transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.000904164, 0.595526, 0.475714, -1.25192 )
+shape = SubResource( 69 )
+
+[node name="CollisionShape8" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
+transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.000904164, 0.595526, 0.475714, -0.00340993 )
+shape = SubResource( 69 )
+
+[node name="CollisionShape7" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
+transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.000904164, -0.628671, 0.475714, -1.25192 )
+shape = SubResource( 69 )
+
+[node name="CollisionShape9" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
+transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.000904164, -0.628671, 0.475714, -0.0174038 )
+shape = SubResource( 69 )
+
 [node name="Effects" type="Spatial" parent="VehicleTypes/Racer"]
 
 [node name="Damage" type="Spatial" parent="VehicleTypes/Racer/Effects"]
@@ -577,26 +601,26 @@ transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437,
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
+[node name="RayCastWheelLeft1" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.741826, 0.0891303, 1.04852 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.786025, 0.0504065, -0.785482 )
+[node name="RayCastWheelLeft2" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.753279, 0.089927, -0.784482 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
+[node name="RayCastWheelRight1" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.750975, 0.0556056, 1.01756 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.753279, 0.089927, -0.784482 )
+[node name="RayCastWheelRight2" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.786025, 0.0504065, -0.785482 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
@@ -966,25 +990,25 @@ transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437,
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
+[node name="RayCastWheelLeft1" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.886215, -0.0541788, 1.046 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
+[node name="RayCastWheelLeft2" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.885998, -0.0273803, -0.814 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
+[node name="RayCastWheelRight1" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.928464, -0.0852042, 1.03803 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
+[node name="RayCastWheelRight2" type="RayCast" parent="VehicleTypes/Rally/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.834748, -0.0861212, -0.774 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
@@ -1335,38 +1359,38 @@ transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437,
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
+[node name="RayCastWheelLeft1" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.995554, -0.0263021, 1.07156 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
+[node name="RayCastWheelLeft2" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.959374, -0.0285062, -0.0256135 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collide_with_areas = true
+
+[node name="RayCastWheelLeft3" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.00449, -0.0168464, -1.05442 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
+[node name="RayCastWheelRight1" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, -0.988651, -0.0411682, 1.038 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1158, -0.0326644, -1.06772 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collide_with_areas = true
-
-[node name="RayCastWheel5" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
+[node name="RayCastWheelRight2" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.01559, -0.0510206, -0.0672405 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel6" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.959374, -0.0285062, -0.0256135 )
+[node name="RayCastWheelRight3" type="RayCast" parent="VehicleTypes/Tank/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1158, -0.0326644, -1.06772 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
@@ -1792,25 +1816,25 @@ transform = Transform( 1, 0, 0, 0, 0.0187437, 0.999824, 0, -0.999824, 0.0187437,
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
 
-[node name="RayCastWheel1" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.84193, -0.264085, -1.09202 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collide_with_areas = true
-
-[node name="RayCastWheel2" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.869947, -0.250144, -3.13202 )
-enabled = true
-cast_to = Vector3( 0, -0.5, 0 )
-collide_with_areas = true
-
-[node name="RayCastWheel3" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
+[node name="RayCastWheelLeft1" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, -0.000690771, 0, 0.000690771, 1, 0.790202, -0.219349, -1.097 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )
 collide_with_areas = true
 
-[node name="RayCastWheel4" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
+[node name="RayCastWheelLeft2" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.869947, -0.250144, -3.13202 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collide_with_areas = true
+
+[node name="RayCastWheelRight1" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.84193, -0.264085, -1.09202 )
+enabled = true
+cast_to = Vector3( 0, -0.5, 0 )
+collide_with_areas = true
+
+[node name="RayCastWheelRight2" type="RayCast" parent="VehicleTypes/Truck/Raycasts"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.911611, -0.218205, -3.20793 )
 enabled = true
 cast_to = Vector3( 0, -0.5, 0 )

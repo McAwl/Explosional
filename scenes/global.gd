@@ -190,11 +190,14 @@ func debug_print(_log_level: int, message: String, _log_topic=null) -> void:
 		var space_str = ""
 		for s in _log_level:
 			space_str += " "
-		print(space_str+str(message))
+		if _log_topic != null:
+			print(space_str+str(message)+" [log due to log_level; log_topic: "+str(_log_topic)+"]")
+		else:
+			print(space_str+str(message))
 	elif _log_topic != null:
 		if _log_topic in log_topics:
 			var space_str = ""
 			for s in _log_level:
 				space_str += " "
-			print(space_str+str(message))
+			print(space_str+str(message)+" [log due to log_topic: "+str(_log_topic)+"]")
 

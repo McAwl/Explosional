@@ -30,7 +30,7 @@ func _process(_delta):
 		if npu[0] < npu[2]:
 			#Global.debug_print(3, "PowerupType.keys() = "+str(ConfigWeapons.PowerupType.keys()), "powerups")
 			var type_str = ConfigWeapons.PowerupType.keys()[npu[1]]
-			Global.debug_print(3, "Respawning new powerup of type "+type_str, "powerups")
+			Global.debug_print(5, "Respawning new powerup of type "+type_str, "powerups")
 			var new_powerup = load(Global.power_up_folder).instance()  # it will set to 0=MOVE automatically
 			new_powerup.rng.randomize()
 			new_powerup.get_node("TimerPeriodicMove").wait_time = 5.0 + (new_powerup.rng.randf()*10.0)
@@ -56,9 +56,9 @@ func _on_TimerCheckPowerups_timeout():
 
 
 func _on_TimerNukePowerUp_timeout():
-	Global.debug_print(3, "_on_TimerNukePowerUp_timeout")
+	Global.debug_print(5, "_on_TimerNukePowerUp_timeout")
 	if $TimerNukePowerUp.is_stopped():
-		Global.debug_print(3, "Respawning new_nuke_powerup")
+		Global.debug_print(5, "Respawning new_nuke_powerup")
 		var new_nuke_powerup = load(Global.power_up_folder).instance()
 		new_nuke_powerup.name = "PowerUpNuke"
 		new_nuke_powerup.type = ConfigWeapons.PowerupType.NUKE

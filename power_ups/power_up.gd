@@ -48,7 +48,7 @@ func _process(delta):
 
 	if type == ConfigWeapons.PowerupType.HEALTH or type == ConfigWeapons.PowerupType.SHIELD:
 		if state == State.MOVE:
-			Global.debug_print(3, "Moving powerup "+str(name), "powerups")
+			Global.debug_print(5, "Moving powerup "+str(name), "powerups")
 			translation = Vector3(0.0+rng.randf()*600.0, 50.0, 0.0+rng.randf()*600.0)  # 600x600 covers the terrain
 			state = State.CHECK_RAYCAST  # check the raycast collision on the next physics process
 
@@ -59,25 +59,25 @@ func _physics_process(_delta):
 		# alternate between moving the powerup and checking its raycast - doing both at once seems to cause performance issues
 		if state == State.CHECK_RAYCAST:
 			if $RayCast.is_colliding():
-				Global.debug_print(3, "Powerup "+str(name)+" raycast is colliding", "powerups")
+				Global.debug_print(4, "Powerup "+str(name)+" raycast is colliding", "powerups")
 				if "terrain" in $RayCast.get_collider().name.to_lower() and not "lava" in $RayCast.get_collider().name.to_lower():
-					Global.debug_print(3, "Powerup "+str(name)+" raycast is colliding with the terrain. Setting powerup active...", "powerups")
+					Global.debug_print(4, "Powerup "+str(name)+" raycast is colliding with the terrain. Setting powerup active...", "powerups")
 					var collision_point = $RayCast.get_collision_point()
 					translation = Vector3(collision_point.x, collision_point.y+0.5, collision_point.z)
 					state = State.ACTIVE
 					#$MoveSound.play()
 				else:
-					Global.debug_print(3, "Powerup "+str(name)+" raycast is not colliding with the terrain. Moving...", "powerups")
+					Global.debug_print(4, "Powerup "+str(name)+" raycast is not colliding with the terrain. Moving...", "powerups")
 					state = State.MOVE  # collided, but not where we want, so move it
 			else:
-				Global.debug_print(3, "Powerup "+str(name)+" raycast is not colliding with anything. Moving...", "powerups")
+				Global.debug_print(4, "Powerup "+str(name)+" raycast is not colliding with anything. Moving...", "powerups")
 				state = State.MOVE  # no collision, so move it
 
 
 
 func _on_Area_body_entered(body):
 	if body is VehicleBody:
-		Global.debug_print(3, "_on_Area_body_entered - VehicleBody", "powerups")
+		Global.debug_print(5, "_on_Area_body_entered - VehicleBody", "powerups")
 		body.power_up(type)
 		activated = true
 		$ActivationSound.play()
@@ -86,12 +86,12 @@ func _on_Area_body_entered(body):
 
 
 func disable() -> void:
-	Global.debug_print(3, "disabling NukePowerUp", "powerups")
+	Global.debug_print(4, "disabling NukePowerUp", "powerups")
 	visible = false
 	$Timer.start()
 	transform.origin.x += 20.0
 
 
 func _on_TimerPeriodicMove_timeout():
-	Global.debug_print(3, "_on_TimerPeriodicMove_timeout()", "powerups")
+	Global.debug_print(5, "_on_TimerPeriodicMove_timeout()", "powerups")
 	state = State.MOVE

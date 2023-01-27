@@ -2,7 +2,6 @@
 
 [ext_resource path="res://terrain/tree.tscn" type="PackedScene" id=2]
 
-
 [node name="Forest1" type="Spatial"]
 
 [node name="Tree1" parent="." instance=ExtResource( 2 )]

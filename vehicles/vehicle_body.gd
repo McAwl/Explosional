@@ -93,7 +93,7 @@ func _process(delta):
 		return
 
 	if set_pos == false:
-		Global.debug_print(1, "Exiting _process: set_pos == false", "camera")
+		Global.debug_print(3, "Exiting _process: set_pos == false", "camera")
 		set_global_transform_origin()
 
 	print_timer += delta
@@ -452,6 +452,7 @@ func _physics_process(delta):
 			consecutive_clipping = 0
 		if consecutive_clipping > CONSECUTIVE_CLIPPING_ALERT:
 			Global.debug_print(2, "Error: "+str(consecutive_clipping) + " consecutive vehicle clipping detected..")
+			transform.origin += Vector3.UP
 
 
 # Signal methods
@@ -623,9 +624,9 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	
 	pos = _pos
 	Global.debug_print(5, "vehicle_body: init(): global_transform.origin= "+str(self.global_transform.origin), "camera")
-	#Global.debug_print(3, "VehicleBody() init: StatePlayers.num_players()="+str(StatePlayers.num_players()))
+	#Global.debug_print(5, "VehicleBody() init: StatePlayers.num_players()="+str(StatePlayers.num_players()))
 	
-	#Global.debug_print(3, "vehicle="+str(get_type()))
+	#Global.debug_print(5, "vehicle="+str(get_type()))
 	# Depending on vehicle type, we look for its nodes
 	var vehicle_type_node: Spatial = $VehicleTypes.get_node(ConfigVehicles.nice_name[get_type()]) as Spatial
 	if vehicle_type_node == null:
@@ -635,12 +636,12 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 		#var ctm = ch.get_node(ch.name)
 		if ch.name in ["Raycasts", "Positions", "MeshInstances", "Lights", "CameraBasesTargets"]:  # move from 1 level down
 			vehicle_type_node.remove_child(ch)
-			Global.debug_print(3, "vehicle_body: init(): ch="+str(ch), "camera")
+			Global.debug_print(6, "vehicle_body: init(): ch="+str(ch), "camera")
 			if ch.name == "CameraBasesTargets":
 				if has_node("CameraBase"):
 					$CameraBase.add_child(ch)
 				else:
-					Global.debug_print(3, "Error: no CameraBase, children are: "+str(get_children()))
+					Global.debug_print(6, "Error: no CameraBase, children are: "+str(get_children()))
 			else:
 				add_child(ch)
 		elif ch.name in ["Wheels", "CollisionShapes", "Effects"]:  # move from 2 levels down
@@ -657,9 +658,9 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	if has_node("VehicleTypes"):
 		get_node("VehicleTypes").queue_free()
 	
-	Global.debug_print(3, "StatePlayers.players[player_number]['vehicle']="+str(get_type()))
+	Global.debug_print(5, "StatePlayers.players[player_number]['vehicle']="+str(get_type()))
 	if get_type() < 0:  # in ConfigVehicles.Type:
-		Global.debug_print(3, "init: vehicle_type "+str(get_type())+" not found in ConfigVehicles.Type="+str(ConfigVehicles.Type))
+		Global.debug_print(6, "init: vehicle_type "+str(get_type())+" not found in ConfigVehicles.Type="+str(ConfigVehicles.Type))
 		return false
 		
 	configure_vehicle_properties()
@@ -671,9 +672,9 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	#$CheckAccelDamage.wait_time = CHECK_ACCEL_DAMAGE_INTERVAL*8.0  # so the vehicle doesn't take damage with initial spawn fall
 	$CheckAccelDamage.start(4.0)
 	
-	Global.debug_print(3, "Initialising camera using pos="+str(_pos), "camera")
+	Global.debug_print(5, "Initialising camera using pos="+str(_pos), "camera")
 	init_camera(StatePlayers.num_players(), _pos)
-	Global.debug_print(3, "..done $CameraBase/Camera.global_transform="+str($CameraBase/Camera.global_transform), "camera")
+	Global.debug_print(5, "..done $CameraBase/Camera.global_transform="+str($CameraBase/Camera.global_transform), "camera")
 	
 	vehicle_parts_exploded = get_node("MeshInstances")
 	Global.debug_print(5, "vehicle_body: init() end: global_transform.origin= "+str(self.global_transform.origin), "camera")
@@ -768,7 +769,7 @@ func configure_vehicle_properties() -> void:
 func set_wheel_parameters(_vts) -> void:
 	
 	for wh in get_children():
-		Global.debug_print(3, "Setting "+str(ConfigVehicles.config[_vts]))
+		Global.debug_print(5, "set_wheel_parameters: Setting "+str(ConfigVehicles.config[_vts]), "wheel")
 		if wh is VehicleWheel:
 			wh.visible = true
 			wh.suspension_stiffness = ConfigVehicles.config[_vts]["suspension_stiffness"]
@@ -777,7 +778,7 @@ func set_wheel_parameters(_vts) -> void:
 			wh.wheel_roll_influence = ConfigVehicles.config[_vts]["wheel_roll_influence"]
 			#wh.suspension_max_force = 4.0 * mass   # as per https://github.com/godotengine/godot/issues/45339
 			if wh.suspension_travel > wh.wheel_rest_length:
-				Global.debug_print(3, "Warning wheel suspension_travel > wh.wheel_rest_length")
+				Global.debug_print(5, "Warning wheel suspension_travel > wh.wheel_rest_length", "wheel")
 			#for ch2 in wh.get_children():
 			#	if get_type() != ConfigVehicles.Type.TANK:
 			#		ch2.visible = true
@@ -945,6 +946,8 @@ func set_icon() -> void:
 
 
 func check_for_clipping() -> bool:
+	var left_wheels_clipped: bool = false
+	var right_wheels_clipped: bool = false
 	if abs(fwd_mps_0_1) < 0.1:  # stationary
 		#Global.debug_print(3, "Checking for clipping")
 		var num_wheels_clipped: int = 0
@@ -955,13 +958,25 @@ func check_for_clipping() -> bool:
 					#Global.debug_print(3, "raycast "+raycast.name+" not colliding")
 				#else:
 				#	Global.debug_print(3, "raycast "+raycast.name+" is colliding with "+str(raycast.get_collider().name))
+				if "left" in raycast.name.to_lower():
+					left_wheels_clipped = true
+				if "right" in raycast.name.to_lower():
+					right_wheels_clipped = true
 		if num_wheels_clipped > 0:
-			Global.debug_print(3, "applying impulse - wheel(s) are clipped")
-			apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.05, rng.randf()*2.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.05) )   # from underneath, upwards force
+			Global.debug_print(3, "vehicle_body: check-for_clipping(): applying upwards translation - wheel(s) are clipped")
+			transform.origin += Vector3.UP*0.5
+			if left_wheels_clipped == true and right_wheels_clipped == false:
+				transform.origin += Vector3.RIGHT*0.5
+			if left_wheels_clipped == false and right_wheels_clipped == true:
+				transform.origin += Vector3.LEFT*0.5
+			#Global.debug_print(3, "vehicle_body: check-for_clipping(): applying impulse - wheel(s) are clipped")
+			#apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.05, rng.randf()*2.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.05) )   # from underneath, upwards force
 			$CheckAccelDamage.start(2.0)  # disable damage for temporarily
 			return true
 	return false
-	
+
+
+
 
 func update_speed() -> void:
 	speed = linear_velocity.length()

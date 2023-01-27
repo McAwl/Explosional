@@ -162,7 +162,7 @@ func _physics_process(_delta):
 			#Global.debug_print(3, "ray translation="+str(ray.translation))
 			#ray.cast_to = Vector3(0, -1000, 0)
 			if ray.is_colliding():
-				Global.debug_print(3, " colliding with "+str(ray.get_collider().name), "procedural veg")
+				Global.debug_print(4, "main: colliding with "+str(ray.get_collider().name), "procedural veg")
 				if "terrain" in ray.get_collider().name.to_lower() and not "lava" in ray.get_collider().name.to_lower():
 					Global.debug_print(5, "colliding with terrain..", "procedural veg")
 					#Global.debug_print(3, "collision point = "+str(ray.get_collision_point()))
@@ -260,22 +260,22 @@ func _turn_airstrike_off() -> void:
 
 
 func _check_and_enforce_slow_motion() -> void:
-	Global.debug_print(3, "_check_and_enforce_slow_motion():", "slow motion")
-	Global.debug_print(3, "Engine.time_scale="+str(Engine.time_scale), "slow motion")
-	Global.debug_print(3, "$Effects/Wind.pitch_scale="+str($Effects/Wind.pitch_scale), "slow motion")
+	Global.debug_print(5, "_check_and_enforce_slow_motion():", "slow motion")
+	Global.debug_print(5, "Engine.time_scale="+str(Engine.time_scale), "slow motion")
+	Global.debug_print(5, "$Effects/Wind.pitch_scale="+str($Effects/Wind.pitch_scale), "slow motion")
 	if $TimerSlowMotion.is_stopped():
-		Global.debug_print(3, "$TimerSlowMotion.is_stopped()", "slow motion")
+		Global.debug_print(5, "$TimerSlowMotion.is_stopped()", "slow motion")
 		if not Engine.time_scale == 1.0 and not $TweenNormalMotion.is_active():
-			Global.debug_print(3, "not Engine.time_scale == 1.0 and not $TweenNormalMotion.is_active()", "slow motion")
+			Global.debug_print(5, "not Engine.time_scale == 1.0 and not $TweenNormalMotion.is_active()", "slow motion")
 			#Engine.time_scale = 1.0
 			$TweenNormalMotion.interpolate_property(Engine, "time_scale", 0.1, 1.0, Global.SLOW_MOTION_DURATION_SEC/2.0, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
 			$TweenNormalMotion.start()
 			in_slow_motion = false
 	else:
-		Global.debug_print(3, "not $TimerSlowMotion.is_stopped()", "slow motion")
+		Global.debug_print(5, "not $TimerSlowMotion.is_stopped()", "slow motion")
 		#Engine.time_scale = 0.1
 		if not $TweenSlowMotion.is_active():
-			Global.debug_print(3, "not $TweenSlowMotion.is_active()", "slow motion")
+			Global.debug_print(5, "not $TweenSlowMotion.is_active()", "slow motion")
 			$TweenSlowMotion.interpolate_property(Engine, "time_scale", 1.0, 0.1, Global.SLOW_MOTION_DURATION_SEC/2.0, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
 			$TweenSlowMotion.start()
 			in_slow_motion = true
@@ -379,6 +379,9 @@ func reset_game() -> void:
 func _on_PlayArea_body_exited(body):
 	if body is VehicleBody:
 		Global.debug_print(3, "main(): detected VehicleBody leaving the playing area", "damage")
+		if is_game_paused == true:
+			Global.debug_print(3, "main(): is_game_paused == true, ignoring", "damage")
+			return
 		Global.debug_print(3, "main(): body location = "+str(body.global_transform.origin), "damage")
 		Global.debug_print(3, "main(): body name = "+str(body.name), "damage")
 		Global.debug_print(3, "main(): lifetime_so_far_sec="+str(body.lifetime_so_far_sec), "damage")

@@ -118,7 +118,7 @@ func _physics_process(delta):
 		target = target.interpolate_with(target_reverse_third_person, modify_by_num_players * delta * FOLLOW_SPEED * follow_speed_multiplier)
 		
 	if timer_0_5s < 0:
-		Global.debug_print(3, "follow_camera: _physics_process(): global_transform="+str(global_transform.origin)+", target="+str(target.origin), "camera")
+		Global.debug_print(5, "follow_camera: _physics_process(): global_transform="+str(global_transform.origin)+", target="+str(target.origin), "camera")
 		if get_carbody().vehicle_state == ConfigVehicles.AliveState.ALIVE:  # else if the car has started exploding leave it at 3rd person for now TODO fix later? 
 			var iray
 			# check the camera can see the vehicle

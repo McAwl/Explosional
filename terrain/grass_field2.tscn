@@ -2,7 +2,6 @@
 
 [ext_resource path="res://terrain/grass_field.tscn" type="PackedScene" id=1]
 
-
 [node name="GrassField2" type="Spatial"]
 
 [node name="GrassField1" parent="." instance=ExtResource( 1 )]

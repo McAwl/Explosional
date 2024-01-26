@@ -75,9 +75,9 @@ show_behind_parent = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = -120.0
-margin_top = -82.3784
+margin_top = -82.0
 margin_right = 1800.0
-margin_bottom = 997.622
+margin_bottom = 1000.0
 texture = ExtResource( 2 )
 stretch_mode = 1
 
@@ -685,7 +685,7 @@ size_flags_vertical = 0
 margin_right = 1920.0
 margin_bottom = 27.0
 custom_fonts/font = ExtResource( 11 )
-text = "Explosional BETA v0.0.1 Build x 2024 McAwl"
+text = "Explosional BETA v1.7.0 Build x 2024 McAwl"
 align = 1
 valign = 1
 

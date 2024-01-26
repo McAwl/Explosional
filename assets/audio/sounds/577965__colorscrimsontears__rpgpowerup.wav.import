@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/577965__colorscrimsontears__rpgpowerup.wav-24baf358a03171165b129a39e3833176.sample"
+path="res://.import/577965__colorscrimsontears__rpgpowerup.wav-6197fbafffb8cfb0ccfba90453ef8d5a.sample"
 
 [deps]
 
-source_file="res://assets/Audio/sounds/577965__colorscrimsontears__rpgpowerup.wav"
-dest_files=[ "res://.import/577965__colorscrimsontears__rpgpowerup.wav-24baf358a03171165b129a39e3833176.sample" ]
+source_file="res://assets/audio/sounds/577965__colorscrimsontears__rpgpowerup.wav"
+dest_files=[ "res://.import/577965__colorscrimsontears__rpgpowerup.wav-6197fbafffb8cfb0ccfba90453ef8d5a.sample" ]
 
 [params]
 

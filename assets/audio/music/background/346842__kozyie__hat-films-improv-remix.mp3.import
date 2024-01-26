@@ -2,12 +2,12 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/346842__kozyie__hat-films-improv-remix.mp3-6b041f94b255edcd8dcff9427e4b9597.mp3str"
+path="res://.import/346842__kozyie__hat-films-improv-remix.mp3-9405a51376c52a7c35e6201c12344b33.mp3str"
 
 [deps]
 
-source_file="res://assets/Audio/music/background/346842__kozyie__hat-films-improv-remix.mp3"
-dest_files=[ "res://.import/346842__kozyie__hat-films-improv-remix.mp3-6b041f94b255edcd8dcff9427e4b9597.mp3str" ]
+source_file="res://assets/audio/music/background/346842__kozyie__hat-films-improv-remix.mp3"
+dest_files=[ "res://.import/346842__kozyie__hat-films-improv-remix.mp3-9405a51376c52a7c35e6201c12344b33.mp3str" ]
 
 [params]
 

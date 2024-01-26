@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/523651__matrixxx__powerup-05.wav-20fc02e887ba0818e29ec48f7d3f4467.sample"
+path="res://.import/523651__matrixxx__powerup-05.wav-d55676841cbce5ec93fa777bed675d8f.sample"
 
 [deps]
 
-source_file="res://assets/Audio/sounds/523651__matrixxx__powerup-05.wav"
-dest_files=[ "res://.import/523651__matrixxx__powerup-05.wav-20fc02e887ba0818e29ec48f7d3f4467.sample" ]
+source_file="res://assets/audio/sounds/523651__matrixxx__powerup-05.wav"
+dest_files=[ "res://.import/523651__matrixxx__powerup-05.wav-d55676841cbce5ec93fa777bed675d8f.sample" ]
 
 [params]
 

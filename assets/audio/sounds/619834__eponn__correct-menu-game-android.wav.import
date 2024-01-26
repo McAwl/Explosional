@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/619834__eponn__correct-menu-game-android.wav-16255bed9204575f1ee1e216a3cc6e65.sample"
+path="res://.import/619834__eponn__correct-menu-game-android.wav-3abf378f0d543cafa90aad5b4dd5d73b.sample"
 
 [deps]
 
-source_file="res://assets/Audio/sounds/619834__eponn__correct-menu-game-android.wav"
-dest_files=[ "res://.import/619834__eponn__correct-menu-game-android.wav-16255bed9204575f1ee1e216a3cc6e65.sample" ]
+source_file="res://assets/audio/sounds/619834__eponn__correct-menu-game-android.wav"
+dest_files=[ "res://.import/619834__eponn__correct-menu-game-android.wav-3abf378f0d543cafa90aad5b4dd5d73b.sample" ]
 
 [params]
 

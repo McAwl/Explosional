@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/563764__florianreichelt__bonfire-flames-sizzling.mp3-754a7475b9402c3853dceefd0efa5535.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/sounds/563764__florianreichelt__bonfire-flames-sizzling.mp3"
+dest_files=[ "res://.import/563764__florianreichelt__bonfire-flames-sizzling.mp3-754a7475b9402c3853dceefd0efa5535.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

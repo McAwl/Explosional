@@ -2,12 +2,12 @@
 
 importer="ogg_vorbis"
 type="AudioStreamOGGVorbis"
-path="res://.import/logo.ogg-fc49cce871598e5b43f7af14ab91d4ab.oggstr"
+path="res://.import/logo.ogg-55d9cb4e21f45f2429b28b153f590a13.oggstr"
 
 [deps]
 
-source_file="res://assets/Audio/music/intro/logo.ogg"
-dest_files=[ "res://.import/logo.ogg-fc49cce871598e5b43f7af14ab91d4ab.oggstr" ]
+source_file="res://assets/audio/music/intro/logo.ogg"
+dest_files=[ "res://.import/logo.ogg-55d9cb4e21f45f2429b28b153f590a13.oggstr" ]
 
 [params]
 

@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/204318__juancamiloorjuela__pick-up-health.wav-db26606de41422240a6a3fd511de77ce.sample"
+path="res://.import/204318__juancamiloorjuela__pick-up-health.wav-dcf3fc13887ab897de4ce66eb31eb84c.sample"
 
 [deps]
 
-source_file="res://assets/Audio/sounds/204318__juancamiloorjuela__pick-up-health.wav"
-dest_files=[ "res://.import/204318__juancamiloorjuela__pick-up-health.wav-db26606de41422240a6a3fd511de77ce.sample" ]
+source_file="res://assets/audio/sounds/204318__juancamiloorjuela__pick-up-health.wav"
+dest_files=[ "res://.import/204318__juancamiloorjuela__pick-up-health.wav-dcf3fc13887ab897de4ce66eb31eb84c.sample" ]
 
 [params]
 

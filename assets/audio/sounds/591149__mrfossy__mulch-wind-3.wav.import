@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/591149__mrfossy__mulch-wind-3.wav-7660c661581bb2a9e20bbc2b0e171dad.sample"
+path="res://.import/591149__mrfossy__mulch-wind-3.wav-185c8c3b2fced53295f46d39ac8343ed.sample"
 
 [deps]
 
-source_file="res://assets/Audio/sounds/591149__mrfossy__mulch-wind-3.wav"
-dest_files=[ "res://.import/591149__mrfossy__mulch-wind-3.wav-7660c661581bb2a9e20bbc2b0e171dad.sample" ]
+source_file="res://assets/audio/sounds/591149__mrfossy__mulch-wind-3.wav"
+dest_files=[ "res://.import/591149__mrfossy__mulch-wind-3.wav-185c8c3b2fced53295f46d39ac8343ed.sample" ]
 
 [params]
 

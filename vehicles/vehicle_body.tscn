@@ -223,6 +223,11 @@ fov = 74.0
 far = 200.0
 script = ExtResource( 9 )
 
+[node name="TimerVehicleCamDelayEnable" type="Timer" parent="CameraBase/Camera"]
+wait_time = 2.0
+one_shot = true
+autostart = true
+
 [node name="ParticlesCinders" type="Particles" parent="CameraBase/Camera"]
 transform = Transform( -0.998213, 0.00103028, 0.0597529, 0.0172799, 0.962119, 0.272084, -0.0572091, 0.27263, -0.960417, 0.0380429, 2.65526, -2.13394 )
 amount = 300
@@ -1756,55 +1761,58 @@ damping_relaxation = 0.8
 [node name="VehicleWheelMesh" parent="VehicleTypes/Truck/Wheels/Wheel4" instance=ExtResource( 6 )]
 transform = Transform( 1, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 
-[node name="DynamicGripTimer" type="Timer" parent="."]
+[node name="Timers" type="Node" parent="."]
+
+[node name="DynamicGripTimer" type="Timer" parent="Timers"]
 autostart = true
 
-[node name="CheckSkidTimer" type="Timer" parent="."]
+[node name="CheckSkidTimer" type="Timer" parent="Timers"]
 wait_time = 0.5
 autostart = true
 
-[node name="CheckWheelSpeedDustTimer" type="Timer" parent="."]
+[node name="CheckWheelSpeedDustTimer" type="Timer" parent="Timers"]
 wait_time = 0.25
 autostart = true
 
-[node name="CheckAccelDamage" type="Timer" parent="."]
+[node name="CheckAccelDamage" type="Timer" parent="Timers"]
 wait_time = 4.0
 one_shot = true
 
-[node name="TimerShieldCheckSpecialAbility" type="Timer" parent="."]
+[node name="TimerShieldCheckSpecialAbility" type="Timer" parent="Timers"]
 autostart = true
 
-[node name="TimerDisablePowerup" type="Timer" parent="."]
+[node name="TimerDisablePowerup" type="Timer" parent="Timers"]
 autostart = true
 
-[node name="TimerDisableShieldAbility" type="Timer" parent="."]
+[node name="TimerDisableShieldAbility" type="Timer" parent="Timers"]
 wait_time = 5.0
 one_shot = true
 
-[node name="TimerFlickerShield" type="Timer" parent="."]
+[node name="TimerFlickerShield" type="Timer" parent="Timers"]
 wait_time = 0.1
 autostart = true
 
-[node name="TimerCheckSpeedDemon5Achievement" type="Timer" parent="."]
+[node name="TimerCheckSpeedDemon5Achievement" type="Timer" parent="Timers"]
 wait_time = 5.0
 one_shot = true
 
-[node name="TimerCheckMaxSpeed" type="Timer" parent="."]
+[node name="TimerCheckMaxSpeed" type="Timer" parent="Timers"]
 autostart = true
 
-[node name="TimerDisableShieldPowerup" type="Timer" parent="."]
+[node name="TimerDisableShieldPowerup" type="Timer" parent="Timers"]
 wait_time = 30.0
 
+[connection signal="timeout" from="CameraBase/Camera/TimerVehicleCamDelayEnable" to="CameraBase/Camera" method="_on_TimerVehicleCamDelayEnable_timeout"]
 [connection signal="timeout" from="Effects/Audio/TimerCheckSoundPitch" to="Effects/Audio" method="_on_TimerCheckSoundPitch_timeout"]
 [connection signal="timeout" from="Effects/Audio/TimerCheckSoundVolume" to="Effects/Audio" method="_on_TimerCheckSoundVolume_timeout"]
-[connection signal="timeout" from="DynamicGripTimer" to="." method="_on_DynamicGripTimer_timeout"]
-[connection signal="timeout" from="CheckSkidTimer" to="." method="_on_CheckSkidTimer_timeout"]
-[connection signal="timeout" from="CheckWheelSpeedDustTimer" to="." method="_on_CheckWheelSpeedDustTimer_timeout"]
-[connection signal="timeout" from="CheckAccelDamage" to="." method="_on_CheckAccelDamage_timeout"]
-[connection signal="timeout" from="TimerShieldCheckSpecialAbility" to="." method="_on_TimerShieldCheckSpecialAbility_timeout"]
-[connection signal="timeout" from="TimerDisablePowerup" to="." method="_on_TimerDisablePowerup_timeout"]
-[connection signal="timeout" from="TimerDisableShieldAbility" to="." method="_on_TimerDisableShieldAbility_timeout"]
-[connection signal="timeout" from="TimerFlickerShield" to="." method="_on_TimerFlickerShield_timeout"]
-[connection signal="timeout" from="TimerCheckSpeedDemon5Achievement" to="." method="_on_TimerCheckSpeedDemon5Achievement_timeout"]
-[connection signal="timeout" from="TimerCheckMaxSpeed" to="." method="_on_TimerCheckMaxSpeed_timeout"]
-[connection signal="timeout" from="TimerDisableShieldPowerup" to="." method="_on_TimerDisableShieldPowerup_timeout"]
+[connection signal="timeout" from="Timers/DynamicGripTimer" to="." method="_on_DynamicGripTimer_timeout"]
+[connection signal="timeout" from="Timers/CheckSkidTimer" to="." method="_on_CheckSkidTimer_timeout"]
+[connection signal="timeout" from="Timers/CheckWheelSpeedDustTimer" to="." method="_on_CheckWheelSpeedDustTimer_timeout"]
+[connection signal="timeout" from="Timers/CheckAccelDamage" to="." method="_on_CheckAccelDamage_timeout"]
+[connection signal="timeout" from="Timers/TimerShieldCheckSpecialAbility" to="." method="_on_TimerShieldCheckSpecialAbility_timeout"]
+[connection signal="timeout" from="Timers/TimerDisablePowerup" to="." method="_on_TimerDisablePowerup_timeout"]
+[connection signal="timeout" from="Timers/TimerDisableShieldAbility" to="." method="_on_TimerDisableShieldAbility_timeout"]
+[connection signal="timeout" from="Timers/TimerFlickerShield" to="." method="_on_TimerFlickerShield_timeout"]
+[connection signal="timeout" from="Timers/TimerCheckSpeedDemon5Achievement" to="." method="_on_TimerCheckSpeedDemon5Achievement_timeout"]
+[connection signal="timeout" from="Timers/TimerCheckMaxSpeed" to="." method="_on_TimerCheckMaxSpeed_timeout"]
+[connection signal="timeout" from="Timers/TimerDisableShieldPowerup" to="." method="_on_TimerDisableShieldPowerup_timeout"]

@@ -92,10 +92,10 @@ var title_screen_folder: String = "res://scenes/title_screen/title_screen.tscn"
 
 var start_scene: String = "res://scenes/start/start.tscn"
 
-var log_level = 3  # 1=error, 2=warning, etc up to 10 for very nested loops
+var log_level = 2  # 1=error, 2=warning, etc up to 10 for very nested loops
 
 # include a string here and any log command (regardless of log_level) with this as 3rd argument will print
-var log_topics = []  # eg, "truck_mine", "weapon", "missile""max_damage" "camera" "missile" "mine" "damage" "vehicle_respawn"
+var log_topics = ["camera", "powerup"]  # eg, "truck_mine", "weapon", "missile""max_damage" "camera" "missile" "mine" "damage" "vehicle_respawn"
 
 # main scene
 var main_scene: String = "res://scenes/main/main.tscn"
@@ -213,18 +213,19 @@ func toggle_weather() -> void:
 
 
 func debug_print(_log_level: int, message: String, _log_topic=null) -> void:
+	var time = Time.get_time_dict_from_system()
 	if _log_level <= log_level:
 		var space_str = ""
 		for s in _log_level:
 			space_str += " "
 		if _log_topic != null:
-			print(space_str+str(message)+" [log due to log_level; log_topic: "+str(_log_topic)+"]")
+			print( ("%02d:%02d:%02d" + space_str+str(message)+" [log due to log_level; log_topic: "+str(_log_topic)+"]") % [time.hour, time.minute, time.second])
 		else:
-			print(space_str+str(message))
+			print( ("%02d:%02d:%02d" + space_str+str(message)) % [time.hour, time.minute, time.second])
 	elif _log_topic != null:
 		if _log_topic in log_topics:
 			var space_str = ""
 			for s in _log_level:
 				space_str += " "
-			print(space_str+str(message)+" [log due to log_topic: "+str(_log_topic)+"]")
+			print( ("%02d:%02d:%02d" + space_str+str(message)+" [log due to log_topic: "+str(_log_topic)+"]") % [time.hour, time.minute, time.second])
 

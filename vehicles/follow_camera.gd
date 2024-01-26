@@ -176,3 +176,7 @@ func _physics_process(delta):
 	var t: Transform = get_transform()
 	t.basis = Basis(t.basis[0], deg2rad(angle_v_adjust)) * t.basis
 	set_transform(t)
+
+
+func _on_TimerVehicleCamDelayEnable_timeout():
+	pass # Replace with function body.

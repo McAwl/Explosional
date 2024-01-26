@@ -25,7 +25,18 @@ func _on_Timer_timeout():
 
 
 func change_scene():
-	var next_level_resource = load(Global.title_screen_folder)
+	var next_level_resource = load(Global.main_menu_scene)  # load(Global.title_screen_folder)
 	var next_level = next_level_resource.instance()
+	next_level.game_active = false  # 
 	get_tree().root.call_deferred("add_child", next_level)
+	next_level.configure()  #
+	queue_free()
+	
+	
+	
+	#var next_level_resource = load(Global.main_menu_scene)
+	#var next_level = next_level_resource.instance()
+	#next_level.game_active = false
+	#get_tree().root.call_deferred("add_child", next_level)
+	#next_level.configure()
 	queue_free()

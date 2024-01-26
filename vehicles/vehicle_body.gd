@@ -587,7 +587,7 @@ func _on_CheckAccelDamage_timeout():
 func _on_TimerShieldCheckSpecialAbility_timeout():
 	if get_type() == ConfigVehicles.Type.RACER:
 		if fwd_mps > (MIN_SPEED_POWERUP_KM_HR/200) * (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]:
-			$TimerDisableShieldAbility.start(5.0)
+			$Timers/TimerDisableShieldAbility.start(5.0)
 			if special_ability_state["shield"] == false:
 				special_ability_state["shield"] = true
 				$Effects/Shield.show()
@@ -612,10 +612,10 @@ func _on_TimerCheckSpeedDemon5Achievement_timeout():
 func _on_TimerCheckMaxSpeed_timeout():
 	var max_speed_limit_mps = (1.0/3.6) * ConfigVehicles.config[get_type()]["max_speed_km_hr"]
 	if fwd_mps >= max_speed_limit_mps:
-		if $TimerCheckSpeedDemon5Achievement.is_stopped():
-			$TimerCheckSpeedDemon5Achievement.start()
+		if $Timers/TimerCheckSpeedDemon5Achievement.is_stopped():
+			$Timers/TimerCheckSpeedDemon5Achievement.start()
 	else:
-		$TimerCheckSpeedDemon5Achievement.stop()
+		$Timers/TimerCheckSpeedDemon5Achievement.stop()
 
 
 # Public methods
@@ -681,7 +681,7 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 	
 	total_damage = 0.0
 	#$CheckAccelDamage.wait_time = CHECK_ACCEL_DAMAGE_INTERVAL*8.0  # so the vehicle doesn't take damage with initial spawn fall
-	$CheckAccelDamage.start(4.0)
+	$Timers/CheckAccelDamage.start(4.0)
 	
 	Global.debug_print(5, "Initialising camera using pos="+str(_pos), "camera")
 	init_camera(StatePlayers.num_players(), _pos)
@@ -991,7 +991,7 @@ func check_for_clipping() -> bool:
 				transform.origin += Vector3.BACK*0.5
 			#Global.debug_print(3, "vehicle_body: check-for_clipping(): applying impulse - wheel(s) are clipped")
 			#apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.05, rng.randf()*2.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.05) )   # from underneath, upwards force
-			$CheckAccelDamage.start(2.0)  # disable damage for temporarily
+			$Timers/CheckAccelDamage.start(2.0)  # disable damage for temporarily
 			return true
 	return false
 
@@ -1022,10 +1022,10 @@ func add_damage(amount: float, damage_type: int) -> void:
 	
 	Global.debug_print(3, "add_damage() type "+str(damage_type)+"="+str(Global.DamageType.keys()[damage_type]), "damage")
 	
-	if not $CheckAccelDamage.is_inside_tree():
+	if not $Timers/CheckAccelDamage.is_inside_tree():
 		Global.debug_print(1, "add_damage(): Error: not $CheckAccelDamage.is_inside_tree()", "damage")
 
-	$CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
+	$Timers/CheckAccelDamage.start(CHECK_ACCEL_DAMAGE_INTERVAL)  # make sure we don't check again for a small duration
 	accel_damage_enabled = false
 	
 	if powerup_state["shield"]["enabled"] == true and not damage_type == Global.DamageType.LAVA and not damage_type == Global.DamageType.OFF_MAP:
@@ -1101,6 +1101,7 @@ func check_engine_force_value() -> void:
 
 func restore_half_health(): # ie remove half the current damage
 	total_damage = total_damage/2
+	align_effects_with_damage()  # otherwise flames stay there after healing
 	
 	
 func restore_health(amount):
@@ -1261,7 +1262,7 @@ func set_global_transform_origin() -> void:
 
 
 func power_up(type: int) -> void:
-	Global.debug_print(3, "power_up: power_up = "+str(type))
+	Global.debug_print(3, "power_up: power_up = "+str(type), "powerup")
 	if type == ConfigWeapons.PowerupType.NUKE:
 		weapons_state[ConfigWeapons.Type.NUKE].enabled = true
 		weapon_select = ConfigWeapons.Type.NUKE
@@ -1275,7 +1276,9 @@ func power_up(type: int) -> void:
 		powerup_state["shield"]["max_hits"] = 3
 		$TimerDisableShieldPowerup.start(30.0)
 	elif type == ConfigWeapons.PowerupType.HEALTH:
+		Global.debug_print(3, "power_up: HEALTH ", "powerup")
 		if total_damage > 0:
+			Global.debug_print(3, "power_up: restoring half health ", "powerup")
 			restore_half_health()
 			# reset_total_damage()
 

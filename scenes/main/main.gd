@@ -74,16 +74,20 @@ func _ready():
 	$DirectionalLightMoon/DayNightAnimation.play("daynightcycle")
 	$DirectionalLightMoon/DayNightAnimation.seek(anim_time)
 
-	# Add veg instances, but place later in physics as we need raycasts
-	for _nt in range(0, num_trees_total):
-		var tree: AnimatedTree = tree_resource.instance()
-		$Vegetation/Trees.add_child(tree)
-		trees.append(tree.get_instance_id())
-		
-	for _ng in range(0, num_grasses_total): 
-		var grass: AnimatedGrass = grass_resource.instance()
-		$Vegetation/Grass.add_child(grass)
-		grasses.append(grass.get_instance_id())
+	if Global.build_options["foliage"]:
+		# Add veg instances, but place later in physics as we need raycasts
+		for _nt in range(0, num_trees_total):
+			var tree: AnimatedTree = tree_resource.instance()
+			$Vegetation/Trees.add_child(tree)
+			trees.append(tree.get_instance_id())
+			
+		for _ng in range(0, num_grasses_total): 
+			var grass: AnimatedGrass = grass_resource.instance()
+			$Vegetation/Grass.add_child(grass)
+			grasses.append(grass.get_instance_id())
+	
+	if Global.build_options["platforms"] == false:
+		$Structures/Platforms.queue_free()
 
 
 func _process(delta):
@@ -100,38 +104,40 @@ func _process(delta):
 	if Input.is_action_pressed("toggle_hud"):
 		for player in get_players():
 			player.toggle_hud()
-		
-	air_strike_state["interval_so_far_sec"] += delta
-	air_strike_state["duration_so_far_sec"] += delta
 	
-	if air_strike_state["on"] == false and air_strike_state["interval_so_far_sec"] > Global.air_strike_config["interval_sec"] and Global.game_mode != Global.GameMode.PEACEFUL:
-		_turn_airstrike_on()
-	elif air_strike_state["on"] == true and air_strike_state["duration_so_far_sec"] > Global.air_strike_config["duration_sec"]:
-		_turn_airstrike_off()
-		#Global.debug_print(3, "Turing airstrike off")
-		#for node in get_tree().root.get_node("TownScene").get_children():  #find_node("*Bomb*":
-			#Global.debug_print(3, "After airstrike finished, found root.get_children() objects: "+str(node.name))
-			#if "omb" in node.name:
-			#	Global.debug_print(3, "  Found bomb: stage = "+str(node.bomb_stage))
-			#	Global.debug_print(3, "  type = "+str(node.type))
-			
+	if Global.build_options["air_strike"]:
 		
-	if air_strike_state["on"] == true:
-		for player in get_players():  # range(1, num_players+1):
-			if player.has_vehicle_body():
-				if player.get_vehicle_body().lifetime_so_far_sec > 5.0:
-					if randf() < delta/5.0:  # target a rate of one bomb per player per five seconds
-						var weapon_instance = load(Global.explosive_folder).instance()
-						add_child(weapon_instance) 
-						var speed = player.get_vehicle_body().get_speed2()
-						var cbo = player.get_vehicle_body().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
-						weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0), 1, 0)  # player 0 = no player
-						weapon_instance.set_as_bomb()
-						weapon_instance.set_as_toplevel(true)
-						Global.debug_print(3, "Launched bomb during airstrike at Player "+str(player.player_number))
-						Global.debug_print(3, "Bomb name "+str(weapon_instance.name))
-						#$nuke_mushroom_cloud.emitting = true
-						#$nuke_mushroom_cloud2.emitting = true
+		air_strike_state["interval_so_far_sec"] += delta
+		air_strike_state["duration_so_far_sec"] += delta
+		
+		if air_strike_state["on"] == false and air_strike_state["interval_so_far_sec"] > Global.air_strike_config["interval_sec"] and Global.game_mode != Global.GameMode.PEACEFUL:
+			_turn_airstrike_on()
+		elif air_strike_state["on"] == true and air_strike_state["duration_so_far_sec"] > Global.air_strike_config["duration_sec"]:
+			_turn_airstrike_off()
+			#Global.debug_print(3, "Turing airstrike off")
+			#for node in get_tree().root.get_node("TownScene").get_children():  #find_node("*Bomb*":
+				#Global.debug_print(3, "After airstrike finished, found root.get_children() objects: "+str(node.name))
+				#if "omb" in node.name:
+				#	Global.debug_print(3, "  Found bomb: stage = "+str(node.bomb_stage))
+				#	Global.debug_print(3, "  type = "+str(node.type))
+				
+			
+		if air_strike_state["on"] == true:
+			for player in get_players():  # range(1, num_players+1):
+				if player.has_vehicle_body():
+					if player.get_vehicle_body().lifetime_so_far_sec > 5.0:
+						if randf() < delta/5.0:  # target a rate of one bomb per player per five seconds
+							var weapon_instance = load(Global.explosive_folder).instance()
+							add_child(weapon_instance) 
+							var speed = player.get_vehicle_body().get_speed2()
+							var cbo = player.get_vehicle_body().get_global_offset_pos(20.0, 1.0, 3.5*speed, 1.0)
+							weapon_instance.activate(cbo, Vector3(0,0,0), Vector3(0,0,0), 1, 0)  # player 0 = no player
+							weapon_instance.set_as_bomb()
+							weapon_instance.set_as_toplevel(true)
+							Global.debug_print(3, "Launched bomb during airstrike at Player "+str(player.player_number))
+							Global.debug_print(3, "Bomb name "+str(weapon_instance.name))
+							#$nuke_mushroom_cloud.emitting = true
+							#$nuke_mushroom_cloud2.emitting = true
 
 	timer_1_sec -= delta
 	
@@ -143,67 +149,69 @@ func _process(delta):
 	if $Effects/Wind.volume_db != Global.weather_state["wind_volume_db"]:
 		$Effects/TweenWindVolume.interpolate_property($Effects/Wind, "volume_db", $Effects/Wind.volume_db, Global.weather_state["wind_volume_db"], 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$Effects/TweenWindVolume.start()
-
+		$Effects/TweenCindersVolume.interpolate_property($Effects/Cinders, "volume_db", $Effects/Cinders.volume_db, Global.weather_state["wind_volume_db"], 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		$Effects/TweenCindersVolume.start()
 
 func _physics_process(_delta):
 	
-	#if num_trees < num_trees_total or num_grasses < num_grasses_total:  # or len(trees)>0 or len(grasses)>0:  # and rng.randf()<0.25:
-	if len(trees)>0 or len(grasses)>0:  # and rng.randf()<0.25:
-		if veg_check_raycast == false:
-			veg_check_raycast = true  # check the raycast collision on the next physics process
-			if rng.randf() < 0.9 and len(last_veg)>0:
-				# reuse the last placement, randomise x/z nearby so veg is clustered together a bit
-				ray.translation = Vector3(-0.5+rng.randf()+last_veg[1].x, last_veg[1].y, -0.5+rng.randf()+last_veg[1].z)
+	if Global.build_options["foliage"]:
+		#if num_trees < num_trees_total or num_grasses < num_grasses_total:  # or len(trees)>0 or len(grasses)>0:  # and rng.randf()<0.25:
+		if len(trees)>0 or len(grasses)>0:  # and rng.randf()<0.25:
+			if veg_check_raycast == false:
+				veg_check_raycast = true  # check the raycast collision on the next physics process
+				if rng.randf() < 0.9 and len(last_veg)>0:
+					# reuse the last placement, randomise x/z nearby so veg is clustered together a bit
+					ray.translation = Vector3(-0.5+rng.randf()+last_veg[1].x, last_veg[1].y, -0.5+rng.randf()+last_veg[1].z)
+				else:
+					ray.translation = Vector3(rng.randf()*1000.0, 100.0, rng.randf()*1000.0)
 			else:
-				ray.translation = Vector3(rng.randf()*1000.0, 100.0, rng.randf()*1000.0)
-		else:
-			veg_check_raycast = false  # move the raycast on the next physics process
-			#ray.force_raycast_update()
-			#Global.debug_print(3, "ray translation="+str(ray.translation))
-			#ray.cast_to = Vector3(0, -1000, 0)
-			if ray.is_colliding():
-				Global.debug_print(4, "main: colliding with "+str(ray.get_collider().name), "procedural veg")
-				if "terrain" in ray.get_collider().name.to_lower() and not "lava" in ray.get_collider().name.to_lower():
-					Global.debug_print(5, "colliding with terrain..", "procedural veg")
-					#Global.debug_print(3, "collision point = "+str(ray.get_collision_point()))
-					if num_trees < num_trees_total:  # place trees first
-						if ray.get_collision_normal().normalized().y > 0.98 and ray.get_collision_normal().normalized().y < 0.99:  # slightly sloping ground for trees
-							#Global.debug_print(3, "tree collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
-							#var tree = load("res://scenes/tree.tscn").instance()  #
-							var tree = instance_from_id(trees[0])
-							#$Vegetation/Trees.add_child(tree)
-							#tree.global_transform.origin = ray.get_collision_point()
-							tree.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
-							tree.translation = Vector3(ray.get_collision_point().x, ray.get_collision_point().y, ray.get_collision_point().z)
-							var scale_tree = 0.5 + (0.5*rng.randf())
-							tree.scale = Vector3(scale_tree, scale_tree, scale_tree)
-							num_trees += 1
-							trees.remove(0)
-							last_veg = ["tree", tree.translation]
-					elif num_grasses < num_grasses_total:  # len(grasses)>0:  # grass
-						if ray.get_collision_normal().normalized().y > 0.9999:  # very flat ground for grass
-							#Global.debug_print(3, "grass collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
-							#tree.global_transform.origin = ray.get_collision_point()
-							#var grass = load("res://scenes/grass.tscn").instance()  # 
-							var grass = instance_from_id(grasses[0])
-							#$Vegetation/Grass.add_child(grass)
-							grass.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
-							grass.translation = Vector3(ray.get_collision_point().x, ray.get_collision_point().y, ray.get_collision_point().z)
-							num_grasses += 1
-							grasses.remove(0)
-							last_veg = ["grass", grass.translation]
-					else:
-						last_veg = []
-					$VC/CL/Label.text = "Veg: "+str(num_trees)+" trees "+str(num_grasses)+" grass"
-			else:
-				last_veg = []
+				veg_check_raycast = false  # move the raycast on the next physics process
+				#ray.force_raycast_update()
+				#Global.debug_print(3, "ray translation="+str(ray.translation))
+				#ray.cast_to = Vector3(0, -1000, 0)
+				if ray.is_colliding():
+					Global.debug_print(4, "main: colliding with "+str(ray.get_collider().name), "procedural veg")
+					if "terrain" in ray.get_collider().name.to_lower() and not "lava" in ray.get_collider().name.to_lower():
+						Global.debug_print(5, "colliding with terrain..", "procedural veg")
+						#Global.debug_print(3, "collision point = "+str(ray.get_collision_point()))
+						if num_trees < num_trees_total:  # place trees first
+							if ray.get_collision_normal().normalized().y > 0.98 and ray.get_collision_normal().normalized().y < 0.99:  # slightly sloping ground for trees
+								#Global.debug_print(3, "tree collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
+								#var tree = load("res://scenes/tree.tscn").instance()  #
+								var tree = instance_from_id(trees[0])
+								#$Vegetation/Trees.add_child(tree)
+								#tree.global_transform.origin = ray.get_collision_point()
+								tree.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
+								tree.translation = Vector3(ray.get_collision_point().x, ray.get_collision_point().y, ray.get_collision_point().z)
+								var scale_tree = 0.5 + (0.5*rng.randf())
+								tree.scale = Vector3(scale_tree, scale_tree, scale_tree)
+								num_trees += 1
+								trees.remove(0)
+								last_veg = ["tree", tree.translation]
+						elif num_grasses < num_grasses_total:  # len(grasses)>0:  # grass
+							if ray.get_collision_normal().normalized().y > 0.9999:  # very flat ground for grass
+								#Global.debug_print(3, "grass collision normal.normalized() = "+str(ray.get_collision_normal().normalized()))
+								#tree.global_transform.origin = ray.get_collision_point()
+								#var grass = load("res://scenes/grass.tscn").instance()  # 
+								var grass = instance_from_id(grasses[0])
+								#$Vegetation/Grass.add_child(grass)
+								grass.translation = Vector3(ray.get_collision_point().x-28.3, ray.get_collision_point().y, ray.get_collision_point().z-82.4)
+								grass.translation = Vector3(ray.get_collision_point().x, ray.get_collision_point().y, ray.get_collision_point().z)
+								num_grasses += 1
+								grasses.remove(0)
+								last_veg = ["grass", grass.translation]
+						else:
+							last_veg = []
+						$VC/CL/Label.text = "Veg: "+str(num_trees)+" trees "+str(num_grasses)+" grass"
+				else:
+					last_veg = []
 
 
 # Signal methods
 
 
 func on_change_weather(weather_change: Dictionary, change_duration_sec) -> void:
-	Global.debug_print(3, "MainScene weather_change.keys()="+str(weather_change.keys()))
+	Global.debug_print(3, "MainScene weather_change="+str(weather_change))
 	for weather_item_key in weather_change.keys():
 		if "fog_depth_begin" == weather_item_key:
 			Global.debug_print(3, "MainScene: changing weather: weather_item = fog_depth_begin", "weather")
@@ -212,18 +220,26 @@ func on_change_weather(weather_change: Dictionary, change_duration_sec) -> void:
 				Global.debug_print(3, "VehicleBody: warning: starting $Effects/TweenFogDepthBegin but it's still active", "weather")
 			$Effects/TweenFogDepthBegin.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_begin", weather_change["fog_depth_begin"][0], weather_change["fog_depth_begin"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
 			$Effects/TweenFogDepthBegin.start()
-		elif "fog_depth_curve" == weather_item_key:
-			Global.debug_print(3, "MainScene: changing weather: weather_item = fog_depth_curve", "weather")
-			Global.debug_print(3, "  old="+str(weather_change["fog_depth_curve"][0])+", new="+str(weather_change["fog_depth_curve"][1]), "weather")
-			if $Effects/TweenFogDepthCurve.is_active():
-				Global.debug_print(3, "VehicleBody: warning: starting $Effects/TweenFogDepthCurve but it's still active", "weather")
-			$Effects/TweenFogDepthCurve.interpolate_property($Viewport/WorldEnvironment, "environment:fog_depth_curve", weather_change["fog_depth_curve"][0], weather_change["fog_depth_curve"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$Effects/TweenFogDepthCurve.start()
+			
+		if "dof_blur_far_amount" == weather_item_key:
+			Global.debug_print(1, "MainScene: changing weather: weather_item = dof_blur_far_amount", "weather")
+			Global.debug_print(1, "MainScene: weather_change = "+str(weather_change), "weather")
+			Global.debug_print(1, "  old="+str(weather_change["dof_blur_far_amount"][0])+", new="+str(weather_change["dof_blur_far_amount"][1]), "weather")
+			if $Effects/TweenBlurFarAmount.is_active():
+				Global.debug_print(3, "VehicleBody: warning: starting $Effects/dof_blur_far_amount but it's still active", "weather")
+			$Effects/TweenBlurFarAmount.interpolate_property($Viewport/WorldEnvironment, "environment:dof_blur_far_amount", weather_change["dof_blur_far_amount"][0], weather_change["dof_blur_far_amount"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$Effects/TweenBlurFarAmount.start()
+			
+		if $Effects/TweenBlurFarAmount.is_active():
+			Global.debug_print(3, "VehicleBody: warning: starting $Effects/TweenFogColor but it's still active", "weather")
+		#$Effects/TweenFireStorm.interpolate_property($Effects/FireStormDirectionalLight, "light_energy", weather_change["fire_storm_dir_light"][0], weather_change["fire_storm_dir_light"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		#$Effects/TweenFireStorm.start()
 
 
 func _on_TimerCheckAudioPitch_timeout():
 	$Effects/Siren.pitch_scale = Engine.time_scale
-	$Effects/Wind.pitch_scale = Engine.time_scale
+	$Effects/Wind.pitch_scale = Engine.time_scale/2.0
+	$Effects/Cinders.pitch_scale = Engine.time_scale
 
 
 func _all_audio_pitch(_pitch=null):
@@ -233,6 +249,7 @@ func _all_audio_pitch(_pitch=null):
 	$Effects/BackgroundMusic.pitch_scale = set_pitch
 	$Effects/Siren.pitch_scale = set_pitch
 	$Effects/Wind.pitch_scale = set_pitch
+	$Effects/Cinders.pitch_scale = set_pitch
 
 
 # Private methods
@@ -331,6 +348,7 @@ func _air_strike_label() -> Label:
 
 func wind(active: bool):
 	$Effects/Wind.playing = active
+	$Effects/Cinders.playing = active
 
 
 func start_timer_slow_motion() -> void:
@@ -390,4 +408,13 @@ func _on_PlayArea_body_exited(body):
 			# body.get_player().add_achievement(Global.Achievements.OUT_OF_THIS_WORLD)
 		else:
 			Global.debug_print(3, "main(): ignoring: VehicleBody not ALIVE; must be DEAD or DYING...", "damage")
+
+
+
+func _on_TimerFlashingFirestormIcon_timeout():
+	# periodically flash the icon
+	if Global.weather_state["type"] == Global.Weather.FIRE_STORM:
+		$VC/CL/IconFireStorm.visible = !$VC/CL/IconFireStorm.visible
+	else:
+		$VC/CL/IconFireStorm.hide()
 

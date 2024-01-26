@@ -4,10 +4,13 @@ extends Camera
 
 enum View {THIRD_PERSON=0, FIRST_PERSON=1}
 
-const FOLLOW_SPEED: float = 2.0  # set 0-1: 0.1=slow follow 0.9=fast follow
+const FOLLOW_SPEED: float = 2.0  #2.0  # 2.0 is good, 0.9 is too slow, 5.0 shakes too much and will make you feel sick
 
-export var min_distance: float = 2.0
-export var max_distance: float = 4.0
+# do these do anynthing?
+#export var min_distance: float = 1.0 # 2.0 
+#export var max_distance: float = 1.5  #4.0
+var follow_speed_mult_min = 1.0  # 2.0 is too slow - the car moves outside cam, 1.0 is good
+
 export var angle_v_adjust: float = 0.0
 export var height: float = 1.5
 
@@ -107,14 +110,16 @@ func _physics_process(delta):
 	# when launched by explosion, angular velocity is high and fwd_mps swaps from + to (and is also high)
 	# this stops the fast switching in this case - zooms out and stops rotating the camera so fast
 	# fix is to follow the target faster, but follow the base more slowly
-	var follow_speed_multiplier: float = 1.0 + 0.01*angular_velocity.length()*abs(fwd_mps)
+	
+	var follow_speed_multiplier: float = follow_speed_mult_min + follow_speed_mult_min + 0.01*angular_velocity.length()*abs(fwd_mps)  
 	var modify_by_num_players: float = 1.0 + ((float(number_of_players)-1.0)/2.0)  # keep closer to the vehicle the smaller the viewport is (number of players)
+	var modify_by_speed = 0.01*pow(abs(fwd_mps), 1.5)
 	
 	if fwd_mps >= -2.0:  # look-forward config for camera
-		global_transform = global_transform.interpolate_with(cam_base_forward_third_person, modify_by_num_players * delta * FOLLOW_SPEED / follow_speed_multiplier)
+		global_transform = global_transform.interpolate_with( cam_base_forward_third_person, 0.01 + modify_by_speed * modify_by_num_players * delta * FOLLOW_SPEED / follow_speed_multiplier)
 		target = target.interpolate_with(target_forward_third_person, modify_by_num_players * delta * FOLLOW_SPEED * follow_speed_multiplier)
 	else:  # look-backwards config for camera
-		global_transform = global_transform.interpolate_with(cam_base_reverse_third_person, modify_by_num_players * delta * FOLLOW_SPEED / follow_speed_multiplier)
+		global_transform = global_transform.interpolate_with( cam_base_reverse_third_person, 0.01 + modify_by_speed * modify_by_num_players * delta * FOLLOW_SPEED / follow_speed_multiplier)
 		target = target.interpolate_with(target_reverse_third_person, modify_by_num_players * delta * FOLLOW_SPEED * follow_speed_multiplier)
 		
 	if timer_0_5s < 0:

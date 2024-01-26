@@ -11,7 +11,7 @@ enum Type {
 }
 
 const STEER_SPEED: float = 1.5
-const STEER_LIMIT: float = 0.6 #0.4
+const STEER_LIMIT: float = 0.4  # 0.6 #0.4
 const EXPLOSION_STRENGTH: float = 50.0
 const ENGINE_FORCE_VALUE_DEFAULT: int = 80
 const ACCEL_DAMAGE_THRESHOLD: float = 70.0
@@ -46,13 +46,13 @@ var config: Dictionary = {
 		"wheel_friction_slip": 1.1,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.9,
 		"brake": 20.0,
-		"max_speed_km_hr": 150.0}, 
+		"max_speed_km_hr": 120.0}, 
 	Type.RALLY:
 		{"engine_force_value": 70,  # keep this at 3x mass
 		"mass_kg/100": 50.0, 
 		"suspension_stiffness": 40.0, "suspension_travel": 2.0,
 		"all_wheel_drive": true,
-		"wheel_friction_slip": 1.3,   # 0 is no grip, 1 is normal grip
+		"wheel_friction_slip": 20.0,  #1.3,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.9,
 		"brake": 10.0,
 		"max_speed_km_hr": 120.0}, 

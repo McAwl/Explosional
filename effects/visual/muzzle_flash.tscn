@@ -2,8 +2,9 @@
 
 [ext_resource path="res://assets/textures/muzzle_flash.png" type="Texture" id=1]
 [ext_resource path="res://assets/textures/dot.png" type="Texture" id=2]
-[ext_resource path="res://assets/shaders/MuzzleFlash.gdshader" type="Shader" id=3]
+[ext_resource path="res://assets/shaders/OLD_REMOVE_MuzzleFlash.gdshader" type="Shader" id=3]
 [ext_resource path="res://assets/models/muzzle_flash_mesh.obj" type="ArrayMesh" id=4]
+
 
 [sub_resource type="Gradient" id=13]
 offsets = PoolRealArray( 0, 0.364, 0.844 )

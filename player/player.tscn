@@ -4,10 +4,10 @@
 [ext_resource path="res://player/player.gd" type="Script" id=2]
 [ext_resource path="res://assets/display/icons/missile.png" type="Texture" id=3]
 [ext_resource path="res://assets/display/icons/icon_mine.png" type="Texture" id=4]
-[ext_resource path="res://assets/display/icons/rocket.png" type="Texture" id=5]
+[ext_resource path="res://assets/display/icons/ballistic_new.png" type="Texture" id=5]
 [ext_resource path="res://assets/display/icons/lifebar_fill.png" type="Texture" id=6]
 [ext_resource path="res://assets/display/icons/energy_bar_fill.png" type="Texture" id=7]
-[ext_resource path="res://assets/display/icons/ballistic.png" type="Texture" id=8]
+[ext_resource path="res://assets/display/icons/rocket.png" type="Texture" id=8]
 [ext_resource path="res://assets/display/icons/nuke.png" type="Texture" id=9]
 [ext_resource path="res://assets/display/fonts/font_theme_tiny.tres" type="DynamicFont" id=10]
 [ext_resource path="res://assets/display/icons/heart_772px.png" type="Texture" id=11]
@@ -142,7 +142,7 @@ margin_top = 21.0
 margin_right = 843.0
 margin_bottom = 749.0
 rect_scale = Vector2( 0.105, 0.105 )
-texture = ExtResource( 5 )
+texture = ExtResource( 8 )
 stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
@@ -181,7 +181,7 @@ margin_top = 20.0
 margin_right = 842.0
 margin_bottom = 743.0
 rect_scale = Vector2( 0.105, 0.105 )
-texture = ExtResource( 8 )
+texture = ExtResource( 5 )
 stretch_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false

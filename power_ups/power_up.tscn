@@ -24,6 +24,7 @@ transform = Transform( 0.715003, 0, 0, 0, 0.479803, 0, 0, 0, 0.682142, 0, 0.4457
 shape = SubResource( 3 )
 
 [node name="GlowingSphere" type="MeshInstance" parent="Area"]
+physics_interpolation_mode = 1
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.369303, 0 )
 mesh = SubResource( 4 )
 material/0 = ExtResource( 3 )
@@ -31,6 +32,7 @@ material/0 = ExtResource( 3 )
 [node name="Lights" type="Spatial" parent="."]
 
 [node name="OmniLight" type="OmniLight" parent="Lights"]
+physics_interpolation_mode = 1
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04918, 0 )
 
 [node name="ActivationSound" type="AudioStreamPlayer" parent="."]

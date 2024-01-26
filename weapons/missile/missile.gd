@@ -241,19 +241,20 @@ func _on_Body_body_entered(body):
 
 
 func _on_TimerCheckActiveLight_timeout():
-	if $Body.has_node("OmniLight"):
-		if homing == false:
-			$Body/OmniLight.hide()
-		else:
-			if homing_check_target_timer > 0.0:
-				$Body/OmniLight.light_color = Color(0, 1, 0)  # green = not active
-				$Body/OmniLight.show()
+	if has_node("Body"):
+		if $Body.has_node("OmniLight"):
+			if homing == false:
+				$Body/OmniLight.hide()
 			else:
-				$Body/OmniLight.light_color = Color(1, 0, 0)  # red = active
-				if closest_target_distance == null:
+				if homing_check_target_timer > 0.0:
+					$Body/OmniLight.light_color = Color(0, 1, 0)  # green = not active
 					$Body/OmniLight.show()
 				else:
-					$Body/OmniLight.visible = !$Body/OmniLight.visible  # flash red = homing on a target
+					$Body/OmniLight.light_color = Color(1, 0, 0)  # red = active
+					if closest_target_distance == null:
+						$Body/OmniLight.show()
+					else:
+						$Body/OmniLight.visible = !$Body/OmniLight.visible  # flash red = homing on a target
 
 
 # Public methods
@@ -275,6 +276,7 @@ func activate(_parent_player_number, _homing) -> void:
 	homing = _homing
 	parent_player_number = _parent_player_number
 	if weapon_type == ConfigWeapons.Type.ROCKET or weapon_type == ConfigWeapons.Type.MISSILE or weapon_type == ConfigWeapons.Type.BALLISTIC_MISSILE or weapon_type == ConfigWeapons.Type.AIR_BURST: 
+		Global.debug_print(1, "setting $LaunchSound.playing = true $FlyingSound.playing = true $ThrustLight.show()")
 		$LaunchSound.playing = true
 		$FlyingSound.playing = true
 		$ThrustLight.show()

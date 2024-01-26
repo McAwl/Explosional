@@ -27,35 +27,45 @@
 [sub_resource type="PhysicsMaterial" id=1]
 rough = true
 
-[sub_resource type="Curve" id=64]
-_data = [ Vector2( 0, 0.00834632 ), 0.0, 0.0, 0, 0, Vector2( 0.5, 0.981073 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+[sub_resource type="Gradient" id=71]
+offsets = PoolRealArray( 0.229759, 0.448578, 0.628009 )
+colors = PoolColorArray( 1, 0.759175, 0, 1, 0.525727, 0.226615, 0, 1, 0, 0, 0, 1 )
 
-[sub_resource type="CurveTexture" id=65]
-curve = SubResource( 64 )
+[sub_resource type="GradientTexture" id=72]
+gradient = SubResource( 71 )
 
 [sub_resource type="ParticlesMaterial" id=66]
 emission_shape = 1
-emission_sphere_radius = 2.0
+emission_sphere_radius = 3.0
 direction = Vector3( 1, 0, 1 )
 spread = 0.0
-gravity = Vector3( 0, -1, 0 )
+flatness = 0.01
+gravity = Vector3( 0, -2, 0 )
 initial_velocity = 1.0
-scale = 0.1
-scale_curve = SubResource( 65 )
+scale = 0.05
+color_ramp = SubResource( 72 )
 
 [sub_resource type="SpatialMaterial" id=67]
 flags_transparent = true
+vertex_color_use_as_albedo = true
 params_billboard_mode = 3
 params_billboard_keep_scale = true
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
 particles_anim_loop = false
+albedo_color = Color( 1, 0.737255, 0, 1 )
 albedo_texture = ExtResource( 4 )
 proximity_fade_enable = true
 proximity_fade_distance = 0.5
 
 [sub_resource type="QuadMesh" id=68]
 material = SubResource( 67 )
+
+[sub_resource type="SpatialMaterial" id=73]
+render_priority = 1
+flags_transparent = true
+params_billboard_mode = 1
+albedo_color = Color( 0.862745, 0.509804, 0.113725, 0 )
 
 [sub_resource type="Gradient" id=33]
 offsets = PoolRealArray( 0, 0.242236, 0.732919, 0.993789, 1 )
@@ -137,8 +147,6 @@ anim_offset_random = 1.0
 
 [sub_resource type="SphereMesh" id=53]
 
-[sub_resource type="SphereMesh" id=29]
-
 [sub_resource type="ParticlesMaterial" id=60]
 resource_local_to_scene = true
 lifetime_randomness = 0.5
@@ -212,32 +220,39 @@ transform = Transform( 0.998172, 0, 0.0604388, 0, 1, 0, -0.0604388, 0, 0.998172,
 [node name="Camera" type="Camera" parent="CameraBase"]
 transform = Transform( -0.998921, -0.0112154, 0.0450581, -2.11161e-08, 0.970391, 0.24154, -0.0464329, 0.241279, -0.969344, -0.138464, 0.281651, -1.96593 )
 fov = 74.0
-near = 0.1
 far = 200.0
 script = ExtResource( 9 )
 
-[node name="ParticlesSnow" type="Particles" parent="CameraBase/Camera"]
-transform = Transform( -0.998213, 0.00103028, 0.0597529, 0.0172799, 0.962119, 0.272084, -0.0572091, 0.27263, -0.960417, 0.0154151, -0.100172, -1.1574 )
-amount = 100
+[node name="ParticlesCinders" type="Particles" parent="CameraBase/Camera"]
+transform = Transform( -0.998213, 0.00103028, 0.0597529, 0.0172799, 0.962119, 0.272084, -0.0572091, 0.27263, -0.960417, 0.0380429, 2.65526, -2.13394 )
+amount = 300
 lifetime = 2.0
 visibility_aabb = AABB( -4.03329, -4, -4, 8.06658, 8, 8 )
 local_coords = false
 process_material = SubResource( 66 )
 draw_pass_1 = SubResource( 68 )
 
-[node name="TweenFar" type="Tween" parent="CameraBase/Camera"]
+[node name="TweenCameraFarCullingDistance" type="Tween" parent="CameraBase/Camera"]
 
-[node name="CameraFPFront" type="Camera" parent="CameraBase"]
-transform = Transform( -0.998921, 0.00220149, 0.0463805, -2.11161e-08, 0.998875, -0.047413, -0.0464328, -0.0473618, -0.997798, -0.124779, -1.27877, 2.63899 )
-visible = false
-far = 1000.0
+[node name="TweenCameraColourFilterTransparency" type="Tween" parent="CameraBase/Camera"]
+
+[node name="CSGPolygon" type="CSGPolygon" parent="CameraBase/Camera"]
+transform = Transform( 0.687824, -0.00178328, 0.00716436, -0.00178327, 0.43427, 0.0678729, 0.0071643, 0.0678727, 0.178484, -0.503121, -0.210243, -0.118225 )
+cast_shadow = 0
+depth = 0.05
+material = SubResource( 73 )
 
 [node name="CameraFPBack" type="Camera" parent="CameraBase"]
-transform = Transform( 0.998315, 0.00220149, -0.0579889, 0.000551148, 0.998875, 0.0474098, 0.058028, -0.0473618, 0.997191, -0.105369, -1.16767, 2.33515 )
+transform = Transform( 0.998315, 0.00220149, -0.0579888, 0.000551148, 0.998875, 0.0474098, 0.058028, -0.0473618, 0.997191, -0.105369, -1.16767, 2.33515 )
 visible = false
 current = true
 fov = 74.0
 near = 0.1
+far = 1000.0
+
+[node name="CameraFPFront" type="Camera" parent="CameraBase"]
+transform = Transform( -0.998921, 0.00220149, 0.0463805, -2.11161e-08, 0.998875, -0.047413, -0.0464328, -0.0473618, -0.997798, -0.124779, -1.27877, 2.63899 )
+visible = false
 far = 1000.0
 
 [node name="Effects" type="Spatial" parent="."]
@@ -353,12 +368,18 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, 1.3331, -1.53865 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, -0.580223, -1.53865 )
 
 [node name="CamBaseForward" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, 1.63354, -2.39391 )
+
+[node name="CamBaseForward4" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, 2.29221, -3.42512 )
 
 [node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, -0.714103, -3.42512 )
 
 [node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, 2.55484, -4.50877 )
+
+[node name="CamBaseForward3" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, 5.37126, -15.4 )
 
 [node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/Racer/CameraBasesTargets"]
@@ -536,6 +557,9 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 1.32512, 0.101055 
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.0332077, -2.11065 )
 
 [node name="MissilePosition" type="Position3D" parent="VehicleTypes/Racer/Positions/Weapons"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.799254, 1.56261 )
+
+[node name="BallisticMissilePosition" type="Position3D" parent="VehicleTypes/Racer/Positions/Weapons"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, 0.799254, 1.56261 )
 
 [node name="RocketPosition" type="Position3D" parent="VehicleTypes/Racer/Positions/Weapons"]
@@ -719,92 +743,32 @@ visible = false
 [node name="CamTargetForward" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, 1.3331, -1.53865 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamTargetForward"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamTargetForward_UD" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, -0.580223, -1.53865 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamTargetForward_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamBaseForward" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, 2.29221, -3.42512 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseForward"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, -0.714103, -3.42512 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseForward_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, 5.37126, -15.4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseForward2"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, -3.40113, -15.4 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseForward2_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 1.89442 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamTargetReverse"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamTargetReverse_UD" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, -0.313553, 0.451696 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamTargetReverse_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 3.81531 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseReverse"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamBaseReverse_UD" type="Spatial" parent="VehicleTypes/Rally/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, -0.927673, 2.59098 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Rally/CameraBasesTargets/CamBaseReverse_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CollisionShapes" type="Spatial" parent="VehicleTypes/Rally"]
 
@@ -1086,92 +1050,32 @@ visible = false
 [node name="CamTargetForward" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, 1.3331, -1.53865 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamTargetForward"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamTargetForward_UD" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, -0.580223, -1.53865 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamTargetForward_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamBaseForward" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, 2.29221, -3.42512 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseForward"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, -0.714103, -3.42512 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseForward_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, 5.37126, -15.4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseForward2"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, -3.40113, -15.4 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseForward2_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, 1.63568, 1.92582 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamTargetReverse"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamTargetReverse_UD" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, -0.313553, 0.451696 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamTargetReverse_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 3.50239 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseReverse"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamBaseReverse_UD" type="Spatial" parent="VehicleTypes/Tank/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, -0.927673, 2.59098 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Tank/CameraBasesTargets/CamBaseReverse_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CollisionShapes" type="Spatial" parent="VehicleTypes/Tank"]
 
@@ -1533,92 +1437,32 @@ visible = false
 [node name="CamTargetForward" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, 1.98799, -2.92262 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamTargetForward"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamTargetForward_UD" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169568, -0.580223, -1.53865 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamTargetForward_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0.358226, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamBaseForward" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, 2.29221, -3.42512 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseForward"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamBaseForward_UD" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169566, -0.714103, -3.42512 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseForward_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamBaseForward2" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, 5.37126, -15.4 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseForward2"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamBaseForward2_UD" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169787, -3.40113, -15.4 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseForward2_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0948564, 1.7256 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamTargetReverse" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.103922, 1.81033, 2.70525 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamTargetReverse"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamTargetReverse_UD" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016955, -0.313553, 0.451696 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamTargetReverse_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, 0, 0, 0 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CamBaseReverse" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, 2.27991, 3.36687 )
 
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseReverse"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
-
 [node name="CamBaseReverse_UD" type="Spatial" parent="VehicleTypes/Truck/CameraBasesTargets"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169596, -0.927673, 2.59098 )
-
-[node name="MeshInstance" type="MeshInstance" parent="VehicleTypes/Truck/CameraBasesTargets/CamBaseReverse_UD"]
-transform = Transform( -0.0999901, 0.000338772, -0.00136103, -2.05513e-09, 0.0970391, 0.024154, 0.00140256, 0.0241516, -0.0970296, -0.0157232, -0.0825521, -6.39137 )
-visible = false
-mesh = SubResource( 29 )
-skeleton = NodePath("../../../../../CameraBase/Camera")
 
 [node name="CollisionShapes" type="Spatial" parent="VehicleTypes/Truck"]
 

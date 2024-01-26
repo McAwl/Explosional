@@ -4,9 +4,14 @@ extends Node
 signal change_weather
 signal update_weather
 
+enum Build {
+	Development=0,
+	Release=1
+}
+
 enum Weather {
 	NORMAL=0,
-	SNOW=1
+	FIRE_STORM=1  # used for Lava terrain - a storm with wind and red cinders in the air
 }
 
 enum GameMode {
@@ -35,13 +40,15 @@ enum Achievements {
 var achievement_config: Dictionary = {
 	Achievements.HOT_STUFF: {"nice_name": "Hot Stuff", "explanation": "Die in lava", "rare": false},
 	Achievements.SPEED_DEMON5: {"nice_name": "Speed Demon 5", "explanation": "Drive at maximum speed for 5 seconds", "rare": false},
-	Achievements.SPEED_DEMON5: {"nice_name": "Speed Demon 10", "explanation": "Drive at maximum speed for 10 seconds", "rare": true},
+	Achievements.SPEED_DEMON10: {"nice_name": "Speed Demon 10", "explanation": "Drive at maximum speed for 10 seconds", "rare": true},
 	Achievements.OUT_OF_THIS_WORLD: {"nice_name": "Out of this World", "explanation": "Drove off the map", "rare": true},
 	}
 
 var weather_model: Array = [
-	{"type": Weather.NORMAL, "duration_s": 120.0, "max_wind_strength": 0.0, "fog_depth_curve": 4.75, "fog_depth_begin": 20.0, "visibility": 200.0}, 
-	{"type": Weather.SNOW, "duration_s": 30.0, "max_wind_strength":300.0, "fog_depth_curve": 1.0, "fog_depth_begin": 0.0, "visibility": 50.0}
+	#{"type": Weather.NORMAL, "duration_s": 120.0, "max_wind_strength": 0.0, "fog_depth_curve": 4.75, "fog_depth_begin": 20.0, "visibility": 200.0, "fire_storm_dir_light": 0.0}, 
+	#{"type": Weather.FIRE_STORM, "duration_s": 30.0, "max_wind_strength":300.0, "fog_depth_curve": 1.0, "fog_depth_begin": 0.0, "visibility": 50.0, "fire_storm_dir_light": 16}
+	{"type": Weather.NORMAL, "duration_s": 120.0, "max_wind_strength": 0.0, "dof_blur_far_amount": 0.0, "cam_colour_filer_transparency": 0.0}, 
+	{"type": Weather.FIRE_STORM, "duration_s": 30.0, "max_wind_strength":300.0, "dof_blur_far_amount": 0.1, "cam_colour_filer_transparency": 0.2}
 	]
 	
 var weather_state: Dictionary = {
@@ -51,16 +58,31 @@ var weather_state: Dictionary = {
 	"wind_direction": Vector3(0,0,0), 
 	"wind_strength": 0.0,
 	"wind_volume_db": -21.0,
+	"dof_blur_far_amount": 0.0,
+	"cam_colour_filer_transparency": 0.0
 	}
 	
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var weather_recalc_timer = 1.0
-var weather_change_duration_sec = 10.0
+var weather_change_duration_sec = 2.0  # 10.0
 
 var air_strike_config: Dictionary = {
 	"duration_sec": 10.0, 
 	"interval_sec": 120.0, 
 	"circle_radius_m": 10.0}
+
+var build_type: int = Build.Release
+
+var build_options: Dictionary = {
+	"foliage": true if build_type == Build.Development else false,
+	"platforms": true if build_type == Build.Development else false,
+	"air_strike": true if build_type == Build.Development else false,
+	"vehicle_falling_parts": true if build_type == Build.Development else false,  # 
+	"vehicle_options": {"racer": true, "rally": false, "tank": false, "truck": false} if build_type == Build.Release else {"racer": true, "rally": true, "tank": true, "truck": true},
+	"allow_toggle_cinders": true if build_type == Build.Development else true,
+	"achievements": true if build_type == Build.Development else false,
+	"hud_speedometer": true if build_type == Build.Development else false,
+}
 
 var game_mode: int = GameMode.COMPETITIVE
 
@@ -78,7 +100,7 @@ var log_topics = []  # eg, "truck_mine", "weapon", "missile""max_damage" "camera
 # main scene
 var main_scene: String = "res://scenes/main/main.tscn"
 var background_music_folder: String = "res://assets/audio/music/background"
-var background_music_volume_db: float = 0.0
+var background_music_volume_db: float = -12.0  # 0.0
 
 const BACKGROUND_MUSIC_MAX_VOLUME_DB: float = 0.0
 const SLOW_MOTION_DURATION_SEC = 5.0
@@ -121,8 +143,8 @@ var power_up_folder: String = "res://power_ups/power_up.tscn"
 
 func _ready():
 	weather_state["time_left_s"] = weather_model[0]["duration_s"]
-
-
+	
+	
 func _process(delta):
 	weather_state["time_left_s"] -= delta
 	if weather_state["time_left_s"] < 0.0:
@@ -157,9 +179,10 @@ func _process(delta):
 # Private methods
 
 func _set_weather(weather_change_dict: Dictionary) -> void:
-	Global.debug_print(3, "set_weather()", "weather")
+	Global.debug_print(3, "set_weather(): weather_change_dict="+str(weather_change_dict), "weather")
 	#weather_state["wind_strength"] = 0.0  # weather_model[weather_state["index"]]["max_wind_strength"] / 2.0
 	Global.debug_print(3, "Setting wind_strength to "+str(weather_state["wind_strength"]), "weather")
+	Global.debug_print(1, "_set_weather(): weather_state= "+str(weather_state), "weather")
 	emit_signal("change_weather", weather_change_dict, weather_change_duration_sec)
 
 
@@ -176,13 +199,17 @@ func toggle_weather() -> void:
 	weather_state["type"] = weather_state["index"]
 	Global.debug_print(3, "toggle_weather() to index "+str(weather_state["index"]), "weather")
 	Global.debug_print(3, "type is now "+str(weather_state["type"]), "weather")
+	Global.debug_print(1, "toggle_weather(): weather_state= "+str(weather_state), "weather")
 	_set_weather(
 		{
-			"fog_depth_curve": [weather_model[old_index]["fog_depth_curve"], weather_model[weather_state["index"]]["fog_depth_curve"]], 
-			"fog_depth_begin": [weather_model[old_index]["fog_depth_begin"], weather_model[weather_state["index"]]["fog_depth_begin"]], 
-			"visibility": [weather_model[old_index]["visibility"], weather_model[weather_state["index"]]["visibility"]],
-			"snow_visible": true if weather_state["type"] == Weather.SNOW else false,
+			# "fog_depth_curve": [weather_model[old_index]["fog_depth_curve"], weather_model[weather_state["index"]]["fog_depth_curve"]], 
+			# "fog_depth_begin": [weather_model[old_index]["fog_depth_begin"], weather_model[weather_state["index"]]["fog_depth_begin"]],
+			"dof_blur_far_amount": [weather_model[old_index]["dof_blur_far_amount"], weather_model[weather_state["index"]]["dof_blur_far_amount"]], 
+			"cam_colour_filer_transparency": [weather_model[old_index]["cam_colour_filer_transparency"], weather_model[weather_state["index"]]["cam_colour_filer_transparency"]],
+			# "visibility": [weather_model[old_index]["visibility"], weather_model[weather_state["index"]]["visibility"]],
+			"cinders_visible": true if weather_state["type"] == Weather.FIRE_STORM else false,
 		})
+	Global.debug_print(1, "toggle_weather(): weather_state= "+str(weather_state), "weather")
 
 
 func debug_print(_log_level: int, message: String, _log_topic=null) -> void:

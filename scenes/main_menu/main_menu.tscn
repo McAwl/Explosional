@@ -1,15 +1,17 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://scenes/main_menu/main_menu.gd" type="Script" id=1]
 [ext_resource path="res://assets/display/capture1 - blurred.png" type="Texture" id=2]
 [ext_resource path="res://assets/display/fonts/font_theme_title.tres" type="DynamicFont" id=3]
 [ext_resource path="res://assets/display/fonts/font_theme_tiny.tres" type="DynamicFont" id=4]
+[ext_resource path="res://assets/display/fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://scenes/main_menu/viewport.gd" type="Script" id=6]
 [ext_resource path="res://scenes/main_menu/music_volume.gd" type="Script" id=7]
 [ext_resource path="res://scenes/main_menu/vehicle_volume.gd" type="Script" id=8]
 [ext_resource path="res://scenes/main_menu/wind_speed.gd" type="Script" id=9]
 [ext_resource path="res://assets/display/theme_big_button.tres" type="Theme" id=10]
 [ext_resource path="res://assets/display/fonts/font_theme_menu.tres" type="DynamicFont" id=11]
+[ext_resource path="res://assets/display/fonts/font_theme_normal.tres" type="DynamicFont" id=12]
 
 [sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
@@ -28,6 +30,16 @@ bg_color = Color( 0.6, 0.6, 0.6, 0 )
 
 [sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="DynamicFont" id=8]
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 30
+font_data = ExtResource( 5 )
 
 [node name="MainMenu" type="Control"]
 pause_mode = 2
@@ -70,6 +82,7 @@ texture = ExtResource( 2 )
 stretch_mode = 1
 
 [node name="MainContainer" type="VBoxContainer" parent="MainSelection"]
+visible = false
 anchor_bottom = 1.0
 margin_right = 519.0
 margin_bottom = 446.0
@@ -91,11 +104,11 @@ valign = 1
 [node name="ButtonsContainer" type="HBoxContainer" parent="MainSelection/MainContainer"]
 margin_top = 156.0
 margin_right = 519.0
-margin_bottom = 403.0
+margin_bottom = 511.0
 
 [node name="HBoxContainer2" type="VBoxContainer" parent="MainSelection/MainContainer/ButtonsContainer"]
 margin_right = 185.0
-margin_bottom = 247.0
+margin_bottom = 355.0
 custom_constants/separation = 23
 
 [node name="ResumeButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
@@ -129,27 +142,44 @@ focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/P
 custom_fonts/font = ExtResource( 11 )
 text = "Options"
 
-[node name="ResetGameButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
+[node name="InstructionsButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
 margin_top = 162.0
 margin_right = 185.0
 margin_bottom = 193.0
+focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
+custom_fonts/font = ExtResource( 11 )
+text = "Instructions"
+
+[node name="CreditsButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
+margin_top = 216.0
+margin_right = 185.0
+margin_bottom = 247.0
+focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
+custom_fonts/font = ExtResource( 11 )
+text = "Credits"
+
+[node name="ResetGameButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
+margin_top = 270.0
+margin_right = 185.0
+margin_bottom = 301.0
 custom_fonts/font = ExtResource( 11 )
 text = "Reset Game"
 
 [node name="QuitToDesktop" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
-margin_top = 216.0
+margin_top = 324.0
 margin_right = 185.0
-margin_bottom = 247.0
+margin_bottom = 355.0
 focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
 focus_neighbour_bottom = NodePath("../../../../../GameModeSelection/CheckBox1Competitive")
 custom_fonts/font = ExtResource( 11 )
 text = "Quit to Desktop"
 
 [node name="GameModeSelection" type="HBoxContainer" parent="."]
-margin_left = 117.0
-margin_top = 549.0
-margin_right = 762.0
-margin_bottom = 664.0
+visible = false
+margin_left = 125.0
+margin_top = 657.0
+margin_right = 770.0
+margin_bottom = 772.0
 custom_constants/separation = 39
 
 [node name="Label" type="Label" parent="GameModeSelection"]
@@ -165,7 +195,7 @@ margin_right = 320.0
 margin_bottom = 115.0
 grow_horizontal = 2
 grow_vertical = 2
-hint_tooltip = "Normal damage. Last player alive wins. AI is active."
+hint_tooltip = "Normal damage. Last player alive wins."
 focus_neighbour_left = NodePath("../../MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToDesktop")
 focus_neighbour_top = NodePath("../../MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToDesktop")
 focus_neighbour_right = NodePath("../CheckBox2Peaceful")
@@ -182,7 +212,7 @@ margin_right = 482.0
 margin_bottom = 115.0
 grow_horizontal = 2
 grow_vertical = 2
-hint_tooltip = "No damage. No AI. No end of game."
+hint_tooltip = "No damage. No end of game."
 focus_neighbour_left = NodePath("../CheckBox1Competitive")
 focus_neighbour_right = NodePath("../CheckBox3Tough")
 size_flags_horizontal = 3
@@ -198,7 +228,7 @@ margin_right = 645.0
 margin_bottom = 115.0
 grow_horizontal = 2
 grow_vertical = 2
-hint_tooltip = "Direct one-hit death, no indirect damage. Last player alive wins. AI is active."
+hint_tooltip = "Direct one-hit death, no indirect damage. Last player alive wins."
 focus_neighbour_left = NodePath("../CheckBox2Peaceful")
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -240,6 +270,14 @@ size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
 text = "Player 1"
 
+[node name="SubLabel" type="Label" parent="PlayerSelection/GridContainer/Player1SelectButton"]
+margin_left = 9.99988
+margin_top = 301.429
+margin_right = 690.0
+margin_bottom = 315.429
+text = "Click to change vehicle"
+align = 1
+
 [node name="Player2SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
 margin_left = 718.0
 margin_right = 1416.0
@@ -249,6 +287,14 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
 text = "Player 2"
+
+[node name="SubLabel" type="Label" parent="PlayerSelection/GridContainer/Player2SelectButton"]
+margin_left = 6.0
+margin_top = 297.0
+margin_right = 690.0
+margin_bottom = 311.0
+text = "Click to add player and choose vehicle"
+align = 1
 
 [node name="Player3SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
 margin_top = 494.0
@@ -261,6 +307,13 @@ custom_fonts/font = ExtResource( 3 )
 disabled = true
 text = "Player 3"
 
+[node name="SubLabel" type="Label" parent="PlayerSelection/GridContainer/Player3SelectButton"]
+margin_left = 10.0
+margin_top = 299.0
+margin_right = 689.0
+margin_bottom = 313.0
+align = 1
+
 [node name="Player4SelectButton" type="Button" parent="PlayerSelection/GridContainer"]
 margin_left = 718.0
 margin_top = 494.0
@@ -272,6 +325,13 @@ size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
 disabled = true
 text = "Player 4"
+
+[node name="SubLabel" type="Label" parent="PlayerSelection/GridContainer/Player4SelectButton"]
+margin_left = 9.0
+margin_top = 303.0
+margin_right = 697.0
+margin_bottom = 319.0
+align = 1
 
 [node name="VehicleSelection" type="Control" parent="."]
 visible = false
@@ -292,7 +352,8 @@ columns = 4
 margin_right = 260.0
 margin_bottom = 105.0
 hint_tooltip = "High-speed
-Special ability: shield at high speed"
+Special ability: shield at high speed
+Standard weapons: mine, rocket"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
@@ -303,7 +364,8 @@ margin_left = 290.0
 margin_right = 510.0
 margin_bottom = 105.0
 hint_tooltip = "Light 4WD
-Special ability: climbs steep terrain"
+Special ability: climbs steep terrain
+Standard weapons: rocket, homing missile"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
@@ -314,7 +376,8 @@ margin_left = 540.0
 margin_right = 761.0
 margin_bottom = 105.0
 hint_tooltip = "Heavy armour
-Special ability: guided ballistic missile"
+Special ability: guided ballistic missile
+Standard weapons: rocket, missile, ballistic round, ballistic missile"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
@@ -325,7 +388,8 @@ margin_left = 791.0
 margin_right = 1041.0
 margin_bottom = 105.0
 hint_tooltip = "Slow and heavy
-Special ability: truck bomb with long range"
+Special ability: truck bomb with long range
+Standard weapons: homing missile, ballistic round, air burst"
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 3 )
@@ -339,7 +403,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 11 )
 text = "High-speed
-Special ability: shield at high speed"
+
+Special ability: shield at high speed
+
+Standard weapons: mine, rocket"
 align = 1
 valign = 1
 autowrap = true
@@ -353,7 +420,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 11 )
 text = "Light 4WD
-Special ability: climbs steep terrain"
+
+Special ability: climbs steep terrain
+
+Standard weapons: rocket, homing missile"
 align = 1
 valign = 1
 autowrap = true
@@ -367,7 +437,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 11 )
 text = "Heavy armour
-Special ability: guided ballistic missile"
+
+Special ability: guided ballistic missile
+
+Standard weapons: rocket, missile, ballistic round, ballistic missile"
 align = 1
 valign = 1
 autowrap = true
@@ -381,7 +454,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/font = ExtResource( 11 )
 text = "Slow and heavy
-Special ability: truck bomb with long range"
+
+Special ability: truck bomb with long range
+
+Standard weapons: homing missile, ballistic round, air burst"
 align = 1
 valign = 1
 autowrap = true
@@ -484,11 +560,61 @@ step = 10.0
 value = 500.0
 script = ExtResource( 9 )
 
+[node name="TerrainChoice" type="GridContainer" parent="OptionMenu/GridContainer"]
+margin_top = 162.0
+margin_right = 409.0
+margin_bottom = 189.0
+columns = 2
+
+[node name="TerrainChoiceText" type="Label" parent="OptionMenu/GridContainer/TerrainChoice"]
+margin_right = 205.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 11 )
+text = "Terrain Choice"
+valign = 1
+
+[node name="DayNightCycleCheckBox" type="CheckBox" parent="OptionMenu/GridContainer/TerrainChoice/TerrainChoiceText"]
+margin_left = 316.0
+margin_top = 32.0
+margin_right = 406.0
+margin_bottom = 59.0
+custom_fonts/font = ExtResource( 12 )
+custom_styles/normal = SubResource( 7 )
+disabled = true
+shortcut_in_tooltip = false
+pressed = true
+text = "Day/night cycle"
+
+[node name="FireStormCheckBox" type="CheckBox" parent="OptionMenu/GridContainer/TerrainChoice/TerrainChoiceText"]
+margin_left = 315.0
+margin_top = 64.0
+margin_right = 405.0
+margin_bottom = 91.0
+custom_fonts/font = ExtResource( 12 )
+custom_styles/normal = SubResource( 7 )
+disabled = true
+shortcut_in_tooltip = false
+pressed = true
+text = "Fire storms"
+
+[node name="LavaIsland" type="CheckBox" parent="OptionMenu/GridContainer/TerrainChoice/TerrainChoiceText"]
+margin_left = 207.0
+margin_right = 407.0
+margin_bottom = 27.0
+custom_fonts/font = ExtResource( 11 )
+custom_styles/normal = SubResource( 7 )
+disabled = true
+shortcut_in_tooltip = false
+pressed = true
+text = "Lava Island"
+
 [node name="Option1Button" type="Button" parent="OptionMenu/GridContainer"]
 visible = false
-margin_top = 50.0
-margin_right = 192.0
-margin_bottom = 76.0
+margin_top = 162.0
+margin_right = 409.0
+margin_bottom = 186.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 10 )
@@ -530,9 +656,9 @@ disabled = true
 text = "Option 4"
 
 [node name="OptionBackButton" type="Button" parent="OptionMenu/GridContainer"]
-margin_top = 162.0
+margin_top = 216.0
 margin_right = 84.0
-margin_bottom = 193.0
+margin_bottom = 247.0
 focus_previous = NodePath("../WindSpeed/WindSpeed")
 size_flags_horizontal = 0
 custom_fonts/font = ExtResource( 11 )
@@ -559,11 +685,12 @@ size_flags_vertical = 0
 margin_right = 1920.0
 margin_bottom = 27.0
 custom_fonts/font = ExtResource( 11 )
-text = "Explosional BETA v0.0.1 Build x 2022 McAwl"
+text = "Explosional BETA v0.0.1 Build x 2024 McAwl"
 align = 1
 valign = 1
 
 [node name="LoadingText" type="Label" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 562.0
@@ -571,14 +698,397 @@ margin_top = 557.0
 margin_right = 1326.0
 margin_bottom = 619.0
 custom_fonts/font = ExtResource( 11 )
-text = "Loading terrain..."
+text = "Loading ..."
 align = 1
 valign = 1
+
+[node name="Instructions" type="Control" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Objectives1" type="Label" parent="Instructions"]
+margin_left = 123.0
+margin_top = 226.0
+margin_right = 842.0
+margin_bottom = 568.0
+custom_fonts/font = SubResource( 8 )
+text = "Explosional is a split-screen game of one to four players.
+Each player controls a vehicle with weapons
+In Competitive and Tough game modes, the objective is to destroy the other players using weapons or ramming. 
+In Peaceful mode, there is no objective and no vehicle damage.
+All vehicles have limited health.
+Players 1 and 2 can be controlled using keyboard or controllers
+Players 3 and 4 use keyboard only
+
+In-game settings:
+F1: toggle music
+F2: next music track
+F3: toggle audio
+F4: toggle head-up-display (HUD)
+ESC/P: pause, shows main menu
+"
+autowrap = true
+
+[node name="Objectives2" type="Label" parent="Instructions"]
+margin_left = 988.0
+margin_top = 220.0
+margin_right = 1792.0
+margin_bottom = 592.0
+custom_fonts/font = SubResource( 8 )
+text = "Powerups are objects which appear randomly; activate by driving through them::
+-Vehicle health: red \"+\" icon restored some vehicle health
+-Shield: pink shield icon: protects health for a limited time.
+
+Weapons:
+-Proximity mine: drop behind the vehicle, explodes when a vehicle is near
+-Rocket: straight flying explosive round
+-Homing Missile: guided  flying explosive round, will follow terrain
+-Ballistic round: explosive round
+-Ballistic guided missile: homing missile lauched high, guided to target
+
+Other:
+-Repair garages show a large red \"+\" above them: parking there within the blue area slowly restores health. 
+-Lava Island terrain only: fire storms occur randomly; the winds are strong enough to move vehicles and visibility is limited. A fire icon will appear bottom-right of the screen."
+autowrap = true
+
+[node name="Player 1" type="Position2D" parent="Instructions"]
+position = Vector2( 367, 731 )
+
+[node name="Player1" type="Label" parent="Instructions/Player 1"]
+margin_left = -174.0
+margin_top = -37.0
+margin_right = -44.0
+margin_bottom = 6.0
+custom_fonts/font = SubResource( 9 )
+text = "Player 1"
+align = 1
+
+[node name="Actions1" type="Label" parent="Instructions/Player 1"]
+margin_left = 40.0
+margin_top = -76.0
+margin_right = 222.0
+margin_bottom = 86.0
+custom_colors/font_color = Color( 0.827451, 0.2, 0.2, 1 )
+custom_fonts/font = SubResource( 8 )
+text = "Fire:
+Cycle weapon:
+Accelerate:
+Brake:
+Left-Right:"
+
+[node name="Buttons1a" type="Label" parent="Instructions/Player 1"]
+margin_left = 117.0
+margin_top = -77.0
+margin_right = 261.0
+margin_bottom = 41.0
+custom_fonts/font = SubResource( 8 )
+text = "E
+Q
+W
+S
+A/D"
+align = 1
+
+[node name="InstructionPlayer1b" type="Label" parent="Instructions/Player 1"]
+margin_left = 192.0
+margin_top = -77.0
+margin_right = 430.0
+margin_bottom = 85.0
+custom_fonts/font = SubResource( 8 )
+text = "Left Trigger
+Left Bumper
+Right Trigger
+Joystick down
+Joystick left/right"
+align = 1
+
+[node name="Player 2" type="Position2D" parent="Instructions"]
+position = Vector2( 361, 868 )
+
+[node name="Player2" type="Label" parent="Instructions/Player 2"]
+margin_left = -172.0
+margin_top = -39.0
+margin_right = -42.0
+margin_bottom = 4.0
+custom_fonts/font = SubResource( 9 )
+text = "Player 2"
+align = 1
+
+[node name="Actions2" type="Label" parent="Instructions/Player 2"]
+margin_left = 43.0
+margin_top = -76.0
+margin_right = 225.0
+margin_bottom = 86.0
+custom_colors/font_color = Color( 0.827451, 0.2, 0.2, 1 )
+custom_fonts/font = SubResource( 8 )
+text = "Fire:
+Cycle weapon:
+Accelerate:
+Brake:
+Left-Right:"
+
+[node name="InstructionPlayer1a" type="Label" parent="Instructions/Player 2"]
+margin_left = 126.0
+margin_top = -75.0
+margin_right = 285.999
+margin_bottom = 87.0
+custom_fonts/font = SubResource( 8 )
+text = "Shift
+Cntl
+Up
+Down
+Left/Right"
+align = 1
+
+[node name="InstructionPlayer2b" type="Label" parent="Instructions/Player 2"]
+margin_left = 230.0
+margin_top = -75.0
+margin_right = 468.0
+margin_bottom = 87.0
+custom_fonts/font = SubResource( 8 )
+text = "Left Trigger
+Left Bumper
+Right Trigger
+Joystick down
+Joystick left/right"
+align = 1
+
+[node name="Player 3" type="Position2D" parent="Instructions"]
+position = Vector2( 1262, 725 )
+
+[node name="InstructionPlayer1a3" type="Label" parent="Instructions/Player 3"]
+margin_left = 147.0
+margin_top = -74.0
+margin_right = 306.999
+margin_bottom = 88.0
+custom_fonts/font = SubResource( 8 )
+text = "Y
+R
+T
+G
+F/H"
+align = 1
+
+[node name="Actions3" type="Label" parent="Instructions/Player 3"]
+margin_left = 63.0
+margin_top = -75.0
+margin_right = 202.0
+margin_bottom = 87.0
+custom_colors/font_color = Color( 0.827451, 0.2, 0.2, 1 )
+custom_fonts/font = SubResource( 8 )
+text = "Fire:
+Cycle weapon:
+Accelerate:
+Brake:
+Left-Right:"
+
+[node name="Player3" type="Label" parent="Instructions/Player 3"]
+margin_left = -174.0
+margin_top = -39.0
+margin_right = -44.0
+margin_bottom = -2.0
+custom_fonts/font = SubResource( 9 )
+text = "Player 3"
+align = 1
+
+[node name="Player 4" type="Position2D" parent="Instructions"]
+position = Vector2( 1282, 889 )
+
+[node name="Player5" type="Label" parent="Instructions/Player 4"]
+margin_left = -191.0
+margin_top = -41.0
+margin_right = -61.0
+margin_bottom = -4.0
+custom_fonts/font = SubResource( 9 )
+text = "Player 4"
+align = 1
+
+[node name="InstructionPlayer1a4" type="Label" parent="Instructions/Player 4"]
+margin_left = 127.0
+margin_top = -79.0
+margin_right = 286.999
+margin_bottom = 83.0
+custom_fonts/font = SubResource( 8 )
+text = "O
+U
+I
+K
+J/L"
+align = 1
+
+[node name="Actions4" type="Label" parent="Instructions/Player 4"]
+margin_left = 42.0
+margin_top = -80.0
+margin_right = 224.0
+margin_bottom = 82.0
+custom_colors/font_color = Color( 0.827451, 0.2, 0.2, 1 )
+custom_fonts/font = SubResource( 8 )
+text = "Fire:
+Cycle weapon:
+Accelerate:
+Brake:
+Left-Right:"
+
+[node name="InstructionsBackButton" type="Button" parent="Instructions"]
+margin_left = 129.0
+margin_top = 957.0
+margin_right = 213.0
+margin_bottom = 988.0
+focus_previous = NodePath("../WindSpeed/WindSpeed")
+size_flags_horizontal = 0
+custom_fonts/font = ExtResource( 11 )
+text = "[Back]"
+
+[node name="Credits" type="Control" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Credits1" type="RichTextLabel" parent="Credits"]
+margin_left = 129.0
+margin_top = 217.0
+margin_right = 731.0
+margin_bottom = 838.0
+bbcode_enabled = true
+bbcode_text = "Sound effects [effect in game: author's effect name - author - URL]:
+
+[color=gray]
+Tyre squeal: Chrysler LHS tire squeal 03 (04-25-2009) - audible-edge - https://freesound.org/people/audible-edge/sounds/71738/[/indent]
+-Wind: wind howl - swiftoid - https://freesound.org/people/swiftoid/sounds/84914/
+-Missile firing: Missile firing fl - NHMWretched - https://freesound.org/people/NHMWretched/sounds/151858/
+-Vehicle engine: motorbike hornet 600 onboard.clip 0005.N3.F - martian - https://freesound.org/people/martian/sounds/181161/
+-Power-up activation: Spacey 1up/Power up - GameAudio - https://freesound.org/people/GameAudio/sounds/220173/
+-Ballistic round firing: Single Gunshot 3 - morganpurkis - https://freesound.org/people/morganpurkis/sounds/371041/
+-Vehicle crash: Crash - Eponn - https://freesound.org/people/Eponn/sounds/420356/
+-Air raid: Delta-7 Evacuation Siren - FusionWolf3740 - https://freesound.org/people/FusionWolf3740/sounds/570464/
+-Shield power-up: rpgPowerup - ColorsCrimsonTears - https://freesound.org/people/colorsCrimsonTears/sounds/577965/
+-Missile flight: Mulch Wind 3 - MrFossy - https://freesound.org/people/MrFossy/sounds/591149/
+-Fire storm crackling: bonfire flames sizzling - florianreichelt - https://freesound.org/people/florianreichelt/sounds/563764/
+[/color]
+
+Add-ons [In-game effect: author's name - author - URL]:
+
+[color=gray]
+-Explosions: Flipbook Particles - MrMinimal - https://godotengine.org/asset-library/asset/1278
+-Lava: Arnklit - Waterways - River Generation - https://godotengine.org/asset-library/asset/805
+[/color]
+
+Textures/Materials:
+
+[color=gray]
+Stylized Sand 001 - Katsukagi - https://3dtextures.me/2020/06/25/stylized-sand-001/
+[/color]"
+text = "Sound effects [effect in game: author's effect name - author - URL]:
+
+
+Tyre squeal: Chrysler LHS tire squeal 03 (04-25-2009) - audible-edge - https://freesound.org/people/audible-edge/sounds/71738/[/indent]
+-Wind: wind howl - swiftoid - https://freesound.org/people/swiftoid/sounds/84914/
+-Missile firing: Missile firing fl - NHMWretched - https://freesound.org/people/NHMWretched/sounds/151858/
+-Vehicle engine: motorbike hornet 600 onboard.clip 0005.N3.F - martian - https://freesound.org/people/martian/sounds/181161/
+-Power-up activation: Spacey 1up/Power up - GameAudio - https://freesound.org/people/GameAudio/sounds/220173/
+-Ballistic round firing: Single Gunshot 3 - morganpurkis - https://freesound.org/people/morganpurkis/sounds/371041/
+-Vehicle crash: Crash - Eponn - https://freesound.org/people/Eponn/sounds/420356/
+-Air raid: Delta-7 Evacuation Siren - FusionWolf3740 - https://freesound.org/people/FusionWolf3740/sounds/570464/
+-Shield power-up: rpgPowerup - ColorsCrimsonTears - https://freesound.org/people/colorsCrimsonTears/sounds/577965/
+-Missile flight: Mulch Wind 3 - MrFossy - https://freesound.org/people/MrFossy/sounds/591149/
+-Fire storm crackling: bonfire flames sizzling - florianreichelt - https://freesound.org/people/florianreichelt/sounds/563764/
+
+
+Add-ons [In-game effect: author's name - author - URL]:
+
+
+-Explosions: Flipbook Particles - MrMinimal - https://godotengine.org/asset-library/asset/1278
+-Lava: Arnklit - Waterways - River Generation - https://godotengine.org/asset-library/asset/805
+
+
+Textures/Materials:
+
+
+Stylized Sand 001 - Katsukagi - https://3dtextures.me/2020/06/25/stylized-sand-001/
+"
+scroll_active = false
+
+[node name="Credits2" type="RichTextLabel" parent="Credits"]
+margin_left = 1028.0
+margin_top = 217.0
+margin_right = 1782.0
+margin_bottom = 698.0
+bbcode_enabled = true
+bbcode_text = "Music tracks [Title - Artist - URL]:
+
+[color=gray]
+1 - Hat Films Improv Remix - Kozyie - https://freesound.org/people/Kozyie/ https://freesound.org/people/Kozyie/sounds/346842/
+2 - Happy Dance Groove Short Song - digimistic - https://freesound.org/people/digimistic/sounds/562287/
+3 - music - bsp7176 - https://freesound.org/people/bsp7176/sounds/570634/
+4 - Insane (Original Mix) - Ian Fever - https://soundcloud.com/ianfever/ian-fever-insane-original-mix
+5 - Sports bassslap - Rafael Zorez - https://soundcloud.com/rafael-torez 
+6 - Gnarly Adventures (Demo) - Super Game Music - https://soundcloud.com/supergamemusic/gnarlyadventures
+[/color]
+
+3D models [Title - Artist - URL]:
+
+[color=gray]
+-Bridge: Bridge 01 - Elkassar - https://www.turbosquid.com/3d-models/bridge-max-free/424181
+-Racer: - Bugatti Veyron - staer9 - https://www.turbosquid.com/3d-models/free-blend-model-bugatti-veyron/645202
+-Rally car: Free Car 1 - Srinath Weerasinghe - https://www.artstation.com/marketplace/p/R97q/free-car-1
+-Tank: - 3D Simple tank m26 model - panosdalk - https://www.turbosquid.com/3d-models/3d-simple-tank-m26-model-1522943 
+-Truck: - Low Poly Truck 3D model - db0013 - https://www.turbosquid.com/3d-models/truck-3d-model-1269603
+-City: Lowpoly City - Aditya Graphical - https://sketchfab.com/3d-models/lowpoly-city-6d0e0cd1b1314c4badfcceb5ccbcb5d5
+[/color]
+
+Shaders [Title - Artist - URL]:
+
+[color=gray]
+-Terrain shader: Texture mix example - QbieShay - https://godotshaders.com/shader/texture-mix-example/
+[/color]
+"
+text = "Music tracks [Title - Artist - URL]:
+
+
+1 - Hat Films Improv Remix - Kozyie - https://freesound.org/people/Kozyie/ https://freesound.org/people/Kozyie/sounds/346842/
+2 - Happy Dance Groove Short Song - digimistic - https://freesound.org/people/digimistic/sounds/562287/
+3 - music - bsp7176 - https://freesound.org/people/bsp7176/sounds/570634/
+4 - Insane (Original Mix) - Ian Fever - https://soundcloud.com/ianfever/ian-fever-insane-original-mix
+5 - Sports bassslap - Rafael Zorez - https://soundcloud.com/rafael-torez 
+6 - Gnarly Adventures (Demo) - Super Game Music - https://soundcloud.com/supergamemusic/gnarlyadventures
+
+
+3D models [Title - Artist - URL]:
+
+
+-Bridge: Bridge 01 - Elkassar - https://www.turbosquid.com/3d-models/bridge-max-free/424181
+-Racer: - Bugatti Veyron - staer9 - https://www.turbosquid.com/3d-models/free-blend-model-bugatti-veyron/645202
+-Rally car: Free Car 1 - Srinath Weerasinghe - https://www.artstation.com/marketplace/p/R97q/free-car-1
+-Tank: - 3D Simple tank m26 model - panosdalk - https://www.turbosquid.com/3d-models/3d-simple-tank-m26-model-1522943 
+-Truck: - Low Poly Truck 3D model - db0013 - https://www.turbosquid.com/3d-models/truck-3d-model-1269603
+-City: Lowpoly City - Aditya Graphical - https://sketchfab.com/3d-models/lowpoly-city-6d0e0cd1b1314c4badfcceb5ccbcb5d5
+
+
+Shaders [Title - Artist - URL]:
+
+
+-Terrain shader: Texture mix example - QbieShay - https://godotshaders.com/shader/texture-mix-example/
+
+"
+scroll_active = false
+
+[node name="CreditsBackButton" type="Button" parent="Credits"]
+margin_left = 134.0
+margin_top = 882.0
+margin_right = 218.0
+margin_bottom = 913.0
+focus_previous = NodePath("../WindSpeed/WindSpeed")
+size_flags_horizontal = 0
+custom_fonts/font = ExtResource( 11 )
+text = "[Back]"
 
 [connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/ResumeButton" to="." method="_on_ResumeButton_button_up"]
 [connection signal="button_down" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/StartButton" to="." method="_on_StartButton_button_down"]
 [connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/AddPlayerButton" to="." method="_on_AddPlayerButton_button_up"]
 [connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/OptionsButton" to="." method="_on_OptionsButton_button_up"]
+[connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/InstructionsButton" to="." method="_on_InstructionsButton_button_up"]
+[connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/CreditsButton" to="." method="_on_CreditsButton_button_up"]
 [connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/ResetGameButton" to="." method="_on_ResetGameButton_button_up"]
 [connection signal="button_up" from="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/QuitToDesktop" to="." method="_on_QuitToDesktop_button_up"]
 [connection signal="button_up" from="GameModeSelection/CheckBox1Competitive" to="." method="_on_CheckBox1Competitive_button_up"]
@@ -596,3 +1106,5 @@ valign = 1
 [connection signal="value_changed" from="OptionMenu/GridContainer/VehicleVolume/VehicleVolume" to="." method="_on_VehicleVolume_value_changed"]
 [connection signal="value_changed" from="OptionMenu/GridContainer/WindSpeed/WindSpeed" to="." method="_on_WindSpeed_value_changed"]
 [connection signal="button_up" from="OptionMenu/GridContainer/OptionBackButton" to="." method="_on_OptionBackButton_button_up"]
+[connection signal="button_up" from="Instructions/InstructionsBackButton" to="." method="_on_InstructionsBackButton_button_up"]
+[connection signal="button_up" from="Credits/CreditsBackButton" to="." method="_on_CreditsBackButton_button_up"]

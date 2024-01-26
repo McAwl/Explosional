@@ -178,8 +178,8 @@ func _process(delta):
 	if cooldown_timer < 0.0:
 		cooldown_timer = 0.0
 
-	$CameraBase/Camera/ParticlesSnow.process_material.direction = Global.weather_state["wind_direction"]
-	$CameraBase/Camera/ParticlesSnow.process_material.initial_velocity = Global.weather_state["wind_strength"]/100.0
+	$CameraBase/Camera/ParticlesCinders.process_material.direction = Global.weather_state["wind_direction"]
+	$CameraBase/Camera/ParticlesCinders.process_material.initial_velocity = Global.weather_state["wind_strength"]/100.0
 	add_central_force(Global.weather_state["wind_direction"] * Global.weather_state["wind_strength"])
 
 
@@ -213,7 +213,7 @@ func _input(event):
 			get_tree().set_input_as_handled()
 	elif InputMap.event_is_action (event, "damage_player1"):
 		if event.is_pressed():
-			if player_number == 1:
+			if player_number == 1 and Global.build_type == Global.Build.Development:
 				Global.debug_print(3, "_input(): adding Global.DamageType.TEST = "+str(Global.DamageType.TEST), "damage")
 				add_damage(1, Global.DamageType.TEST)
 				#add_damage(max_damage, Global.DamageType.OFF_MAP)
@@ -221,7 +221,7 @@ func _input(event):
 			get_tree().set_input_as_handled()
 	elif InputMap.event_is_action (event, "kill_player1"):
 		if event.is_pressed():
-			if player_number == 1:
+			if player_number == 1 and Global.build_type == Global.Build.Development:
 				Global.debug_print(3, "_input(): adding Global.DamageType.TEST = "+str(Global.DamageType.TEST), "damage")
 				add_damage(max_damage, Global.DamageType.TEST)
 				#add_damage(max_damage, Global.DamageType.OFF_MAP)
@@ -229,26 +229,26 @@ func _input(event):
 			get_tree().set_input_as_handled()
 	elif InputMap.event_is_action (event, "kill_player2"):
 		if event.is_pressed():
-			if player_number == 2:
+			if player_number == 2 and Global.build_type == Global.Build.Development:
 				add_damage(max_damage, Global.DamageType.TEST)
 			# Stop the event from spreading
 			get_tree().set_input_as_handled()
 	elif InputMap.event_is_action (event, "kill_player3"):
 		if event.is_pressed():
-			if player_number == 3:
+			if player_number == 3 and Global.build_type == Global.Build.Development:
 				add_damage(max_damage, Global.DamageType.TEST)
 			# Stop the event from spreading
 			get_tree().set_input_as_handled()
 	elif InputMap.event_is_action (event, "kill_player4"):
 		if event.is_pressed():
-			if player_number == 4:
+			if player_number == 4 and Global.build_type == Global.Build.Development:
 				add_damage(max_damage, Global.DamageType.TEST)
 			# Stop the event from spreading
 			get_tree().set_input_as_handled()
-	elif InputMap.event_is_action (event, "toggle_snow"):
-		if event.is_pressed():
+	elif InputMap.event_is_action (event, "toggle_cinders"):
+		if event.is_pressed() and Global.build_options["allow_toggle_cinders"] == true:
 			# fog will set to camera.far as long as the fog depth end = 0 in the main enviroment
-			if not $CameraBase/Camera/TweenFar.is_active():
+			if not $CameraBase/Camera/TweenCameraFarCullingDistance.is_active():
 				Global.toggle_weather()
 			# Stop the event from spreading
 			get_tree().set_input_as_handled()
@@ -395,9 +395,10 @@ func _physics_process(delta):
 		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta)
 		
 		# Keep 4wd vehicles on inclines surfaces, given Godot's VehicleWheel traction doesn't work properly
-		if fwd_mps < 1.0 and engine_force > 0 and is_4wd():
+		if fwd_mps < 2.0 and engine_force > 0 and is_4wd():
 			if get_type() == ConfigVehicles.Type.RALLY:
 				apply_impulse( Vector3(0,0,0), 0.5*engine_force*transform.basis.z )   # offset, impulse(=direction*force)
+				#apply_impulse( Vector3(0,0,0), 0.5*engine_force*transform.basis.y )   # offset, impulse(=direction*force)
 				special_ability_state["climb_walls"] = true
 				power_up_effect(true)
 			else:  # e.g. get_type == ConfigVehicles.Type.TANK:
@@ -467,12 +468,22 @@ func on_change_weather(weather_change: Dictionary, change_duration_sec) -> void:
 		if "visibility" == weather_item_key:
 			Global.debug_print(3, "VehicleBody: changing weather: visibility", "weather")
 			Global.debug_print(3, "  old="+str(weather_change["visibility"][0])+", new="+str(weather_change["visibility"][1]), "weather")
-			if $CameraBase/Camera/TweenFar.is_active():
-				Global.debug_print(3, "VehicleBody: warning: starting $CameraBase/Camera/TweenFar but it's still active", "weather")
-			$CameraBase/Camera/TweenFar.interpolate_property($CameraBase/Camera, "far", weather_change["visibility"][0], weather_change["visibility"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$CameraBase/Camera/TweenFar.start()
-		if "snow_visible" == weather_item_key:
-			$CameraBase/Camera/ParticlesSnow.visible = weather_change["snow_visible"]
+			if $CameraBase/Camera/TweenCameraFarCullingDistance.is_active():
+				Global.debug_print(3, "VehicleBody: warning: starting $CameraBase/Camera/TweenCameraFarCullingDistance but it's still active", "weather")
+			$CameraBase/Camera/TweenCameraFarCullingDistance.interpolate_property($CameraBase/Camera, "far", weather_change["visibility"][0], weather_change["visibility"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$CameraBase/Camera/TweenCameraFarCullingDistance.start()
+		#if "cinders_visible" == weather_item_key:
+		#	get_node("/root/MainScene/Effects/TweenFireStorm").interpolate_property(get_node("/root/MainScene/Viewport/WorldEnvironment"), "environment:dof_blur_far_distance", weather_change["dof_blur_far_distance"][0], weather_change["dof_blur_far_distance"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		#	get_node("/root/MainScene/Effects/TweenFireStorm").start()
+		#	$CameraBase/Camera/ParticlesCinders.visible = weather_change["cinders_visible"]
+		if "cam_colour_filer_transparency" == weather_item_key:
+			Global.debug_print(1, "MainScene: changing weather: weather_item = cam_colour_filer_transparency", "weather")
+			Global.debug_print(1, "MainScene: weather_change = "+str(weather_change), "weather")
+			Global.debug_print(1, "  old="+str(weather_change["cam_colour_filer_transparency"][0])+", new="+str(weather_change["cam_colour_filer_transparency"][1]), "weather")
+			if $CameraBase/Camera/TweenCameraColourFilterTransparency.is_active():
+				Global.debug_print(3, "VehicleBody: warning: starting $Effects/cam_colour_filer_transparency but it's still active", "weather")
+			$CameraBase/Camera/TweenCameraColourFilterTransparency.interpolate_property($CameraBase/Camera/CSGPolygon.get_material(), "albedo_color:a", weather_change["cam_colour_filer_transparency"][0], weather_change["cam_colour_filer_transparency"][1], change_duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)  #Color(1, 0.52549, 0, 0.305882)
+			$CameraBase/Camera/TweenCameraColourFilterTransparency.start()
 
 
 func on_update_weather(weather_state) -> void:
@@ -480,18 +491,18 @@ func on_update_weather(weather_state) -> void:
 	Global.debug_print(5, "VehicleBody: received update_weather signal="+str(weather_state), "weather")
 	
 	# Check visibility matches weather model and correct if needed. This can happen when vehicle respawns and the weather has changed
-	if not $CameraBase/Camera/TweenFar.is_active():  # only check if we're not already trying to change it via the Tween
-		if not Global.weather_model[weather_state["type"]]["visibility"] == $CameraBase/Camera.far:
-			Global.debug_print(1, "VehicleBody: update_weather(): error! visibility doesn't match weather model! Correcting...", "weather")
-			$CameraBase/Camera.far = Global.weather_model[weather_state["type"]]["visibility"]
+	#if not $CameraBase/Camera/TweenCameraFarCullingDistance.is_active():  # only check if we're not already trying to change it via the Tween
+	#	if not Global.weather_model[weather_state["type"]]["visibility"] == $CameraBase/Camera.far:
+	#		Global.debug_print(1, "VehicleBody: update_weather(): error! visibility doesn't match weather model! Correcting...", "weather")
+	#		$CameraBase/Camera.far = Global.weather_model[weather_state["type"]]["visibility"]
 		
 	# Check snow visibility matches weather model and correct if needed. This can happen when vehicle respawns and the weather has changed 
-	if weather_state["type"] != Global.Weather.SNOW and $CameraBase/Camera/ParticlesSnow.visible:
-		Global.debug_print(1, "VehicleBody: error! ParticlesSnow.visible but weather is not SNOW. Correcting...", "weather")
-		$CameraBase/Camera/ParticlesSnow.hide()
-	elif weather_state["type"] == Global.Weather.SNOW and not $CameraBase/Camera/ParticlesSnow.visible:
-		Global.debug_print(1, "VehicleBody: error! ParticlesSnow not visible but weather is SNOW. Correcting...", "weather")
-		$CameraBase/Camera/ParticlesSnow.show()
+	if weather_state["type"] != Global.Weather.FIRE_STORM and $CameraBase/Camera/ParticlesCinders.visible:
+		Global.debug_print(1, "VehicleBody: error! ParticlesCinders.visible but weather is not FIRE_STORM. Correcting...", "weather")
+		$CameraBase/Camera/ParticlesCinders.hide()
+	elif weather_state["type"] == Global.Weather.FIRE_STORM and not $CameraBase/Camera/ParticlesCinders.visible:
+		Global.debug_print(1, "VehicleBody: error! ParticlesCinders not visible but weather is FIRE_STORM. Correcting...", "weather")
+		$CameraBase/Camera/ParticlesCinders.show()
 
 
 func _on_CarBody_body_entered(body):
@@ -639,7 +650,7 @@ func init(_pos=null, _player_number=null, _name=null) -> bool:
 			Global.debug_print(6, "vehicle_body: init(): ch="+str(ch), "camera")
 			if ch.name == "CameraBasesTargets":
 				if has_node("CameraBase"):
-					$CameraBase.add_child(ch)
+					$CameraBase.add_child(ch)   #NODE NOT FOUND ERROR E 0:00:10.604   get_node: (Node not found: "../../../../../CameraBase/Camera" (relative to "//MainScene/Player1/VC/V/vehicle_body/CameraBase/CameraBasesTargets/CamTargetForward/MeshInstance").)
 				else:
 					Global.debug_print(6, "Error: no CameraBase, children are: "+str(get_children()))
 			else:
@@ -749,7 +760,7 @@ func init_visual_effects(start) -> void:
 	powerup_state["shield"]["enabled"] = false
 	$Effects/Shield.hide()
 	$Effects/Shield.visible = false
-	$CameraBase/Camera/ParticlesSnow.hide()
+	$CameraBase/Camera/ParticlesCinders.hide()
 	
 	if start == false:
 		engine_sound_off()
@@ -849,17 +860,17 @@ func flicker_lights() -> void:
 		$Lights/LightFrontRight.spot_range = 100.0
 
 
-func get_raycast(wheel_num) -> RayCast:
+func get_raycast(left_or_right, wheel_num) -> RayCast:  # 1=front, 2=back
 	var gw: VehicleWheel = get_wheel(wheel_num)
 	if gw != null:
-		return $Raycasts.get_node("RayCastWheel"+str(wheel_num)) as RayCast
+		return $Raycasts.get_node("RayCastWheel"+str(left_or_right)+str(wheel_num)) as RayCast
 	else:
 		return null
 
 
 func check_ongoing_damage() -> int:
 	if total_damage < max_damage:
-		for raycast in [get_raycast(1), get_raycast(2), get_raycast(3), get_raycast(4), $Raycasts/RayCastCentreDown, $Raycasts/RayCastBonnetUp, $Raycasts/RayCastForward, $Raycasts/RayCastBackward, $Raycasts/RayCastLeft, $Raycasts/RayCastRight]:
+		for raycast in [get_raycast("Left", 1), get_raycast("Right", 1), get_raycast("Left", 2), get_raycast("Right", 2), $Raycasts/RayCastCentreDown, $Raycasts/RayCastBonnetUp, $Raycasts/RayCastForward, $Raycasts/RayCastBackward, $Raycasts/RayCastLeft, $Raycasts/RayCastRight]:
 			if check_raycast("lava", raycast) == true:
 				#Global.debug_print(3, "Player taking damage 1")
 				return 1
@@ -1059,24 +1070,25 @@ func add_damage(amount: float, damage_type: int) -> void:
 		start_vehicle_dying()
 	
 	# explode one mesh from the vehicle body
-	if has_node("MeshInstances"):
-		var base_scale = $MeshInstances.scale
-		for vehicle_part in $MeshInstances.get_children():
-			var new_exploded_vehicle_part_instance: ExplodedVehiclePart = new_exploded_vehicle_part.instance()
-			$MeshInstances.remove_child(vehicle_part)  # move the part from the vehicle to an exploded part
-			vehicle_part.visible = true  # some meshes start off invisible
-			vehicle_part.translation = Vector3(0.0, 0.0, 0.0)  # start them all at 0,0,0?
-			new_exploded_vehicle_part_instance.get_node("SmokeTrail").emitting = true
-			new_exploded_vehicle_part_instance.add_child(vehicle_part)
-			new_exploded_vehicle_part_instance.set_as_toplevel(true)
-			new_exploded_vehicle_part_instance.global_transform.origin = global_transform.origin
-			new_exploded_vehicle_part_instance.global_transform.origin.y += 1
-			new_exploded_vehicle_part_instance.linear_velocity = linear_velocity/2.0
-			vehicle_part.scale *= base_scale
-			add_child(new_exploded_vehicle_part_instance)
-			new_exploded_vehicle_part_instance.name = "ExplodedVehiclePart_"+str(vehicle_part.name)
-			break # only consider one mesh for now
-			#explode_vehicle_meshes(true)  # test to expldoe one mesh from the vehicle only
+	if Global.build_options["vehicle_falling_parts"] == true:
+		if has_node("MeshInstances"):
+			var base_scale = $MeshInstances.scale
+			for vehicle_part in $MeshInstances.get_children():
+				var new_exploded_vehicle_part_instance: ExplodedVehiclePart = new_exploded_vehicle_part.instance()
+				$MeshInstances.remove_child(vehicle_part)  # move the part from the vehicle to an exploded part
+				vehicle_part.visible = true  # some meshes start off invisible
+				vehicle_part.translation = Vector3(0.0, 0.0, 0.0)  # start them all at 0,0,0?
+				new_exploded_vehicle_part_instance.get_node("SmokeTrail").emitting = true
+				new_exploded_vehicle_part_instance.add_child(vehicle_part)
+				new_exploded_vehicle_part_instance.set_as_toplevel(true)
+				new_exploded_vehicle_part_instance.global_transform.origin = global_transform.origin
+				new_exploded_vehicle_part_instance.global_transform.origin.y += 1
+				new_exploded_vehicle_part_instance.linear_velocity = linear_velocity/2.0
+				vehicle_part.scale *= base_scale
+				add_child(new_exploded_vehicle_part_instance)
+				new_exploded_vehicle_part_instance.name = "ExplodedVehiclePart_"+str(vehicle_part.name)
+				break # only consider one mesh for now
+				#explode_vehicle_meshes(true)  # test to expldoe one mesh from the vehicle only
 
 
 func check_engine_force_value() -> void:
@@ -1087,6 +1099,10 @@ func check_engine_force_value() -> void:
 	#engine_force_value = ConfigVehicles.config[get_type()]["engine_force_value"]*pow(0.75, total_damage)  # decrease engine power to indicate damage
 
 
+func restore_half_health(): # ie remove half the current damage
+	total_damage = total_damage/2
+	
+	
 func restore_health(amount):
 	if amount == 0:
 		return
@@ -1208,7 +1224,7 @@ func fire_missile_or_rocket() -> void:
 		knock_back_firing_ballistic = true
 		weapon_instance.activate(player_number, false)  # homing = false
 		weapon_instance.get_node("ParticlesThrust").visible = false
-		weapon_instance.velocity += Vector3.UP * 5.0  # fire upwards a bit
+		weapon_instance.velocity += Vector3.UP   # * 5.0  # fire upwards a bit
 		$Effects/Audio/GunshotSound.playing = true
 	else:
 		weapon_instance.activate(player_number, true)  # homing = true
@@ -1260,7 +1276,8 @@ func power_up(type: int) -> void:
 		$TimerDisableShieldPowerup.start(30.0)
 	elif type == ConfigWeapons.PowerupType.HEALTH:
 		if total_damage > 0:
-			reset_total_damage()
+			restore_half_health()
+			# reset_total_damage()
 
 
 func reset_total_damage():

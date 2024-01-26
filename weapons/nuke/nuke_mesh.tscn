@@ -22,6 +22,7 @@ albedo_color = Color( 0.972549, 0.913725, 0.0196078, 1 )
 metallic = 0.4
 
 [node name="NukeMeshes" type="Spatial"]
+physics_interpolation_mode = 1
 
 [node name="Body" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, -0.0308028, -0.999525, 0, 0.999525, -0.0308028, 0, 1.34651, 0 )

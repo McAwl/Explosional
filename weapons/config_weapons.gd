@@ -30,14 +30,14 @@ enum PowerupType {
 	}
 	
 const COOLDOWN_TIMER_DEFAULTS: Dictionary = {
-	Type.MINE: 10.0, 
-	Type.ROCKET: 20.0, 
-	Type.MISSILE: 30.0, 
+	Type.MINE: 5.0,
+	Type.ROCKET: 10.0, 
+	Type.MISSILE: 60.0,  #20.0, changed as we're giving all weapons to the 
 	Type.NUKE: 60.0, 
-	Type.BALLISTIC: 10.0,
-	Type.BALLISTIC_MISSILE: 30.0,
-	Type.TRUCK_MINE: 5.0,
-	Type.AIR_BURST: 5.0,
+	Type.BALLISTIC: 60.0,  #5.0, changed as we're giving all weapons to the
+	Type.BALLISTIC_MISSILE: 60.0,  #10.0, changed as we're giving all weapons to the
+	Type.TRUCK_MINE: 30.0,
+	Type.AIR_BURST: 30.0,
 	}
 
 const EXPLOSIVE_START_WAIT: float = 3.0  # wait time when first turned on to activation
@@ -54,8 +54,8 @@ const DAMAGE: Dictionary = {
 	Type.NUKE: 10,
 	Type.BALLISTIC: 5.0,
 	Type.BALLISTIC_MISSILE: 10.0,
-	Type.TRUCK_MINE: 5.0,
-	Type.AIR_BURST: 5.0,  # this won't happen though
+	Type.TRUCK_MINE: 3,
+	Type.AIR_BURST: 3,  # this won't happen though
 	}
 
 # TODO: Do we want to keep this, or do we want to completely move to damage due to force (acceleration)
@@ -67,8 +67,8 @@ const DAMAGE_INDIRECT: Dictionary = {
 	Type.BOMB: 1, 
 	Type.BALLISTIC: 0,
 	Type.BALLISTIC_MISSILE: 3,
-	Type.TRUCK_MINE: 5,
-	Type.AIR_BURST: 5.0,
+	Type.TRUCK_MINE: 3,
+	Type.AIR_BURST: 3,
 	}
 	
 const SCENE: Dictionary = {
@@ -97,7 +97,7 @@ const ICON: Dictionary = {
 const MUZZLE_SPEED: Dictionary = {
 	Type.ROCKET: 10.0, 
 	Type.MISSILE: 10.0, 
-	Type.BALLISTIC: 20.0,
+	Type.BALLISTIC: 20.0,  # at 50 it can fly through walls - be careful
 	Type.BALLISTIC_MISSILE: 0.0,
 	Type.AIR_BURST: 1.0,
 	}
@@ -143,11 +143,11 @@ const EXPLOSION_STRENGTH: Dictionary = {
 var vehicle_weapons: Dictionary = {
 	Type.MINE: [ConfigVehicles.Type.RACER],
 	Type.ROCKET: [ConfigVehicles.Type.RACER, ConfigVehicles.Type.RALLY, ConfigVehicles.Type.TANK],
-	Type.MISSILE: [ConfigVehicles.Type.RALLY, ConfigVehicles.Type.TANK, ConfigVehicles.Type.TRUCK],
+	Type.MISSILE: [ConfigVehicles.Type.RACER, ConfigVehicles.Type.RALLY, ConfigVehicles.Type.TANK, ConfigVehicles.Type.TRUCK],
 	Type.NUKE: [],  # disabled initially, PowerUp enables it ."Racer", "Rally", "Tank", "Truck"]},
-	Type.BALLISTIC: [ConfigVehicles.Type.TANK, ConfigVehicles.Type.TRUCK],
+	Type.BALLISTIC: [ConfigVehicles.Type.RACER, ConfigVehicles.Type.TANK, ConfigVehicles.Type.TRUCK],
 	Type.BOMB: [],
-	Type.BALLISTIC_MISSILE: [ConfigVehicles.Type.TANK],
+	Type.BALLISTIC_MISSILE: [ConfigVehicles.Type.RACER, ConfigVehicles.Type.TANK],
 	Type.TRUCK_MINE: [ConfigVehicles.Type.TRUCK],
 	Type.AIR_BURST: [ConfigVehicles.Type.TRUCK],
 	}
@@ -160,8 +160,8 @@ const EXPLOSION_RANGE: Dictionary = {
 	Type.BALLISTIC_MISSILE: 20.0,
 	Type.BALLISTIC: 10.0, 
 	Type.NUKE: 1000.0,
-	Type.TRUCK_MINE: 1000.0,  # Infinite, but only line of sight
-	Type.AIR_BURST: 1000.0,  # Infinite, but only line of sight
+	Type.TRUCK_MINE: 200.0,  # only line of sight. 1000=Infinite
+	Type.AIR_BURST: 200.0,  # only line of sight. 1000=Infinite
 	}
 
 # TODO enforce these for indirect missile explosions

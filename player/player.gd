@@ -14,6 +14,10 @@ func _ready():
 	$VC/V/CanvasLayer/HeadUpDisplay/icon_nuke.visible = false
 	$VC/V/CanvasLayer/HeadUpDisplay/health.tint_progress = "#7e00ff00"  # green
 	get_canvaslayer().get_node("LabelAchievement").hide()
+	if Global.build_options["hud_speedometer"] == false:
+		$VC/V/CanvasLayer/Speedometer.hide()
+	else:
+		$VC/V/CanvasLayer/Speedometer.show()
 
 
 func _process(_delta):

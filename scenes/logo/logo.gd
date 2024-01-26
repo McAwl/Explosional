@@ -9,7 +9,7 @@ func _ready():
 	print("current application  size="+str(curr_app_size))
 	print("target screen size="+str(target_screen_size))
 	if curr_app_size != target_screen_size:
-		print("Resizing screen from "+str(curr_app_size)+" to "+str(target_screen_size))
+		Global.debug_print(0, "Resizing screen from "+str(curr_app_size)+" to "+str(target_screen_size))
 		OS.set_window_size(target_screen_size)
 	curr_app_size = get_tree().get_root().get_viewport().size
 

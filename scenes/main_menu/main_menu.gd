@@ -22,6 +22,13 @@ func _ready():
 	$LoadingText.hide()
 	$OptionMenu.hide()
 	$VersionText.show()
+	$Instructions.hide()
+	$Credits.hide()
+	$MainSelection.show()
+	$MainSelection/MainContainer.show()
+	$MainSelection/MainContainer/ButtonsContainer.show()
+	$MainSelection/MainContainer/ButtonsContainer/HBoxContainer2.show()
+	$GameModeSelection.show()
 	var output_build = []
 	var output_version = []
 	var _os_execute_build = OS.execute("git", PoolStringArray(["rev-list", "--count", "HEAD"]), true, output_build)
@@ -40,9 +47,9 @@ func _ready():
 		version = output_version[0].trim_suffix("\n")
 	
 	if build == null or version == null:
-		$VersionText/VersionContainer/VersionText.text = "Explosional! BETA 2022 McAwl"
+		$VersionText/VersionContainer/VersionText.text = "Explosional! BETA 2024 McAwl"
 	else:
-		$VersionText/VersionContainer/VersionText.text = "Explosional! "+ version + " Build "+build+" 2022 McAwl"
+		$VersionText/VersionContainer/VersionText.text = "Explosional! "+ version + " Build "+build+" 2024 McAwl"
 	
 	match Global.game_mode:
 		Global.GameMode.COMPETITIVE:
@@ -51,6 +58,23 @@ func _ready():
 			$GameModeSelection/CheckBox2Peaceful.pressed = true
 		Global.GameMode.TOUGH:
 			$GameModeSelection/CheckBox3Tough.pressed = true
+
+	
+	if Global.build_options["vehicle_options"]["racer"] == false:
+		$VehicleSelection/GridContainer/RacerButton.hint_tooltip = "disabled"
+		$VehicleSelection/GridContainer/RacerButton.disabled = true
+	
+	if Global.build_options["vehicle_options"]["rally"] == false:
+		$VehicleSelection/GridContainer/RallyButton.hint_tooltip = "disabled"
+		$VehicleSelection/GridContainer/RallyButton.disabled = true
+	
+	if Global.build_options["vehicle_options"]["tank"] == false:
+		$VehicleSelection/GridContainer/TankButton.hint_tooltip = "disabled"
+		$VehicleSelection/GridContainer/TankButton.disabled = true
+	
+	if Global.build_options["vehicle_options"]["truck"] == false:
+		$VehicleSelection/GridContainer/TruckButton.hint_tooltip = "disabled"
+		$VehicleSelection/GridContainer/TruckButton.disabled = true
 	
 	configure().resume()
 
@@ -93,6 +117,8 @@ func _on_OptionsButton_button_up():
 	$OptionMenu/GridContainer/MusicVolume/MusicVolume.grab_focus()
 
 
+
+
 func _on_OptionBackButton_button_up():
 	$OptionMenu.hide()
 	$MainSelection/MainContainer/ButtonsContainer.show()
@@ -127,32 +153,47 @@ func _on_Player1SelectButton_button_up():
 func _on_Player2SelectButton_button_up():
 	show_vehicle_selection(2)
 	$PlayerSelection/GridContainer/Player3SelectButton.disabled = false
+	$PlayerSelection/GridContainer/Player2SelectButton/SubLabel.text = "Player added. Click to change vehicle"
+	$PlayerSelection/GridContainer/Player3SelectButton/SubLabel.text = "Click to add player"
 
 
 func _on_Player3SelectButton_button_up():
 	show_vehicle_selection(3)
 	$PlayerSelection/GridContainer/Player4SelectButton.disabled = false
+	$PlayerSelection/GridContainer/Player3SelectButton/SubLabel.text = "Player added. Click to change vehicle"
+	$PlayerSelection/GridContainer/Player4SelectButton/SubLabel.text = "Click to add player"
 
 
 func _on_Player4SelectButton_button_up():
 	show_vehicle_selection(4)
+	$PlayerSelection/GridContainer/Player4SelectButton/SubLabel.text = "Player added. Click to change vehicle"
 
 
 func _on_RacerButton_button_up():
-	hide_vehicle_selection(ConfigVehicles.Type.RACER)
-
+	if Global.build_options["vehicle_options"]["racer"] == true:
+		hide_vehicle_selection(ConfigVehicles.Type.RACER)
+	else:
+		return
 
 func _on_RallyButton_button_up():
-	hide_vehicle_selection(ConfigVehicles.Type.RALLY)
+	if Global.build_options["vehicle_options"]["rally"] == true:
+		hide_vehicle_selection(ConfigVehicles.Type.RALLY)
+	else:
+		return
 
 
 func _on_TankButton_button_up():
-	hide_vehicle_selection(ConfigVehicles.Type.TANK)
+	if Global.build_options["vehicle_options"]["tank"] == true:
+		hide_vehicle_selection(ConfigVehicles.Type.TANK)
+	else:
+		return
 
 
 func _on_TruckButton_button_up():
-	hide_vehicle_selection(ConfigVehicles.Type.TRUCK)
-	
+	if Global.build_options["vehicle_options"]["truck"] == true:
+		hide_vehicle_selection(ConfigVehicles.Type.TRUCK)
+	else:
+		return
 
 
 func _on_MusicVolume_value_changed(value):
@@ -164,7 +205,7 @@ func _on_VehicleVolume_value_changed(value):
 
 
 func _on_WindSpeed_value_changed(value):
-	Global.weather_model[Global.Weather.SNOW]["max_wind_strength"] = value
+	Global.weather_model[Global.Weather.FIRE_STORM]["max_wind_strength"] = value
 
 
 func _on_CheckBox1Competitive_button_up():
@@ -267,7 +308,8 @@ func hide_vehicle_selection(_vehicle_selection: int) -> void:
 	$PlayerSelection/GridContainer.get_node("Player"+str(player_selection)+"SelectButton").text = "Player "+str(player_selection)+" "+str(ConfigVehicles.nice_name[vehicle_selection])
 	players[player_selection] = {"name": str(player_selection), "vehicle": vehicle_selection}
 	$PlayerSelection/GridContainer.get_node("Player"+str(player_selection)+"SelectButton").grab_focus()
-
+	Global.debug_print(0, "hide_vehicle_selection(): _vehicle_selection="+str(_vehicle_selection))
+	
 
 func show_vehicle_selection(_player_selection: int) -> void:
 	player_selection = _player_selection
@@ -285,3 +327,36 @@ func get_resume_button() -> Button:
 func get_start_button() -> Button:
 	return $MainSelection/MainContainer/ButtonsContainer/HBoxContainer2/StartButton as Button
 
+
+func _on_InstructionsButton_button_up():
+	$Instructions.visible = true
+	$MainSelection/MainContainer/ButtonsContainer.hide()
+	$GameModeSelection.hide()
+	$PlayerSelection.hide()
+	$VehicleSelection.hide()
+
+
+func _on_InstructionsBackButton_button_up():
+	$Instructions.hide()
+	$MainSelection/MainContainer/ButtonsContainer.show()
+	$GameModeSelection.show()
+	$PlayerSelection.show()
+	$VehicleSelection.hide()
+
+
+func _on_CreditsButton_button_up():
+	$Credits.show()
+	$Instructions.hide()
+	$MainSelection/MainContainer/ButtonsContainer.hide()
+	$GameModeSelection.hide()
+	$PlayerSelection.hide()
+	$VehicleSelection.hide()
+
+
+func _on_CreditsBackButton_button_up():
+	$Credits.hide()
+	$Instructions.hide()
+	$MainSelection/MainContainer/ButtonsContainer.show()
+	$GameModeSelection.show()
+	$PlayerSelection.show()
+	$VehicleSelection.hide()

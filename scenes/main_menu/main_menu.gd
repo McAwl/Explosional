@@ -50,11 +50,11 @@ func _ready():
 		$VersionText/VersionContainer/VersionText.text = "Explosional v1.8.5-beta 2024 McAwl"
 	else:
 		if len(build) < 2 or len(version) < 2:
-			$VersionText/VersionContainer/VersionText.text = "Explosional v1.8.5-beta 2024 McAwl" + str(len(version)) + " " + str(len(build))
+			$VersionText/VersionContainer/VersionText.text = "Explosional v1.8.5-beta 2024 McAwl "  # + str(len(version)) + " " + str(len(build))
 		else:
 			Global.debug_print(3, "version="+str(version)+", build="+str(build))
 			Global.debug_print(3, "len version="+str(len(version))+", len build="+str(len(build)))
-			$VersionText/VersionContainer/VersionText.text = "Explosional "+ version + " Build "+build+" 2024 McAwl" + str(len(version)) + " " + str(len(build))
+			$VersionText/VersionContainer/VersionText.text = "Explosional "+ version + " Build "+build+" 2024 McAwl " # + str(len(version)) + " " + str(len(build))
 	
 	match Global.game_mode:
 		Global.GameMode.COMPETITIVE:

@@ -75,6 +75,7 @@ var powerup_state: Dictionary = {
 	"shield": {"enabled": false, "hits_left": 0, "max_hits": 0},
 	"fast_reverse": {"enabled": false},
 	}
+var has_vehicle_touched_down_yet: bool = false
 
 
 # Built-in  methods
@@ -882,6 +883,10 @@ func check_ongoing_damage() -> int:
 func check_raycast(substring_in_hit_name, raycast) -> bool:
 	if raycast != null:
 		if raycast.is_colliding():
+			if has_vehicle_touched_down_yet == false:
+				has_vehicle_touched_down_yet = true
+				get_node("/root/MainScene/VC/CL/MainMenu/MainSelection").hide()
+				get_node("/root/MainScene/VC/CL/MainMenu/LoadingText").hide()
 			if substring_in_hit_name.to_lower() in raycast.get_collider().name.to_lower():
 				#Global.debug_print(3, "Vehicle raycast "+str(raycast.name)+": collision matches substring: "+str(substring_in_hit_name))
 				$Effects/Damage/LavaLight1.visible = true
@@ -1274,7 +1279,7 @@ func power_up(type: int) -> void:
 		powerup_state["shield"]["enabled"] = true
 		powerup_state["shield"]["hits_left"] = 3
 		powerup_state["shield"]["max_hits"] = 3
-		$TimerDisableShieldPowerup.start(30.0)
+		$Timers/TimerDisableShieldPowerup.start(30.0)
 	elif type == ConfigWeapons.PowerupType.HEALTH:
 		Global.debug_print(3, "power_up: HEALTH ", "powerup")
 		if total_damage > 0:
@@ -1455,3 +1460,6 @@ func get_av_wheel_friction_slip():
 func power_up_effect(enable):
 	$Effects/Powerup.visible = enable
 
+
+func _on_TimerCheckEngineSoundOn_timeout():
+	pass

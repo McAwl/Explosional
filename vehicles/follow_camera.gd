@@ -28,7 +28,6 @@ var raycast_vehicle_to_cam: RayCast
 
 func _ready():
 	Global.debug_print(5, "follow_camera: _ready() global_transform.origin= "+str(self.global_transform.origin), "camera")
-	pass
 
 
 func init(_number_of_players, _base_origin, _target_origin):
@@ -55,11 +54,12 @@ func init(_number_of_players, _base_origin, _target_origin):
 	# This detaches the camera transform from the parent spatial node.
 	set_as_toplevel(true)
 	#Global.debug_print(5, "follow_camera: _ready() target.origin starting at position "+str(self.target.origin), "camera")
-	Global.debug_print(5, "follow_camera: init() global_transform.origin starting at global_transform.origin= "+str(self.global_transform.origin), "camera")
-	Global.debug_print(5, "follow_camera: init() parent has global_transform.origin= "+str(get_parent().global_transform.origin), "camera")
+	#Global.debug_print(5, "follow_camera: init() global_transform.origin starting at global_transform.origin= "+str(self.global_transform.origin), "camera")
+	#Global.debug_print(5, "follow_camera: init() parent has global_transform.origin= "+str(get_parent().global_transform.origin), "camera")
 	
 	number_of_players= _number_of_players
-
+	Global.debug_print(5, "follow_camera:init() completed", "camera")
+	
 
 func get_carbody():
 	return get_parent().get_parent()
@@ -113,17 +113,22 @@ func _physics_process(delta):
 	
 	var follow_speed_multiplier: float = follow_speed_mult_min + follow_speed_mult_min + 0.01*angular_velocity.length()*abs(fwd_mps)  
 	var modify_by_num_players: float = 1.0 + ((float(number_of_players)-1.0)/2.0)  # keep closer to the vehicle the smaller the viewport is (number of players)
-	var modify_by_speed = 0.01*pow(abs(fwd_mps), 1.5)
+	var modify_by_speed = 0.04*pow(abs(1.0+fwd_mps), 1.1)
 	
+	#if $TimerVehicleCamDelayEnable.is_stopped():
 	if fwd_mps >= -2.0:  # look-forward config for camera
 		global_transform = global_transform.interpolate_with( cam_base_forward_third_person, 0.01 + modify_by_speed * modify_by_num_players * delta * FOLLOW_SPEED / follow_speed_multiplier)
 		target = target.interpolate_with(target_forward_third_person, modify_by_num_players * delta * FOLLOW_SPEED * follow_speed_multiplier)
 	else:  # look-backwards config for camera
 		global_transform = global_transform.interpolate_with( cam_base_reverse_third_person, 0.01 + modify_by_speed * modify_by_num_players * delta * FOLLOW_SPEED / follow_speed_multiplier)
 		target = target.interpolate_with(target_reverse_third_person, modify_by_num_players * delta * FOLLOW_SPEED * follow_speed_multiplier)
+	#else:
+	#	#global_transform = global_transform.interpolate_with( cam_base_forward_third_person, 0.01 + modify_by_speed * modify_by_num_players * delta * FOLLOW_SPEED / follow_speed_multiplier)
+	#	#global_transform = cam_base_forward_third_person
+	#	global_transform = global_transform.interpolate_with( cam_base_forward_third_person, delta * FOLLOW_SPEED / follow_speed_multiplier)
 		
 	if timer_0_5s < 0:
-		Global.debug_print(5, "follow_camera: _physics_process(): global_transform="+str(global_transform.origin)+", target="+str(target.origin), "camera")
+		#Global.debug_print(5, "follow_camera: _physics_process(): global_transform="+str(global_transform.origin)+", target="+str(target.origin), "camera")
 		if get_carbody().vehicle_state == ConfigVehicles.AliveState.ALIVE:  # else if the car has started exploding leave it at 3rd person for now TODO fix later? 
 			var iray
 			# check the camera can see the vehicle
@@ -143,6 +148,7 @@ func _physics_process(delta):
 					#Global.debug_print(3, "colliding")
 					self.visible = false
 					self.current = false
+					
 					if fwd_mps >= -2.0:
 						get_parent().get_node("CameraFPBack").visible = false
 						get_parent().get_node("CameraFPBack").current = false
@@ -160,6 +166,7 @@ func _physics_process(delta):
 			
 			if colliding == false:
 				#Global.debug_print(3, "no collisions - setting third person cam")
+				#if $TimerVehicleCamDelayEnable.is_stopped():
 				self.visible = true
 				self.current = true
 				get_parent().get_node("CameraFPBack").visible = false
@@ -179,4 +186,6 @@ func _physics_process(delta):
 
 
 func _on_TimerVehicleCamDelayEnable_timeout():
+	#get_node("/root/MainScene/VC/CL/MainMenu/MainSelection").hide()
+	#get_node("/root/MainScene/VC/CL/MainMenu/LoadingText").hide()
 	pass # Replace with function body.

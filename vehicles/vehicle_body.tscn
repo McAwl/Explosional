@@ -219,12 +219,13 @@ transform = Transform( 0.998172, 0, 0.0604388, 0, 1, 0, -0.0604388, 0, 0.998172,
 
 [node name="Camera" type="Camera" parent="CameraBase"]
 transform = Transform( -0.998921, -0.0112154, 0.0450581, -2.11161e-08, 0.970391, 0.24154, -0.0464329, 0.241279, -0.969344, -0.138464, 0.281651, -1.96593 )
+visible = false
 fov = 74.0
 far = 200.0
 script = ExtResource( 9 )
 
 [node name="TimerVehicleCamDelayEnable" type="Timer" parent="CameraBase/Camera"]
-wait_time = 2.0
+wait_time = 10.0
 one_shot = true
 autostart = true
 
@@ -250,7 +251,6 @@ material = SubResource( 73 )
 [node name="CameraFPBack" type="Camera" parent="CameraBase"]
 transform = Transform( 0.998315, 0.00220149, -0.0579888, 0.000551148, 0.998875, 0.0474098, 0.058028, -0.0473618, 0.997191, -0.105369, -1.16767, 2.33515 )
 visible = false
-current = true
 fov = 74.0
 near = 0.1
 far = 1000.0
@@ -259,6 +259,11 @@ far = 1000.0
 transform = Transform( -0.998921, 0.00220149, 0.0463805, -2.11161e-08, 0.998875, -0.047413, -0.0464328, -0.0473618, -0.997798, -0.124779, -1.27877, 2.63899 )
 visible = false
 far = 1000.0
+
+[node name="CameraTopView" type="Camera" parent="CameraBase"]
+transform = Transform( -0.998688, 0, 0.0512029, 0, 1, 0, -0.0512029, 0, -0.998688, 0.152302, -0.454181, -2.51534 )
+fov = 60.1
+far = 732.4
 
 [node name="Effects" type="Spatial" parent="."]
 
@@ -1802,6 +1807,9 @@ autostart = true
 [node name="TimerDisableShieldPowerup" type="Timer" parent="Timers"]
 wait_time = 30.0
 
+[node name="TimerCheckEngineSoundOn" type="Timer" parent="Timers"]
+autostart = true
+
 [connection signal="timeout" from="CameraBase/Camera/TimerVehicleCamDelayEnable" to="CameraBase/Camera" method="_on_TimerVehicleCamDelayEnable_timeout"]
 [connection signal="timeout" from="Effects/Audio/TimerCheckSoundPitch" to="Effects/Audio" method="_on_TimerCheckSoundPitch_timeout"]
 [connection signal="timeout" from="Effects/Audio/TimerCheckSoundVolume" to="Effects/Audio" method="_on_TimerCheckSoundVolume_timeout"]
@@ -1816,3 +1824,4 @@ wait_time = 30.0
 [connection signal="timeout" from="Timers/TimerCheckSpeedDemon5Achievement" to="." method="_on_TimerCheckSpeedDemon5Achievement_timeout"]
 [connection signal="timeout" from="Timers/TimerCheckMaxSpeed" to="." method="_on_TimerCheckMaxSpeed_timeout"]
 [connection signal="timeout" from="Timers/TimerDisableShieldPowerup" to="." method="_on_TimerDisableShieldPowerup_timeout"]
+[connection signal="timeout" from="Timers/TimerCheckEngineSoundOn" to="." method="_on_TimerCheckEngineSoundOn_timeout"]

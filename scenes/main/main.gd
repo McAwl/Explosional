@@ -33,15 +33,20 @@ var game_over_checked = false
 # built-in virtual methods
 
 func _ready():
+	Global.debug_print(5, "main:ready()", "scenes")
 	var _connect_change_weather = Global.connect("change_weather", self, "on_change_weather")
 	randomize()
 	#$TimerSlowMotion.start()  # for Procedurally place vegetation
 	self.add_child(ray)
-	$VC/CL/MainMenu.set_visible(false)
+	#$VC/CL/MainMenu.set_visible(false)
 	$VC/CL/MainMenu.game_active = true
 	$VC/CL/MainMenu/PlayerSelection.hide()
 	$VC/CL/MainMenu/GameModeSelection.hide()
-	$VC/CL/MainMenu/LoadingText.hide()
+	$VC/CL/MainMenu/VersionText.hide()
+	$VC/CL/MainMenu/LoadingText.show()
+	$VC/CL/MainMenu/MainSelection.show()
+	$VC/CL/MainMenu/MainSelection/MainContainer/ButtonsContainer.hide()
+	$VC/CL/MainMenu/MainSelection/MainContainer/TitleContainer.hide()
 	
 	# hide the mouse
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -57,6 +62,7 @@ func _ready():
 		$Moons/OmniLight.visible = false
 		$DirectionalLightMoon.visible = true
 	var spawn_points: Array = _get_spawn_points()
+	Global.debug_print(3, "main:ready(): instancing players")
 	for player_number in range(1, StatePlayers.num_players()+1):
 		var player_instance: Player = load(Global.player_folder).instance()
 		add_child(player_instance)
@@ -65,7 +71,8 @@ func _ready():
 		player_instance.init(player_number, vehicle_body_pos)
 		player_instance.get_vehicle_body().weapons_state[3].enabled = test_nuke
 		player_instance.get_vehicle_body().weapons_state[3].test_mode = test_nuke
-		Global.debug_print(3, "main: player_instance.get_vehicle_body().global_transform.origin after vb init="+str(player_instance.get_vehicle_body().global_transform.origin), "camera")
+		Global.debug_print(3, "main:ready(): player_instance.get_vehicle_body().global_transform.origin after vb init="+str(player_instance.get_vehicle_body().global_transform.origin), "camera")
+	Global.debug_print(3, "main:ready(): instancing players completed")
 	var anim_time: float = start_clock_hrs + 12.0
 	if anim_time > 24.0:
 		anim_time -= 12.0
@@ -88,6 +95,8 @@ func _ready():
 	
 	if Global.build_options["platforms"] == false:
 		$Structures/Platforms.queue_free()
+		
+	Global.debug_print(5, "main:ready() exit", "scenes")
 
 
 func _process(delta):
@@ -151,6 +160,7 @@ func _process(delta):
 		$Effects/TweenWindVolume.start()
 		$Effects/TweenCindersVolume.interpolate_property($Effects/Cinders, "volume_db", $Effects/Cinders.volume_db, Global.weather_state["wind_volume_db"], 0.5, Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$Effects/TweenCindersVolume.start()
+
 
 func _physics_process(_delta):
 	

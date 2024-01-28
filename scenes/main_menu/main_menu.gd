@@ -1,7 +1,7 @@
 extends Node
 
 
-var next_level_resource
+var next_level_resource # = preload("res://scenes/main/main.tscn")
 
 var build: String
 var version: String
@@ -47,9 +47,9 @@ func _ready():
 		version = output_version[0].trim_suffix("\n")
 	
 	if build == null or version == null:
-		$VersionText/VersionContainer/VersionText.text = "Explosional! BETA 2024 McAwl"
+		$VersionText/VersionContainer/VersionText.text = "Explosional v1.7.3-beta 2024 McAwl"
 	else:
-		$VersionText/VersionContainer/VersionText.text = "Explosional! "+ version + " Build "+build+" 2024 McAwl"
+		$VersionText/VersionContainer/VersionText.text = "Explosional "+ version + " Build "+build+" 2024 McAwl"
 	
 	match Global.game_mode:
 		Global.GameMode.COMPETITIVE:
@@ -239,15 +239,23 @@ func configure():
 	if game_active:
 		get_resume_button().show()
 		qmmb.show()
+		$MainSelection.show()
+		$MainSelection/MainContainer/ButtonsContainer.show()
+		$MainSelection/MainContainer/TitleContainer.show()
 		$PlayerSelection.hide()
-		$LoadingText.hide()
+		#$LoadingText.hide()
 		get_resume_button().grab_focus()
 		get_start_button().hide()
 		#apb.hide()
+
 	else:
 		$PlayerSelection/GridContainer/Player1SelectButton.text = "Player 1 "+ConfigVehicles.nice_name[ConfigVehicles.Type.RACER]
 		players[1] = {"name": "1", "vehicle": ConfigVehicles.Type.RACER}
 		get_start_button().show()
+		
+		$MainSelection.show()
+		$MainSelection/MainContainer/ButtonsContainer.show()
+		$MainSelection/MainContainer/TitleContainer.show()
 		#apb.show()
 		$PlayerSelection.show()
 		qmmb.hide()
@@ -283,15 +291,16 @@ func resume() -> void:
 func start_game() -> void:
 	
 	$LoadingText.show()
-	$MainSelection/MainContainer.hide()
+	#$MainSelection/MainContainer.hide()
 	$PlayerSelection.hide()
 	$GameModeSelection.hide()
 	yield(get_tree().create_timer(1),"timeout")
 	var next_level = next_level_resource.instance()
 	StatePlayers.players = players
 	StatePlayers.configure_players()
-	Global.debug_print(3, "players = "+str(players))
+	Global.debug_print(3, "main_menu:start_game(): players = "+str(players))
 	get_tree().root.call_deferred("add_child", next_level)
+	Global.debug_print(3, "main_menu:start_game(): get_tree().root.call_deferred", "scenes")
 	queue_free()
 
 

@@ -82,7 +82,6 @@ texture = ExtResource( 2 )
 stretch_mode = 1
 
 [node name="MainContainer" type="VBoxContainer" parent="MainSelection"]
-visible = false
 anchor_bottom = 1.0
 margin_right = 519.0
 margin_bottom = 446.0
@@ -102,6 +101,7 @@ align = 1
 valign = 1
 
 [node name="ButtonsContainer" type="HBoxContainer" parent="MainSelection/MainContainer"]
+visible = false
 margin_top = 156.0
 margin_right = 519.0
 margin_bottom = 511.0
@@ -156,7 +156,7 @@ margin_right = 185.0
 margin_bottom = 247.0
 focus_neighbour_right = NodePath("../../../../../PlayerSelection/GridContainer/Player1SelectButton")
 custom_fonts/font = ExtResource( 11 )
-text = "Credits"
+text = "Contact/Credits"
 
 [node name="ResetGameButton" type="Button" parent="MainSelection/MainContainer/ButtonsContainer/HBoxContainer2"]
 margin_top = 270.0
@@ -239,6 +239,7 @@ text = "Tough"
 
 [node name="PlayerSelection" type="Control" parent="."]
 pause_mode = 2
+visible = false
 anchor_left = 0.587
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -463,6 +464,7 @@ valign = 1
 autowrap = true
 
 [node name="OptionMenu" type="Control" parent="."]
+visible = false
 anchor_left = 0.124
 anchor_top = 0.116
 anchor_right = 0.349
@@ -941,7 +943,6 @@ custom_fonts/font = ExtResource( 11 )
 text = "[Back]"
 
 [node name="Credits" type="Control" parent="."]
-visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 
@@ -951,7 +952,9 @@ margin_top = 217.0
 margin_right = 731.0
 margin_bottom = 838.0
 bbcode_enabled = true
-bbcode_text = "Sound effects [effect in game: author's effect name - author - URL]:
+bbcode_text = "Contact McAwl Games via mcawlgames@outlook.com with \"Explosional\" in the subject line.
+
+Sound effects [effect in game: author's effect name - author - URL]:
 
 [color=gray]
 Tyre squeal: Chrysler LHS tire squeal 03 (04-25-2009) - audible-edge - https://freesound.org/people/audible-edge/sounds/71738/[/indent]
@@ -972,14 +975,10 @@ Add-ons [In-game effect: author's name - author - URL]:
 [color=gray]
 -Explosions: Flipbook Particles - MrMinimal - https://godotengine.org/asset-library/asset/1278
 -Lava: Arnklit - Waterways - River Generation - https://godotengine.org/asset-library/asset/805
-[/color]
-
-Textures/Materials:
-
-[color=gray]
-Stylized Sand 001 - Katsukagi - https://3dtextures.me/2020/06/25/stylized-sand-001/
 [/color]"
-text = "Sound effects [effect in game: author's effect name - author - URL]:
+text = "Contact McAwl Games via mcawlgames@outlook.com with \"Explosional\" in the subject line.
+
+Sound effects [effect in game: author's effect name - author - URL]:
 
 
 Tyre squeal: Chrysler LHS tire squeal 03 (04-25-2009) - audible-edge - https://freesound.org/people/audible-edge/sounds/71738/[/indent]
@@ -1000,12 +999,6 @@ Add-ons [In-game effect: author's name - author - URL]:
 
 -Explosions: Flipbook Particles - MrMinimal - https://godotengine.org/asset-library/asset/1278
 -Lava: Arnklit - Waterways - River Generation - https://godotengine.org/asset-library/asset/805
-
-
-Textures/Materials:
-
-
-Stylized Sand 001 - Katsukagi - https://3dtextures.me/2020/06/25/stylized-sand-001/
 "
 scroll_active = false
 
@@ -1042,7 +1035,12 @@ Shaders [Title - Artist - URL]:
 [color=gray]
 -Terrain shader: Texture mix example - QbieShay - https://godotshaders.com/shader/texture-mix-example/
 [/color]
-"
+
+Textures/Materials:
+
+[color=gray]
+Stylized Sand 001 - Katsukagi - https://3dtextures.me/2020/06/25/stylized-sand-001/
+[/color]"
 text = "Music tracks [Title - Artist - URL]:
 
 
@@ -1070,6 +1068,11 @@ Shaders [Title - Artist - URL]:
 
 -Terrain shader: Texture mix example - QbieShay - https://godotshaders.com/shader/texture-mix-example/
 
+
+Textures/Materials:
+
+
+Stylized Sand 001 - Katsukagi - https://3dtextures.me/2020/06/25/stylized-sand-001/
 "
 scroll_active = false
 

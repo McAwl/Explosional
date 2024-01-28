@@ -37,7 +37,7 @@ func _process(_delta):
 			new_powerup.name = "PowerUp"+type_str
 			new_powerup.type = npu[1]
 			add_child(new_powerup)  
-			#new_powerup.get_node("ActivationSound").play()  
+			#new_powerup.get_node("ActivationSound").play()  # why was this even here? this was the sound that played during the loading screen
 
 
 func _on_TimerCheckPowerups_timeout():

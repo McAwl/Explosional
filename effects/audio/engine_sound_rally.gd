@@ -88,6 +88,7 @@ func get_vehicle() -> VehicleBody:
 
 
 func slowly_increase_volume(duration_sec) -> void:
-	$Tween.interpolate_property(self, "volume_db", Global.vehicle_sound_volume_db, Global.vehicle_sound_volume_db+6.0, duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
-	$Tween.start()
+	if get_parent().get_parent().get_parent().has_vehicle_touched_down_yet == true:
+		$Tween.interpolate_property(self, "volume_db", Global.vehicle_sound_volume_db, Global.vehicle_sound_volume_db+6.0, duration_sec, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		$Tween.start()
 

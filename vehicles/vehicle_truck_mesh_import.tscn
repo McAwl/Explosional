@@ -1,13 +1,14 @@
 [gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://assets/models/vehicles/truck.dae" type="PackedScene" id=1]
-[ext_resource path="res://assets/materials/vehicles/car_blue_body.tres" type="Material" id=2]
-[ext_resource path="res://assets/materials/vehicles/shiny_metal.tres" type="Material" id=3]
-[ext_resource path="res://assets/materials/vehicles/tyre.tres" type="Material" id=4]
-[ext_resource path="res://assets/materials/vehicles/vehicle_headlight.tres" type="Material" id=5]
-[ext_resource path="res://assets/materials/vehicles/car_orange_body.tres" type="Material" id=6]
-[ext_resource path="res://assets/materials/vehicles/vehicle_taillight.tres" type="Material" id=7]
-[ext_resource path="res://assets/materials/vehicles/car_grill.tres" type="Material" id=8]
+[ext_resource path="res://assets/shaders/materials/vehicles/car_blue_body.tres" type="Material" id=2]
+[ext_resource path="res://assets/shaders/materials/vehicles/shiny_metal.tres" type="Material" id=3]
+[ext_resource path="res://assets/shaders/materials/vehicles/tyre.tres" type="Material" id=4]
+[ext_resource path="res://assets/shaders/materials/vehicles/vehicle_headlight.tres" type="Material" id=5]
+[ext_resource path="res://assets/shaders/materials/vehicles/car_orange_body.tres" type="Material" id=6]
+[ext_resource path="res://assets/shaders/materials/vehicles/vehicle_taillight.tres" type="Material" id=7]
+[ext_resource path="res://assets/shaders/materials/vehicles/car_grill.tres" type="Material" id=8]
+
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "Mesh"

@@ -2,7 +2,7 @@
 
 [ext_resource path="res://weapons/missile/missile.gd" type="Script" id=1]
 [ext_resource path="res://assets/audio/sounds/591149__mrfossy__mulch-wind-3.wav" type="AudioStream" id=2]
-[ext_resource path="res://assets/materials/vehicles/car_grill.tres" type="Material" id=3]
+[ext_resource path="res://assets/shaders/materials/vehicles/car_grill.tres" type="Material" id=3]
 [ext_resource path="res://assets/textures/dot.png" type="Texture" id=4]
 [ext_resource path="res://assets/audio/sounds/151858__nhmwretched__missile-firing-fl.mp3" type="AudioStream" id=6]
 

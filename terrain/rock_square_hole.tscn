@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://assets/materials/rock.tres" type="Material" id=1]
+[ext_resource path="res://assets/shaders/materials/rock.tres" type="Material" id=1]
 
 [node name="RockSquareHole" type="CSGBox"]
 use_collision = true

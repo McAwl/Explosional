@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/ballistic_new.png-9735e7bde6eef014c71744f1aae557aa.stex"
+path="res://.import/missile_new.png-f4e6320d1102e2470c4c0b64cacfec00.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/display/icons/ballistic_new.png"
-dest_files=[ "res://.import/ballistic_new.png-9735e7bde6eef014c71744f1aae557aa.stex" ]
+source_file="res://assets/display/icons/missile_new.png"
+dest_files=[ "res://.import/missile_new.png-f4e6320d1102e2470c4c0b64cacfec00.stex" ]
 
 [params]
 

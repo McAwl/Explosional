@@ -1,10 +1,11 @@
 [gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://assets/materials/terrain/cement.tres" type="Material" id=1]
+[ext_resource path="res://assets/shaders/materials/terrain/cement.tres" type="Material" id=1]
 [ext_resource path="res://effects/visual/explosion_nuke.tscn" type="PackedScene" id=2]
 [ext_resource path="res://weapons/nuke/nuke_mesh.tscn" type="PackedScene" id=3]
-[ext_resource path="res://assets/materials/vehicles/car_blue_body.tres" type="Material" id=4]
+[ext_resource path="res://assets/shaders/materials/vehicles/car_blue_body.tres" type="Material" id=4]
 [ext_resource path="res://weapons/explosive/explosive.gd" type="Script" id=5]
+
 
 [sub_resource type="PhysicsMaterial" id=1]
 bounce = 0.18

@@ -6,7 +6,7 @@ var tracks: Array = []
 var timer_0_5s: float = 1.0
 var current_track_num: int
 
-export var start_paused: bool = true
+export var start_paused: bool = false
 
 
 func _ready():

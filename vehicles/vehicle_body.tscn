@@ -417,23 +417,15 @@ shape = SubResource( 51 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.728945, -0.133028 )
 
 [node name="CollisionShape2" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
-transform = Transform( 0.366768, 0, 0, 0, 0.105462, 0, 0, 0, 0.17041, 0, 0.352972, -0.982356 )
+transform = Transform( 0.366768, 0, 0, 0, 0.105462, 0, 0, 0, 0.17041, 0, 0.396403, -0.982356 )
 shape = SubResource( 69 )
 
 [node name="CollisionShape3" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
 transform = Transform( 0.326945, 0, 0, 0, 0.105462, 0, 0, 0, 0.17041, 0, 0.33334, 0.901072 )
 shape = SubResource( 69 )
 
-[node name="CollisionShape4" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
-transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.000904164, 0.595526, 0.475714, 1.33811 )
-shape = SubResource( 69 )
-
 [node name="CollisionShape6" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
-transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.000904164, -0.602009, 0.475714, 1.33811 )
-shape = SubResource( 69 )
-
-[node name="CollisionShape5" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
-transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.000904164, 0.595526, 0.475714, -1.25192 )
+transform = Transform( 0.0157881, 0, 1.55093, 0, 0.105462, 0, -0.32694, 0, 0.000904164, -0.00366539, 0.54592, 1.33811 )
 shape = SubResource( 69 )
 
 [node name="CollisionShape8" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
@@ -441,7 +433,7 @@ transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.0
 shape = SubResource( 69 )
 
 [node name="CollisionShape7" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
-transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.000904164, -0.628671, 0.475714, -1.25192 )
+transform = Transform( 0.0152588, 0, 1.49894, 0, 0.105462, 0, -0.32694, 0, 0.000904164, 0.00359216, 0.545663, -1.25192 )
 shape = SubResource( 69 )
 
 [node name="CollisionShape9" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
@@ -449,7 +441,7 @@ transform = Transform( 0.00173471, 0, 0.170408, 0, 0.105462, 0, -0.32694, 0, 0.0
 shape = SubResource( 69 )
 
 [node name="CollisionShape10" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.414655, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.448942, 0 )
 shape = SubResource( 70 )
 
 [node name="Effects" type="Spatial" parent="VehicleTypes/Racer"]
@@ -687,6 +679,22 @@ collide_with_areas = true
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
 visible = false
 mesh = SubResource( 53 )
+
+[node name="RayCastStuckAtFront1" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0395738, 0.999217, 0, -0.999217, 0.0395738, -0.385475, 0.272682, 0.491218 )
+enabled = true
+
+[node name="RayCastStuckAtFront2" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0395738, 0.999217, 0, -0.999217, 0.0395738, -0.39291, 0.458198, 0.491218 )
+enabled = true
+
+[node name="RayCastStuckAtFront3" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0395738, 0.999217, 0, -0.999217, 0.0395738, 0.350995, 0.458198, 0.491218 )
+enabled = true
+
+[node name="RayCastStuckAtFront4" type="RayCast" parent="VehicleTypes/Racer/Raycasts"]
+transform = Transform( 1, 0, 0, 0, 0.0395738, 0.999217, 0, -0.999217, 0.0395738, 0.359922, 0.272682, 0.491218 )
+enabled = true
 
 [node name="Wheels" type="Spatial" parent="VehicleTypes/Racer"]
 

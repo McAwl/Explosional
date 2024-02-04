@@ -190,6 +190,12 @@ func _input(event):
 			cycle_weapon()
 			# Stop the event from spreading
 			get_tree().set_input_as_handled()
+	elif InputMap.event_is_action (event, "cycle_fov_player"+str(player_number)):
+		if event.is_pressed():
+			if $CameraBase/Camera.fov < 50:
+				$CameraBase/Camera.fov = 76.0
+			else:
+				$CameraBase/Camera.fov = 40.0
 	elif InputMap.event_is_action (event, "fire_player"+str(player_number)) and weapons_state[weapon_select]["active"] == false and weapons_state[weapon_select]["cooldown_timer"] <= 0.0 and weapons_state[weapon_select]["enabled"] == true:
 		if event.is_pressed():
 			#Global.debug_print(3, "Player pressed fire")
@@ -393,7 +399,10 @@ func _physics_process(delta):
 			engine_force *= engine_force_adjustment_4wd
 			steer_target = left - right
 			steer_target *= ConfigVehicles.STEER_LIMIT
-		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta)
+			
+		var speed_adjustment_divisor = pow(1.0 + abs(fwd_mps/10.0), 1.3)  # decrease the steering sensitivity at higher speeds
+		
+		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta / speed_adjustment_divisor)
 		
 		# Keep 4wd vehicles on inclines surfaces, given Godot's VehicleWheel traction doesn't work properly
 		if fwd_mps < 2.0 and engine_force > 0 and is_4wd():
@@ -967,6 +976,7 @@ func check_for_clipping() -> bool:
 	if abs(fwd_mps_0_1) < 0.1:  # stationary
 		#Global.debug_print(3, "Checking for clipping")
 		var num_wheels_clipped: int = 0
+		var num_front_clipped: int = 0
 		for raycast in $Raycasts.get_children():
 			if "Wheel" in raycast.name:
 				if not raycast.is_colliding():
@@ -978,8 +988,11 @@ func check_for_clipping() -> bool:
 					left_wheels_clipped = true
 				if "right" in raycast.name.to_lower():
 					right_wheels_clipped = true
+			if "StuckAtFront" in raycast.name:
+				if raycast.is_colliding():
+					num_front_clipped += 1
 		if num_wheels_clipped > 0:
-			Global.debug_print(3, "vehicle_body: check-for_clipping(): applying upwards translation - wheel(s) are clipped")
+			Global.debug_print(3, "vehicle_body: check-for_clipping(): applying upwards translation - wheel(s) are clipped", "clipping")
 			transform.origin += Vector3.UP*0.5
 			if left_wheels_clipped == true and right_wheels_clipped == false:
 				transform.origin += Vector3.RIGHT*0.5
@@ -998,9 +1011,21 @@ func check_for_clipping() -> bool:
 			#apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.05, rng.randf()*2.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.05) )   # from underneath, upwards force
 			$Timers/CheckAccelDamage.start(2.0)  # disable damage for temporarily
 			return true
+		if num_front_clipped > 0:
+			Global.debug_print(3, "vehicle_body: check-for_clipping(): applying backwards translation - front is clipped", "clipping")
+			transform.origin += Vector3.BACK*0.5
+			# Apply some random sideways movements as well
+			if rng.randf() < 0.5:
+				transform.origin += Vector3.LEFT*0.5
+			else:
+				transform.origin += Vector3.RIGHT*0.5
+			if rng.randf() < 0.5:
+				transform.origin += Vector3.FORWARD*0.5
+			else:
+				transform.origin += Vector3.BACK*0.5
+			$Timers/CheckAccelDamage.start(2.0)  # disable damage for temporarily
+			return true
 	return false
-
-
 
 
 func update_speed() -> void:

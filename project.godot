@@ -19,11 +19,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://terrain/tree.gd"
 }, {
-"base": "AudioStreamPlayer",
-"class": "BackgroundMusic",
-"language": "GDScript",
-"path": "res://effects/audio/background_music.gd"
-}, {
 "base": "RigidBody",
 "class": "ExplodedVehiclePart",
 "language": "GDScript",
@@ -152,7 +147,6 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "AnimatedGrass": "",
 "AnimatedTree": "",
-"BackgroundMusic": "",
 "ExplodedVehiclePart": "",
 "Explosion": "",
 "Explosive": "",
@@ -557,6 +551,10 @@ kill_player4={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":16777255,"unicode":0,"echo":false,"script":null)
  ]
 }
+
+[logging]
+
+file_logging/enable_file_logging=true
 
 [physics]
 

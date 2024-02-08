@@ -13,7 +13,6 @@
 [ext_resource path="res://assets/shaders/materials/vehicles/car_blue_body.tres" type="Material" id=11]
 [ext_resource path="res://assets/shaders/materials/vehicles/car_grill.tres" type="Material" id=12]
 
-
 [sub_resource type="ArrayMesh" id=48]
 resource_name = "Plane.021"
 surfaces/0 = {

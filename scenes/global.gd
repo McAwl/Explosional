@@ -9,6 +9,11 @@ enum Build {
 	Release=1
 }
 
+enum Graphics {
+	Low=0,
+	High=1
+}
+
 enum Weather {
 	NORMAL=0,
 	FIRE_STORM=1  # used for Lava terrain - a storm with wind and red cinders in the air
@@ -75,7 +80,7 @@ var build_type: int = Build.Release
 
 var build_options: Dictionary = {
 	"foliage": true if build_type == Build.Development else false,
-	"platforms": true if build_type == Build.Development else false,
+	"platforms": true if build_type == Build.Development else false,  # includes the nuke power up
 	"air_strike": true if build_type == Build.Development else false,
 	"vehicle_falling_parts": true if build_type == Build.Development else false,  # 
 	"vehicle_options": {"racer": true, "rally": false, "tank": false, "truck": false} if build_type == Build.Release else {"racer": true, "rally": true, "tank": true, "truck": true},
@@ -93,6 +98,8 @@ var title_screen_folder: String = "res://scenes/title_screen/title_screen.tscn"
 var start_scene: String = "res://scenes/start/start.tscn"
 
 var log_level = 3  # 1=error, 2=warning, etc up to 10 for very nested loops
+
+var graphics = Graphics.High
 
 # include a string here and any log command (regardless of log_level) with this as 3rd argument will print
 var log_topics = ["clipping"]  # eg, "truck_mine", "weapon", "missile""max_damage" "camera" "missile" "mine" "damage" "vehicle_respawn"
@@ -230,3 +237,6 @@ func debug_print(_log_level: int, message: String, _log_topic=null) -> void:
 				space_str += " "
 			print( ("%02d:%02d:%02d" + space_str+str(message)+" [log due to log_topic: "+str(_log_topic)+"]") % [time.hour, time.minute, time.second])
 
+
+func set_graphics(value: int):  # 0=low, 1=high
+	graphics = value

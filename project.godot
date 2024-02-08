@@ -189,6 +189,10 @@ ConfigVehicles="*res://vehicles/config_vehicles.gd"
 ConfigWeapons="*res://weapons/config_weapons.gd"
 StatePlayers="*res://player/state_players.gd"
 
+[debug]
+
+settings/fps/force_fps=60
+
 [display]
 
 window/size/width=1920

@@ -20,7 +20,7 @@ var health_meshes: Resource = load(Global.health_meshes_scene_folder)
 
 
 func _ready():
-	pass # Replace with function body.
+	set_physics_process(true)
 
 
 func _process(delta):
@@ -51,6 +51,7 @@ func _process(delta):
 			Global.debug_print(5, "Moving powerup "+str(name), "powerups")
 			translation = Vector3(0.0+rng.randf()*600.0, 50.0, 0.0+rng.randf()*600.0)  # 600x600 covers the terrain
 			state = State.CHECK_RAYCAST  # check the raycast collision on the next physics process
+			set_physics_process(true)
 
 
 func _physics_process(_delta):
@@ -65,14 +66,13 @@ func _physics_process(_delta):
 					var collision_point = $RayCast.get_collision_point()
 					translation = Vector3(collision_point.x, collision_point.y+0.5, collision_point.z)
 					state = State.ACTIVE
-					#$MoveSound.play()
+					set_physics_process(false)  # stop processing physics, as the raycast not needed once we've placed the powerup
 				else:
 					Global.debug_print(4, "Powerup "+str(name)+" raycast is not colliding with the terrain. Moving...", "powerups")
 					state = State.MOVE  # collided, but not where we want, so move it
 			else:
 				Global.debug_print(4, "Powerup "+str(name)+" raycast is not colliding with anything. Moving...", "powerups")
 				state = State.MOVE  # no collision, so move it
-
 
 
 func _on_Area_body_entered(body):
@@ -95,3 +95,4 @@ func disable() -> void:
 func _on_TimerPeriodicMove_timeout():
 	Global.debug_print(5, "_on_TimerPeriodicMove_timeout()", "powerups")
 	state = State.MOVE
+	set_physics_process(true)  # start processing physics, so we can check raycasts

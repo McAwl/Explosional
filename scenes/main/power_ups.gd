@@ -12,6 +12,25 @@ func _ready():
 
 
 func _process(_delta):
+	pass
+
+
+func _on_TimerCheckPowerups_timeout():
+	
+	if Global.build_options["platforms"] == true:
+		if not $NukeSpawnPoint.has_node("PowerUpNuke") and $TimerNukePowerUp.is_stopped():
+			$TimerNukePowerUp.set_paused(false)
+			$TimerNukePowerUp.start(10.0)
+		
+	#if not $Powerups/ShieldPowerupSpawnPoint.has_node("PowerUpShield1") and $Powerups/TimerShieldPowerup.is_stopped():
+	#	$Powerups/TimerShieldPowerup.set_paused(false)
+	#	$Powerups/TimerShieldPowerup.start(10.0)
+	
+	#if not $Powerups/HealthPowerupSpawnPoint.has_node("PowerUpHealth1") and $Powerups/TimerHealthPowerup.is_stopped():
+	#	$Powerups/TimerHealthPowerup.set_paused(false)
+	#	$Powerups/TimerHealthPowerup.start(10.0)
+	
+	#this code moved from _process to stop lots of powerups at start of game causing lag
 	var _num_health_powerups = 0
 	var _num_shield_powerups = 0
 	var _num_nuke_powerups = 0
@@ -40,28 +59,14 @@ func _process(_delta):
 			#new_powerup.get_node("ActivationSound").play()  # why was this even here? this was the sound that played during the loading screen
 
 
-func _on_TimerCheckPowerups_timeout():
-	
-	if not $NukeSpawnPoint.has_node("PowerUpNuke") and $TimerNukePowerUp.is_stopped():
-		$TimerNukePowerUp.set_paused(false)
-		$TimerNukePowerUp.start(10.0)
-		
-	#if not $Powerups/ShieldPowerupSpawnPoint.has_node("PowerUpShield1") and $Powerups/TimerShieldPowerup.is_stopped():
-	#	$Powerups/TimerShieldPowerup.set_paused(false)
-	#	$Powerups/TimerShieldPowerup.start(10.0)
-	
-	#if not $Powerups/HealthPowerupSpawnPoint.has_node("PowerUpHealth1") and $Powerups/TimerHealthPowerup.is_stopped():
-	#	$Powerups/TimerHealthPowerup.set_paused(false)
-	#	$Powerups/TimerHealthPowerup.start(10.0)
-
-
 func _on_TimerNukePowerUp_timeout():
-	Global.debug_print(5, "_on_TimerNukePowerUp_timeout")
-	if $TimerNukePowerUp.is_stopped():
-		Global.debug_print(5, "Respawning new_nuke_powerup")
-		var new_nuke_powerup = load(Global.power_up_folder).instance()
-		new_nuke_powerup.name = "PowerUpNuke"
-		new_nuke_powerup.type = ConfigWeapons.PowerupType.NUKE
-		$NukeSpawnPoint.add_child(new_nuke_powerup)
-		new_nuke_powerup.get_node("ActivationSound").play()
+	if Global.build_options["platforms"] == true:
+		Global.debug_print(5, "_on_TimerNukePowerUp_timeout")
+		if $TimerNukePowerUp.is_stopped():
+			Global.debug_print(5, "Respawning new_nuke_powerup")
+			var new_nuke_powerup = load(Global.power_up_folder).instance()
+			new_nuke_powerup.name = "PowerUpNuke"
+			new_nuke_powerup.type = ConfigWeapons.PowerupType.NUKE
+			$NukeSpawnPoint.add_child(new_nuke_powerup)
+			new_nuke_powerup.get_node("ActivationSound").play()
 

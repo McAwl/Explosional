@@ -97,6 +97,14 @@ func _ready():
 		$Structures/Platforms.queue_free()
 		
 	Global.debug_print(5, "main:ready() exit", "scenes")
+	
+	# Set some graphics options
+	if Global.graphics == Global.Graphics.Low:
+		$DirectionalLightSun.shadow_enabled = false
+		$DirectionalLightMoon.shadow_enabled = false
+	else:
+		$DirectionalLightSun.shadow_enabled = true
+		$DirectionalLightMoon.shadow_enabled = true
 
 
 func _process(delta):

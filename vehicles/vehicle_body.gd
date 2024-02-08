@@ -86,7 +86,7 @@ func _ready():
 	var _connect_update_weather = Global.connect("update_weather", self, "on_update_weather")
 	vehicle_state = ConfigVehicles.AliveState.ALIVE
 	#Global.debug_print(3, "vehicle_body: _ready(): Camera target pos="+str($CameraBase/Camera.target.global_transform.origin), "camera")
-
+	
 
 func _process(delta):
 	
@@ -546,15 +546,19 @@ func _on_CheckSkidTimer_timeout():
 		return
 		
 	var skidding: bool = false
-	randomly_emit($Effects/WheelSkidDust, 0.0)
+	# Set some graphics options
+	if Global.graphics == Global.Graphics.High:
+		randomly_emit($Effects/WheelSkidDust, 0.0)
+
 	
 	for wh in get_children():
 		if wh is VehicleWheel: 
-			if wh.get_skidinfo() < 0.15:
+			if wh.get_skidinfo() < 0.1: # 0.15 was a bit much, trying 0.1
 				skidding = true
 
 	if skidding == true:
-		randomly_emit($Effects/WheelSkidDust, 0.25)
+		if Global.graphics == Global.Graphics.High:
+			randomly_emit($Effects/WheelSkidDust, 0.25)
 		if $Effects/Audio/SkidSound.playing == false:
 			$Effects/Audio/SkidSound.playing = true
 			$Effects/Audio/SkidSound.pitch_scale = 0.5+(abs(fwd_mps)/100.0)
@@ -565,7 +569,8 @@ func _on_CheckSkidTimer_timeout():
 
 
 func _on_CheckWheelSpeedDustTimer_timeout():
-	randomly_emit($Effects/WheelSpeedDust, 1.0 - (20.0/(20.0+abs(fwd_mps))))
+	if Global.graphics == Global.Graphics.High:
+		randomly_emit($Effects/WheelSpeedDust, 1.0 - (20.0/(20.0+abs(fwd_mps))))
 	#$Effects/WheelSpeedDust.amount = num_particles  # changing this resets the particle system. Great!
 
 
@@ -973,10 +978,14 @@ func set_icon() -> void:
 func check_for_clipping() -> bool:
 	var left_wheels_clipped: bool = false
 	var right_wheels_clipped: bool = false
+	var upside_down: bool
+	
 	if abs(fwd_mps_0_1) < 0.1:  # stationary
 		#Global.debug_print(3, "Checking for clipping")
 		var num_wheels_clipped: int = 0
-		var num_front_clipped: int = 0
+		# var num_front_clipped: int = 0
+		var down_hit: bool
+		var up_hit: bool
 		for raycast in $Raycasts.get_children():
 			if "Wheel" in raycast.name:
 				if not raycast.is_colliding():
@@ -988,32 +997,58 @@ func check_for_clipping() -> bool:
 					left_wheels_clipped = true
 				if "right" in raycast.name.to_lower():
 					right_wheels_clipped = true
+			"""
 			if "StuckAtFront" in raycast.name:
 				if raycast.is_colliding():
 					num_front_clipped += 1
-		if num_wheels_clipped > 0:
-			Global.debug_print(3, "vehicle_body: check-for_clipping(): applying upwards translation - wheel(s) are clipped", "clipping")
+			"""
+			if "CentreDown" in raycast.name:
+				down_hit = raycast.is_colliding()
+			if "BonnetUp" in raycast.name:
+				up_hit = raycast.is_colliding()
+			upside_down = true if up_hit == true and down_hit == false else false
+		
+		if upside_down == false:
+			if num_wheels_clipped > 0:
+				Global.debug_print(3, "vehicle_body: check-for_clipping(): applying upwards translation - wheel(s) are clipped", "clipping")
+				transform.origin += Vector3.UP*0.5
+				if left_wheels_clipped == true and right_wheels_clipped == false:
+					transform.origin += Vector3.RIGHT*0.5
+				if left_wheels_clipped == false and right_wheels_clipped == true:
+					transform.origin += Vector3.LEFT*0.5
+				# Apply some random sideways movements as well
+				if rng.randf() < 0.5:
+					transform.origin += Vector3.LEFT*0.5
+				else:
+					transform.origin += Vector3.RIGHT*0.5
+				if rng.randf() < 0.5:
+					transform.origin += Vector3.FORWARD*0.5
+				else:
+					transform.origin += Vector3.BACK*0.5
+				#Global.debug_print(3, "vehicle_body: check-for_clipping(): applying impulse - wheel(s) are clipped")
+				#apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.05, rng.randf()*2.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.05) )   # from underneath, upwards force
+				$Timers/CheckAccelDamage.start(2.0)  # disable damage for temporarily
+				return true
+			"""
+				if num_front_clipped > 0:
+					Global.debug_print(3, "vehicle_body: check-for_clipping(): applying backwards translation - front is clipped", "clipping")
+					transform.origin += Vector3.BACK*0.5
+					# Apply some random sideways movements as well
+					if rng.randf() < 0.5:
+						transform.origin += Vector3.LEFT*0.5
+					else:
+						transform.origin += Vector3.RIGHT*0.5
+					if rng.randf() < 0.5:
+						transform.origin += Vector3.FORWARD*0.5
+					else:
+						transform.origin += Vector3.BACK*0.5
+					$Timers/CheckAccelDamage.start(2.0)  # disable damage for temporarily
+					return true
+			"""
+		else:
+			Global.debug_print(3, "vehicle_body: check-for_clipping(): detected upside down: applying upwards translation", "clipping")
+			Global.debug_print(3, "global_rotation="+str(global_rotation), "clipping")
 			transform.origin += Vector3.UP*0.5
-			if left_wheels_clipped == true and right_wheels_clipped == false:
-				transform.origin += Vector3.RIGHT*0.5
-			if left_wheels_clipped == false and right_wheels_clipped == true:
-				transform.origin += Vector3.LEFT*0.5
-			# Apply some random sideways movements as well
-			if rng.randf() < 0.5:
-				transform.origin += Vector3.LEFT*0.5
-			else:
-				transform.origin += Vector3.RIGHT*0.5
-			if rng.randf() < 0.5:
-				transform.origin += Vector3.FORWARD*0.5
-			else:
-				transform.origin += Vector3.BACK*0.5
-			#Global.debug_print(3, "vehicle_body: check-for_clipping(): applying impulse - wheel(s) are clipped")
-			#apply_impulse( Vector3(0, -10.0, 0), Vector3(rng.randf()*0.05, rng.randf()*2.0*ConfigVehicles.config[get_type()]["mass_kg/100"], rng.randf()*0.05) )   # from underneath, upwards force
-			$Timers/CheckAccelDamage.start(2.0)  # disable damage for temporarily
-			return true
-		if num_front_clipped > 0:
-			Global.debug_print(3, "vehicle_body: check-for_clipping(): applying backwards translation - front is clipped", "clipping")
-			transform.origin += Vector3.BACK*0.5
 			# Apply some random sideways movements as well
 			if rng.randf() < 0.5:
 				transform.origin += Vector3.LEFT*0.5
@@ -1025,6 +1060,7 @@ func check_for_clipping() -> bool:
 				transform.origin += Vector3.BACK*0.5
 			$Timers/CheckAccelDamage.start(2.0)  # disable damage for temporarily
 			return true
+			
 	return false
 
 

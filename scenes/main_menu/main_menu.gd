@@ -47,10 +47,10 @@ func _ready():
 		version = output_version[0].trim_suffix("\n")
 	
 	if build == null or version == null:
-		$VersionText/VersionContainer/VersionText.text = "Explosional v1.8.11-beta 2024 McAwl"
+		$VersionText/VersionContainer/VersionText.text = "Explosional v1.8.12-beta 2024 McAwl"
 	else:
 		if len(build) < 2 or len(version) < 2:
-			$VersionText/VersionContainer/VersionText.text = "Explosional v1.8.11-beta 2024 McAwl "  # + str(len(version)) + " " + str(len(build))
+			$VersionText/VersionContainer/VersionText.text = "Explosional v1.8.12-beta 2024 McAwl "  # + str(len(version)) + " " + str(len(build))
 		else:
 			Global.debug_print(3, "version="+str(version)+", build="+str(build))
 			Global.debug_print(3, "len version="+str(len(version))+", len build="+str(len(build)))
@@ -213,6 +213,10 @@ func _on_WindSpeed_value_changed(value):
 	Global.weather_model[Global.Weather.FIRE_STORM]["max_wind_strength"] = value
 
 
+func _on_GraphicsSliders_value_changed(value):
+	Global.set_graphics(value)
+
+
 func _on_CheckBox1Competitive_button_up():
 	Global.game_mode = Global.GameMode.COMPETITIVE
 	$GameModeSelection/CheckBox2Peaceful.pressed = false
@@ -349,7 +353,6 @@ func _on_InstructionsButton_button_up():
 	$PlayerSelection.hide()
 	$VehicleSelection.hide()
 	$Instructions/InstructionsBackButton.grab_focus()
-	
 
 
 func _on_InstructionsBackButton_button_up():
@@ -358,6 +361,10 @@ func _on_InstructionsBackButton_button_up():
 	$GameModeSelection.show()
 	$PlayerSelection.show()
 	$VehicleSelection.hide()
+	if game_active:
+		get_resume_button().grab_focus()
+	else:
+		get_start_button().grab_focus()
 
 
 func _on_CreditsButton_button_up():
@@ -377,3 +384,8 @@ func _on_CreditsBackButton_button_up():
 	$GameModeSelection.show()
 	$PlayerSelection.show()
 	$VehicleSelection.hide()
+	if game_active:
+		get_resume_button().grab_focus()
+	else:
+		get_start_button().grab_focus()
+

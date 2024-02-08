@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://scenes/main_menu/main_menu.gd" type="Script" id=1]
 [ext_resource path="res://assets/display/capture1 - blurred.png" type="Texture" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://assets/display/theme_big_button.tres" type="Theme" id=10]
 [ext_resource path="res://assets/display/fonts/font_theme_menu.tres" type="DynamicFont" id=11]
 [ext_resource path="res://assets/display/fonts/font_theme_normal.tres" type="DynamicFont" id=12]
+[ext_resource path="res://scenes/main_menu/GraphicsSliders.gd" type="Script" id=13]
 
 [sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
@@ -464,7 +465,6 @@ valign = 1
 autowrap = true
 
 [node name="OptionMenu" type="Control" parent="."]
-visible = false
 anchor_left = 0.124
 anchor_top = 0.116
 anchor_right = 0.349
@@ -562,10 +562,37 @@ step = 10.0
 value = 500.0
 script = ExtResource( 9 )
 
-[node name="TerrainChoice" type="GridContainer" parent="OptionMenu/GridContainer"]
+[node name="Graphics" type="GridContainer" parent="OptionMenu/GridContainer"]
 margin_top = 162.0
 margin_right = 409.0
 margin_bottom = 189.0
+columns = 2
+
+[node name="GraphicsText" type="Label" parent="OptionMenu/GridContainer/Graphics"]
+margin_right = 203.0
+margin_bottom = 27.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 11 )
+text = "Graphics"
+valign = 1
+
+[node name="GraphicsSliders" type="HSlider" parent="OptionMenu/GridContainer/Graphics"]
+margin_left = 207.0
+margin_right = 409.0
+margin_bottom = 27.0
+hint_tooltip = "Low / High"
+focus_previous = NodePath("../../VehicleVolume/VehicleVolume")
+size_flags_horizontal = 3
+size_flags_vertical = 3
+max_value = 1.0
+value = 1.0
+script = ExtResource( 13 )
+
+[node name="TerrainChoice" type="GridContainer" parent="OptionMenu/GridContainer"]
+margin_top = 216.0
+margin_right = 409.0
+margin_bottom = 243.0
 columns = 2
 
 [node name="TerrainChoiceText" type="Label" parent="OptionMenu/GridContainer/TerrainChoice"]
@@ -614,9 +641,9 @@ text = "Lava Island"
 
 [node name="Option1Button" type="Button" parent="OptionMenu/GridContainer"]
 visible = false
-margin_top = 162.0
+margin_top = 216.0
 margin_right = 409.0
-margin_bottom = 186.0
+margin_bottom = 240.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 10 )
@@ -658,9 +685,9 @@ disabled = true
 text = "Option 4"
 
 [node name="OptionBackButton" type="Button" parent="OptionMenu/GridContainer"]
-margin_top = 216.0
+margin_top = 270.0
 margin_right = 84.0
-margin_bottom = 247.0
+margin_bottom = 301.0
 focus_previous = NodePath("../WindSpeed/WindSpeed")
 size_flags_horizontal = 0
 custom_fonts/font = ExtResource( 11 )
@@ -687,7 +714,7 @@ size_flags_vertical = 0
 margin_right = 1920.0
 margin_bottom = 27.0
 custom_fonts/font = ExtResource( 11 )
-text = "Explosional BETA v1.8.11 2024 McAwl"
+text = "Explosional BETA v1.8.12 2024 McAwl"
 align = 1
 valign = 1
 
@@ -712,8 +739,8 @@ margin_bottom = 40.0
 [node name="Objectives1" type="Label" parent="Instructions"]
 margin_left = 123.0
 margin_top = 226.0
-margin_right = 842.0
-margin_bottom = 568.0
+margin_right = 866.0
+margin_bottom = 591.0
 custom_fonts/font = SubResource( 8 )
 text = "Explosional is a split-screen game of one to four players.
 Each player controls a vehicle with weapons
@@ -733,21 +760,21 @@ ESC/P: pause, shows main menu
 autowrap = true
 
 [node name="Objectives2" type="Label" parent="Instructions"]
-margin_left = 988.0
-margin_top = 220.0
-margin_right = 1792.0
-margin_bottom = 592.0
+margin_left = 927.0
+margin_top = 206.0
+margin_right = 1791.0
+margin_bottom = 594.0
 custom_fonts/font = SubResource( 8 )
-text = "Powerups are objects which appear randomly; activate by driving through them::
+text = "Powerups are objects which appear randomly; activate by driving through them:
 -Vehicle health: red \"+\" icon restored some vehicle health
 -Shield: pink shield icon: protects health for a limited time.
 
 Weapons:
--Proximity mine: drop behind the vehicle, explodes when a vehicle is near
--Rocket: straight flying explosive round
--Homing Missile: guided  flying explosive round, will follow terrain
--Ballistic round: explosive round
--Ballistic guided missile: homing missile lauched high, guided to target
+-Proximity mine: drop behind the vehicle, explodes when a vehicle is near (including you!)
+-Rocket: straight flying explosive
+-Homing Missile: guided flying explosive, will follow terrain to any moving target (except you)
+-Ballistic round: explosive round (a bullet)
+-Ballistic guided missile: homing missile lauched high, guided to target - use for far-off targets in the direction of launch
 
 Other:
 -Repair garages show a large red \"+\" above them: parking there within the blue area slowly restores health. 
@@ -755,7 +782,7 @@ Other:
 autowrap = true
 
 [node name="Player 1" type="Position2D" parent="Instructions"]
-position = Vector2( 367, 731 )
+position = Vector2( 368, 753 )
 
 [node name="Player1" type="Label" parent="Instructions/Player 1"]
 margin_left = -174.0
@@ -806,7 +833,7 @@ Joystick left/right"
 align = 1
 
 [node name="Player 2" type="Position2D" parent="Instructions"]
-position = Vector2( 361, 868 )
+position = Vector2( 362, 890 )
 
 [node name="Player2" type="Label" parent="Instructions/Player 2"]
 margin_left = -172.0
@@ -857,7 +884,7 @@ Joystick left/right"
 align = 1
 
 [node name="Player 3" type="Position2D" parent="Instructions"]
-position = Vector2( 1262, 725 )
+position = Vector2( 1263, 747 )
 
 [node name="InstructionPlayer1a3" type="Label" parent="Instructions/Player 3"]
 margin_left = 147.0
@@ -895,7 +922,7 @@ text = "Player 3"
 align = 1
 
 [node name="Player 4" type="Position2D" parent="Instructions"]
-position = Vector2( 1282, 889 )
+position = Vector2( 1283, 911 )
 
 [node name="Player5" type="Label" parent="Instructions/Player 4"]
 margin_left = -191.0
@@ -943,6 +970,7 @@ custom_fonts/font = ExtResource( 11 )
 text = "[Back]"
 
 [node name="Credits" type="Control" parent="."]
+visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 
@@ -1108,6 +1136,7 @@ text = "[Back]"
 [connection signal="value_changed" from="OptionMenu/GridContainer/MusicVolume/MusicVolume" to="." method="_on_MusicVolume_value_changed"]
 [connection signal="value_changed" from="OptionMenu/GridContainer/VehicleVolume/VehicleVolume" to="." method="_on_VehicleVolume_value_changed"]
 [connection signal="value_changed" from="OptionMenu/GridContainer/WindSpeed/WindSpeed" to="." method="_on_WindSpeed_value_changed"]
+[connection signal="value_changed" from="OptionMenu/GridContainer/Graphics/GraphicsSliders" to="." method="_on_GraphicsSliders_value_changed"]
 [connection signal="button_up" from="OptionMenu/GridContainer/OptionBackButton" to="." method="_on_OptionBackButton_button_up"]
 [connection signal="button_up" from="Instructions/InstructionsBackButton" to="." method="_on_InstructionsBackButton_button_up"]
 [connection signal="button_up" from="Credits/CreditsBackButton" to="." method="_on_CreditsBackButton_button_up"]

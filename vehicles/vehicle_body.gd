@@ -86,6 +86,10 @@ func _ready():
 	var _connect_update_weather = Global.connect("update_weather", self, "on_update_weather")
 	vehicle_state = ConfigVehicles.AliveState.ALIVE
 	#Global.debug_print(3, "vehicle_body: _ready(): Camera target pos="+str($CameraBase/Camera.target.global_transform.origin), "camera")
+	if Global.graphics == Global.Graphics.High:
+		$CameraBase/Camera/ParticlesCinders.amount = 300
+	else:
+		$CameraBase/Camera/ParticlesCinders.amount = 30
 	
 
 func _process(delta):
@@ -1166,7 +1170,11 @@ func check_engine_force_value() -> void:
 
 
 func restore_half_health(): # ie remove half the current damage
-	total_damage = total_damage/2
+	Global.debug_print(3, "restore_half_health(): total_damage="+str(total_damage))
+	if total_damage == 1:
+		total_damage = 0
+	else:
+		total_damage = total_damage/2
 	align_effects_with_damage()  # otherwise flames stay there after healing
 	
 	
@@ -1181,14 +1189,16 @@ func restore_health(amount):
 	if new_total_damage >= 0:
 		Global.debug_print(3, "Restored to "+str(new_total_damage)+" damage")
 		total_damage = new_total_damage
-		align_effects_with_damage()
 	else:
 		Global.debug_print(3, "Warning: restore_health() had no effect")
-		
+	
+	align_effects_with_damage()
+	
 	check_engine_force_value()
 
 
 func align_effects_with_damage():
+	Global.debug_print(3, "align_effects_with_damage(): total_damage="+str(total_damage))
 	if total_damage > 0:
 		if $Effects/Damage/ParticlesSmoke.emitting == false:
 			$Effects/Damage/ParticlesSmoke.emitting = true
@@ -1405,7 +1415,8 @@ func start_vehicle_dying() -> void:
 		Global.debug_print(3, "start_vehicle_dying(): Starting slow_motion_timer", "damage")
 		get_main_scene().start_timer_slow_motion()
 		remove_main_collision_shapes()
-		explode_vehicle_meshes()
+		if Global.build_options["vehicle_falling_parts"] == true:
+			explode_vehicle_meshes()
 		get_player().decrement_lives_left()
 		Global.debug_print(3, "start_vehicle_dying(): ..done", "damage")
 	else:

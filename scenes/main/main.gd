@@ -102,9 +102,13 @@ func _ready():
 	if Global.graphics == Global.Graphics.Low:
 		$DirectionalLightSun.shadow_enabled = false
 		$DirectionalLightMoon.shadow_enabled = false
+		Engine.iterations_per_second = 60  # any lower and vehicle falls through the terrain
+		#rendering/quality/shadow_atlas/size = 2048
 	else:
 		$DirectionalLightSun.shadow_enabled = true
 		$DirectionalLightMoon.shadow_enabled = true
+		Engine.iterations_per_second = 144
+		#rendering/quality/shadow_atlas/size = 4096
 
 
 func _process(delta):

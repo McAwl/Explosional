@@ -225,6 +225,7 @@ ec=false
 etc\=false
 etc=false
 mouse=false
+fps=false
 
 [gui]
 

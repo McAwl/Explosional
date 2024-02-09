@@ -479,35 +479,30 @@ transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.3912
 [node name="LightUnder1" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 0 )
 light_energy = 2.0
-shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
 [node name="LightUnder2" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, 1 )
 light_energy = 2.0
-shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
 [node name="LightUnder3" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0, -0.1, -1 )
 light_energy = 2.0
-shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
 [node name="LightUnder4" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, -0.528934, -0.1, -0.0325493 )
 light_energy = 2.0
-shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 
 [node name="LightUnder5" type="OmniLight" parent="VehicleTypes/Racer/Lights"]
 transform = Transform( -0.999595, 0, -0.0284624, 0, 1, 0, 0.0284624, 0, -0.999595, 0.496284, -0.1, 0.012954 )
 light_energy = 2.0
-shadow_enabled = true
 shadow_reverse_cull_face = true
 omni_range = 1.0
 

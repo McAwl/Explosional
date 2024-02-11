@@ -84,7 +84,7 @@ var build_options: Dictionary = {
 	"air_strike": true if build_type == Build.Development else false,
 	"vehicle_falling_parts": true if build_type == Build.Development else false,  # 
 	"vehicle_options": {"racer": true, "rally": false, "tank": false, "truck": false} if build_type == Build.Release else {"racer": true, "rally": true, "tank": true, "truck": true},
-	"allow_toggle_cinders": true if build_type == Build.Development else true,
+	"allow_toggle_cinders": true if build_type == Build.Development else false,
 	"achievements": true if build_type == Build.Development else false,
 	"hud_speedometer": true if build_type == Build.Development else false,
 }

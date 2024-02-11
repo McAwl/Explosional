@@ -32,9 +32,9 @@ enum PowerupType {
 const COOLDOWN_TIMER_DEFAULTS: Dictionary = {
 	Type.MINE: 5.0,
 	Type.ROCKET: 10.0, 
-	Type.MISSILE: 60.0,  #20.0, changed as we're giving all weapons to the 
+	Type.MISSILE: 30.0,  #20.0, changed as we're giving all weapons to the 
 	Type.NUKE: 60.0, 
-	Type.BALLISTIC: 60.0,  #5.0, changed as we're giving all weapons to the
+	Type.BALLISTIC: 10.0,  #5.0, changed as we're giving all weapons to the
 	Type.BALLISTIC_MISSILE: 60.0,  #10.0, changed as we're giving all weapons to the
 	Type.TRUCK_MINE: 30.0,
 	Type.AIR_BURST: 30.0,

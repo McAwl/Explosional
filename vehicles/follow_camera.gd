@@ -113,7 +113,7 @@ func _physics_process(delta):
 	
 	var follow_speed_multiplier: float = follow_speed_mult_min + follow_speed_mult_min + 0.01*angular_velocity.length()*abs(fwd_mps)  
 	var modify_by_num_players: float = 1.0 + ((float(number_of_players)-1.0)/2.0)  # keep closer to the vehicle the smaller the viewport is (number of players)
-	var modify_by_speed = 0.04*pow(abs(1.0+fwd_mps), 1.1)
+	var modify_by_speed = 0.04*pow(abs(2.0+fwd_mps), 1.1)
 	
 	#if $TimerVehicleCamDelayEnable.is_stopped():
 	if fwd_mps >= -2.0:  # look-forward config for camera

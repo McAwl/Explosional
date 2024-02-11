@@ -404,7 +404,7 @@ func _physics_process(delta):
 			steer_target = left - right
 			steer_target *= ConfigVehicles.STEER_LIMIT
 			
-		var speed_adjustment_divisor = pow(1.0 + abs(fwd_mps/10.0), 1.3)  # decrease the steering sensitivity at higher speeds
+		var speed_adjustment_divisor = pow(1.0 + abs(fwd_mps/15.0), 2.5)  # decrease the steering sensitivity at higher speeds
 		
 		steering = move_toward(steering, steer_target, ConfigVehicles.STEER_SPEED * delta / speed_adjustment_divisor)
 		

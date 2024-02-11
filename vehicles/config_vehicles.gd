@@ -39,11 +39,11 @@ const MAX_DAMAGE: Dictionary = {
 
 var config: Dictionary = {
 	Type.RACER:
-		{"engine_force_value": 220,  # keep this at 3x mass
+		{"engine_force_value": 150,  # was at 220 for a long time, turned down once we increased wheel tyre friction keep this at 3x mass
 		"mass_kg/100": 70.0, 
 		"suspension_stiffness": 50.0, "suspension_travel": 0.25,
 		"all_wheel_drive": false,
-		"wheel_friction_slip": 1.1,   # 0 is no grip, 1 is normal grip
+		"wheel_friction_slip": 3.0, # 1.1,   # 0 is no grip, 1 is normal grip
 		"wheel_roll_influence": 0.9,
 		"brake": 20.0,
 		"max_speed_km_hr": 120.0}, 

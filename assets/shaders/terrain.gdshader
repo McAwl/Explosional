@@ -26,7 +26,8 @@ void fragment(){
 	vec4 albedo1 = texture(tex_1_albedo, UV*scale_texture1);
 	vec4 albedo2 = texture(tex_2_albedo, UV*scale_texture2);
 	vec4 albedo3 = texture(tex_3_albedo, UV*scale_texture3);
-	vec3 normal1 = texture(tex_1_normal, UV*scale_texture1).rgb;
+	//vec3 normal1 = texture(tex_1_normal, UV*scale_texture1).rgb;  
+	vec3 normal1 = texture(tex_1_normal, UV*scale_texture1).rgb * vec3(1.0, -1.0, 1.0) - vec3(0.0, -1.0, 0.0);
 	vec3 normal2 = texture(tex_2_normal, UV*scale_texture2).rgb;
 	vec3 normal3 = texture(tex_3_normal, UV*scale_texture3).rgb;
 	float ao = texture(tex_1_ao, UV).r;
@@ -73,9 +74,23 @@ void fragment(){
 	// boost to the mix_factor, so that blending can follow the shapes in the second texture.
 	// Here are the textures: https://cc0textures.com/view?id=Moss003
 	// Have fun!
+	
+	
+	// In my case both Y & X were inverted. So here's micro fix.
+	//
+	//shader_type canvas_item;
+	//
+	//void fragment() {
+	//COLOR = texture(TEXTURE, UV);
+	//NORMAL = texture(NORMAL_TEXTURE, UV).rgb * vec3(-2.0, -2.0, 1.0) - vec3(-1.0, -1.0, 0.0);
+	//}
+
 	mix_factor1 = smoothstep(0.0, blend_smoothness, mix_factor1 - threshold);
 
 	NORMALMAP = mix(normal1, normal2, mix_factor1);
+	
+	//NORMALMAP = texture(NORMALMAP, UV).rgb * vec3(-2.0, -2.0, 1.0) - vec3(-1.0, -1.0, 0.0);
+	
 	ALBEDO = clamp(mix(albedo1, albedo2, mix_factor1).rgb, vec3(0.0), vec3(1.0));
 
 }

@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://scenes/main_menu/main_menu.gd" type="Script" id=1]
 [ext_resource path="res://assets/display/capture1 - blurred.png" type="Texture" id=2]
@@ -13,6 +13,8 @@
 [ext_resource path="res://assets/display/fonts/font_theme_menu.tres" type="DynamicFont" id=11]
 [ext_resource path="res://assets/display/fonts/font_theme_normal.tres" type="DynamicFont" id=12]
 [ext_resource path="res://scenes/main_menu/GraphicsSliders.gd" type="Script" id=13]
+[ext_resource path="res://assets/display/1116px-Xbox_Controller.svg.png" type="Texture" id=14]
+[ext_resource path="res://assets/display/Qwerty.svg.png" type="Texture" id=15]
 
 [sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
@@ -39,8 +41,20 @@ bg_color = Color( 0.6, 0.6, 0.6, 0 )
 font_data = ExtResource( 5 )
 
 [sub_resource type="DynamicFont" id=9]
-size = 30
+size = 38
 font_data = ExtResource( 5 )
+
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 0.47451, 0.47451, 0.47451, 1 )
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color( 0.466667, 0.466667, 0.466667, 1 )
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [node name="MainMenu" type="Control"]
 pause_mode = 2
@@ -102,6 +116,7 @@ align = 1
 valign = 1
 
 [node name="ButtonsContainer" type="HBoxContainer" parent="MainSelection/MainContainer"]
+visible = false
 margin_top = 156.0
 margin_right = 519.0
 margin_bottom = 511.0
@@ -464,6 +479,7 @@ valign = 1
 autowrap = true
 
 [node name="OptionMenu" type="Control" parent="."]
+visible = false
 anchor_left = 0.124
 anchor_top = 0.116
 anchor_right = 0.349
@@ -713,7 +729,7 @@ size_flags_vertical = 0
 margin_right = 1920.0
 margin_bottom = 27.0
 custom_fonts/font = ExtResource( 11 )
-text = "Explosional BETA v1.14.2 2024 McAwl"
+text = "Explosional BETA v1.14.3 2024 McAwl"
 align = 1
 valign = 1
 
@@ -731,7 +747,6 @@ align = 1
 valign = 1
 
 [node name="Instructions" type="Control" parent="."]
-visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 
@@ -780,184 +795,6 @@ Other:
 -Lava Island terrain only: fire storms occur randomly; the winds are strong enough to move vehicles and visibility is limited. A fire icon will appear bottom-right of the screen."
 autowrap = true
 
-[node name="Player 1" type="Position2D" parent="Instructions"]
-position = Vector2( 368, 753 )
-
-[node name="Player1" type="Label" parent="Instructions/Player 1"]
-margin_left = -174.0
-margin_top = -37.0
-margin_right = -44.0
-margin_bottom = 6.0
-custom_fonts/font = SubResource( 9 )
-text = "Player 1"
-align = 1
-
-[node name="Actions1" type="Label" parent="Instructions/Player 1"]
-margin_left = 40.0
-margin_top = -76.0
-margin_right = 222.0
-margin_bottom = 86.0
-custom_colors/font_color = Color( 0.827451, 0.2, 0.2, 1 )
-custom_fonts/font = SubResource( 8 )
-text = "Fire:
-Cycle weapon:
-Accelerate:
-Brake:
-Left-Right:"
-
-[node name="Buttons1a" type="Label" parent="Instructions/Player 1"]
-margin_left = 117.0
-margin_top = -77.0
-margin_right = 261.0
-margin_bottom = 41.0
-custom_fonts/font = SubResource( 8 )
-text = "E
-Q
-W
-S
-A/D"
-align = 1
-
-[node name="InstructionPlayer1b" type="Label" parent="Instructions/Player 1"]
-margin_left = 192.0
-margin_top = -77.0
-margin_right = 430.0
-margin_bottom = 85.0
-custom_fonts/font = SubResource( 8 )
-text = "Left Trigger
-Left Bumper
-Right Trigger
-Joystick down
-Joystick left/right"
-align = 1
-
-[node name="Player 2" type="Position2D" parent="Instructions"]
-position = Vector2( 362, 890 )
-
-[node name="Player2" type="Label" parent="Instructions/Player 2"]
-margin_left = -172.0
-margin_top = -39.0
-margin_right = -42.0
-margin_bottom = 4.0
-custom_fonts/font = SubResource( 9 )
-text = "Player 2"
-align = 1
-
-[node name="Actions2" type="Label" parent="Instructions/Player 2"]
-margin_left = 43.0
-margin_top = -76.0
-margin_right = 225.0
-margin_bottom = 86.0
-custom_colors/font_color = Color( 0.827451, 0.2, 0.2, 1 )
-custom_fonts/font = SubResource( 8 )
-text = "Fire:
-Cycle weapon:
-Accelerate:
-Brake:
-Left-Right:"
-
-[node name="InstructionPlayer1a" type="Label" parent="Instructions/Player 2"]
-margin_left = 126.0
-margin_top = -75.0
-margin_right = 285.999
-margin_bottom = 87.0
-custom_fonts/font = SubResource( 8 )
-text = "Shift
-Cntl
-Up
-Down
-Left/Right"
-align = 1
-
-[node name="InstructionPlayer2b" type="Label" parent="Instructions/Player 2"]
-margin_left = 230.0
-margin_top = -75.0
-margin_right = 468.0
-margin_bottom = 87.0
-custom_fonts/font = SubResource( 8 )
-text = "Left Trigger
-Left Bumper
-Right Trigger
-Joystick down
-Joystick left/right"
-align = 1
-
-[node name="Player 3" type="Position2D" parent="Instructions"]
-position = Vector2( 1263, 747 )
-
-[node name="InstructionPlayer1a3" type="Label" parent="Instructions/Player 3"]
-margin_left = 147.0
-margin_top = -74.0
-margin_right = 306.999
-margin_bottom = 88.0
-custom_fonts/font = SubResource( 8 )
-text = "Y
-R
-T
-G
-F/H"
-align = 1
-
-[node name="Actions3" type="Label" parent="Instructions/Player 3"]
-margin_left = 63.0
-margin_top = -75.0
-margin_right = 202.0
-margin_bottom = 87.0
-custom_colors/font_color = Color( 0.827451, 0.2, 0.2, 1 )
-custom_fonts/font = SubResource( 8 )
-text = "Fire:
-Cycle weapon:
-Accelerate:
-Brake:
-Left-Right:"
-
-[node name="Player3" type="Label" parent="Instructions/Player 3"]
-margin_left = -174.0
-margin_top = -39.0
-margin_right = -44.0
-margin_bottom = -2.0
-custom_fonts/font = SubResource( 9 )
-text = "Player 3"
-align = 1
-
-[node name="Player 4" type="Position2D" parent="Instructions"]
-position = Vector2( 1283, 911 )
-
-[node name="Player5" type="Label" parent="Instructions/Player 4"]
-margin_left = -191.0
-margin_top = -41.0
-margin_right = -61.0
-margin_bottom = -4.0
-custom_fonts/font = SubResource( 9 )
-text = "Player 4"
-align = 1
-
-[node name="InstructionPlayer1a4" type="Label" parent="Instructions/Player 4"]
-margin_left = 127.0
-margin_top = -79.0
-margin_right = 286.999
-margin_bottom = 83.0
-custom_fonts/font = SubResource( 8 )
-text = "O
-U
-I
-K
-J/L"
-align = 1
-
-[node name="Actions4" type="Label" parent="Instructions/Player 4"]
-margin_left = 42.0
-margin_top = -80.0
-margin_right = 224.0
-margin_bottom = 82.0
-custom_colors/font_color = Color( 0.827451, 0.2, 0.2, 1 )
-custom_fonts/font = SubResource( 8 )
-text = "Fire:
-Cycle weapon:
-Accelerate:
-Brake:
-Left-Right:"
-
 [node name="InstructionsBackButton" type="Button" parent="Instructions"]
 margin_left = 129.0
 margin_top = 957.0
@@ -967,6 +804,459 @@ focus_previous = NodePath("../WindSpeed/WindSpeed")
 size_flags_horizontal = 0
 custom_fonts/font = ExtResource( 11 )
 text = "[Back]"
+
+[node name="KeyboardLayout" type="TextureRect" parent="Instructions"]
+anchor_bottom = 0.319
+margin_left = 124.0
+margin_top = 620.0
+margin_right = 2646.0
+margin_bottom = 1570.0
+rect_scale = Vector2( 0.3, 0.3 )
+texture = ExtResource( 15 )
+
+[node name="Key" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 216.969
+margin_top = 513.334
+margin_right = 296.969
+margin_bottom = 589.334
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "A"
+align = 1
+valign = 1
+
+[node name="A1" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = -136.364
+margin_top = 940.0
+margin_right = 2336.64
+margin_bottom = 1016.0
+custom_fonts/font = SubResource( 9 )
+text = "A: Accelerate  B:Brake  L/R: Steer left/right  C: Cycle weapon  F: Fire weapon"
+align = 1
+valign = 1
+
+[node name="A2" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 1583.64
+margin_top = 676.667
+margin_right = 1663.64
+margin_bottom = 752.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "A"
+align = 1
+valign = 1
+
+[node name="A3" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 503.636
+margin_top = 513.333
+margin_right = 583.636
+margin_bottom = 589.333
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "A"
+align = 1
+valign = 1
+
+[node name="A4" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 790.303
+margin_top = 513.334
+margin_right = 870.302
+margin_bottom = 589.334
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "A"
+align = 1
+valign = 1
+
+[node name="C1" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 123.636
+margin_top = 513.0
+margin_right = 203.636
+margin_bottom = 589.0
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "C"
+align = 1
+valign = 1
+
+[node name="C2" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 1283.64
+margin_top = 760.0
+margin_right = 1363.64
+margin_bottom = 836.0
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "C"
+align = 1
+valign = 1
+
+[node name="C3" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 406.969
+margin_top = 513.333
+margin_right = 486.969
+margin_bottom = 589.333
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "C"
+align = 1
+valign = 1
+
+[node name="C4" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 696.969
+margin_top = 513.334
+margin_right = 776.969
+margin_bottom = 589.334
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "C"
+align = 1
+valign = 1
+
+[node name="L1" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 146.969
+margin_top = 596.667
+margin_right = 226.969
+margin_bottom = 672.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "L"
+align = 1
+valign = 1
+
+[node name="L2" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 1483.64
+margin_top = 756.667
+margin_right = 1563.64
+margin_bottom = 832.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "L"
+align = 1
+valign = 1
+
+[node name="L3" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 433.636
+margin_top = 596.667
+margin_right = 513.636
+margin_bottom = 672.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "L"
+align = 1
+valign = 1
+
+[node name="L4" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 720.302
+margin_top = 596.667
+margin_right = 800.302
+margin_bottom = 672.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "L"
+align = 1
+valign = 1
+
+[node name="R1" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 340.303
+margin_top = 596.667
+margin_right = 420.303
+margin_bottom = 672.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "R"
+align = 1
+valign = 1
+
+[node name="R2" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 1680.3
+margin_top = 756.666
+margin_right = 1760.3
+margin_bottom = 832.666
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "R"
+align = 1
+valign = 1
+
+[node name="R3" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 623.636
+margin_top = 596.667
+margin_right = 703.636
+margin_bottom = 672.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "R"
+align = 1
+valign = 1
+
+[node name="R4" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 910.303
+margin_top = 596.667
+margin_right = 990.303
+margin_bottom = 672.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "R"
+align = 1
+valign = 1
+
+[node name="F1" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 313.636
+margin_top = 513.333
+margin_right = 393.636
+margin_bottom = 589.333
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "F"
+align = 1
+valign = 1
+
+[node name="F2" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 1220.3
+margin_top = 676.667
+margin_right = 1300.3
+margin_bottom = 752.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "F"
+align = 1
+valign = 1
+
+[node name="F3" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 600.302
+margin_top = 513.333
+margin_right = 680.303
+margin_bottom = 589.333
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "F"
+align = 1
+valign = 1
+
+[node name="F4" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 883.636
+margin_top = 513.333
+margin_right = 963.636
+margin_bottom = 589.333
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "F"
+align = 1
+valign = 1
+
+[node name="B1" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 1583.64
+margin_top = 756.667
+margin_right = 1663.64
+margin_bottom = 832.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "B"
+align = 1
+valign = 1
+
+[node name="B2" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 243.636
+margin_top = 596.667
+margin_right = 323.636
+margin_bottom = 672.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "B"
+align = 1
+valign = 1
+
+[node name="B3" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 526.969
+margin_top = 596.667
+margin_right = 606.969
+margin_bottom = 672.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "B"
+align = 1
+valign = 1
+
+[node name="B4" type="Label" parent="Instructions/KeyboardLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 813.636
+margin_top = 596.667
+margin_right = 893.636
+margin_bottom = 672.667
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "B"
+align = 1
+valign = 1
+
+[node name="Player 1" type="Position2D" parent="Instructions/KeyboardLayout"]
+position = Vector2( 196.667, -136.667 )
+scale = Vector2( 3.33333, 3.33333 )
+
+[node name="Player1" type="Label" parent="Instructions/KeyboardLayout/Player 1"]
+margin_left = -83.0
+margin_top = 12.0
+margin_right = 118.0
+margin_bottom = 68.0
+custom_fonts/font = SubResource( 9 )
+text = "Player 1"
+align = 1
+
+[node name="Player 2" type="Position2D" parent="Instructions/KeyboardLayout"]
+position = Vector2( 2183.33, -116.667 )
+scale = Vector2( 3.33333, 3.33333 )
+
+[node name="Player2" type="Label" parent="Instructions/KeyboardLayout/Player 2"]
+margin_left = -71.0
+margin_top = 9.0
+margin_right = 130.0
+margin_bottom = 65.0
+custom_fonts/font = SubResource( 9 )
+text = "Player 2"
+align = 1
+
+[node name="Player 3" type="Position2D" parent="Instructions/KeyboardLayout"]
+position = Vector2( 796.667, -103.333 )
+scale = Vector2( 3.33333, 3.33333 )
+
+[node name="Player3" type="Label" parent="Instructions/KeyboardLayout/Player 3"]
+margin_left = -62.0
+margin_top = 3.0
+margin_right = 139.0
+margin_bottom = 59.0
+custom_fonts/font = SubResource( 9 )
+text = "Player 3"
+align = 1
+
+[node name="Player 4" type="Position2D" parent="Instructions/KeyboardLayout"]
+position = Vector2( 1510, -136.667 )
+scale = Vector2( 3.33333, 3.33333 )
+
+[node name="Player5" type="Label" parent="Instructions/KeyboardLayout/Player 4"]
+margin_left = -65.0
+margin_top = 14.0
+margin_right = 136.0
+margin_bottom = 70.0
+custom_fonts/font = SubResource( 9 )
+text = "Player 4"
+align = 1
+
+[node name="XBoxLayout" type="TextureRect" parent="Instructions"]
+margin_left = 1165.0
+margin_top = 655.0
+margin_right = 2281.0
+margin_bottom = 1405.0
+rect_scale = Vector2( 0.4, 0.4 )
+texture = ExtResource( 14 )
+
+[node name="Break (down)" type="Label" parent="Instructions/XBoxLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = -116.692
+margin_top = 470.0
+margin_right = 160.308
+margin_bottom = 537.0
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "Break (down)"
+align = 1
+
+[node name="Break (down)2" type="Label" parent="Instructions/XBoxLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = -156.692
+margin_top = 372.5
+margin_right = 84.308
+margin_bottom = 439.5
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "Steer (L/R)"
+align = 1
+
+[node name="Accelerate" type="Label" parent="Instructions/XBoxLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 810.808
+margin_top = -15.0
+margin_right = 1039.81
+margin_bottom = 52.0
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "Accelerate"
+align = 1
+
+[node name="Cycle" type="Label" parent="Instructions/XBoxLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = -214.192
+margin_top = 112.5
+margin_right = 74.808
+margin_bottom = 179.5
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "Cycle weapon"
+align = 1
+
+[node name="Fire" type="Label" parent="Instructions/XBoxLayout"]
+anchor_left = 0.062
+anchor_right = 0.062
+margin_left = 240.808
+margin_top = -20.0
+margin_right = 498.808
+margin_bottom = 47.0
+custom_fonts/font = SubResource( 9 )
+custom_styles/normal = SubResource( 10 )
+text = "Fire weapon"
+align = 1
 
 [node name="Credits" type="Control" parent="."]
 visible = false

@@ -53,7 +53,7 @@ var weather_model: Array = [
 	#{"type": Weather.NORMAL, "duration_s": 120.0, "max_wind_strength": 0.0, "fog_depth_curve": 4.75, "fog_depth_begin": 20.0, "visibility": 200.0, "fire_storm_dir_light": 0.0}, 
 	#{"type": Weather.FIRE_STORM, "duration_s": 30.0, "max_wind_strength":300.0, "fog_depth_curve": 1.0, "fog_depth_begin": 0.0, "visibility": 50.0, "fire_storm_dir_light": 16}
 	{"type": Weather.NORMAL, "duration_s": 120.0, "max_wind_strength": 0.0, "dof_blur_far_amount": 0.0, "cam_colour_filer_transparency": 0.0}, 
-	{"type": Weather.FIRE_STORM, "duration_s": 30.0, "max_wind_strength":300.0, "dof_blur_far_amount": 0.1, "cam_colour_filer_transparency": 0.2}
+	{"type": Weather.FIRE_STORM, "duration_s": 20.0, "max_wind_strength":1000.0, "dof_blur_far_amount": 0.1, "cam_colour_filer_transparency": 0.2}
 	]
 	
 var weather_state: Dictionary = {
@@ -84,7 +84,7 @@ var build_options: Dictionary = {
 	"air_strike": true if build_type == Build.Development else false,
 	"vehicle_falling_parts": true if build_type == Build.Development else false,  # 
 	"vehicle_options": {"racer": true, "rally": false, "tank": false, "truck": false} if build_type == Build.Release else {"racer": true, "rally": true, "tank": true, "truck": true},
-	"allow_toggle_cinders": true if build_type == Build.Development else false,
+	"allow_toggle_cinders": true if build_type == Build.Development else true,
 	"achievements": true if build_type == Build.Development else false,
 	"hud_speedometer": true if build_type == Build.Development else false,
 }
@@ -176,11 +176,19 @@ func _process(delta):
 		weather_state["wind_direction"].y = clamp(weather_state["wind_direction"].y, -2.0, 2.0)
 		weather_state["wind_direction"].z = clamp(weather_state["wind_direction"].z, -1.0, 1.0)
 		
-		# random walk for wind strength, but walk toward max/2
-		weather_state["wind_strength"] = (0.9*weather_state["wind_strength"]) + (0.1*(mws/2.0))
-		weather_state["wind_strength"] += rng.randf_range(-mws/2.0, mws/2.0) 
-		weather_state["wind_strength"] = clamp(weather_state["wind_strength"], 0.0, mws)
-
+		# random walk for wind strength, but walk toward max/4
+		#weather_state["wind_strength"] = (0.9*weather_state["wind_strength"]) + (0.1*(mws/4.0))
+		#weather_state["wind_strength"] += rng.randf_range(-mws/4.0, mws/4.0)
+		#weather_state["wind_strength"] = clamp(weather_state["wind_strength"], 0.0, mws/2.0)
+		
+		var wind_random = rng.randf_range(0.0, 1.0) 
+		if wind_random > 0.9:  
+			weather_state["wind_strength"] = mws  # Once in a while (10% of the time) make a gust at max wind speed
+		elif wind_random > 0.5:  
+			weather_state["wind_strength"] = mws/4.0  
+		else:
+			weather_state["wind_strength"] = mws/8.0
+		
 		weather_state["wind_volume_db"] = clamp(-21.0+(28.0*weather_state["wind_strength"]/500.0), -21.0, 12.0)
 		emit_signal("update_weather", weather_state)
 

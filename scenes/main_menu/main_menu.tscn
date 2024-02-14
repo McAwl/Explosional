@@ -729,7 +729,7 @@ size_flags_vertical = 0
 margin_right = 1920.0
 margin_bottom = 27.0
 custom_fonts/font = ExtResource( 11 )
-text = "Explosional v1.15.0-beta 2024 McAwl"
+text = "Explosional v1.16.1-beta 2024 McAwl"
 align = 1
 valign = 1
 

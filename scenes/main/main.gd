@@ -259,19 +259,14 @@ func on_change_weather(weather_change: Dictionary, change_duration_sec) -> void:
 
 
 func _on_TimerCheckAudioPitch_timeout():
-	$Effects/Siren.pitch_scale = Engine.time_scale
-	$Effects/Wind.pitch_scale = Engine.time_scale/2.0
-	$Effects/Cinders.pitch_scale = Engine.time_scale
+	$Effects.set_pitch_scale(Engine.time_scale)
 
 
 func _all_audio_pitch(_pitch=null):
 	var set_pitch = _pitch
 	if _pitch == null:
 		set_pitch = Engine.time_scale
-	$Effects/BackgroundMusic.pitch_scale = set_pitch
-	$Effects/Siren.pitch_scale = set_pitch
-	$Effects/Wind.pitch_scale = set_pitch
-	$Effects/Cinders.pitch_scale = set_pitch
+	$Effects.set_pitch_scale(set_pitch)
 
 
 # Private methods

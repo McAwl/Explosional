@@ -57,6 +57,19 @@ func load_new_track() -> void:
 	current_track.playing = true
 
 
+func set_pitch_scale(set_pitch):
+	
+	$MusicTrack1.pitch_scale = set_pitch
+	$MusicTrack2.pitch_scale = set_pitch
+	$MusicTrack3.pitch_scale = set_pitch
+	$MusicTrack4.pitch_scale = set_pitch
+	$MusicTrack5.pitch_scale = set_pitch
+	$MusicTrack6.pitch_scale = set_pitch
+	$Siren.pitch_scale = set_pitch
+	$Wind.pitch_scale = set_pitch/2.0
+	$Cinders.pitch_scale = set_pitch
+
+
 func _on_TimerCheckMusic_timeout():
 	if current_track != null:
 		# once in a whie, check all music is disabled or move to the next track

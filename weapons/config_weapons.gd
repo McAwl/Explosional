@@ -44,6 +44,7 @@ const EXPLOSIVE_START_WAIT: float = 3.0  # wait time when first turned on to act
 const EXPLOSIVE_ACTIVE_WAIT: float = 1.0
 const EXPLOSIVE_PROXIMITY_DISTANCE: float = 5.0
 const FLASH_TIMER_WAIT: float = 0.25
+const MINE_MAGNETIC_RANGE: float = 30.0
 
 # TODO remove this, if we want to completely move to damage due to force (acceleration)
 # is this direct hit damage?

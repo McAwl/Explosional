@@ -32,6 +32,8 @@ var explosive_flash_state: float = 0
 var flash_timer: float = 0.25
 var hit_on_contact: bool = false
 
+var closest_target_mine: VehicleBody
+var closest_target_distance_mine: float
 
 # Built-in methods
 
@@ -196,7 +198,7 @@ func _physics_process(_delta):
 					Global.debug_print(5, "target took "+str(ConfigWeapons.DAMAGE_INDIRECT.get(type))+" indirect damage launched_by_player_number "+str(launched_by_player_number), "weapon")
 				else:
 					Global.debug_print(3, "ignoring explosion damge to target player_num "+str(target.player_number), "truck_mine")
-
+					
 		#print("setting explosive_stage = 5")
 		explosive_stage = ConfigWeapons.ExplosiveStage.EFFECTS
 		explosive_proximity_check_timer = ConfigWeapons.EXPLOSIVE_ACTIVE_WAIT * 4  # to ensure we don't wait forever
@@ -205,6 +207,27 @@ func _physics_process(_delta):
 		# linear_velocity = Vector3(0.0, 0.0, 0.0)
 		# angular_velocity = Vector3(0.0, 0.0, 0.0)
 		rotation_degrees = Vector3(0.0, 0.0, 0.0)
+		
+	if explosive_stage == ConfigWeapons.ExplosiveStage.ACTIVE:
+		if type == ConfigWeapons.Type.MINE:
+			for player in get_node("/root/MainScene").get_players():  # in range(1, 5): # explosion toward all players
+				#if i != parent_player_number:
+				# if player.player_number != parent_player_number:
+				var target: VehicleBody = player.get_vehicle_body()  # get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+				#var target = get_node("/root/Main/InstancePos"+str(i)+"/VC/V/CarBase/Body")
+				if target != null:  # it might have exploded already, leaving no body
+					var distance = global_transform.origin.distance_to(target.global_transform.origin)
+					if distance < ConfigWeapons.MINE_MAGNETIC_RANGE:
+						closest_target_mine = target
+						closest_target_distance_mine = distance
+						var closest_target_direction =  closest_target_mine.global_transform.origin - global_transform.origin
+						var closest_target_direction_normalised = closest_target_direction.normalized()
+						var mine_mag_force
+						if abs(linear_velocity.x) + abs(linear_velocity.y) + abs(linear_velocity.z) < 10.0:
+							mine_mag_force = 300.0  # 300 will get it moving
+						else:
+							mine_mag_force = 150.0  # 150 will keep get it moving
+						add_central_force(closest_target_direction_normalised*mine_mag_force)  # 100.0 gives very slow movement, # 200 is ok
 
 
 func line_of_sight(_vehicle_body_target) -> bool:

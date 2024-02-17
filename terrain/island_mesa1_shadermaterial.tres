@@ -1,0 +1,31 @@
+[gd_resource type="ShaderMaterial" load_steps=9 format=2]
+
+[ext_resource path="res://assets/textures/grass_1-1K/grass_1_normal-1K.png" type="Texture" id=1]
+[ext_resource path="res://assets/textures/StylizedSand001_1K-JPG/Stylized_Sand_001_basecolor.jpg" type="Texture" id=2]
+[ext_resource path="res://assets/textures/ground_12-1K/1K-ground_12_normal.png" type="Texture" id=3]
+[ext_resource path="res://assets/textures/grass_1-1K/grass_1_basecolor-1K.png" type="Texture" id=4]
+[ext_resource path="res://assets/textures/ground_12-1K/1K-ground_12_ambientocclusion.png" type="Texture" id=5]
+[ext_resource path="res://assets/textures/StylizedSand001_1K-JPG/Stylized_Sand_001_normal.jpg" type="Texture" id=6]
+[ext_resource path="res://assets/textures/ground_12-1K/1K-ground_12_basecolor.png" type="Texture" id=7]
+[ext_resource path="res://assets/shaders/terrain.gdshader" type="Shader" id=8]
+
+[resource]
+shader = ExtResource( 8 )
+shader_param/blend_smoothness = 0.04
+shader_param/threshold = 0.64
+shader_param/normal_mult = 0.35
+shader_param/scale_texture1 = 64.0
+shader_param/scale_texture2 = 64.0
+shader_param/scale_texture3 = 64.0
+shader_param/additive_mix = false
+shader_param/use_red_vertex_color = true
+shader_param/use_ao_occlusion = true
+shader_param/use_world_direction = true
+shader_param/world_direction = Vector3( 0, 1, 0 )
+shader_param/tex_1_albedo = ExtResource( 7 )
+shader_param/tex_1_ao = ExtResource( 5 )
+shader_param/tex_1_normal = ExtResource( 3 )
+shader_param/tex_2_albedo = ExtResource( 4 )
+shader_param/tex_2_normal = ExtResource( 1 )
+shader_param/tex_3_albedo = ExtResource( 2 )
+shader_param/tex_3_normal = ExtResource( 6 )

@@ -21,7 +21,7 @@ var rng = RandomNumberGenerator.new()
 
 var explosive_proximity_check_timer: float = 1.0
 var explosive_proximity_timer_limit: float = 20
-var explosive_inactive_timer: float = 1.0
+var explosive_inactive_timer: float = ConfigWeapons.EXPLOSIVE_START_WAIT
 
 var material_green: Material
 var material_red: Material

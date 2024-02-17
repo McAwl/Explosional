@@ -1,0 +1,181 @@
+[gd_resource type="VisualShader" load_steps=18 format=2]
+
+[ext_resource path="res://assets/textures/grass_1-1K/grass_1_basecolor-1K.png" type="Texture" id=1]
+[ext_resource path="res://assets/textures/ground_12-1K/1K-ground_12_basecolor.png" type="Texture" id=2]
+
+[sub_resource type="VisualShaderNodeVectorScalarMix" id=9]
+output_port_for_preview = 0
+
+[sub_resource type="VisualShaderNodeIf" id=10]
+default_input_values = [ 0, 0.0, 1, 0.7, 2, 1e-05, 3, Vector3( 0, 0, 0 ), 4, Vector3( 0, 0, 0 ), 5, Vector3( 0, 0, 0 ) ]
+
+[sub_resource type="VisualShaderNodeScalarOp" id=11]
+default_input_values = [ 0, 0.0, 1, 0.7 ]
+operator = 1
+
+[sub_resource type="VisualShaderNodeScalarOp" id=12]
+default_input_values = [ 0, 0.0, 1, 4.0 ]
+operator = 2
+
+[sub_resource type="VisualShaderNodeTexture" id=13]
+texture = ExtResource( 1 )
+
+[sub_resource type="VisualShaderNodeInput" id=14]
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeTexture" id=15]
+texture = ExtResource( 2 )
+
+[sub_resource type="VisualShaderNodeColorConstant" id=1]
+output_port_for_preview = 0
+constant = Color( 0.984707, 0.98757, 0.979182, 1 )
+
+[sub_resource type="VisualShaderNodeColorConstant" id=2]
+output_port_for_preview = 0
+constant = Color( 0, 0, 0, 1 )
+
+[sub_resource type="VisualShaderNodeDotProduct" id=3]
+
+[sub_resource type="VisualShaderNodeInput" id=4]
+input_name = "normal"
+
+[sub_resource type="VisualShaderNodeVec3Constant" id=5]
+constant = Vector3( 0, 1, 0 )
+
+[sub_resource type="VisualShaderNodeInput" id=6]
+input_name = "inv_camera"
+
+[sub_resource type="VisualShaderNodeIf" id=7]
+default_input_values = [ 0, 0.0, 1, 0.95, 2, 1e-05, 3, Vector3( 0, 0, 0 ), 4, Vector3( 0, 0, 0 ), 5, Vector3( 0, 0, 0 ) ]
+
+[sub_resource type="VisualShaderNodeTransformVecMult" id=8]
+operator = 1
+
+[resource]
+code = "shader_type spatial;
+render_mode specular_schlick_ggx, async_visible;
+
+uniform sampler2D tex_frg_16;
+uniform sampler2D tex_frg_18;
+
+
+
+void vertex() {
+// Output:0
+
+}
+
+void fragment() {
+// Input:7
+	mat4 n_out7p0 = INV_CAMERA_MATRIX;
+
+// Input:5
+	vec3 n_out5p0 = NORMAL;
+
+// TransformVectorMult:9
+	vec3 n_out9p0 = (vec4(n_out5p0, 1.0) * n_out7p0).xyz;
+
+// Vector:6
+	vec3 n_out6p0 = vec3(0.000000, 1.000000, 0.000000);
+
+// DotProduct:4
+	float n_out4p0 = dot(n_out9p0, n_out6p0);
+
+// Texture:16
+	vec4 tex_frg_16_read = texture(tex_frg_16, UV.xy);
+	vec3 n_out16p0 = tex_frg_16_read.rgb;
+	float n_out16p1 = tex_frg_16_read.a;
+
+// Texture:18
+	vec4 tex_frg_18_read = texture(tex_frg_18, UV.xy);
+	vec3 n_out18p0 = tex_frg_18_read.rgb;
+	float n_out18p1 = tex_frg_18_read.a;
+
+// ScalarOp:14
+	float n_in14p1 = 0.70000;
+	float n_out14p0 = n_out4p0 - n_in14p1;
+
+// ScalarOp:15
+	float n_in15p1 = 4.00000;
+	float n_out15p0 = n_out14p0 * n_in15p1;
+
+// VectorScalarMix:12
+	vec3 n_out12p0 = mix(n_out18p0, n_out16p0, n_out15p0);
+
+// If:13
+	float n_in13p1 = 0.70000;
+	float n_in13p2 = 0.00001;
+	vec3 n_out13p0;
+	if(abs(n_out4p0 - n_in13p1) < n_in13p2)
+	{
+		n_out13p0 = n_out12p0;
+	}
+	else if(n_out4p0 < n_in13p1)
+	{
+		n_out13p0 = n_out18p0;
+	}
+	else
+	{
+		n_out13p0 = n_out12p0;
+	}
+
+// If:8
+	float n_in8p1 = 0.95000;
+	float n_in8p2 = 0.00001;
+	vec3 n_out8p0;
+	if(abs(n_out4p0 - n_in8p1) < n_in8p2)
+	{
+		n_out8p0 = n_out16p0;
+	}
+	else if(n_out4p0 < n_in8p1)
+	{
+		n_out8p0 = n_out13p0;
+	}
+	else
+	{
+		n_out8p0 = n_out16p0;
+	}
+
+// Output:0
+	ALBEDO = n_out8p0;
+
+}
+
+void light() {
+// Output:0
+
+}
+"
+graph_offset = Vector2( -455.099, -89.9581 )
+nodes/fragment/0/position = Vector2( 1960, -160 )
+nodes/fragment/2/node = SubResource( 1 )
+nodes/fragment/2/position = Vector2( 80, 140 )
+nodes/fragment/3/node = SubResource( 2 )
+nodes/fragment/3/position = Vector2( 80, 340 )
+nodes/fragment/4/node = SubResource( 3 )
+nodes/fragment/4/position = Vector2( 260, -200 )
+nodes/fragment/5/node = SubResource( 4 )
+nodes/fragment/5/position = Vector2( -300, -200 )
+nodes/fragment/6/node = SubResource( 5 )
+nodes/fragment/6/position = Vector2( -220, -100 )
+nodes/fragment/7/node = SubResource( 6 )
+nodes/fragment/7/position = Vector2( -300, -280 )
+nodes/fragment/8/node = SubResource( 7 )
+nodes/fragment/8/position = Vector2( 1600, -160 )
+nodes/fragment/9/node = SubResource( 8 )
+nodes/fragment/9/position = Vector2( 0, -260 )
+nodes/fragment/12/node = SubResource( 9 )
+nodes/fragment/12/position = Vector2( 980, 160 )
+nodes/fragment/13/node = SubResource( 10 )
+nodes/fragment/13/position = Vector2( 1280, 40 )
+nodes/fragment/14/node = SubResource( 11 )
+nodes/fragment/14/position = Vector2( 460, -100 )
+nodes/fragment/15/node = SubResource( 12 )
+nodes/fragment/15/position = Vector2( 660, -100 )
+nodes/fragment/16/node = SubResource( 13 )
+nodes/fragment/16/position = Vector2( 460, 40 )
+nodes/fragment/17/node = SubResource( 14 )
+nodes/fragment/17/position = Vector2( -80, 140 )
+nodes/fragment/18/node = SubResource( 15 )
+nodes/fragment/18/position = Vector2( 460, 280 )
+nodes/fragment/connections = PoolIntArray( 6, 0, 4, 1, 4, 0, 8, 0, 8, 0, 0, 0, 5, 0, 9, 1, 7, 0, 9, 0, 9, 0, 4, 0, 13, 0, 8, 5, 12, 0, 13, 4, 12, 0, 13, 3, 4, 0, 14, 0, 14, 0, 15, 0, 15, 0, 12, 2, 4, 0, 13, 0, 16, 0, 8, 3, 16, 0, 8, 4, 16, 0, 12, 1, 18, 0, 12, 0, 18, 0, 13, 5 )

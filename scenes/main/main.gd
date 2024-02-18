@@ -28,6 +28,7 @@ var veg_check_raycast: bool = false
 var last_veg: Array = []
 var in_slow_motion: bool = false
 var game_over_checked = false
+var time_since_last_toggle = 0.0
 
 
 # built-in virtual methods
@@ -44,6 +45,7 @@ func _ready():
 	$VC/CL/MainMenu/GameModeSelection.hide()
 	$VC/CL/MainMenu/VersionText.hide()
 	$VC/CL/MainMenu/LoadingText.show()
+	$VC/CL/MainMenu.show()
 	$VC/CL/MainMenu/MainSelection.show()
 	$VC/CL/MainMenu/MainSelection/MainContainer/ButtonsContainer.hide()
 	$VC/CL/MainMenu/MainSelection/MainContainer/TitleContainer.hide()
@@ -113,6 +115,8 @@ func _ready():
 
 func _process(delta):
 	
+	time_since_last_toggle += delta
+	
 	if Input.is_action_pressed("pause") or Input.is_action_pressed("back"):
 		is_game_paused = true
 		$VC/CL/MainMenu.game_active = true
@@ -122,10 +126,19 @@ func _process(delta):
 		get_tree().paused = true  # pause everything, the MainMenu will continue processing
 		
 	
-	if Input.is_action_pressed("toggle_hud"):
+	if Input.is_action_pressed("toggle_hud") and time_since_last_toggle > 1.0:
+		time_since_last_toggle = 0.0
 		for player in get_players():
 			player.toggle_hud()
 	
+	if Input.is_action_pressed("toggle_fps")  and time_since_last_toggle > 1.0:
+		time_since_last_toggle = 0.0
+		if $VC/CL/FPSCounter.visible == true:
+			$VC/CL/FPSCounter.hide()
+		else:
+			$VC/CL/FPSCounter.text = "FPS:"+str(Engine.get_frames_per_second())
+			$VC/CL/FPSCounter.show()
+
 	if Global.build_options["air_strike"]:
 		
 		air_strike_state["interval_so_far_sec"] += delta
@@ -435,3 +448,7 @@ func _on_TimerFlashingFirestormIcon_timeout():
 	else:
 		$VC/CL/IconFireStorm.hide()
 
+
+
+func _on_Timer_timeout():
+	$VC/CL/FPSCounter.text = "FPS:"+str(Engine.get_frames_per_second())

@@ -784,7 +784,7 @@ text = "Powerups are objects which appear randomly; activate by driving through 
 -Shield: pink shield icon: protects health for a limited time.
 
 Weapons:
--Proximity mine: drop behind the vehicle, explodes when a vehicle is near (including you!)
+-Magnetic mine: drop behind the vehicle, 5 sec activation, is attracted to and explodes when near a vehicle  (including you!)
 -Rocket: straight flying explosive
 -Homing Missile: guided flying explosive, will follow terrain to any moving target (except you)
 -Ballistic round: explosive round (a bullet)

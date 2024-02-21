@@ -108,7 +108,7 @@ radius = 0.308364
 height = 1.43153
 
 [sub_resource type="BoxShape" id=70]
-extents = Vector3( 0.691594, 0.148854, 0.588728 )
+extents = Vector3( 0.691594, 0.229895, 0.588728 )
 
 [sub_resource type="Gradient" id=3]
 offsets = PoolRealArray( 0, 0.245327, 0.714953, 1 )
@@ -414,7 +414,7 @@ shape = SubResource( 51 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.728945, -0.133028 )
 
 [node name="CollisionShape10" type="CollisionShape" parent="VehicleTypes/Racer/CollisionShapes"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1.94948, 0, 0.44169, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1.94948, 0, 0.525965, 0 )
 shape = SubResource( 70 )
 
 [node name="Effects" type="Spatial" parent="VehicleTypes/Racer"]

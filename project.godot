@@ -192,6 +192,8 @@ StatePlayers="*res://player/state_players.gd"
 [debug]
 
 settings/fps/force_fps=60
+gdscript/warnings/unsafe_cast=true
+gdscript/warnings/unsafe_call_argument=true
 
 [display]
 
@@ -226,6 +228,7 @@ etc\=false
 etc=false
 mouse=false
 fps=false
+static=false
 
 [gui]
 

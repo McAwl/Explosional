@@ -47,10 +47,10 @@ func _ready():
 		version = output_version[0].trim_suffix("\n")
 	
 	if build == null or version == null:
-		$VersionText/VersionContainer/VersionText.text = "Explosional v1.18.0-beta 2024 McAwl"
+		$VersionText/VersionContainer/VersionText.text = "Explosional v1.18.2-beta 2024 McAwl"
 	else:
 		if len(build) < 2 or len(version) < 2:
-			$VersionText/VersionContainer/VersionText.text = "Explosional v1.18.0-beta 2024 McAwl "  # + str(len(version)) + " " + str(len(build))
+			$VersionText/VersionContainer/VersionText.text = "Explosional v1.18.2-beta 2024 McAwl "  # + str(len(version)) + " " + str(len(build))
 		else:
 			Global.debug_print(3, "version="+str(version)+", build="+str(build))
 			Global.debug_print(3, "len version="+str(len(version))+", len build="+str(len(build)))
@@ -120,6 +120,7 @@ func _on_OptionsButton_button_up():
 	$GameModeSelection.hide()
 	$MainSelection/MainContainer/ButtonsContainer.hide()
 	$OptionMenu/GridContainer/MusicVolume/MusicVolume.grab_focus()
+	$OptionMenu/GridContainer/Graphics/GraphicsSliders.value = Global.graphics
 	if game_active:
 		$OptionMenu/GridContainer/Graphics/GraphicsSliders.editable = false
 	else:
@@ -152,7 +153,6 @@ func _on_ResetGameButton_button_up():
 	get_tree().root.get_node("MainScene").reset_game()
 
 
-
 func _on_Player1SelectButton_button_up():
 	show_vehicle_selection(1)
 
@@ -181,6 +181,7 @@ func _on_RacerButton_button_up():
 		hide_vehicle_selection(ConfigVehicles.Type.RACER)
 	else:
 		return
+
 
 func _on_RallyButton_button_up():
 	if Global.build_options["vehicle_options"]["rally"] == true:
@@ -258,12 +259,10 @@ func configure():
 		get_resume_button().grab_focus()
 		get_start_button().hide()
 		#apb.hide()
-
 	else:
 		$PlayerSelection/GridContainer/Player1SelectButton.text = "Player 1 "+ConfigVehicles.nice_name[ConfigVehicles.Type.RACER]
 		players[1] = {"name": "1", "vehicle": ConfigVehicles.Type.RACER}
 		get_start_button().show()
-		
 		$MainSelection.show()
 		$MainSelection/MainContainer/ButtonsContainer.show()
 		$MainSelection/MainContainer/TitleContainer.show()

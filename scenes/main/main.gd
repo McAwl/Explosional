@@ -109,7 +109,7 @@ func _ready():
 	else:
 		$DirectionalLightSun.shadow_enabled = true
 		$DirectionalLightMoon.shadow_enabled = true
-		Engine.iterations_per_second = 144
+		Engine.iterations_per_second = 288
 		#rendering/quality/shadow_atlas/size = 4096
 
 
@@ -136,7 +136,11 @@ func _process(delta):
 		if $VC/CL/FPSCounter.visible == true:
 			$VC/CL/FPSCounter.hide()
 		else:
-			$VC/CL/FPSCounter.text = "FPS:"+str(Engine.get_frames_per_second())
+			var fps_text = "FPS:"+str(Engine.get_frames_per_second())
+			if Global.graphics == Global.Graphics.Low:
+				$VC/CL/FPSCounter.text = "LG:"+fps_text
+			else:
+				$VC/CL/FPSCounter.text = "HG:"+fps_text
 			$VC/CL/FPSCounter.show()
 
 	if Global.build_options["air_strike"]:
@@ -451,4 +455,8 @@ func _on_TimerFlashingFirestormIcon_timeout():
 
 
 func _on_Timer_timeout():
-	$VC/CL/FPSCounter.text = "FPS:"+str(Engine.get_frames_per_second())
+	var fps_text = "FPS:"+str(Engine.get_frames_per_second())
+	if Global.graphics == Global.Graphics.Low:
+		$VC/CL/FPSCounter.text = "LG:"+fps_text
+	else:
+		$VC/CL/FPSCounter.text = "HG:"+fps_text

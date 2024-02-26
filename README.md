@@ -14,3 +14,4 @@ Download game from itch.io @ https://mcawl.itch.io/explosional
 Team:
 - coding by https://github.com/McAwl
 - direction by https://github.com/Willy2Point0
+- testing by https://github.com/nwarnock

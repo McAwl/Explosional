@@ -10,3 +10,7 @@ Explosional was developed with extensive creative control from a 10yo gamer - so
 This is a beta release where many of the less-polished features have been disabled such as some vehicles (rally car, tank, truck), several of the weapons (air burst, nuke), AI (air strikes), and some effects (vehicle damage falling parts). We plan on fixing these features for future releases. 
 
 Download game from itch.io @ https://mcawl.itch.io/explosional
+
+Team:
+- coding by https://github.com/McAwl
+- direction by https://github.com/Willy2Point0
